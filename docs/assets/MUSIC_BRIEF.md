@@ -52,3 +52,9 @@ Per-game "menu + play" pairs (CULTURAL_GUIDE section 4) will be listed in each g
 |---|---|---|---|---|
 | `snakes-menu-fuji` | Menu loop | Fuji / juju-inspired, lighter density | 45 s loop | 112 BPM, talking drum sparse, agogo, shekere, round bass |
 | `snakes-play-fuji` | Play loop | Fuji / juju-inspired percussion with talking drum | 60 s loop | 120 BPM; no talking-drum fills on beats 1 and 3 of the last two bars; keep 300 to 450 Hz thin (danfo-horn SFX); avoid ritual bata. Fallback: `ng-play-juju`. Full spec in `snakes-ladders-brief.md` section 7 |
+
+## Game-specific slots: Naija Ludo
+| File (placeholder in `games/naija-ludo/assets/audio/music/`) | Slot | Style | Length | Notes |
+|---|---|---|---|---|
+| `ludo-menu-highlife` | Menu loop | Highlife, guitar-led, warm | 45 s loop | 108 BPM; two clean guitars with palm-wine-style picking, bass, claves, shekere, brushed kit |
+| `ludo-play-highlife` | Play loop | Highlife, relaxed two-beat swing | 60 s loop | 112 BPM, I-IV-V, walking bass; leave space for dice (shekere, 3 to 8 kHz) and agogo capture SFX; never tiring over 10 minutes. Fallback: `ng-play-highlife`. Full spec in `naija-ludo-brief.md` section 7 |

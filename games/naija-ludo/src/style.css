@@ -1,0 +1,505 @@
+/* Naija Ludo. Naija Green theme (tokens from @naija/core). Transform and opacity only for anything
+   that moves. Portrait 360x640 first; landscape and desktop below. */
+
+/* ---------- menu ---------- */
+.ld-menu-art {
+  width: 84px;
+  height: 84px;
+  border-radius: var(--ng-r-md);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.3);
+}
+.ld-menu .ng-h--display {
+  font-size: clamp(1.75rem, 9vw, 2.75rem);
+}
+.ld-pickers {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: var(--ng-s-3);
+  width: 100%;
+  max-width: 340px;
+}
+.ld-pickers > * {
+  min-width: 0;
+}
+.ld-pickers .ng-seg__opt {
+  padding-inline: var(--ng-s-1);
+}
+.ld-menu .ng-menu__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 340px;
+}
+.ld-menu .ng-menu__list li {
+  min-width: 0;
+}
+.ld-menu .ng-menu__list li:first-child {
+  grid-column: 1 / -1;
+}
+.ld-menu .ng-menu__list .ng-btn--lg {
+  min-width: 0;
+  padding-inline: var(--ng-s-2);
+  font-size: var(--ng-fs-lg);
+}
+.ld-menu .ng-settings .ng-btn {
+  padding-inline: var(--ng-s-2);
+  white-space: nowrap;
+}
+@media (max-height: 700px) and (orientation: portrait) {
+  .ld-menu {
+    gap: var(--ng-s-3);
+  }
+  .ld-menu-art {
+    width: 56px;
+    height: 56px;
+  }
+  .ld-menu .ng-seg__opt {
+    min-height: 48px;
+  }
+}
+@media (max-height: 640px) and (orientation: portrait) {
+  .ld-menu-art,
+  .ld-menu .ng-menu__tag {
+    display: none;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .ld-menu-art {
+    display: none;
+  }
+  .ld-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--ng-s-5);
+    row-gap: var(--ng-s-2);
+    align-content: center;
+    max-width: 760px;
+  }
+  .ld-menu > .ng-h {
+    grid-column: 1 / -1;
+  }
+  .ld-menu > .ng-field,
+  .ld-menu > .ld-pickers {
+    grid-column: 1;
+    max-width: none;
+  }
+  .ld-menu > .ng-menu__list {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: center;
+    max-width: none;
+  }
+  .ld-menu > .ng-menu__footer {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .ld-menu .ng-seg__opt {
+    min-height: 48px;
+  }
+}
+
+/* ---------- how to play ---------- */
+.ld-legend {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--ng-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ld-legend__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.ld-legend__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+@media (max-height: 640px) {
+  .ld-legend__icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ---------- rules screen ---------- */
+.ld-rules {
+  align-items: stretch;
+  gap: var(--ng-s-3);
+}
+.ld-rules__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ld-rules__item {
+  padding: var(--ng-s-2) var(--ng-s-3);
+  border-radius: var(--ng-r-md);
+  background: var(--ng-surface);
+  color: var(--ng-ink-s);
+}
+.ld-rules__item .ng-field,
+.ld-rules__item .ng-seg {
+  color: var(--ng-ink-s);
+}
+.ld-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-3);
+  width: 100%;
+  min-height: var(--ng-tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 800 var(--ng-fs-md) / 1.2 var(--ng-font-ui);
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ld-switch:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+.ld-switch__txt {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ld-switch__state {
+  flex: none;
+  min-width: 56px;
+  padding: 6px 10px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-surface-2);
+  box-shadow: inset 0 0 0 2px var(--ng-ink-s-2);
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+.ld-switch[aria-checked='true'] .ld-switch__state {
+  background: var(--ng-good);
+  color: #fff;
+  box-shadow: none;
+}
+.ld-switch[aria-checked='true'] .ld-switch__state::before {
+  content: '';
+  display: inline-block;
+  width: 0.3em;
+  height: 0.55em;
+  margin: 0 0.4em 0.1em 0;
+  border: solid currentColor;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+.ld-rules__help {
+  margin: 0 0 var(--ng-s-1);
+  font-size: var(--ng-fs-sm);
+  color: var(--ng-ink-s-2);
+}
+.ld-rules__note {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+
+/* ---------- play screen ---------- */
+.ld-play {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--ng-s-2);
+  /* narrower side margins: the 15 x 15 board needs cells of at least 22 px on a 360 px phone */
+  padding-left: max(var(--ng-s-2), env(safe-area-inset-left));
+  padding-right: max(var(--ng-s-2), env(safe-area-inset-right));
+}
+.ld-play .ng-hud {
+  min-height: 48px;
+}
+.ld-play .ng-hud__item {
+  position: relative;
+  padding-bottom: 3px;
+  border-bottom: 3px solid transparent;
+}
+.ld-play .ng-hud__item.is-turn {
+  border-bottom-color: var(--ng-accent);
+}
+.ld-play .ng-hud__item.is-turn .ng-hud__label {
+  color: var(--ng-accent);
+}
+.ld-hud__seed {
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto 1px;
+}
+.ld-msg {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+.ld-status {
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+  font-weight: 800;
+  font-size: var(--ng-fs-sm);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.ld-msg .ng-bubble {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  z-index: 2;
+}
+
+.ld-board-wrap {
+  position: relative;
+  align-self: center;
+  width: min(100%, calc(100vh - 232px));
+  width: min(100%, calc(100dvh - 232px));
+  border-radius: var(--ng-r-md);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ng-stripe-1) 0 14px,
+    var(--ng-stripe-2) 14px 18px,
+    var(--ng-stripe-3) 18px 30px,
+    var(--ng-stripe-2) 30px 34px
+  );
+  box-shadow: var(--ng-sh-3);
+}
+/* square without aspect-ratio (old WebViews): the board is as tall as it is wide */
+.ld-board-wrap::before {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+.ld-board-wrap:focus {
+  outline: none;
+}
+.ld-board {
+  position: absolute;
+  inset: 5px;
+  border-radius: 4px;
+  background: #06281a;
+  container-type: inline-size;
+}
+.ld-board__bg,
+.ld-board__seeds,
+.ld-board__fx {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ld-board__bg {
+  border-radius: 4px;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+.ld-board__seeds,
+.ld-board__fx {
+  pointer-events: none;
+}
+.ld-board__fx {
+  z-index: 4;
+}
+.ld-board__seeds {
+  z-index: 3;
+}
+.ld-seed,
+.ld-target,
+.ld-fx {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6.6667%;
+  height: 6.6667%;
+  will-change: transform;
+}
+.ld-seed__body {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform var(--ng-t-base) var(--ng-ease);
+}
+.ld-seed__img {
+  display: block;
+  width: 72%;
+  height: 72%;
+}
+.ld-seed.is-yard .ld-seed__img {
+  width: 90%;
+  height: 90%;
+}
+.ld-seed.is-home .ld-seed__img {
+  width: 46%;
+  height: 46%;
+}
+.ld-seed__badge {
+  position: absolute;
+  right: -4%;
+  bottom: -4%;
+  width: 62%;
+  height: 62%;
+}
+.ld-seed__badge[hidden] {
+  display: none;
+}
+.ld-seed__ring {
+  position: absolute;
+  left: -14%;
+  top: -14%;
+  width: 128%;
+  height: 128%;
+  opacity: 0;
+  pointer-events: none;
+}
+.ld-seed.is-movable {
+  z-index: 5;
+}
+.ld-seed.is-movable .ld-seed__ring {
+  opacity: 1;
+  animation: ld-spin 5s linear infinite;
+}
+.ld-seed.is-selected .ld-seed__ring {
+  animation: ld-spin 2.5s linear infinite;
+  transform-origin: 50% 50%;
+}
+.ld-seed.is-selected .ld-seed__img {
+  animation: ld-lift 700ms ease-in-out infinite;
+}
+.ld-seed.is-turn:not(.is-movable):not(.is-home) .ld-seed__img {
+  animation: ld-bob 1.3s ease-in-out infinite;
+}
+.ld-seed__hit {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  touch-action: manipulation;
+  pointer-events: auto;
+}
+.ld-seed__hit[hidden] {
+  display: none;
+}
+.ld-seed__hit:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 0;
+}
+.ld-target[hidden],
+.ld-fx[hidden] {
+  display: none;
+}
+.ld-target img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: ld-lift 700ms ease-in-out infinite;
+}
+.ld-fx img {
+  position: absolute;
+  left: -100%;
+  top: -100%;
+  width: 300%;
+  height: 300%;
+}
+@keyframes ld-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ld-bob {
+  50% {
+    transform: translateY(-8%) scale(1.06);
+  }
+}
+@keyframes ld-lift {
+  50% {
+    transform: translateY(-10%);
+  }
+}
+
+.ld-controls {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ng-s-3);
+  min-height: 76px;
+}
+.ld-six {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  pointer-events: none;
+}
+.ld-six[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ld-seed.is-movable .ld-seed__ring,
+  .ld-seed.is-selected .ld-seed__ring,
+  .ld-seed.is-selected .ld-seed__img,
+  .ld-target img {
+    animation: none;
+  }
+  .ld-seed.is-turn .ld-seed__img {
+    animation: none;
+  }
+}
+
+/* landscape phones and desktops: board on the left, panel on the right */
+@media (orientation: landscape) and (min-width: 640px) {
+  .ld-play {
+    display: grid;
+    grid-template-columns: auto minmax(240px, 1fr);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'board hud'
+      'board msg'
+      'board controls';
+    column-gap: var(--ng-s-4);
+    align-content: center;
+    max-width: 980px;
+  }
+  .ld-play > .ng-hud {
+    grid-area: hud;
+  }
+  .ld-play > .ld-msg {
+    grid-area: msg;
+  }
+  .ld-play > .ld-board-wrap {
+    grid-area: board;
+    width: min(calc(100vh - 24px), calc(100vw - 340px), 680px);
+    width: min(calc(100dvh - 24px), calc(100vw - 340px), 680px);
+  }
+  .ld-play > .ld-controls {
+    grid-area: controls;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+}

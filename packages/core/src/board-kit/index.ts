@@ -5,3 +5,4 @@ export * from './turns';
 export * from './movement';
 export * from './shake';
 export * from './dice-view';
+export * from './flow';

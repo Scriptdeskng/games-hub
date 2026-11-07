@@ -62,19 +62,16 @@ confirm with the portal team)**, every call with `Authorization: Bearer <token>`
 If a call fails the local copy is used. The portal must send CORS headers allowing the game origin,
 the `Authorization` and `Content-Type` headers, and `GET, PUT, OPTIONS`.
 
-**Origin allow-list.** Events and the Bearer token only go to an allowed portal origin. Default
-(no configuration needed): `https://m.gamesplash.com.ng` (`DEFAULT_PORTAL_ORIGIN`) plus
-`localhost`, `127.0.0.1` and `[::1]` for development (the only origins where http is accepted). No
-wildcards, nothing else. A game or test that talks to another portal passes
-`boot({ allowedPortalOrigins: ['https://portal.example'] })` (exact origins or `https://*.domain`
-patterns); a list REPLACES the default. A disallowed `?portal=` is ignored: no events, no token,
-local storage only. The mock portal runs on `http://localhost:4180`, so it is allowed by default.
-
-**Shake-to-roll in an iframe.** The dice view listens to `devicemotion` only when the page's
-permissions policy allows the accelerometer and gyroscope (`devicemotion` needs both), and stays silent (tap still works) when it does not.
-The portal can enable shake-to-roll by embedding the game with
-`<iframe allow="accelerometer; gyroscope" ...>`; `tools/mock-portal.html` does, and `?noallow=1` loads it
-without, which an e2e test uses to prove there are zero console errors either way.
+**Origin allow-list.** Events and the Bearer token only go to an allowed portal origin. In a
+**production build** the only allowed origin is `https://m.gamesplash.com.ng` (`DEFAULT_PORTAL_ORIGIN`):
+no wildcards, no http, and no localhost of any kind (so a page on a player's own machine, for example
+`https://localhost:8443`, cannot pose as the portal). In dev and the e2e build (`__NAIJA_TEST__` true)
+`http://localhost`, `http://127.0.0.1` and `http://[::1]` on any port are also accepted, **over http
+only**. A production build can opt in with `boot({ allowLocalPortal: true })`. A game or test that
+talks to another portal passes `boot({ allowedPortalOrigins: ['https://portal.example'] })` (exact
+origins or `https://*.domain` patterns); a list REPLACES the default. A disallowed `?portal=` is
+ignored: no events, no token, local storage only. The mock portal runs on `http://localhost:4180`,
+so it works in dev and in the e2e build.
 
 `tools/mock-portal.html` (`npm run mock-portal`) implements the same contract on a second origin.
 
@@ -172,6 +169,12 @@ import {
 count). State is plain JSON; `advanceTurn(state, { again?, skip? })` returns a new state and counts
 each seat's own turns (`turnsTaken`, `isEveryNth(state, 5)`, `turnsUntilNth`).
 
+**Turn flow.** `createFlow({ core, scope, tempo, isOver, onRestart, onQuit })` is the pacing and
+pause helper every board game shares: `sleep(ms)` (scaled by tempo, instant in fast mode), `gate()`
+(holds while the pause dialog is open), `alive(promise)` (never continues after `kill()`, so a
+destroyed game plays no late sound or event), `pause / toggle / setFast / kill`. It also pauses when
+the tab is hidden.
+
 **Movement.** `createMover(el, { scope, format?, reducedMotion?, hopMs?, slideMs?, lift? })` moves a
 positioned element with the Web Animations API (`transform` only). `run(steps, { onStep })` hops
 through `PathStep[]` (`kind: 'hop' | 'slide'`) and resolves at the end; `place`, `finish`, `busy`.
@@ -211,6 +214,11 @@ window.__naijaTest = {
 };
 ```
 
+Keep test-only members out of the production app object: build them inside an `__NAIJA_TEST__`
+branch and attach them as one optional `test` property (`...(test ? { test } : {})`), as the
+template, Snakes & Ladders and Ludo do. `scripts/prod-gate.mjs` (part of `npm run build`) fails if
+`__naijaTest`, `autoplay`, `setSeed`, `fastForward` or `liveMoves` survive in a production bundle.
+
 ## Performance tests
 
 `npm run e2e:perf -- <slug>` (in `npm run check`, about 12 s): CDP 4x CPU throttle plus Fast 3G;
@@ -226,12 +234,26 @@ Icons: the ui-kit inlines only the designer icons it uses (`ui-kit/icons.ts`, ab
 ## Which assets ship
 
 `vite.config.ts` copies `games/<slug>/assets/**` (not `*.md`) into `dist/<slug>/assets/`. A game can
-add `assets/ship.json` (`{ "include": ["board/*.svg", "pawns/**"] }`; `*` stays inside a folder,
-`**` crosses folders) and then ONLY matching files ship, so unused art, thumbnails and placeholder
-audio stay out of the download. Portal catalogue assets (thumbnails) are not runtime assets: they
-stay out of `dist` unless you add their path to `include`. The build fails if the bundle references
-a literal `./assets/...` file that is not shipped (names built at runtime are not checked, so keep
-the include patterns for those, e.g. `dice/*.svg`).
+add `assets/ship.json` and then ONLY matching files ship, so unused art, thumbnails and placeholder
+audio stay out of the download:
+
+```json
+{
+  "include": ["board/*.svg", "dice/*.svg", "thumb/*.svg"],
+  "dynamic": ["dice/die-*.svg"],
+  "keep": ["thumb/*.svg"]
+}
+```
+
+`*` stays inside a folder, `**` crosses folders. The check is **two-way**
+(`scripts/ship-check.ts`, unit-tested): the build fails if the bundle references a literal
+`./assets/...` file that is not shipped, and it also fails if a shipped file is referenced by
+nothing. A file counts as referenced when its relative path (`board/board.svg`) appears in the built
+js, css or html. Files whose names the code builds at run time (`die-${n}.svg`) go in `dynamic`
+(the text before the first `*`, `dice/die-`, must appear in the code, so a stale pattern fails).
+Files shipped on purpose although nothing names them (portal catalogue thumbnails) go in `keep`;
+every `keep` pattern must still match a shipped file. Portal catalogue assets are not runtime
+assets: they stay out of `dist` unless you add their path to `include`.
 
 ## Service worker
 

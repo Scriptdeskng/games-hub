@@ -6,7 +6,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT } from './lib.mjs';
 
-const FORBIDDEN = ['__naijaTest', '__NAIJA_TEST__', 'autoplay', 'setBot'];
+// Test-only API names. `getState` and `screen` are not listed: core's rng legitimately has getState
+// and screen ids are ordinary words. They are kept out of the app objects by construction (the
+// games expose test members only inside `__NAIJA_TEST__` branches), and `setSeed` / `fastForward`
+// / `liveMoves` / `tempo=` are specific enough to catch a leak of the same family.
+const FORBIDDEN = [
+  '__naijaTest',
+  '__NAIJA_TEST__',
+  'autoplay',
+  'setBot',
+  'setSeed',
+  'fastForward',
+  'liveMoves',
+];
 const dist = path.resolve(ROOT, process.argv[2] ?? 'dist');
 const walk = (d) =>
   fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {

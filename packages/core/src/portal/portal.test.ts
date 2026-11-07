@@ -136,7 +136,49 @@ describe('portal progress', () => {
 });
 
 describe('portal origin allow-list', () => {
-  it('default: only the GameSplash portal, plus localhost / 127.0.0.1 / [::1] for development', () => {
+  it('production default: only the GameSplash portal. No localhost of any kind, no https localhost', () => {
+    for (const o of [
+      'https://localhost',
+      'https://localhost:8443',
+      'https://127.0.0.1',
+      'https://127.0.0.1:4180',
+      'https://[::1]:3000',
+      'http://localhost:4180',
+      'http://127.0.0.1:3000',
+      'http://[::1]:3000',
+    ]) {
+      expect(isAllowedOrigin(o, undefined, false), o).toBe(false);
+    }
+    expect(isAllowedOrigin(DEFAULT_PORTAL_ORIGIN, undefined, false)).toBe(true);
+    expect(isAllowedOrigin('https://evil.example', undefined, false)).toBe(false);
+  });
+  it('local development: http localhost / 127.0.0.1 / [::1] only, and only when allowed', () => {
+    for (const o of ['http://localhost:4180', 'http://127.0.0.1:3000', 'http://[::1]:3000']) {
+      expect(isAllowedOrigin(o, undefined, true), o).toBe(true);
+    }
+    for (const o of ['https://localhost:8443', 'https://127.0.0.1', 'https://[::1]']) {
+      expect(isAllowedOrigin(o, undefined, true), o).toBe(false); // https localhost is never a portal
+    }
+    expect(isAllowedOrigin('http://localhost.evil.example', undefined, true)).toBe(false);
+    expect(isAllowedOrigin('http://127.0.0.1.evil.example', undefined, true)).toBe(false);
+  });
+  it('a production page ignores a localhost ?portal= (no events, no token) unless allowLocal is set', () => {
+    const q = '?token=secret&portal=http://localhost:4180';
+    expect(parsePortalParams(q, undefined, false).portalOrigin).toBeNull();
+    expect(parsePortalParams(q, undefined, true).portalOrigin).toBe('http://localhost:4180');
+    const { win, post } = iframeWin();
+    const p = createPortal({
+      game: 'g',
+      storage: createStorage('g'),
+      search: q,
+      allowLocal: false,
+      win,
+      fetchFn: vi.fn(),
+    });
+    p.emit('ready');
+    expect(post).not.toHaveBeenCalled();
+  });
+  it('default (non-production test build): localhost over http is accepted, https localhost is not', () => {
     expect(isAllowedOrigin('https://m.gamesplash.com.ng')).toBe(true);
     expect(isAllowedOrigin(DEFAULT_PORTAL_ORIGIN)).toBe(true);
     expect(isAllowedOrigin('http://m.gamesplash.com.ng')).toBe(false); // no downgrade
@@ -144,7 +186,7 @@ describe('portal origin allow-list', () => {
     expect(isAllowedOrigin('https://gamesplash.com.ng')).toBe(false);
     expect(isAllowedOrigin('https://x.gamesplash.com.ng')).toBe(false); // no wildcard by default
     expect(isAllowedOrigin('https://m.gamesplash.com.ng.evil.example')).toBe(false);
-    expect(isAllowedOrigin('https://localhost:8443')).toBe(true);
+    expect(isAllowedOrigin('https://localhost:8443')).toBe(false);
     expect(isAllowedOrigin('http://localhost:4180')).toBe(true);
     expect(isAllowedOrigin('http://127.0.0.1:3000')).toBe(true);
     expect(isAllowedOrigin('http://[::1]:3000')).toBe(true);

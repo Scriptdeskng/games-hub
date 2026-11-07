@@ -1,10 +1,11 @@
-import { createThinker } from '@naija/core/ai-kit';
-import type { Core } from '@naija/core/boot';
-import type { Scope } from '@naija/core/lifecycle';
-import { createPause, type Modal } from '@naija/core/ui-kit';
+import { createThinker } from '../ai-kit/think';
+import type { Scope } from '../lifecycle';
+import { createPause, type Modal } from '../ui-kit/modal';
+import type { UiContext } from '../ui-kit/dom';
 
 export interface FlowOptions {
-  core: Core;
+  /** the core (or any UiContext with `root`): used to open the pause dialog */
+  core: UiContext & { root: HTMLElement };
   scope: Scope;
   /** animation and pause speed factor (1 = normal) */
   tempo: number;
@@ -14,7 +15,7 @@ export interface FlowOptions {
 }
 
 /**
- * Pacing and pause for one game's async turn flow. Everything the flow waits on goes through
+ * Pacing and pause for one game's async turn flow (shared by every board game). Everything the flow waits on goes through
  * here, so pausing freezes the game at the next gate and `kill()` stops it for good.
  */
 export interface Flow {

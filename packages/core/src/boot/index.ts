@@ -30,6 +30,8 @@ export interface BootOptions {
   search?: string;
   /** portal origins allowed to receive events and the token (default: https + localhost) */
   allowedPortalOrigins?: readonly string[];
+  /** also accept http://localhost / 127.0.0.1 / [::1] as the portal (default: only in non-production builds) */
+  allowLocalPortal?: boolean;
 }
 
 export interface Core {
@@ -60,6 +62,7 @@ export function boot(o: BootOptions): Core {
     storage,
     search: o.search,
     allowedOrigins: o.allowedPortalOrigins,
+    allowLocal: o.allowLocalPortal,
   });
   const lang = normalizeLang(portal.params.lang) ?? normalizeLang(settings.get('lang')) ?? 'en';
   const i18n = createI18n(

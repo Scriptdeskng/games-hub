@@ -12,11 +12,15 @@ import type { Store } from '../storage';
  *        and treated as "no progress".
  *   PUT  {portal}/api/games/{slug}/progress  body { "data": <json> } -> 2xx
  *
- * The portal origin must be allowed. By default that is `DEFAULT_PORTAL_ORIGIN`
- * (https://m.gamesplash.com.ng, the portal named in CLAUDE.md) plus localhost / 127.0.0.1 / [::1]
- * for development (the only http origins ever accepted). No wildcards. A game or test that talks
- * to another portal passes `allowedOrigins` (exact origins, or `https://*.example.com`), which
- * REPLACES the default. A disallowed origin gets no events and never sees the token.
+ * The portal origin must be allowed. In a production build that is `DEFAULT_PORTAL_ORIGIN`
+ * (https://m.gamesplash.com.ng, the portal named in CLAUDE.md) and nothing else: no wildcards, no
+ * localhost, no http. Development (dev server and the e2e build, `__NAIJA_TEST__`) also accepts
+ * `http://localhost`, `http://127.0.0.1` and `http://[::1]` on any port, and ONLY over http
+ * (https://localhost is never accepted, so a page on a victim's own machine cannot pose as the portal).
+ * A production build can opt in with `allowLocal: true` (boot option `allowLocalPortal`).
+ * A game or test that talks to another portal passes `allowedOrigins` (exact origins, or
+ * `https://*.example.com`), which REPLACES the default. A disallowed origin gets no events and
+ * never sees the token.
  */
 export const DEFAULT_PORTAL_ORIGIN = 'https://m.gamesplash.com.ng';
 
@@ -36,8 +40,15 @@ export interface PortalParams {
   portalOrigin: string | null;
 }
 
+/** Local origins are a development convenience: on in non-production builds, off in production. */
+const devDefault = (): boolean => typeof __NAIJA_TEST__ !== 'undefined' && __NAIJA_TEST__;
+
 /** Is `origin` (already normalised by URL) acceptable as a portal? */
-export function isAllowedOrigin(origin: string, allowed?: readonly string[]): boolean {
+export function isAllowedOrigin(
+  origin: string,
+  allowed?: readonly string[],
+  allowLocal: boolean = devDefault(),
+): boolean {
   let u: URL;
   try {
     u = new URL(origin);
@@ -53,17 +64,21 @@ export function isAllowedOrigin(origin: string, allowed?: readonly string[]): bo
   }
   if (origin === DEFAULT_PORTAL_ORIGIN) return true;
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
-  return local && (u.protocol === 'http:' || u.protocol === 'https:');
+  return allowLocal && local && u.protocol === 'http:';
 }
 
-export function parsePortalParams(search: string, allowed?: readonly string[]): PortalParams {
+export function parsePortalParams(
+  search: string,
+  allowed?: readonly string[],
+  allowLocal?: boolean,
+): PortalParams {
   const q = new URLSearchParams(search);
   let portalOrigin: string | null = null;
   const raw = q.get('portal');
   if (raw) {
     try {
       const u = new URL(raw);
-      if (isAllowedOrigin(u.origin, allowed)) portalOrigin = u.origin;
+      if (isAllowedOrigin(u.origin, allowed, allowLocal)) portalOrigin = u.origin;
     } catch {
       portalOrigin = null;
     }
@@ -76,8 +91,10 @@ export interface PortalOptions {
   game: string;
   storage: Store;
   search?: string;
-  /** exact origins or `https://*.example.com` patterns; default: the GameSplash portal + localhost for dev */
+  /** exact origins or `https://*.example.com` patterns; default: the GameSplash portal (+ http localhost in non-production builds) */
   allowedOrigins?: readonly string[];
+  /** accept http://localhost, 127.0.0.1 and [::1] (default: only in non-production builds) */
+  allowLocal?: boolean;
   /** injectable for tests */
   win?: Pick<Window, 'parent'> & { top?: unknown };
   fetchFn?: typeof fetch;
@@ -95,7 +112,11 @@ export interface Portal {
 const LOG_CAP = 500;
 
 export function createPortal(opts: PortalOptions): Portal {
-  const p = parsePortalParams(opts.search ?? window.location.search, opts.allowedOrigins);
+  const p = parsePortalParams(
+    opts.search ?? window.location.search,
+    opts.allowedOrigins,
+    opts.allowLocal,
+  );
   const token = p.token;
   const win = opts.win ?? window;
   const doFetch = opts.fetchFn ?? ((...a: Parameters<typeof fetch>) => fetch(...a));

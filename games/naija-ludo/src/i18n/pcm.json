@@ -1,0 +1,231 @@
+{
+  "game.title": "Naija Ludo",
+  "game.tagline": {
+    "text": "Roll am, run am, and send dem go back yard!",
+    "_review": true
+  },
+  "game.howto.1": {
+    "text": "Tap di dice (or press Space) make e roll. If you roll 6, one seed go comot from yard enter your start square, and you go roll again.",
+    "_review": true
+  },
+  "game.howto.2": {
+    "text": "Tap one seed wey dey shine make e move as many squares as di dice show, go round di track clockwise. If you dey use keyboard, press 1 to 4, or arrow keys and Enter.",
+    "_review": true
+  },
+  "game.howto.3": {
+    "text": "If you land on one opponent seed wey dey alone, e go go back im yard, and you go roll again. Star squares and start squares safe, nobody fit catch you for there.",
+    "_review": true
+  },
+  "game.howto.4": {
+    "text": "If two or more of your seeds dey one square, na stack, dem no fit catch am. You fit change dis one for Rules.",
+    "_review": true
+  },
+  "game.howto.5": {
+    "text": "If you roll 6 three times one after di other, your turn don finish. Di third roll no count.",
+    "_review": true
+  },
+  "game.howto.6": {
+    "text": "Carry all your seeds reach home for di centre to win. You must roll di exact number to enter home. For Quick mode, you get 2 seeds and di first one wey reach home don win.",
+    "_review": true
+  },
+  "legend.safe": {
+    "text": "Star square: you safe",
+    "_review": true
+  },
+  "legend.start": {
+    "text": "Start square: you safe",
+    "_review": true
+  },
+  "legend.column": "Your home column",
+  "legend.centre": "Home: di centre",
+  "menu.opponents": "Who you wan play against",
+  "menu.mode": "Mode",
+  "menu.mode.classic": "Classic",
+  "menu.mode.quick": "Quick",
+  "menu.rules": "Rules",
+  "rules.title": "Rules",
+  "rules.note": {
+    "text": "Di computer players dey follow di same rules wey you dey follow.",
+    "_review": true
+  },
+  "rules.capture": {
+    "text": "Extra roll if you catch person",
+    "_review": true
+  },
+  "rules.capture.help": {
+    "text": "Catch one opponent seed wey dey alone and you go roll again.",
+    "_review": true
+  },
+  "rules.exact": "Exact roll to enter home",
+  "rules.exact.help": {
+    "text": "Seed must get di exact number to reach home. If you off am, any roll wey reach or pass home go work.",
+    "_review": true
+  },
+  "rules.three": {
+    "text": "Three 6 go finish your turn",
+    "_review": true
+  },
+  "rules.three.help": {
+    "text": "If you roll 6 three times one after di other, di third roll no count.",
+    "_review": true
+  },
+  "rules.stacks": {
+    "text": "Seeds wey dey together (two or more)",
+    "_review": true
+  },
+  "rules.stacks.safe": "Safe",
+  "rules.stacks.block": "Block",
+  "rules.stacks.off": "Off",
+  "rules.stacks.help.safe": {
+    "text": "Safe: dem no fit catch stack, and anybody fit share di square.",
+    "_review": true
+  },
+  "rules.stacks.help.block": {
+    "text": "Block: stack na wall. Nobody fit land on am or jump pass am.",
+    "_review": true
+  },
+  "rules.stacks.help.off": {
+    "text": "Off: no protection. If you land, you catch every opponent seed wey dey di square.",
+    "_review": true
+  },
+  "rules.quickFirst": {
+    "text": "Quick mode: first seed wey reach home don win",
+    "_review": true
+  },
+  "rules.quickFirst.help": {
+    "text": "For Quick mode, each side get 2 seeds. If you on am, di first seed wey reach home don win. If you off am, both go reach home.",
+    "_review": true
+  },
+  "rules.autoMove": {
+    "text": "Move di only seed for me",
+    "_review": true
+  },
+  "rules.autoMove.help": {
+    "text": "If only one move dey, make e move by itself, no ask me.",
+    "_review": true
+  },
+  "player.you": "You",
+  "board.label": {
+    "text": "Ludo board wey get four yards and one home centre",
+    "_review": true
+  },
+  "play.yourTurn": "Na your turn. Tap di dice make e roll.",
+  "play.rollAgain": "Roll again o! Tap di dice.",
+  "play.nudge": "Oya, tap di dice!",
+  "play.cpuTurn": "{name} dey roll...",
+  "play.youRolled": "You roll {n}.",
+  "play.rolled": "{name} roll {n}.",
+  "play.pickSeed": "You roll {n}. Tap one seed wey dey shine make e move.",
+  "play.autoMove": {
+    "text": "Only one move dey. Make we go!",
+    "_review": true
+  },
+  "play.seedLabel": "Seed {n}: move {steps}",
+  "play.forfeit": {
+    "text": "{name} roll three 6. Turn don pass!",
+    "_review": true
+  },
+  "play.forfeitYou": {
+    "text": "Three 6 o! Your turn don pass.",
+    "_review": true
+  },
+  "play.stuck": "{name} no fit move.",
+  "play.stuckYou": "No seed fit move. Turn go pass.",
+  "results.captures": "Captures",
+  "results.home": {
+    "text": "Seeds wey reach home",
+    "_review": true
+  },
+  "results.wins": "Wins",
+  "results.streak": "Win streak",
+  "persona.funmi.name": "Funmi",
+  "persona.baba-ade.name": "Baba Ade",
+  "persona.malam-sani.name": "Malam Sani",
+  "persona.funmi.1": "Ah ah, you wan capture me? Try am!",
+  "persona.funmi.3": "I no dey retreat. I no dey surrender.",
+  "persona.funmi.6": "Abeg, roll again. I no fear.",
+  "persona.baba-ade.1": "My pikin, make I teach you lesson for patience.",
+  "persona.baba-ade.5": "Count your seed well well.",
+  "persona.baba-ade.6": {
+    "text": "Wisdom no dey rush.",
+    "_review": true
+  },
+  "persona.baba-ade.8": "Sit up well. Next move na big one.",
+  "persona.malam-sani.1": "Patience na move too.",
+  "persona.malam-sani.3": "Hmm. I see wetin you dey do.",
+  "persona.malam-sani.6": "No wahala. We dey learn from every game.",
+  "ludo.banter.funmi.six": {
+    "text": "Six! E don come o!",
+    "_review": true
+  },
+  "ludo.banter.funmi.capture": {
+    "text": "Captured! Go back to start, my padi.",
+    "_review": true
+  },
+  "ludo.banter.funmi.captured": "I no dey retreat. I no dey surrender.",
+  "ludo.banter.funmi.home": {
+    "text": "Home sweet home! One don reach, di rest dey come.",
+    "_review": true
+  },
+  "ludo.banter.funmi.forfeit": {
+    "text": "Three six? Ah ah, di dice dey play with me!",
+    "_review": true
+  },
+  "ludo.banter.funmi.win": {
+    "text": "Smile na, na Ludo only!",
+    "_review": true
+  },
+  "ludo.banter.funmi.lose": "Hmm, you don catch me! Well played.",
+  "ludo.banter.baba-ade.six": {
+    "text": "Even luck, you must count am.",
+    "_review": true
+  },
+  "ludo.banter.baba-ade.capture": {
+    "text": "Small lesson for patience, my pikin.",
+    "_review": true
+  },
+  "ludo.banter.baba-ade.captured": "Hmm. Interesting move. Very interesting.",
+  "ludo.banter.baba-ade.home": {
+    "text": "One seed don reach home. Patience dey pay.",
+    "_review": true
+  },
+  "ludo.banter.baba-ade.forfeit": {
+    "text": "Three six. Even di dice fit too rush.",
+    "_review": true
+  },
+  "ludo.banter.baba-ade.win": {
+    "text": "Ẹ kú iṣẹ́! You don try.",
+    "_review": true
+  },
+  "ludo.banter.baba-ade.lose": "Ah! You don catch me. Well played.",
+  "ludo.banter.malam-sani.six": {
+    "text": "Six. I wait, e come.",
+    "_review": true
+  },
+  "ludo.banter.malam-sani.capture": "Sorry, my friend. Patience na move too.",
+  "ludo.banter.malam-sani.captured": "No wahala. We dey learn from every game.",
+  "ludo.banter.malam-sani.home": "One don reach home.",
+  "ludo.banter.malam-sani.forfeit": {
+    "text": "Three six. Di turn don pass. No wahala.",
+    "_review": true
+  },
+  "ludo.banter.malam-sani.win": {
+    "text": "Madalla! Correct move.",
+    "_review": true
+  },
+  "ludo.banter.malam-sani.lose": {
+    "text": "Calm mind dey win. Well played.",
+    "_review": true
+  },
+  "persona.funmi.short": "Funmi",
+  "persona.baba-ade.short": "Ade",
+  "persona.malam-sani.short": "Sani",
+  "rules.fast": {
+    "text": "Make game quick",
+    "_review": true
+  },
+  "rules.fast.help": {
+    "text": "Make animation and CPU waiting quick small. E good for long four-player game.",
+    "_review": true
+  }
+}

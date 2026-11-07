@@ -5,13 +5,9 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const OUT = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  'games',
-  'snakes-ladders',
-  'assets',
-);
+const GAME = join(dirname(fileURLToPath(import.meta.url)), '..', 'games', 'snakes-ladders');
+// ART_OUT lets you render into a scratch dir (to diff against the committed art) without touching it.
+const OUT = process.env.ART_OUT ?? join(GAME, 'assets');
 const INK = '#1D1D20',
   YEL = '#FFC20E',
   RED = '#D91F26',
@@ -34,7 +30,7 @@ const g = (inner) =>
 const r1 = (n) => Math.round(n * 10) / 10;
 
 // ---------------- layout: one source of truth, games/snakes-ladders/src/rules/layout.json ----------------
-const layoutJson = JSON.parse(readFileSync(join(OUT, '..', 'src', 'rules', 'layout.json'), 'utf8'));
+const layoutJson = JSON.parse(readFileSync(join(GAME, 'src', 'rules', 'layout.json'), 'utf8'));
 export const LAYOUT = [
   ...layoutJson.ladders.map((l) => [l.from, l.to, 'ladder', l.theme]),
   ...layoutJson.snakes.map((l) => [l.from, l.to, 'snake', l.theme]),
@@ -302,31 +298,50 @@ function connector([a, b, kind, theme]) {
   );
 }
 
-// ---------------- pawns (48x48) ----------------
-const pawn = (shape) => svg('0 0 48 48', shape, ' width="48" height="48"');
-const P = { stroke: `stroke="${INK}" stroke-width="4" stroke-linejoin="round"` };
+// ---------------- pawns (48x48, viewBox -2 -2 52 52) ----------------
+// SL-14: every pawn has its own SILHOUETTE (circle, square, triangle, diamond, hexagon), a white halo, an
+// ink outline and a big inner mark, so they differ in greyscale at 16 px. SL-18: this section is the single
+// source for pawn-you/tari/efe/aisha/funmi.svg and the thumbnails, so running the script never reverts them.
+const PAWNS = {
+  you: {
+    hex: '#1D3A9E',
+    body: '<circle cx="24" cy="24" r="15.5"/>',
+    mark: `<circle cx="24" cy="24" r="8.5" fill="none" stroke="#fff" stroke-width="3.5"/><circle cx="24" cy="24" r="3.4" fill="#fff"/>`,
+  },
+  tari: {
+    hex: '#0B7F8A',
+    body: '<rect x="6.5" y="6.5" width="35" height="35" rx="2.5"/>',
+    mark: `<rect x="15" y="15" width="18" height="18" fill="none" stroke="#fff" stroke-width="3.5"/>`,
+  },
+  efe: {
+    hex: RED,
+    body: '<path d="M24 7L42 41H6z"/>',
+    mark: `<path d="M16 33h16" stroke="#fff" stroke-width="5" stroke-linecap="round"/>`,
+  },
+  aisha: {
+    hex: '#7B2D8E',
+    body: '<path d="M24 2.5L45.5 24 24 45.5 2.5 24z"/>',
+    mark: `<path d="M24 14L34 24 24 34 14 24z" fill="none" stroke="#fff" stroke-width="3.5" stroke-linejoin="round"/>`,
+  },
+  funmi: {
+    hex: '#0E7A3B',
+    body: '<path d="M24 4.5L40.5 14v20L24 43.5 7.5 34V14z"/>',
+    mark: `<circle cx="16" cy="24" r="3.2" fill="#fff"/><circle cx="24" cy="24" r="3.2" fill="#fff"/><circle cx="32" cy="24" r="3.2" fill="#fff"/>`,
+  },
+};
+const pawnLayers = (id) => {
+  const p = PAWNS[id];
+  return `<g fill="#fff" stroke="#fff" stroke-width="9" stroke-linejoin="round">${p.body}</g><g fill="${INK}" stroke="${INK}" stroke-width="5" stroke-linejoin="round">${p.body}</g><g fill="${p.hex}">${p.body}</g>${p.mark}`;
+};
+for (const id of Object.keys(PAWNS))
+  w(`pawns/pawn-${id}.svg`, svg('-2 -2 52 52', pawnLayers(id), ' width="48" height="48"'));
+// small off-board start tray (the developer decides placement): four pits in an aso-oke striped bar
 w(
-  'pawns/pawn-you.svg',
-  pawn(
-    `<circle cx="24" cy="24" r="20" fill="#1D3A9E" ${P.stroke}/><circle cx="24" cy="24" r="12" fill="none" stroke="${WHITE}" stroke-width="3"/><circle cx="24" cy="24" r="4.5" fill="${WHITE}"/>`,
-  ),
-);
-w(
-  'pawns/pawn-tari.svg',
-  pawn(
-    `<rect x="5" y="5" width="38" height="38" rx="7" fill="#0B7F8A" ${P.stroke}/><rect x="14" y="14" width="20" height="20" rx="2" fill="none" stroke="${WHITE}" stroke-width="3"/>`,
-  ),
-);
-w(
-  'pawns/pawn-efe.svg',
-  pawn(
-    `<path d="M24 4L45 42H3z" fill="${YEL}" ${P.stroke}/><path d="M13 31h22" stroke="${INK}" stroke-width="5"/>`,
-  ),
-);
-w(
-  'pawns/pawn-aisha.svg',
-  pawn(
-    `<path d="M24 2L46 24 24 46 2 24z" fill="#7B2D8E" ${P.stroke}/><path d="M24 12L36 24 24 36 12 24z" fill="none" stroke="${WHITE}" stroke-width="3"/>`,
+  'pawns/start-tray.svg',
+  svg(
+    '0 0 160 48',
+    `<rect x="2" y="2" width="156" height="44" rx="12" fill="${CREAM}" stroke="${INK}" stroke-width="4"/><rect x="8" y="6" width="144" height="5" rx="2.5" fill="${YEL}"/><rect x="8" y="37" width="144" height="5" rx="2.5" fill="${RED}"/>${[0, 1, 2, 3].map((i) => `<circle cx="${32 + i * 32}" cy="24" r="12" fill="${LGREY}" stroke="${INK}" stroke-width="3" stroke-dasharray="4 3"/>`).join('')}`,
+    ' width="160" height="48"',
   ),
 );
 
@@ -482,8 +497,9 @@ function scene(W, H, k) {
   );
 }
 {
-  const pw = (id, x, y, s) => `<use href="#${id}" x="${x}" y="${y}" width="${s}" height="${s}"/>`;
-  const pawnDefs = `<defs><symbol id="pw1" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#1D3A9E" stroke="${INK}" stroke-width="4"/><circle cx="24" cy="24" r="12" fill="none" stroke="${WHITE}" stroke-width="3"/><circle cx="24" cy="24" r="4.5" fill="${WHITE}"/></symbol><symbol id="pw2" viewBox="0 0 48 48"><path d="M24 4L45 42H3z" fill="${YEL}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/><path d="M13 31h22" stroke="${INK}" stroke-width="5"/></symbol></defs>`;
+  const pw = (id, x, y, s) =>
+    `<g transform="translate(${x} ${y}) scale(${s / 52}) translate(2 2)">${pawnLayers(id)}</g>`;
+  const pawnDefs = '';
   const die = (x, y, s, n) =>
     `<g transform="translate(${x} ${y}) rotate(14 ${s / 2} ${s / 2}) scale(${s / 64})">${dieBody(n)}</g>`;
   const t1 = scene(512, 512, {
@@ -491,8 +507,8 @@ function scene(W, H, k) {
     by: 71,
     props:
       pawnDefs +
-      pw('pw1', 160, 140, 40) +
-      pw('pw2', 290, 214, 36) +
+      pw('you', 160, 140, 40) +
+      pw('efe', 290, 214, 36) +
       `<circle cx="390" cy="440" r="62" fill="${CREAM}"/><use href="#lm-danfo" x="338" y="388" width="104" height="104"/>` +
       die(60, 405, 70, 6),
   });
@@ -503,8 +519,8 @@ function scene(W, H, k) {
     by: 62,
     props:
       pawnDefs +
-      pw('pw1', 230, 140, 40) +
-      pw('pw2', 360, 214, 36) +
+      pw('you', 230, 140, 40) +
+      pw('efe', 360, 214, 36) +
       `<circle cx="770" cy="310" r="150" fill="${CREAM}"/><use href="#lm-danfo" x="650" y="190" width="240" height="240"/>` +
       die(760, 62, 110, 5) +
       die(900, 90, 80, 2),

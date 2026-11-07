@@ -78,8 +78,14 @@ The whole board lives in one JSON table, `src/rules/layout.json` (the art genera
 - The board background (`board-bg.svg`) carries the landmark tiles. If you move ladders or snakes,
   re-run `scripts/gen-snakes-ladders-art.mjs` so no landmark sits under a connector, and add or
   update the caption keys for the new `from` squares.
+- **Landmark clearance is not machine-checked (QA SL-10c, documented instead of tested).** The
+  landmark tiles are baked into `board-bg.svg` by `scripts/gen-snakes-ladders-art.mjs`, which owns
+  their positions; there is no data file with those positions for a test to read, and moving them
+  into one means changing the art pipeline. The crossing, touching-end and balance rules are
+  tested (`rules/design.ts`); after editing the layout, re-run the generator and look at the board.
 - Hard's planner (`ai/planner.ts`) is solved from the table at the start of the game, so the CPU
-  adapts to any valid layout with no further change.
+  adapts to any valid layout with no further change. Solved tables live in a `PlannerCache`
+  created by the app instance (and by each simulation), never in a module-level variable.
 
 ## CPU opponents
 
@@ -95,7 +101,9 @@ and Hard vs Medium over 2000 games each with Wilson 95 % intervals.
 
 ## Test hook (non-production builds)
 
-`window.__naijaTest.autoplay({ difficulty, cpus, win, realtime })`: instant by default (it searches
+`window.__naijaTest.autoplay({ difficulty, cpus, win, realtime })` (the test members are built
+only inside `__NAIJA_TEST__` branches and live in the app's optional `test` property, so the
+production app object has none): instant by default (it searches
 from the current seed for a game the human wins, or loses with `win: false`, then shows the
 results); `realtime: true` plays the first 10 moves through the real UI and animations (compressed
 4x in time, the human seat played by the Hard brain), then finishes the game instantly, so a perf or

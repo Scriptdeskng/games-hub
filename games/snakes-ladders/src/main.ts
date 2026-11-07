@@ -44,16 +44,17 @@ async function main(): Promise<void> {
   await loader.done;
 
   const app = createApp(core, progress);
-  if (__NAIJA_TEST__) {
+  if (__NAIJA_TEST__ && app.test) {
+    const api = app.test;
     // this game has no frame loop of its own: a no-op loop feeds perf() so the hook reports real fps
     const frames = createLoop({ update: () => undefined, perf: core.perf });
     frames.start();
     core.scope.add(() => frames.destroy());
     core.exposeTestHook({
-      autoplay: async (opts) => (app.autoplay ? app.autoplay(opts) : undefined),
-      getState: () => app.getState(),
-      setSeed: (n) => app.setSeed(n),
-      screen: () => app.screen,
+      autoplay: (opts) => api.autoplay(opts),
+      getState: () => api.getState(),
+      setSeed: (n) => api.setSeed(n),
+      screen: () => api.screen,
       destroy: () => {
         app.destroy();
         core.destroy();

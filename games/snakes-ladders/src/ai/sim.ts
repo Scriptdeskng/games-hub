@@ -3,6 +3,7 @@ import type { Difficulty } from '@naija/core/ui-kit';
 import { DEFAULT_RULES, type Rules } from '../rules/config';
 import { apply, createGame, isOver, turnsOf, type Action, type GameState } from '../rules/engine';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
+import { createPlannerCache, type PlannerCache } from './planner';
 import { personaById } from './personas';
 
 export interface SimResult {
@@ -17,6 +18,8 @@ export interface SimResult {
  * timers). Used by the tests to measure how much stronger each level is. `first` picks who starts.
  */
 export function simulate(o: {
+  /** share solved Hard tables between games (one cache per match-up, never a module global) */
+  planners?: PlannerCache;
   seed: number;
   seats: readonly Difficulty[];
   rules?: Partial<Rules>;
@@ -36,7 +39,7 @@ export function simulate(o: {
       persona: personaById('tari'),
       difficulty,
       seed: (o.seed * 31 + i * 7919 + 1) >>> 0,
-      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain() },
+      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain(o.planners) },
     }),
   );
   // rotate the start so the first-move advantage is shared out
@@ -79,8 +82,10 @@ export function headToHead(
 ): MatchStats {
   let wins = 0;
   let turns = 0;
+  const planners = createPlannerCache(); // solved once for the whole match-up
   for (let i = 0; i < games; i++) {
     const r = simulate({
+      planners,
       seed: (o.seed ?? 1000) + i,
       seats: [a, b],
       rules: o.rules,

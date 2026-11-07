@@ -14,7 +14,7 @@ import { DEFAULT_LAYOUT } from '../rules/layout';
 import { resolveLanding } from '../rules/board';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
 import { PERSONAS, createOpponents, pickPersonas } from './index';
-import { createPlanner, getPlanner, warmPlanner } from './planner';
+import { createPlanner, createPlannerCache } from './planner';
 import { headToHead, simulate, wilson } from './sim';
 
 const GAMES = 2000;
@@ -88,21 +88,39 @@ describe('planner (exact expected turns)', () => {
     expect(p.shouldReroll(97, 0, 3)).toBe(false);
   });
 
-  it('is solved once per layout and rules and then shared (cached)', () => {
+  it('is solved once per layout and rules and then shared by the cache that solved it', () => {
+    const cache = createPlannerCache();
     const rules = { ...DEFAULT_RULES, choiceEvery: 7 };
     const t0 = performance.now();
-    const a = getPlanner(DEFAULT_LAYOUT, rules);
+    const a = cache.get(DEFAULT_LAYOUT, rules);
     const solve = performance.now() - t0;
     const t1 = performance.now();
-    const b = getPlanner(DEFAULT_LAYOUT, rules);
+    const b = cache.get(DEFAULT_LAYOUT, rules);
     const again = performance.now() - t1;
     expect(b).toBe(a);
     expect(again).toBeLessThan(1);
-    expect(getPlanner(DEFAULT_LAYOUT, { ...rules, exactFinish: false })).not.toBe(a);
-    warmPlanner(DEFAULT_LAYOUT, rules);
-    expect(getPlanner(DEFAULT_LAYOUT, rules)).toBe(a);
+    expect(cache.get(DEFAULT_LAYOUT, { ...rules, exactFinish: false })).not.toBe(a);
+    expect(cache.size).toBe(2);
+    cache.warm(DEFAULT_LAYOUT, rules);
+    expect(cache.get(DEFAULT_LAYOUT, rules)).toBe(a);
+    expect(cache.size).toBe(2);
     // main-thread budget: a few ms natively, far below the 50 ms limit even at 4x slower
     expect(solve * 4).toBeLessThan(400);
+  });
+
+  it('caches are instance-local: another cache (another game or app) never sees these tables', () => {
+    const one = createPlannerCache();
+    const two = createPlannerCache();
+    const a = one.get(DEFAULT_LAYOUT, DEFAULT_RULES);
+    expect(two.size).toBe(0);
+    expect(two.get(DEFAULT_LAYOUT, DEFAULT_RULES)).not.toBe(a);
+    expect(one.size).toBe(1);
+  });
+
+  it('evicts old entries instead of growing without bound', () => {
+    const cache = createPlannerCache();
+    for (let n = 2; n < 22; n++) cache.warm(DEFAULT_LAYOUT, { ...DEFAULT_RULES, choiceEvery: n });
+    expect(cache.size).toBeLessThanOrEqual(16);
   });
 
   it('works for the other toggles too', () => {
@@ -249,9 +267,10 @@ describe('difficulty raises the challenge (seeded simulations)', () => {
   });
 
   it('stronger CPUs finish in fewer turns', () => {
+    const planners = createPlannerCache();
     const avg = (d: 'easy' | 'medium' | 'hard'): number => {
       let t = 0;
-      for (let i = 0; i < 400; i++) t += simulate({ seed: 500 + i, seats: [d, d] }).turns;
+      for (let i = 0; i < 400; i++) t += simulate({ planners, seed: 500 + i, seats: [d, d] }).turns;
       return t / 400;
     };
     const [e, m, h] = [avg('easy'), avg('medium'), avg('hard')];

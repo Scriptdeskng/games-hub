@@ -26,19 +26,25 @@ import {
 import { menuMusic } from './sfx';
 import { createPlay, type Play } from './view/play';
 
-export interface App {
-  showMenu(): void;
-  /** Test hook: play a full round quickly. `{ win: false }` lets the clock run out. */
-  autoplay?: (opts?: {
+/** Test builds only: what window.__naijaTest drives. Not part of the production app object. */
+export interface TestApi {
+  /** play a full round quickly. `{ win: false }` lets the clock run out. */
+  autoplay(opts?: {
     difficulty?: Difficulty;
     win?: boolean;
     /** play in real time through the real render loop (perf and soak tests) */
     realtime?: boolean;
-  }) => Promise<GameState>;
+  }): Promise<GameState>;
   getState(): unknown;
   setSeed(n: number): void;
   readonly screen: string;
+}
+
+export interface App {
+  showMenu(): void;
   destroy(): void;
+  /** present only when `__NAIJA_TEST__` is true: production builds carry no test members at all */
+  readonly test?: TestApi;
 }
 
 export function createApp(core: Core, initial: Progress): App {
@@ -175,7 +181,7 @@ export function createApp(core: Core, initial: Progress): App {
 
   // Test-only: `__NAIJA_TEST__` is false in production builds, so this whole function (and the
   // string 'autoplay') is removed from the shipped bundle. scripts/prod-gate.mjs enforces it.
-  const autoplay: App['autoplay'] = __NAIJA_TEST__
+  const autoplay: TestApi['autoplay'] | undefined = __NAIJA_TEST__
     ? async (opts = {}) => {
         const d = DIFFICULTIES.includes(opts.difficulty as Difficulty)
           ? (opts.difficulty as Difficulty)
@@ -199,26 +205,33 @@ export function createApp(core: Core, initial: Progress): App {
       }
     : undefined;
 
+  const test: TestApi | undefined =
+    __NAIJA_TEST__ && autoplay
+      ? {
+          autoplay,
+          getState: () => ({
+            screen: host.screenId,
+            difficulty,
+            seed: seedOverride,
+            progress,
+            round: play ? play.getState() : null,
+          }),
+          setSeed(n) {
+            seedOverride = n >>> 0;
+          },
+          get screen() {
+            return host.screenId;
+          },
+        }
+      : undefined;
+
   return {
     showMenu,
-    ...(__NAIJA_TEST__ ? { autoplay } : {}),
-    getState: () => ({
-      screen: host.screenId,
-      difficulty,
-      seed: seedOverride,
-      progress,
-      round: play ? play.getState() : null,
-    }),
-    setSeed(n) {
-      seedOverride = n >>> 0;
-    },
-    get screen() {
-      return host.screenId;
-    },
     destroy() {
       abandonRound();
       host.destroy();
       rerender = null;
     },
+    ...(test ? { test } : {}),
   };
 }

@@ -71,3 +71,16 @@ Shared lines also used: `oya`, `your-turn`, `you-don-win`, `no-shaking`, `no-wah
 - "Ẹ kú iṣẹ́" = eh KOO ee-SHEH (Yoruba; tone marks matter, native speaker to confirm).
 - "Ọ dị mma" = aw dee MMAH (Igbo; native speaker to confirm).
 - "Madalla" = mah-DAH-lah (Hausa; native speaker to confirm).
+
+## Game-specific lines: Naija Ludo
+Files in `games/naija-ludo/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Same rules as above. Lines marked `_review` need a native Pidgin check. Shared lines also used: `oya`, `your-turn`, `you-don-win`, `no-shaking`, `e-don-do`, `sweet`.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `ld-six` | Six! Oya, comot! `_review` | Six! Out you come! | Punchy, bright. | F, 30s | rolled a six | `vo-ld-six.mp3` |
+| `ld-capture` | Ah ah, captured! | Oh, captured! | Playful surprise, never mocking. | M, 30s | a capture | `vo-ld-capture.mp3` |
+| `ld-home` | E don reach house! `_review` | One seed home! | Warm, pleased. | F, 40s | seed reaches home | `vo-ld-home.mp3` |
+| `ld-again` | Roll again o! | Roll again! | Friendly nudge. | M or F, 20s | bonus roll | `vo-ld-again.mp3` |
+| `ld-triple` | Three sixes o! Turn don pass. `_review` | Three sixes! Turn passes. | Gentle comic sympathy. | M, 30s | triple six | `vo-ld-triple.mp3` |
+| `ld-exact` | Exact number, abeg! `_review` | You need the exact number! | Friendly reminder. | F, 30s | exact-roll rule | `vo-ld-exact.mp3` |
+| `ld-safe` | You safe for here! `_review` | Safe on the star! | Reassuring. | F, 30s | landing on a star | `vo-ld-safe.mp3` |
+| `ld-last` | Last one! Carry am go home! `_review` | Last seed! Take it home! | Encouraging, rising. | M, 30s | final seed | `vo-ld-last.mp3` |

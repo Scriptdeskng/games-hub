@@ -3,6 +3,7 @@ import { createRng } from '@naija/core/rng';
 import type { Difficulty } from '@naija/core/ui-kit';
 import type { Action, GameState } from '../rules/engine';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
+import type { PlannerCache } from './planner';
 import { personaById } from './personas';
 
 export * from './brains';
@@ -23,13 +24,15 @@ export function pickPersonas(seed: number, count: number, gameCounter = 0): stri
 }
 
 /**
- * Build the CPU opponents of one game. Hard CPUs share one planner (solved once, lazily).
+ * Build the CPU opponents of one game. Hard CPUs share the planner cache you pass in (solved once, lazily).
  * `ids` are the seat ids, in seat order, with the persona each one plays.
  */
 export function createOpponents(o: {
   seed: number;
   difficulty: Difficulty;
   seats: readonly { id: string; persona: string }[];
+  /** the planner cache of this game's app (shared by its Hard CPUs) */
+  planners?: PlannerCache;
 }): Cpu[] {
   return o.seats.map((seat, i) =>
     createCpu<GameState, Action>({
@@ -37,7 +40,7 @@ export function createOpponents(o: {
       persona: personaById(seat.persona),
       difficulty: o.difficulty,
       seed: (o.seed + 1 + i * 7919) >>> 0,
-      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain() },
+      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain(o.planners) },
     }),
   );
 }

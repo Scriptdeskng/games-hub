@@ -9,6 +9,11 @@
       "slug": "snakes-ladders",
       "title": "Snakes & Ladders: Lagos Edition",
       "deploy": true
+    },
+    {
+      "slug": "naija-ludo",
+      "title": "Naija Ludo",
+      "deploy": true
     }
   ]
 }

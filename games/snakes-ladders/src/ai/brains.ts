@@ -2,7 +2,7 @@ import { PROFILES, withMistakes, type Brain } from '@naija/core/ai-kit';
 import { resolveLanding } from '../rules/board';
 import { jumpMap } from '../rules/layout';
 import { currentPlayer, type Action, type GameState } from '../rules/engine';
-import { getPlanner } from './planner';
+import { createPlannerCache, type PlannerCache } from './planner';
 
 /** Every CPU decision is a function of the whole game state (the current player is the CPU). */
 export type CpuBrain = Brain<GameState, Action>;
@@ -64,12 +64,15 @@ export const mediumBrain: CpuBrain = {
     ),
 };
 
-/** Hard: exact expected-turns tables (see planner.ts), solved once per layout and rules. */
-export function createHardBrain(): CpuBrain {
+/**
+ * Hard: exact expected-turns tables (see planner.ts). The tables live in the `planners` cache you
+ * pass in (share one between the CPUs of a game); with none given the brain keeps its own.
+ */
+export function createHardBrain(planners: PlannerCache = createPlannerCache()): CpuBrain {
   return {
     decide(s) {
       const me = currentPlayer(s);
-      const planner = getPlanner(s.layout, s.rules);
+      const planner = planners.get(s.layout, s.rules);
       switch (s.phase) {
         case 'pick':
           return {

@@ -1,4 +1,4 @@
-import { personaById, warmPlanner } from './ai';
+import { createPlannerCache, personaById } from './ai';
 import type { Core } from '@naija/core/boot';
 import {
   createScreenHost,
@@ -36,19 +36,27 @@ export interface AutoplayOptions {
   realtime?: boolean;
 }
 
-export interface App {
-  showMenu(): void;
-  autoplay?: (opts?: AutoplayOptions) => Promise<GameState>;
+/** Test builds only: what window.__naijaTest drives. Not part of the production app object. */
+export interface TestApi {
+  autoplay(opts?: AutoplayOptions): Promise<GameState>;
   getState(): unknown;
   setSeed(n: number): void;
   readonly screen: string;
+}
+
+export interface App {
+  showMenu(): void;
   destroy(): void;
+  /** present only when `__NAIJA_TEST__` is true: production builds carry no test members at all */
+  readonly test?: TestApi;
 }
 
 export function createApp(core: Core, initial: Progress): App {
   const host = createScreenHost(core.root);
   const { t } = core;
   let progress = initial;
+  /** solved Hard-CPU tables: owned by this app instance and shared by its games */
+  const planners = createPlannerCache();
   let play: Play | null = null;
   let roundOpen = false;
   let currentDifficulty: Difficulty = progress.lastDifficulty;
@@ -80,7 +88,7 @@ export function createApp(core: Core, initial: Progress): App {
       onDifficulty: (d) => {
         currentDifficulty = d;
         save({ ...progress, lastDifficulty: d });
-        if (d === 'hard') warmPlanner(DEFAULT_LAYOUT, progress.rules);
+        if (d === 'hard') planners.warm(DEFAULT_LAYOUT, progress.rules);
       },
       onCpuCount: (n) => save({ ...progress, cpuCount: Math.max(1, Math.min(MAX_CPUS, n)) }),
       onPlay: () => startRound(currentDifficulty),
@@ -89,7 +97,7 @@ export function createApp(core: Core, initial: Progress): App {
     });
     show('menu', c, showMenu);
     // solve Hard's tables here, on a menu with nothing animating, so the game never hitches
-    if (currentDifficulty === 'hard') warmPlanner(DEFAULT_LAYOUT, progress.rules);
+    if (currentDifficulty === 'hard') planners.warm(DEFAULT_LAYOUT, progress.rules);
   }
 
   function showHowTo(): void {
@@ -123,6 +131,7 @@ export function createApp(core: Core, initial: Progress): App {
       gameCounter: progress.games,
       rules: progress.rules,
       seed,
+      planners,
       onMove: (s, m) => (quiet ? undefined : reportMove(s, m)),
       onEnd: finishRound,
       onRestart: () => startRound(d),
@@ -212,7 +221,7 @@ export function createApp(core: Core, initial: Progress): App {
 
   // Test-only: `__NAIJA_TEST__` is false in production builds, so this whole function (and the
   // word "autoplay") is removed from the shipped bundle. scripts/prod-gate.mjs enforces it.
-  const autoplay: App['autoplay'] = __NAIJA_TEST__
+  const autoplay: TestApi['autoplay'] | undefined = __NAIJA_TEST__
     ? async (opts = {}) => {
         const d = DIFFICULTIES.includes(opts.difficulty as Difficulty)
           ? (opts.difficulty as Difficulty)
@@ -246,26 +255,33 @@ export function createApp(core: Core, initial: Progress): App {
       }
     : undefined;
 
+  const test: TestApi | undefined =
+    __NAIJA_TEST__ && autoplay
+      ? {
+          autoplay,
+          getState: () => ({
+            screen: host.screenId,
+            difficulty: currentDifficulty,
+            seed: seedOverride,
+            progress,
+            round: play ? play.getState() : null,
+          }),
+          setSeed(n) {
+            seedOverride = n >>> 0;
+          },
+          get screen() {
+            return host.screenId;
+          },
+        }
+      : undefined;
+
   return {
     showMenu,
-    ...(__NAIJA_TEST__ ? { autoplay } : {}),
-    getState: () => ({
-      screen: host.screenId,
-      difficulty: currentDifficulty,
-      seed: seedOverride,
-      progress,
-      round: play ? play.getState() : null,
-    }),
-    setSeed(n) {
-      seedOverride = n >>> 0;
-    },
-    get screen() {
-      return host.screenId;
-    },
     destroy() {
       abandonRound();
       host.destroy();
       rerender = null;
     },
+    ...(test ? { test } : {}),
   };
 }

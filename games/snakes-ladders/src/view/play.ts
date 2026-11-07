@@ -1,10 +1,18 @@
 import { createBanter, type Banter } from '@naija/core/ai-kit';
+import { createFlow } from '@naija/core/board-kit';
 import type { Core } from '@naija/core/boot';
 import { createInput } from '@naija/core/input';
 import { createScope } from '@naija/core/lifecycle';
 import { createRng } from '@naija/core/rng';
 import type { Component, Difficulty } from '@naija/core/ui-kit';
-import { createHardBrain, createOpponents, personaById, pickPersonas, type Cpu } from '../ai';
+import {
+  createHardBrain,
+  createOpponents,
+  personaById,
+  pickPersonas,
+  type Cpu,
+  type PlannerCache,
+} from '../ai';
 import {
   apply,
   createGame,
@@ -19,7 +27,6 @@ import {
   type Phase,
   type Rules,
 } from '../rules';
-import { createFlow } from './flow';
 import { createPlayUi, type PlayUi } from './play-ui';
 import { jumpSfx, playMusic } from '../audio/cues';
 
@@ -30,6 +37,8 @@ export interface PlayOptions {
   gameCounter: number;
   rules: Rules;
   seed: number;
+  /** the app's planner cache, shared by this game's Hard CPUs (instance state, not a module global) */
+  planners: PlannerCache;
   /** after every move (the app reports the score to the portal) */
   onMove(state: GameState, move: MoveRecord): void;
   onEnd(state: GameState): void;
@@ -78,9 +87,10 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     seed: o.seed,
     difficulty: o.difficulty,
     seats: cpuSeats,
+    planners: o.planners,
   });
   const cpuOf = (id: string): Cpu => cpus.find((c) => c.id === id) as Cpu;
-  const bot = createHardBrain();
+  const bot = createHardBrain(o.planners);
   const botRng = createRng(o.seed ^ 0xb07);
   let botOn = o.test?.bot ?? false;
 

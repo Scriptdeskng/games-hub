@@ -55,11 +55,12 @@ export async function press(target: Locator, opts: { timeout?: number } = {}): P
  * Layout problems on the current screen: any element whose content is wider than its box
  * (clipped or overflowing text, e.g. a stat tile that cuts "Medium"), or that sits outside the
  * viewport horizontally. Decorative layers (aria-hidden, confetti, the play arena) are skipped
- * unless `include` (a CSS selector) names elements that must be checked anyway.
+ * unless `include` (a CSS selector) names elements that must be checked anyway; `skip` (a CSS
+ * selector) removes a whole subtree from the check.
  */
 export async function layoutProblems(
   page: Page,
-  opts: { include?: string } = {},
+  opts: { include?: string; skip?: string } = {},
 ): Promise<string[]> {
   // let entrance animations (title slam, toasts) finish: measure the settled layout
   await page.evaluate(() =>
@@ -70,33 +71,40 @@ export async function layoutProblems(
         .map((a) => a.finished.catch(() => undefined)),
     ),
   );
-  return page.evaluate((include) => {
-    const vw = window.innerWidth;
-    const out: string[] = [];
-    for (const el of document.querySelectorAll<HTMLElement>('body *')) {
-      // `include` names elements that are checked even inside an aria-hidden layer (board labels)
-      const forced = include ? el.matches(include) : false;
-      if (
-        !forced &&
-        (el instanceof SVGElement ||
-          el.closest('[aria-hidden="true"],.arena,.ng-confetti,.ng-sweep,.ng-sr'))
-      )
-        continue;
-      const cs = getComputedStyle(el);
-      if (cs.display === 'none' || cs.display === 'inline' || cs.visibility === 'hidden') continue;
-      const r = el.getBoundingClientRect();
-      if (r.width <= 1 || r.height <= 1) continue; // visually hidden native radios
-      const name = `${el.tagName.toLowerCase()}.${el.className.toString().split(' ')[0]} "${(el.textContent ?? '').trim().slice(0, 20)}"`;
-      if (el.scrollWidth > el.clientWidth + 1 && !['auto', 'scroll'].includes(cs.overflowX)) {
-        out.push(`${name} content ${el.scrollWidth}px > box ${el.clientWidth}px`);
+  return page.evaluate(
+    ({ include, skip }) => {
+      const vw = window.innerWidth;
+      const out: string[] = [];
+      for (const el of document.querySelectorAll<HTMLElement>('body *')) {
+        // `skip`: a game-board layer whose art overflows its cell on purpose (rings, 44 px targets);
+        // the game checks that layer with its own geometry tests
+        if (skip && el.closest(skip)) continue;
+        // `include` names elements that are checked even inside an aria-hidden layer (board labels)
+        const forced = include ? el.matches(include) : false;
+        if (
+          !forced &&
+          (el instanceof SVGElement ||
+            el.closest('[aria-hidden="true"],.arena,.ng-confetti,.ng-sweep,.ng-sr'))
+        )
+          continue;
+        const cs = getComputedStyle(el);
+        if (cs.display === 'none' || cs.display === 'inline' || cs.visibility === 'hidden')
+          continue;
+        const r = el.getBoundingClientRect();
+        if (r.width <= 1 || r.height <= 1) continue; // visually hidden native radios
+        const name = `${el.tagName.toLowerCase()}.${el.className.toString().split(' ')[0]} "${(el.textContent ?? '').trim().slice(0, 20)}"`;
+        if (el.scrollWidth > el.clientWidth + 1 && !['auto', 'scroll'].includes(cs.overflowX)) {
+          out.push(`${name} content ${el.scrollWidth}px > box ${el.clientWidth}px`);
+        }
+        if (r.left < -1 || r.right > vw + 1)
+          out.push(
+            `${name} outside viewport (${Math.round(r.left)}..${Math.round(r.right)} of ${vw})`,
+          );
       }
-      if (r.left < -1 || r.right > vw + 1)
-        out.push(
-          `${name} outside viewport (${Math.round(r.left)}..${Math.round(r.right)} of ${vw})`,
-        );
-    }
-    return out;
-  }, opts.include);
+      return out;
+    },
+    { include: opts.include, skip: opts.skip },
+  );
 }
 
 /** Is the element fully inside the viewport right now, without scrolling? */

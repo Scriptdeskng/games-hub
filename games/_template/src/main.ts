@@ -32,12 +32,13 @@ async function main(): Promise<void> {
   await loader.done;
 
   const app = createApp(core, progress);
-  if (__NAIJA_TEST__) {
+  if (__NAIJA_TEST__ && app.test) {
+    const api = app.test;
     core.exposeTestHook({
-      autoplay: async (opts) => (app.autoplay ? app.autoplay(opts) : undefined),
-      getState: () => app.getState(),
-      setSeed: (n) => app.setSeed(n),
-      screen: () => app.screen,
+      autoplay: (opts) => api.autoplay(opts),
+      getState: () => api.getState(),
+      setSeed: (n) => api.setSeed(n),
+      screen: () => api.screen,
       destroy: () => {
         app.destroy();
         core.destroy();

@@ -4,7 +4,7 @@ export default defineConfig({
   define: { __NAIJA_TEST__: 'true' },
   test: {
     environment: 'jsdom',
-    include: ['packages/*/src/**/*.test.ts', 'games/*/src/**/*.test.ts'],
+    include: ['packages/*/src/**/*.test.ts', 'games/*/src/**/*.test.ts', 'scripts/**/*.test.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text-summary', 'text', 'lcov'],

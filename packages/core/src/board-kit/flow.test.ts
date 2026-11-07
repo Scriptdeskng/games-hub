@@ -1,9 +1,11 @@
-import type { Core } from '@naija/core/boot';
-import { createScope, leakCounters } from '@naija/core/lifecycle';
+import { createScope, leakCounters } from '../lifecycle';
+import type { UiContext } from '../ui-kit/dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createFlow } from './flow';
 
-const core = { t: (k: string) => k, root: document.body } as unknown as Core;
+const core = { t: (k: string) => k, root: document.body } as unknown as UiContext & {
+  root: HTMLElement;
+};
 const flush = async (): Promise<void> => {
   for (let i = 0; i < 5; i++) await Promise.resolve();
 };
