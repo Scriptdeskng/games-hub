@@ -13,10 +13,12 @@ describe('perf', () => {
     for (let t = 1000 + 50; t <= 2100; t += 50) p.frame(t); // ~20 fps window
     const s = p.snapshot();
     expect(s.frames).toBeGreaterThan(60);
+    expect(s.avgFps).toBeGreaterThan(30);
+    expect(s.avgFps).toBeLessThan(70);
     expect(s.minFps).toBeLessThanOrEqual(s.fps + 40);
     expect(s.minFps).toBeGreaterThan(10);
     p.reset();
-    expect(p.snapshot()).toMatchObject({ fps: 0, minFps: 0, frames: 0 });
+    expect(p.snapshot()).toMatchObject({ fps: 0, avgFps: 0, minFps: 0, frames: 0 });
     p.destroy();
   });
   it('samples the heap on an interval when the browser exposes it', () => {

@@ -1,5 +1,7 @@
 // Usage: npm run e2e -- [slug...]        (mobile 375x812 + 360x640)
 //        npm run e2e:extra -- [slug...]  (landscape + desktop)
+//        npm run e2e:perf -- [slug...]   (4x CPU + Fast 3G: time to menu, fps, heap)
+//        npm run e2e:soak -- [slug...]   (SOAK_MINUTES, default 10; SOAK_SAMPLE_S, default 30)
 // Builds the requested games in test mode (dist-e2e/) first, then runs Playwright.
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -7,23 +9,49 @@ import path from 'node:path';
 import { listGames, ROOT } from './lib.mjs';
 
 const args = process.argv.slice(2);
-const extra = args.includes('--extra');
-const rest = args.filter((a) => a !== '--extra');
+const mode = args.includes('--soak')
+  ? 'soak'
+  : args.includes('--perf')
+    ? 'perf'
+    : args.includes('--extra')
+      ? 'extra'
+      : 'e2e';
+const rest = args.filter((a) => !['--extra', '--perf', '--soak'].includes(a));
 const slugs = rest.filter((a) => !a.startsWith('-'));
 const passthrough = rest.filter((a) => a.startsWith('-'));
-const all = listGames().filter((g) => fs.existsSync(path.join(ROOT, 'tests/e2e', `${g}.spec.ts`)));
+const perfMode = mode === 'perf' || mode === 'soak';
+// perf specs are generic (they only need the game's __naijaTest hook), so any built game works
+const all = perfMode
+  ? listGames()
+  : listGames().filter((g) => fs.existsSync(path.join(ROOT, 'tests/e2e', `${g}.spec.ts`)));
 for (const s of slugs) {
   if (!all.includes(s)) {
-    console.error(`e2e: no tests/e2e/${s}.spec.ts (known: ${all.join(', ')})`);
+    console.error(`e2e: unknown or untested game "${s}" (known: ${all.join(', ')})`);
     process.exit(1);
   }
 }
 const targets = slugs.length ? slugs : all;
-const run = (cmd, a) => spawnSync(cmd, a, { cwd: ROOT, stdio: 'inherit', env: process.env });
+const run = (cmd, a, env = {}) =>
+  spawnSync(cmd, a, { cwd: ROOT, stdio: 'inherit', env: { ...process.env, ...env } });
 
 let r = run('node', ['scripts/build-all.mjs', '--test', '--only', targets.join(',')]);
 if (r.status) process.exit(r.status);
-const cfg = extra ? 'playwright.extra.config.ts' : 'playwright.config.ts';
+
+if (perfMode) {
+  const spec = mode === 'soak' ? 'tests/perf/soak.spec.ts' : 'tests/perf/perf.spec.ts';
+  for (const slug of targets) {
+    r = run(
+      'npx',
+      ['playwright', 'test', '-c', 'playwright.perf.config.ts', spec, ...passthrough],
+      {
+        PERF_SLUG: slug,
+      },
+    );
+    if (r.status) process.exit(r.status);
+  }
+  process.exit(0);
+}
+const cfg = mode === 'extra' ? 'playwright.extra.config.ts' : 'playwright.config.ts';
 r = run('npx', [
   'playwright',
   'test',

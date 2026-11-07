@@ -1,4 +1,5 @@
 import { createScope } from '../lifecycle';
+import { icon } from './icons';
 import { h, type Component, type UiContext } from './dom';
 
 /** Sound / music toggles and language switch. Reads and writes persisted settings. */
@@ -10,13 +11,15 @@ export function createSettingsBar(ctx: UiContext): Component {
   const mk = (): HTMLButtonElement =>
     h('button', { type: 'button', class: 'ng-btn ng-btn--ghost' });
 
-  const toggle = (key: 'sound' | 'music', icon: string): void => {
+  const toggle = (key: 'sound' | 'music'): void => {
     if (!settings) return;
     const b = mk();
+    const label = h('span');
+    b.append(icon(`${key}-on`, 'on'), icon(`${key}-off`, 'off'), label);
     const refresh = (): void => {
       const on = settings.get(key);
       b.setAttribute('aria-pressed', String(on));
-      b.textContent = `${icon} ${ctx.t(`ui.${key}`)}: ${ctx.t(on ? 'ui.on' : 'ui.off')}`;
+      label.textContent = `${ctx.t(`ui.${key}`)}: ${ctx.t(on ? 'ui.on' : 'ui.off')}`;
     };
     scope.on(b, 'click', () => {
       settings.set(key, !settings.get(key));
@@ -26,8 +29,8 @@ export function createSettingsBar(ctx: UiContext): Component {
     refresh();
     el.append(b);
   };
-  toggle('sound', '♫');
-  toggle('music', '♪');
+  toggle('sound');
+  toggle('music');
 
   if (i18n) {
     const b = mk();

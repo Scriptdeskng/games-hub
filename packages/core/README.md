@@ -119,6 +119,18 @@ window.__naijaTest = {
 };
 ```
 
+## Performance tests
+
+`npm run e2e:perf -- <slug>` (in `npm run check`, about 12 s): CDP 4x CPU throttle plus Fast 3G;
+asserts time to menu <= 4 s and average fps >= 50 during real-time play, prints heap after GC.
+`npm run e2e:soak -- <slug>` (nightly, `.github/workflows/soak.yml`; `SOAK_MINUTES`, `SOAK_SAMPLE_S`):
+repeated real-time rounds, post-GC heap sampled every 30 s, fails if the heap slope after a
+warm-up exceeds 100 KB/min or if listener/timer/RAF counters drift. A game opts in by supporting
+`__naijaTest.autoplay({ realtime: true, difficulty })`, which must play through the real render loop
+and resolve when the round ends, plus `screen() === 'menu'` once interactive.
+Icons: the ui-kit inlines only the designer icons it uses (`ui-kit/icons.ts`, about 1.2 KB) because
+`assets/icons/icons.svg` is currently an empty file.
+
 ## Service worker
 
 `vite.config.ts` generates `dist/<slug>/sw.js` from `src/sw/sw-template.js`: precaches every built

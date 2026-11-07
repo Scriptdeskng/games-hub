@@ -12,3 +12,4 @@ export * from './hud';
 export * from './results';
 export * from './toast';
 export * from './settings-bar';
+export * from './icons';

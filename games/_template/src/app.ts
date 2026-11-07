@@ -29,7 +29,12 @@ import { createPlay, type Play } from './view/play';
 export interface App {
   showMenu(): void;
   /** Test hook: play a full round quickly. `{ win: false }` lets the clock run out. */
-  autoplay(opts?: { difficulty?: Difficulty; win?: boolean }): Promise<GameState>;
+  autoplay(opts?: {
+    difficulty?: Difficulty;
+    win?: boolean;
+    /** play in real time through the real render loop (perf and soak tests) */
+    realtime?: boolean;
+  }): Promise<GameState>;
   getState(): unknown;
   setSeed(n: number): void;
   readonly screen: string;
@@ -44,6 +49,7 @@ export function createApp(core: Core, initial: Progress): App {
   let roundOpen = false;
   let seedOverride: number | null = null;
   let rerender: (() => void) | null = null;
+  let waiters: ((s: GameState) => void)[] = [];
   const { t } = core;
 
   const nextSeed = (): number => seedOverride ?? Date.now() & 0x7fffffff;
@@ -130,6 +136,9 @@ export function createApp(core: Core, initial: Progress): App {
   }
 
   function finishRound(s: GameState): void {
+    const done = waiters;
+    waiters = [];
+    done.forEach((w) => w(s));
     roundOpen = false;
     play = null;
     const won = s.status === 'won';
@@ -172,6 +181,11 @@ export function createApp(core: Core, initial: Progress): App {
         : difficulty;
       startRound(d);
       const p = play as Play;
+      if (opts.realtime) {
+        const ended = new Promise<GameState>((resolve) => waiters.push(resolve));
+        p.setBot(opts.win !== false);
+        return ended;
+      }
       let s = p.getState();
       const bot = opts.win !== false;
       for (let i = 0; i < 20000 && s.status === 'playing'; i++) {

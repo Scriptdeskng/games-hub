@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createI18n } from '../i18n';
 import coreEn from '../i18n/en.json';
 import corePcm from '../i18n/pcm.json';
-import { leakCounters } from '../lifecycle';
+import { createScope, leakCounters } from '../lifecycle';
 import { createSettings } from '../settings';
 import { createStorage } from '../storage';
 import {
@@ -15,6 +15,8 @@ import {
   createResults,
   createScreenHost,
   createSettingsBar,
+  button,
+  icon,
   focusInitial,
   toast,
   type UiContext,
@@ -290,5 +292,27 @@ describe('hud, results, toast, settings bar', () => {
     expect(bare.el.children).toHaveLength(0);
     settings.set('sound', true);
     settings.set('music', true);
+  });
+});
+
+describe('icons', () => {
+  it('inlines decorative currentColor svgs and supports icon-only buttons', () => {
+    const on = icon('sound-on', 'on');
+    expect(on.getAttribute('class')).toBe('ng-icon ng-icon--on');
+    expect(on.getAttribute('aria-hidden')).toBe('true');
+    expect(on.getAttribute('width')).toBeNull();
+    expect(icon('pause').getAttribute('class')).toBe('ng-icon');
+    const scope = createScope();
+    const b = button(ctx, scope, {
+      label: 'Pause',
+      icon: 'pause',
+      ariaLabel: 'Pause',
+      variant: 'icon',
+      onClick: vi.fn(),
+    });
+    expect(b.querySelector('svg.ng-icon')).not.toBeNull();
+    expect(b.textContent).toBe('');
+    expect(b.getAttribute('aria-label')).toBe('Pause');
+    scope.destroy();
   });
 });

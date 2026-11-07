@@ -29,6 +29,8 @@ export interface Play extends Component {
   /** Replace the state (autoplay fast-forward). Ends the round if the state is final. */
   setState(s: GameState): void;
   start(): void;
+  /** Test hook: hit the oldest bell every ~200 ms in real time (drives the real render loop). */
+  setBot(on: boolean): void;
 }
 
 export function createPlay(core: Core, o: PlayOptions): Play {
@@ -38,6 +40,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   let modal: Modal | null = null;
   let over = false;
   let lastSecond = -1;
+  let bot = false;
+  let botTicks = 0;
 
   const hud = createHud([
     { id: 'score', label: core.t('hud.score'), value: '0' },
@@ -46,7 +50,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     { id: 'combo', label: core.t('hud.combo'), value: '0' },
   ]);
   const pauseBtn = button(core, scope, {
-    label: '❚❚',
+    label: core.t('ui.pause'),
+    icon: 'pause',
     ariaLabel: core.t('ui.pause'),
     variant: 'icon',
     onClick: () => pause(),
@@ -91,7 +96,13 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   };
 
   const loop = createLoop({
-    update: (dt) => apply(tick(state, dt * 1000)),
+    update: (dt) => {
+      apply(tick(state, dt * 1000));
+      if (bot && !over && ++botTicks % 12 === 0) {
+        const id = oldestTarget(state);
+        if (id !== null) apply(hit(state, id));
+      }
+    },
     perf: core.perf,
     onHidden: () => pause(),
   });
@@ -143,6 +154,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     el,
     getState: () => state,
     setState: apply,
+    setBot: (on) => void (bot = on),
     start() {
       core.audio.playSfx('start');
       loop.start();

@@ -1,3 +1,4 @@
+import { icon, type IconName } from './icons';
 import type { Scope } from '../lifecycle';
 import type { Settings } from '../settings';
 import type { I18n, TFn } from '../i18n';
@@ -49,6 +50,8 @@ export interface ButtonOptions {
   /** sfx event played on click (default 'tap'; null for none) */
   sfx?: string | null;
   id?: string;
+  /** show this icon instead of text (set ariaLabel too) */
+  icon?: IconName;
 }
 
 /** Button with >= 44 px tap target (CSS), sfx, and a scope-tracked listener. */
@@ -58,8 +61,9 @@ export function button(ctx: UiContext, scope: Scope, o: ButtonOptions): HTMLButt
     class: `ng-btn ng-btn--${o.variant ?? 'primary'}${o.block ? ' ng-btn--lg ng-btn--block' : ''}`,
     'aria-label': o.ariaLabel,
     id: o.id,
-    text: o.label,
+    text: o.icon ? null : o.label,
   });
+  if (o.icon) b.append(icon(o.icon));
   scope.on(b, 'click', (ev: MouseEvent) => {
     if (o.sfx !== null) ctx.audio?.playSfx(o.sfx ?? 'tap');
     o.onClick(ev);
