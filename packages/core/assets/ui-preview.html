@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Naija Games UI skin (preview)</title>
+<link rel="stylesheet" href="../src/styles/tokens.css"><link rel="stylesheet" href="../src/styles/skin.css"></head>
+<body class="ng-app">
+<div class="ng-screen ng-menu ng-pat ng-pat--adire">
+  <img class="ng-menu__logo" src="logo/logo-lockup.svg" alt="Naija Games">
+  <p class="ng-menu__tag">Oya, make we play!</p>
+  <ul class="ng-menu__list">
+    <li><button class="ng-btn ng-btn--primary ng-btn--lg ng-btn--block">Play</button></li>
+    <li><button class="ng-btn ng-btn--secondary ng-btn--block">How to play</button></li>
+    <li><button class="ng-btn ng-btn--ghost ng-btn--block">Settings</button></li>
+  </ul>
+  <fieldset class="ng-seg" role="radiogroup" aria-label="Difficulty">
+    <label><input type="radio" name="d" checked><span class="ng-seg__opt"><span class="ng-seg__txt">Easy</span><span class="ng-pips" style="--n:1"></span></span></label>
+    <label><input type="radio" name="d"><span class="ng-seg__opt"><span class="ng-seg__txt">Medium</span><span class="ng-pips" style="--n:2"></span></span></label>
+    <label><input type="radio" name="d"><span class="ng-seg__opt"><span class="ng-seg__txt">Hard</span><span class="ng-pips" style="--n:3"></span></span></label>
+  </fieldset>
+  <div class="ng-menu__persona"><img class="ng-avatar" src="avatars/mama-nkechi.svg" alt=""><span><b>Mama Nkechi:</b> Come, I go show you.</span></div>
+  <div class="ng-menu__footer">
+    <button class="ng-btn ng-btn--ghost ng-btn--icon" aria-label="Sound" aria-pressed="true"><svg class="ng-icon"><use href="icons/icons.svg#ng-sound-on"/></svg></button>
+    <button class="ng-btn ng-btn--ghost ng-btn--icon" aria-label="Music"><svg class="ng-icon"><use href="icons/icons.svg#ng-music-on"/></svg></button>
+  </div>
+</div>
+<div class="ng-screen" style="gap:16px">
+  <div class="ng-hud"><div class="ng-hud__item"><span class="ng-hud__label">Score</span><span class="ng-hud__value">1,240</span></div><span class="ng-hud__spacer"></span><div class="ng-hud__item"><span class="ng-hud__label">Time</span><span class="ng-hud__value">0:42</span></div><button class="ng-btn ng-btn--ghost ng-btn--icon" aria-label="Pause"><svg class="ng-icon"><use href="icons/icons.svg#ng-pause"/></svg></button></div>
+  <div class="ng-progress" style="width:100%;--ng-p:.6" role="progressbar" aria-valuenow="60"><div class="ng-progress__fill"></div></div>
+  <div class="ng-toast ng-toast--good" style="animation:none"><svg class="ng-toast__icon"><use href="icons/icons.svg#ng-check"/></svg>Correct!</div>
+  <div class="ng-toast ng-toast--bad" style="animation:none"><svg class="ng-toast__icon"><use href="icons/icons.svg#ng-alert"/></svg>Wrong answer</div>
+  <button class="ng-btn ng-btn--accent" onclick="document.querySelector('.ng-modal').classList.add('is-open')">Open pause modal</button><div class="ng-card" style="width:100%"><h2 class="ng-h ng-h--sm">How to play</h2><ol class="ng-howto__steps" style="margin-top:8px"><li class="ng-howto__step">Match the shape or the number.</li><li class="ng-howto__step">Play a Whot 20 to call a new shape.</li></ol></div>
+</div>
+<div class="ng-screen ng-results"><div class="ng-confetti"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="ng-results__banner"><h1 class="ng-results__title">You win!</h1><p class="ng-results__sub">Ẹ kú iṣẹ́!</p>
+  <div class="ng-results__stars"><svg class="ng-star is-on" viewBox="0 0 24 24"><use href="icons/icons.svg#ng-star"/></svg><svg class="ng-star is-on" viewBox="0 0 24 24"><use href="icons/icons.svg#ng-star"/></svg><svg class="ng-star" viewBox="0 0 24 24"><use href="icons/icons.svg#ng-star"/></svg></div></div>
+  <ul class="ng-results__stats"><li class="ng-stat"><span class="ng-stat__value">1,240</span><span class="ng-stat__label">Score</span></li><li class="ng-stat"><span class="ng-stat__value">5</span><span class="ng-stat__label">Streak</span></li><li class="ng-stat"><span class="ng-stat__value">+30</span><span class="ng-stat__label">Coins</span></li></ul>
+  <div class="ng-results__actions"><button class="ng-btn ng-btn--accent ng-btn--lg">Play again</button><button class="ng-btn ng-btn--ghost">Home</button></div></div>
+<div class="ng-modal"><div class="ng-modal__panel" role="dialog" aria-modal="true" aria-labelledby="t" tabindex="-1"><button class="ng-btn ng-btn--icon ng-modal__close" aria-label="Close"><svg class="ng-icon"><use href="icons/icons.svg#ng-close"/></svg></button><h2 class="ng-modal__title" id="t">Paused</h2><p class="ng-modal__body">Take small break. Your game dey safe.</p><div class="ng-modal__actions"><button class="ng-btn ng-btn--primary">Resume</button><button class="ng-btn ng-btn--ghost">Quit</button></div></div></div>
+<div class="ng-loader" id="ld" hidden style="display:none"></div>
+<script>document.addEventListener('click',e=>{if(e.target.closest('.ng-modal__close,.ng-modal__actions .ng-btn'))document.querySelector('.ng-modal').classList.remove('is-open')});const q=new URLSearchParams(location.search).get('theme');if(q)document.documentElement.className='theme-'+q</script>
+</body></html>

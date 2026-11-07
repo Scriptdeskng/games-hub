@@ -1,0 +1,46 @@
+/* Naija Games design tokens. Prefix --ng-. Source of truth: docs/assets/STYLE_GUIDE.md
+   Default theme = Naija Green. Switch per game with <html class="theme-adire"> etc.
+   Every theme is a deep background + light cards; colour-scheme is pinned so Android
+   auto-dark / forced-dark cannot invert it. */
+@font-face{font-family:"NG Display";src:url(../../assets/fonts/bungee-subset.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"NG UI";src:url(../../assets/fonts/nunito-subset.woff2) format("woff2");font-weight:400 800;font-style:normal;font-display:swap}
+
+:root{
+  color-scheme:only light;
+  /* type */
+  --ng-font-display:"NG Display","NG UI",Impact,"Arial Black",sans-serif;
+  --ng-font-ui:"NG UI",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  --ng-fs-xs:.75rem;--ng-fs-sm:.875rem;--ng-fs-md:1rem;--ng-fs-lg:1.125rem;--ng-fs-xl:1.375rem;
+  --ng-fs-2xl:clamp(1.5rem,5.5vw,1.875rem);--ng-fs-3xl:clamp(1.75rem,7vw,2.5rem);--ng-fs-display:clamp(2rem,10vw,3.5rem);
+  --ng-lh-tight:1.1;--ng-lh-body:1.45;
+  /* radii */
+  --ng-r-xs:6px;--ng-r-sm:10px;--ng-r-md:14px;--ng-r-lg:20px;--ng-r-xl:28px;--ng-r-pill:999px;
+  /* spacing (4px grid) */
+  --ng-s-1:4px;--ng-s-2:8px;--ng-s-3:12px;--ng-s-4:16px;--ng-s-5:24px;--ng-s-6:32px;--ng-s-7:48px;--ng-s-8:64px;
+  /* shadows */
+  --ng-sh-0:none;
+  --ng-sh-1:0 1px 2px rgba(0,0,0,.28);
+  --ng-sh-2:0 4px 10px rgba(0,0,0,.28);
+  --ng-sh-3:0 10px 24px rgba(0,0,0,.34);
+  --ng-sh-4:0 18px 44px rgba(0,0,0,.42);
+  --ng-sh-btn:0 4px 0 rgba(0,0,0,.3);
+  /* motion (transform/opacity only) */
+  --ng-t-fast:120ms;--ng-t-base:200ms;--ng-t-slow:360ms;--ng-t-celebrate:1100ms;
+  --ng-ease:cubic-bezier(.2,.8,.2,1);--ng-ease-spring:cubic-bezier(.34,1.56,.64,1);
+  /* layout */
+  --ng-tap:44px;--ng-maxw:520px;
+  --ng-z-hud:10;--ng-z-modal:50;--ng-z-toast:60;--ng-z-loader:90;
+  /* pattern overlay defaults (see .ng-pat) */
+  --ng-pat-op:.14;--ng-pat-size:96px;
+}
+@media (prefers-reduced-motion:reduce){:root{--ng-t-fast:1ms;--ng-t-base:1ms;--ng-t-slow:1ms;--ng-t-celebrate:1ms}}
+
+/* ---- Palettes (generated from assets/tools/palettes.json; contrast-checked, see STYLE_GUIDE.md) ---- */
+:root,.theme-naija-green{--ng-bg:#0b3d22;--ng-bg-2:#06281a;--ng-surface:#f3faf4;--ng-surface-2:#dcefe1;--ng-ink:#ffffff;--ng-ink-2:#bfe3cb;--ng-ink-s:#0a2a18;--ng-ink-s-2:#3b5a47;--ng-primary:#3dd680;--ng-on-primary:#04210f;--ng-accent:#ffc933;--ng-on-accent:#2a1a00;--ng-good:#0e7a3b;--ng-bad:#b3261e;--ng-focus:#ffd84d;--ng-stripe-1:#0e7a3b;--ng-stripe-2:#ffffff;--ng-stripe-3:#ffc933}
+.theme-adire{--ng-bg:#122055;--ng-bg-2:#0a1233;--ng-surface:#f4f1e8;--ng-surface-2:#dce2f2;--ng-ink:#f4f1e8;--ng-ink-2:#b9c6ee;--ng-ink-s:#0f1b4a;--ng-ink-s-2:#434f7d;--ng-primary:#8fb4ff;--ng-on-primary:#0b1640;--ng-accent:#f4f1e8;--ng-on-accent:#0f1b4a;--ng-good:#0e6b52;--ng-bad:#b3261e;--ng-focus:#ffd84d;--ng-stripe-1:#1d3a9e;--ng-stripe-2:#f4f1e8;--ng-stripe-3:#6f93e8}
+.theme-danfo{--ng-bg:#1d1d20;--ng-bg-2:#2c2c31;--ng-surface:#fff5cc;--ng-surface-2:#f2e3a0;--ng-ink:#ffffff;--ng-ink-2:#d2d2d8;--ng-ink-s:#1d1d20;--ng-ink-s-2:#55503a;--ng-primary:#ffc20e;--ng-on-primary:#1d1d20;--ng-accent:#d91f26;--ng-on-accent:#ffffff;--ng-good:#0e6b3a;--ng-bad:#b3161e;--ng-focus:#ffffff;--ng-stripe-1:#ffc20e;--ng-stripe-2:#1d1d20;--ng-stripe-3:#d91f26}
+.theme-aso-oke{--ng-bg:#4a1020;--ng-bg-2:#2c0813;--ng-surface:#fff3da;--ng-surface-2:#f5deb0;--ng-ink:#fff3da;--ng-ink-2:#e8c9a4;--ng-ink-s:#35091a;--ng-ink-s-2:#6b4448;--ng-primary:#e8ae32;--ng-on-primary:#2c0813;--ng-accent:#e4702a;--ng-on-accent:#1f0a00;--ng-good:#0e6b3a;--ng-bad:#b3261e;--ng-focus:#ffe082;--ng-stripe-1:#e8ae32;--ng-stripe-2:#8c1d3d;--ng-stripe-3:#e4702a}
+.theme-market{--ng-bg:#6b1a0e;--ng-bg-2:#430e07;--ng-surface:#fff1dc;--ng-surface-2:#f7d9ae;--ng-ink:#fff1dc;--ng-ink-2:#f0c9a8;--ng-ink-s:#3a0e06;--ng-ink-s-2:#6e4636;--ng-primary:#f58a24;--ng-on-primary:#2a1000;--ng-accent:#6dba3f;--ng-on-accent:#0f2a06;--ng-good:#2c6e12;--ng-bad:#b3261e;--ng-focus:#f7d348;--ng-stripe-1:#d63a1f;--ng-stripe-2:#f58a24;--ng-stripe-3:#f7d348}
+.theme-northern{--ng-bg:#552716;--ng-bg-2:#341409;--ng-surface:#f7e8d0;--ng-surface-2:#e9cfa5;--ng-ink:#f7e8d0;--ng-ink-2:#e2c3a0;--ng-ink-s:#2e1509;--ng-ink-s-2:#684b38;--ng-primary:#e0a030;--ng-on-primary:#2b1608;--ng-accent:#2d4f94;--ng-on-accent:#ffffff;--ng-good:#1f6b2e;--ng-bad:#a82018;--ng-focus:#ffd87a;--ng-stripe-1:#b4532a;--ng-stripe-2:#e0a030;--ng-stripe-3:#2d4f94}
+.theme-creek{--ng-bg:#08454e;--ng-bg-2:#042b31;--ng-surface:#eefaf6;--ng-surface-2:#cdebe3;--ng-ink:#ffffff;--ng-ink-2:#b5e3da;--ng-ink-s:#053137;--ng-ink-s-2:#3a6168;--ng-primary:#ff7a63;--ng-on-primary:#2a0a05;--ng-accent:#46b982;--ng-on-accent:#04210f;--ng-good:#0e6f47;--ng-bad:#b3261e;--ng-focus:#ffe082;--ng-stripe-1:#ff7a63;--ng-stripe-2:#46b982;--ng-stripe-3:#f4fffb}
+

@@ -1,0 +1,165 @@
+/* Naija Games shared UI skin (.ng-*). Needs tokens.css. Documented in docs/assets/STYLE_GUIDE.md.
+   Animations use transform/opacity only. Mobile-first: 360x640 up to desktop. */
+*,*::before,*::after{box-sizing:border-box}
+.ng-app{min-height:100vh;min-height:100dvh;margin:0;color:var(--ng-ink);font:500 var(--ng-fs-md)/var(--ng-lh-body) var(--ng-font-ui);background:var(--ng-bg);background:linear-gradient(170deg,var(--ng-bg),var(--ng-bg-2));-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%;overflow-x:hidden}
+.ng-screen{position:relative;display:flex;flex-direction:column;align-items:center;width:100%;max-width:var(--ng-maxw);min-height:100vh;min-height:100dvh;margin:0 auto;padding:max(var(--ng-s-4),env(safe-area-inset-top)) max(var(--ng-s-4),env(safe-area-inset-right)) max(var(--ng-s-4),env(safe-area-inset-bottom)) max(var(--ng-s-4),env(safe-area-inset-left))}
+.ng-h{margin:0;font:400 var(--ng-fs-3xl)/var(--ng-lh-tight) var(--ng-font-display);letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.ng-h--display{font-size:var(--ng-fs-display)}
+.ng-h--sm{font-size:var(--ng-fs-xl)}
+.ng-muted{color:var(--ng-ink-2)}
+.ng-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ng-card{background:var(--ng-surface);color:var(--ng-ink-s);border-radius:var(--ng-r-lg);padding:var(--ng-s-4);box-shadow:var(--ng-sh-2)}
+.ng-card .ng-muted{color:var(--ng-ink-s-2)}
+.ng-chip{display:inline-flex;align-items:center;gap:var(--ng-s-1);min-height:28px;padding:0 var(--ng-s-3);border-radius:var(--ng-r-pill);background:var(--ng-accent);color:var(--ng-on-accent);font-weight:800;font-size:var(--ng-fs-sm)}
+
+/* ---------- Pattern overlay: single-colour SVG masks, themed by --ng-pat-color ---------- */
+.ng-pat{position:relative;isolation:isolate}
+.ng-pat::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;background:var(--ng-pat-color,var(--ng-ink));opacity:var(--ng-pat-op);-webkit-mask:var(--ng-pat-url) 0 0/var(--ng-pat-size);mask:var(--ng-pat-url) 0 0/var(--ng-pat-size)}
+.ng-pat--adire{--ng-pat-url:url(../../assets/patterns/adire.svg)}
+.ng-pat--asooke{--ng-pat-url:url(../../assets/patterns/aso-oke.svg)}
+.ng-pat--akwete{--ng-pat-url:url(../../assets/patterns/akwete.svg)}
+.ng-pat--uli{--ng-pat-url:url(../../assets/patterns/uli.svg);--ng-pat-size:128px}
+.ng-pat--arewa{--ng-pat-url:url(../../assets/patterns/arewa.svg)}
+.ng-pat--ankara{--ng-pat-url:url(../../assets/patterns/ankara.svg);--ng-pat-size:120px}
+/* Aso-oke stripe band from theme stripe tokens (borders, card backs, progress). */
+.ng-stripe{height:10px;border-radius:var(--ng-r-pill);background:repeating-linear-gradient(90deg,var(--ng-stripe-1) 0 14px,var(--ng-stripe-2) 14px 18px,var(--ng-stripe-3) 18px 30px,var(--ng-stripe-2) 30px 34px)}
+
+/* ---------- Buttons ---------- */
+.ng-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--ng-s-2);min-width:var(--ng-tap);min-height:var(--ng-tap);padding:var(--ng-s-2) var(--ng-s-5);border:0;border-radius:var(--ng-r-md);font:800 var(--ng-fs-lg)/1.1 var(--ng-font-ui);text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;color:var(--ng-on-primary);background:var(--ng-primary);box-shadow:var(--ng-sh-btn);transition:transform var(--ng-t-fast) var(--ng-ease),box-shadow var(--ng-t-fast) var(--ng-ease)}
+.ng-btn:active:not([disabled]){transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.3)}
+.ng-btn[disabled],.ng-btn[aria-disabled=true]{opacity:.55;cursor:not-allowed;box-shadow:none}
+.ng-btn:focus-visible,.ng-seg input:focus-visible+.ng-seg__opt,.ng-modal__panel:focus-visible{outline:3px solid var(--ng-focus);outline-offset:2px;box-shadow:0 0 0 2px var(--ng-bg)}
+.ng-btn--primary{}
+.ng-btn--secondary{background:var(--ng-surface);color:var(--ng-ink-s)}
+.ng-btn--accent{background:var(--ng-accent);color:var(--ng-on-accent)}
+.ng-btn--ghost{background:transparent;color:var(--ng-ink);box-shadow:inset 0 0 0 2px var(--ng-ink-2)}
+.ng-btn--ghost:active:not([disabled]){box-shadow:inset 0 0 0 2px var(--ng-ink-2);background:rgba(255,255,255,.12)}
+.ng-btn--lg{min-height:56px;padding:var(--ng-s-3) var(--ng-s-6);font-size:var(--ng-fs-xl);border-radius:var(--ng-r-lg)}
+.ng-btn--block{display:flex;width:100%}
+.ng-btn--icon{width:var(--ng-tap);padding:0;border-radius:var(--ng-r-pill)}
+.ng-icon{width:1.5em;height:1.5em;flex:none;fill:currentColor;stroke:none}
+.ng-btn[aria-pressed=false] .ng-icon--on,.ng-btn[aria-pressed=true] .ng-icon--off{display:none}
+@media (forced-colors:active){.ng-btn{border:2px solid ButtonText}}
+
+/* ---------- Modal (also pause / how-to) ---------- */
+.ng-modal{position:fixed;inset:0;z-index:var(--ng-z-modal);display:flex;align-items:center;justify-content:center;padding:var(--ng-s-4);background:rgba(0,0,0,.6);visibility:hidden;opacity:0;transition:opacity var(--ng-t-base) var(--ng-ease),visibility 0s linear var(--ng-t-base)}
+.ng-modal.is-open{visibility:visible;opacity:1;transition-delay:0s}
+.ng-modal__panel{position:relative;width:100%;max-width:400px;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;padding:var(--ng-s-5);border-radius:var(--ng-r-xl);background:var(--ng-surface);color:var(--ng-ink-s);box-shadow:var(--ng-sh-4);transform:translateY(24px) scale(.96);transition:transform var(--ng-t-slow) var(--ng-ease-spring);overscroll-behavior:contain}
+.ng-modal.is-open .ng-modal__panel{transform:none}
+.ng-modal__panel::before{content:"";display:block;height:10px;margin:calc(var(--ng-s-5)*-1) calc(var(--ng-s-5)*-1) var(--ng-s-4);border-radius:var(--ng-r-xl) var(--ng-r-xl) 0 0;background:repeating-linear-gradient(90deg,var(--ng-stripe-1) 0 14px,var(--ng-stripe-2) 14px 18px,var(--ng-stripe-3) 18px 30px,var(--ng-stripe-2) 30px 34px)}
+.ng-modal__title{margin:0 0 var(--ng-s-3);font:400 var(--ng-fs-2xl)/var(--ng-lh-tight) var(--ng-font-display);text-transform:uppercase;color:var(--ng-ink-s)}
+.ng-modal__body{margin:0 0 var(--ng-s-4);color:var(--ng-ink-s)}
+.ng-modal__actions{display:flex;flex-direction:column;gap:var(--ng-s-3)}
+.ng-modal__actions .ng-btn--ghost{color:var(--ng-ink-s);box-shadow:inset 0 0 0 2px var(--ng-ink-s-2)}
+.ng-modal__close{position:absolute;top:var(--ng-s-3);right:var(--ng-s-3);color:var(--ng-ink-s);background:var(--ng-surface-2);box-shadow:none}
+.ng-modal--pause .ng-modal__title{text-align:center}
+
+/* ---------- Toast ---------- */
+.ng-toast-host{position:fixed;left:0;right:0;top:max(var(--ng-s-3),env(safe-area-inset-top));z-index:var(--ng-z-toast);display:flex;flex-direction:column;align-items:center;gap:var(--ng-s-2);padding:0 var(--ng-s-3);pointer-events:none}
+.ng-toast{display:flex;align-items:center;gap:var(--ng-s-2);max-width:min(92vw,420px);min-height:var(--ng-tap);padding:var(--ng-s-2) var(--ng-s-4);border-radius:var(--ng-r-pill);background:var(--ng-surface);color:var(--ng-ink-s);font-weight:800;box-shadow:var(--ng-sh-3);border-left:6px solid var(--ng-stripe-1);animation:ng-toast-in var(--ng-t-slow) var(--ng-ease-spring) both}
+.ng-toast.is-out{animation:ng-toast-out var(--ng-t-base) var(--ng-ease) both}
+.ng-toast--good{border-left-color:var(--ng-good)}
+.ng-toast--bad{border-left-color:var(--ng-bad)}
+.ng-toast__icon{width:1.4em;height:1.4em;fill:currentColor;flex:none}
+.ng-toast--good .ng-toast__icon{color:var(--ng-good)}
+.ng-toast--bad .ng-toast__icon{color:var(--ng-bad)}
+@keyframes ng-toast-in{from{opacity:0;transform:translateY(-24px) scale(.94)}}
+@keyframes ng-toast-out{to{opacity:0;transform:translateY(-12px)}}
+
+/* ---------- HUD bar ---------- */
+.ng-hud{position:relative;z-index:var(--ng-z-hud);display:flex;align-items:center;gap:var(--ng-s-2);width:100%;min-height:52px;padding:var(--ng-s-2) var(--ng-s-3);border-radius:var(--ng-r-lg);background:rgba(0,0,0,.32);color:var(--ng-ink)}
+.ng-hud::after{content:"";position:absolute;left:var(--ng-s-4);right:var(--ng-s-4);bottom:0;height:4px;border-radius:var(--ng-r-pill) var(--ng-r-pill) 0 0;background:repeating-linear-gradient(90deg,var(--ng-stripe-1) 0 14px,var(--ng-stripe-2) 14px 18px,var(--ng-stripe-3) 18px 30px,var(--ng-stripe-2) 30px 34px)}
+.ng-hud__item{display:flex;flex-direction:column;min-width:0;line-height:1.1}
+.ng-hud__label{font-size:var(--ng-fs-xs);font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ng-ink-2)}
+.ng-hud__value{font:400 var(--ng-fs-xl)/1.1 var(--ng-font-display);font-variant-numeric:tabular-nums}
+.ng-hud__spacer{flex:1}
+.ng-hud__pop{animation:ng-pop var(--ng-t-slow) var(--ng-ease-spring)}
+@keyframes ng-pop{50%{transform:scale(1.25)}}
+
+/* ---------- Menu screen ---------- */
+.ng-menu{justify-content:center;gap:var(--ng-s-5);text-align:center}
+.ng-menu__logo{width:min(78vw,300px);height:auto;filter:drop-shadow(0 6px 0 rgba(0,0,0,.25))}
+.ng-menu__tag{margin:0;color:var(--ng-ink-2);font-size:var(--ng-fs-lg)}
+.ng-menu__list{display:flex;flex-direction:column;gap:var(--ng-s-3);width:100%;max-width:320px;margin:0;padding:0;list-style:none}
+.ng-menu__footer{display:flex;gap:var(--ng-s-3);justify-content:center;margin-top:auto;padding-top:var(--ng-s-4)}
+.ng-menu__persona{display:flex;align-items:center;gap:var(--ng-s-3);max-width:320px;padding:var(--ng-s-2) var(--ng-s-4) var(--ng-s-2) var(--ng-s-2);border-radius:var(--ng-r-pill);background:rgba(0,0,0,.28);text-align:left;font-size:var(--ng-fs-sm)}
+.ng-avatar{width:48px;height:48px;flex:none;border-radius:50%;background:var(--ng-surface);box-shadow:0 0 0 3px var(--ng-accent)}
+
+/* ---------- How to play ---------- */
+.ng-howto{align-items:stretch;gap:var(--ng-s-4)}
+.ng-howto__steps{display:flex;flex-direction:column;gap:var(--ng-s-3);margin:0;padding:0;list-style:none;counter-reset:ng-step}
+.ng-howto__step{display:flex;gap:var(--ng-s-3);align-items:flex-start;padding:var(--ng-s-3) var(--ng-s-4);border-radius:var(--ng-r-md);background:var(--ng-surface);color:var(--ng-ink-s);counter-increment:ng-step}
+.ng-howto__step::before{content:counter(ng-step);flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--ng-accent);color:var(--ng-on-accent);font:400 var(--ng-fs-md)/1 var(--ng-font-display)}
+.ng-howto__art{display:block;width:100%;max-height:160px;margin:0 auto}
+
+/* ---------- Difficulty picker: segmented, label + pips + tick (never colour-only) ---------- */
+.ng-seg{min-width:0;display:flex;gap:var(--ng-s-1);width:100%;padding:var(--ng-s-1);margin:0;border:0;border-radius:var(--ng-r-lg);background:rgba(0,0,0,.32)}
+.ng-seg>label{flex:1;display:flex}
+.ng-seg input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.ng-seg__opt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;padding:var(--ng-s-2);border-radius:var(--ng-r-md);color:var(--ng-ink);font-weight:800;font-size:var(--ng-fs-md);cursor:pointer;touch-action:manipulation;transition:transform var(--ng-t-fast) var(--ng-ease)}
+.ng-seg__opt:active{transform:scale(.96)}
+.ng-seg input:checked+.ng-seg__opt{background:var(--ng-primary);color:var(--ng-on-primary);box-shadow:var(--ng-sh-btn)}
+.ng-seg input:checked+.ng-seg__opt .ng-seg__txt::before{content:"";display:inline-block;width:.32em;height:.6em;margin:0 .45em .12em 0;border:solid currentColor;border-width:0 .16em .16em 0;transform:rotate(45deg)}
+.ng-pips{display:inline-block;width:calc(var(--n,1)*12px);height:8px;background:radial-gradient(circle,currentColor 3.5px,transparent 4px) 0 0/12px 8px repeat-x}
+
+/* ---------- Progress (aso-oke stripe fill; set --ng-p to 0..1) ---------- */
+.ng-progress{position:relative;height:16px;overflow:hidden;border-radius:var(--ng-r-pill);background:rgba(0,0,0,.35);box-shadow:inset 0 0 0 2px rgba(255,255,255,.22)}
+.ng-progress--thin{height:8px}
+.ng-progress__fill{position:absolute;inset:0;border-radius:inherit;background:repeating-linear-gradient(90deg,var(--ng-stripe-1) 0 14px,var(--ng-stripe-2) 14px 18px,var(--ng-stripe-3) 18px 30px,var(--ng-stripe-2) 30px 34px);transform:translateX(calc((var(--ng-p,0) - 1)*100%));transition:transform var(--ng-t-slow) var(--ng-ease);will-change:transform}
+
+/* ---------- Loader ---------- */
+.ng-loader{position:fixed;inset:0;z-index:var(--ng-z-loader);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--ng-s-5);padding:var(--ng-s-5);background:var(--ng-bg);background:linear-gradient(170deg,var(--ng-bg),var(--ng-bg-2));color:var(--ng-ink);transition:opacity var(--ng-t-slow) var(--ng-ease)}
+.ng-loader.is-done{opacity:0;pointer-events:none}
+.ng-loader__logo{width:min(64vw,240px);height:auto}
+.ng-loader .ng-progress{width:min(70vw,280px)}
+.ng-loader__shuttle{display:flex;gap:6px;height:28px;align-items:flex-end}
+.ng-loader__shuttle i{width:8px;height:28px;border-radius:3px;background:var(--ng-stripe-1);transform-origin:bottom;animation:ng-weave 900ms var(--ng-ease) infinite}
+.ng-loader__shuttle i:nth-child(2){background:var(--ng-stripe-2);animation-delay:120ms}
+.ng-loader__shuttle i:nth-child(3){background:var(--ng-stripe-3);animation-delay:240ms}
+.ng-loader__shuttle i:nth-child(4){background:var(--ng-stripe-2);animation-delay:360ms}
+@keyframes ng-weave{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+
+/* ---------- Results (aso-oke gold celebration) ---------- */
+.ng-results{--ng-stripe-1:#e8ae32;--ng-stripe-2:#8c1d3d;--ng-stripe-3:#e4702a;justify-content:center;gap:var(--ng-s-4);text-align:center;overflow:hidden}
+.ng-results__banner{position:relative;width:100%;padding:var(--ng-s-6) var(--ng-s-4) var(--ng-s-5);border-radius:var(--ng-r-xl);background:#4a1020;color:#fff3da;box-shadow:var(--ng-sh-3);overflow:hidden}
+.ng-results__banner::before,.ng-results__banner::after{content:"";position:absolute;left:0;right:0;height:12px;background:repeating-linear-gradient(90deg,#e8ae32 0 14px,#8c1d3d 14px 18px,#e4702a 18px 30px,#8c1d3d 30px 34px)}
+.ng-results__banner::before{top:0}
+.ng-results__banner::after{bottom:0}
+.ng-results__title{margin:0;font:400 var(--ng-fs-3xl)/var(--ng-lh-tight) var(--ng-font-display);text-transform:uppercase;color:#ffd466;animation:ng-slam var(--ng-t-slow) var(--ng-ease-spring) both}
+.ng-results--lose .ng-results__title{color:#fff3da}
+.ng-results__sub{margin:var(--ng-s-2) 0 0;font-size:var(--ng-fs-lg)}
+.ng-results__stars{display:flex;justify-content:center;gap:var(--ng-s-2);margin:var(--ng-s-4) 0 0}
+.ng-star{width:48px;height:48px;fill:rgba(255,243,218,.28);animation:ng-pop-in var(--ng-t-slow) var(--ng-ease-spring) both}
+.ng-star.is-on{fill:#ffc933;stroke:#fff3da;stroke-width:1.5}
+.ng-star:nth-child(2){animation-delay:.15s}.ng-star:nth-child(3){animation-delay:.3s}
+.ng-results__stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:var(--ng-s-3);width:100%;margin:0;padding:0;list-style:none}
+.ng-stat{padding:var(--ng-s-3);border-radius:var(--ng-r-md);background:var(--ng-surface);color:var(--ng-ink-s)}
+.ng-stat__value{display:block;font:400 var(--ng-fs-xl)/1.1 var(--ng-font-display)}
+.ng-stat__label{font-size:var(--ng-fs-xs);font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--ng-ink-s-2)}
+.ng-results__actions{display:flex;flex-direction:column;gap:var(--ng-s-3);width:100%;max-width:340px}
+@keyframes ng-slam{0%{opacity:0;transform:scale(1.8)}100%{opacity:1;transform:none}}
+@keyframes ng-pop-in{0%{opacity:0;transform:scale(.2) rotate(-30deg)}100%{opacity:1;transform:none}}
+/* aso-oke stripes sweep across the screen on win */
+.ng-sweep{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.ng-sweep i{position:absolute;left:0;width:100%;height:14%;opacity:.9;transform:translateX(-110%);animation:ng-sweep 900ms var(--ng-ease) forwards}
+.ng-sweep i:nth-child(1){top:6%;background:var(--ng-stripe-1)}
+.ng-sweep i:nth-child(2){top:20%;background:var(--ng-stripe-2);animation-delay:90ms}
+.ng-sweep i:nth-child(3){top:34%;background:var(--ng-stripe-3);animation-delay:180ms}
+@keyframes ng-sweep{0%{transform:translateX(-110%)}60%{opacity:.9}100%{transform:translateX(110%);opacity:0}}
+/* gele-ribbon confetti: 12 ribbon strips; add <i> children, each falls once */
+.ng-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.ng-confetti i{position:absolute;top:-8%;left:calc(var(--k)*8.3%);width:10px;height:22px;border-radius:3px;background:var(--c,#e8ae32);opacity:0;animation:ng-fall var(--ng-t-celebrate) calc(var(--k)*70ms) ease-in both}
+.ng-confetti i:nth-child(3n+1){--c:#e8ae32}
+.ng-confetti i:nth-child(3n+2){--c:#e4702a;width:14px;height:14px;border-radius:50%}
+.ng-confetti i:nth-child(3n){--c:#fff3da;height:30px;width:6px}
+.ng-confetti i:nth-child(1){--k:0}.ng-confetti i:nth-child(2){--k:1}.ng-confetti i:nth-child(3){--k:2}.ng-confetti i:nth-child(4){--k:3}.ng-confetti i:nth-child(5){--k:4}.ng-confetti i:nth-child(6){--k:5}
+.ng-confetti i:nth-child(7){--k:6}.ng-confetti i:nth-child(8){--k:7}.ng-confetti i:nth-child(9){--k:8}.ng-confetti i:nth-child(10){--k:9}.ng-confetti i:nth-child(11){--k:10}.ng-confetti i:nth-child(12){--k:11}
+@keyframes ng-fall{0%{opacity:1;transform:translate3d(0,0,0) rotate(0)}100%{opacity:0;transform:translate3d(24px,110vh,0) rotate(540deg)}}
+
+/* ---------- CPU persona banter bubble ---------- */
+.ng-banter{display:flex;align-items:center;gap:var(--ng-s-2);max-width:min(88vw,340px);padding:var(--ng-s-2) var(--ng-s-4) var(--ng-s-2) var(--ng-s-2);border-radius:var(--ng-r-pill);background:var(--ng-surface);color:var(--ng-ink-s);font-weight:700;font-size:var(--ng-fs-sm);box-shadow:var(--ng-sh-3);animation:ng-toast-in var(--ng-t-slow) var(--ng-ease-spring) both}
+.ng-banter.is-out{animation:ng-toast-out var(--ng-t-base) var(--ng-ease) both}
+
+@media (min-width:600px){.ng-btn--lg{min-width:240px}.ng-results__actions{flex-direction:row;max-width:none}.ng-modal__actions{flex-direction:row-reverse}.ng-modal__actions .ng-btn{flex:1}}
+@media (max-height:480px) and (orientation:landscape){.ng-screen{padding-top:var(--ng-s-2);padding-bottom:var(--ng-s-2)}.ng-menu{gap:var(--ng-s-3)}.ng-menu__logo{width:160px}.ng-star{width:36px;height:36px}}
+@media (prefers-reduced-motion:reduce){.ng-sweep,.ng-confetti{display:none}.ng-loader__shuttle i{animation:none}}

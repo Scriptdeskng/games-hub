@@ -1,0 +1,10 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Naija Games pattern library (preview)</title>
+<link rel="stylesheet" href="../../src/styles/tokens.css"><link rel="stylesheet" href="../../src/styles/skin.css">
+<style>body{margin:0;padding:16px}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin:12px 0 28px}.t{height:150px;border-radius:14px;display:flex;align-items:flex-end;padding:8px;font-weight:800}.t span{background:var(--ng-surface);color:var(--ng-ink-s);padding:2px 8px;border-radius:8px;font-size:13px}.t.ng-pat{--ng-pat-op:.9}</style></head>
+<body class="ng-app"><h1 class="ng-h">Pattern library</h1>
+<p>Single-colour SVG masks, tinted by <code>--ng-pat-color</code> and faded by <code>--ng-pat-op</code>. Each theme shown below.</p>
+<script>
+const pats=['adire','asooke','akwete','uli','arewa','ankara'],themes=[['naija-green','#ffffff'],['adire','#f4f1e8'],['danfo','#ffc20e'],['aso-oke','#e8ae32'],['market','#f58a24'],['northern','#e0a030'],['creek','#ff7a63']];
+for(const [th,c] of themes){document.write(`<h2 class="ng-h ng-h--sm">${th}</h2><div class="g theme-${th}">`+pats.map(p=>`<div class="t ng-pat ng-pat--${p}" style="background:var(--ng-bg);--ng-pat-color:${c}"><span>${p}</span></div>`).join('')+'</div>')}
+</script></body></html>
