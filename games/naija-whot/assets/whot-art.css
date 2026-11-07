@@ -1,0 +1,325 @@
+/* Naija Whot art helpers (asset-designer). Import once from the game (import '../assets/whot-art.css').
+   Cards: inline cards/deck.svg ONCE (import deck from './assets/cards/deck.svg?raw' and insert it into a hidden
+   wrapper), then every card is  <svg class="whot-card__art" viewBox="0 0 100 140"><use href="#c-circle-14"/></svg>.
+   Ids: c-<circle|triangle|cross|square|star>-<n>, c-whot-20, c-back, s-<shape> (24x24 symbols).
+   Transform and opacity only, so it stays at 50 fps on a throttled phone. */
+.whot-card {
+  --whot-w: 64px; /* 5 to 7 cards fit a 360 px fan at 64 px; the discard top card uses --whot-w: 96px */
+  position: relative;
+  width: var(--whot-w);
+  aspect-ratio: 5 / 7;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: calc(var(--whot-w) * 0.1);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.35));
+  transition: transform var(--ng-t-fast, 120ms) var(--ng-ease, ease-out);
+}
+.whot-card__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* playable: raised AND outlined (not colour alone) */
+.whot-card.is-playable {
+  transform: translateY(-14px);
+  outline: 3px solid var(--ng-focus, #ffe082);
+  outline-offset: 1px;
+}
+.whot-card.is-playable::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--ng-focus, #ffe082);
+}
+.whot-card.is-blocked {
+  opacity: 0.5;
+}
+.whot-card.is-selected {
+  transform: translateY(-22px) scale(1.06);
+  z-index: 3;
+}
+/* fan: children overlap by --whot-step, so only the corner index shows. 7 cards x 46 px + 64 px = 340 px. */
+.whot-fan {
+  --whot-step: 46px;
+  display: flex;
+  justify-content: center;
+  padding-top: 18px;
+}
+.whot-fan > .whot-card + .whot-card {
+  margin-left: calc(var(--whot-step) - var(--whot-w));
+}
+.whot-fan > .whot-card:focus-visible {
+  z-index: 4;
+}
+/* CPU hand: card backs, a small overlap and a count badge */
+.whot-cpu-hand {
+  display: flex;
+  justify-content: center;
+  --whot-w: 36px;
+}
+.whot-cpu-hand > .whot-card + .whot-card {
+  margin-left: -26px;
+}
+.whot-count {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  min-width: 22px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--ng-accent, #e4702a);
+  color: var(--ng-on-accent, #1f0a00);
+  border: 2px solid #1d1d20;
+  font: 800 12px/1.2 var(--ng-font-ui, sans-serif);
+  text-align: center;
+}
+/* table */
+.whot-table {
+  position: absolute;
+  inset: 0;
+  background: #5a1230 url('./table/table-portrait.svg') center / cover no-repeat;
+}
+@media (orientation: landscape) {
+  .whot-table {
+    background-image: url('./table/table-landscape.svg');
+  }
+}
+.whot-table.is-thump {
+  animation: whot-thump 220ms var(--ng-ease, ease-out);
+}
+/* piles */
+.whot-pile {
+  position: relative;
+  width: 96px;
+  aspect-ratio: 120 / 170;
+}
+.whot-pile--draw {
+  background: url('./cards/pile-draw.svg') center / contain no-repeat;
+}
+.whot-pile--discard {
+  background: url('./cards/pile-discard.svg') center / contain no-repeat;
+}
+.whot-pile--draw.is-take {
+  outline: 3px solid var(--ng-focus, #ffe082);
+  border-radius: 12px;
+  animation: whot-nudge 900ms ease-in-out infinite;
+}
+.whot-pile > .whot-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+}
+/* called-shape chip: <img class="whot-called" src="ui/call-<shape>.svg"> (ring + shape, pointer below) */
+.whot-called {
+  width: 56px;
+  height: auto;
+  animation: whot-pop 360ms var(--ng-ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+/* last-card call: button plate has no text; put t('whot.lastCard') over it in --ng-font-display */
+.whot-lastcard {
+  position: relative;
+  width: 220px;
+  aspect-ratio: 260 / 76;
+  border: 0;
+  padding: 0;
+  background: url('./ui/last-card-btn.svg') center / contain no-repeat;
+  color: var(--ng-bright, #ffc933);
+  font: 400 18px/1 var(--ng-font-display, sans-serif);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  touch-action: manipulation;
+}
+.whot-lastcard:active {
+  transform: translateY(3px);
+}
+.whot-lastcard.is-due {
+  animation: whot-nudge 700ms ease-in-out infinite;
+}
+.whot-lastbanner {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: min(92%, 340px);
+  aspect-ratio: 340 / 104;
+  display: grid;
+  place-items: center;
+  transform: translateX(-50%);
+  background: url('./ui/last-card-banner.svg') center / contain no-repeat;
+  color: #fff3da;
+  font: 400 22px/1 var(--ng-font-display, sans-serif);
+  text-transform: uppercase;
+  pointer-events: none;
+  animation: whot-banner 1400ms var(--ng-ease, ease-out) both;
+}
+/* fx: <img class="whot-fx whot-fx--slam" src="fx/slam.svg"> placed by the game; remove on animationend */
+.whot-fx {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -48px 0 0 -48px;
+  width: 96px;
+  height: auto;
+  pointer-events: none;
+}
+.whot-fx--slam {
+  animation: whot-slam 320ms ease-out both;
+}
+.whot-fx--market {
+  width: 160px;
+  margin: -80px 0 0 -80px;
+  animation: whot-burst 900ms var(--ng-ease, ease-out) both;
+}
+.whot-fx--penalty {
+  width: 110px;
+  margin: -55px 0 0 -55px;
+  animation: whot-penalty 700ms ease-out both;
+}
+.whot-fx--skip {
+  animation: whot-burst 700ms var(--ng-ease, ease-out) both;
+}
+.whot-fx--whot {
+  width: 140px;
+  margin: -70px 0 0 -70px;
+  animation: whot-burst 800ms var(--ng-ease, ease-out) both;
+}
+/* flick: a played card flies from its hand/seat to the discard. Set --fx/--fy (start offset from the
+   discard pile in px) and --rot on the card; the card ends at its resting place. */
+.whot-card.is-flick {
+  animation: whot-flick 260ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.whot-card.is-slam {
+  animation: whot-cardslam 280ms cubic-bezier(0.3, 0, 0.2, 1) both;
+}
+.whot-card.is-draw {
+  animation: whot-flick 300ms ease-out both;
+}
+@keyframes whot-flick {
+  from {
+    transform: translate(var(--fx, 0), var(--fy, 80px)) rotate(var(--rot, -14deg)) scale(0.9);
+    opacity: 0.8;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes whot-cardslam {
+  0% {
+    transform: translate(var(--fx, 0), var(--fy, 80px)) scale(1.5) rotate(var(--rot, 8deg));
+  }
+  70% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes whot-thump {
+  0%,
+  100% {
+    transform: none;
+  }
+  25% {
+    transform: translate(0, 4px);
+  }
+  55% {
+    transform: translate(0, -2px);
+  }
+}
+@keyframes whot-slam {
+  from {
+    transform: scale(0.4);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes whot-burst {
+  0% {
+    transform: scale(0.3) rotate(-8deg);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.25) rotate(4deg);
+    opacity: 0;
+  }
+}
+@keyframes whot-penalty {
+  0% {
+    transform: translateY(0) scale(0.6);
+    opacity: 0;
+  }
+  30% {
+    transform: translateY(0) scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(36px) scale(1);
+    opacity: 0;
+  }
+}
+@keyframes whot-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes whot-nudge {
+  0%,
+  100% {
+    transform: none;
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes whot-banner {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  15% {
+    transform: translateX(-50%) scale(1.06);
+    opacity: 1;
+  }
+  25%,
+  80% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .whot-table.is-thump,
+  .whot-card.is-flick,
+  .whot-card.is-slam,
+  .whot-card.is-draw,
+  .whot-fx,
+  .whot-called,
+  .whot-pile--draw.is-take,
+  .whot-lastcard.is-due {
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+  }
+}

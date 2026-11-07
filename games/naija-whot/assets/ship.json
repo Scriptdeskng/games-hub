@@ -1,0 +1,14 @@
+{
+  "include": [
+    "cards/deck.svg",
+    "cards/back.svg",
+    "cards/pile-draw.svg",
+    "cards/pile-discard.svg",
+    "table/table-portrait.svg",
+    "table/table-landscape.svg",
+    "ui/*.svg",
+    "fx/*.svg"
+  ],
+  "dynamic": ["ui/call-*.svg", "fx/*.svg"],
+  "keep": []
+}

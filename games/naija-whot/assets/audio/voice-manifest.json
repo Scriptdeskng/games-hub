@@ -1,0 +1,101 @@
+{
+  "_readme": "Naija Whot voice placeholders (silent mp3, ogg null until human delivery). Shared lines (last-card, semi-last-card, pick-two, pick-three, hold-on, suspension, market-don-open, whot, oya, your-turn, you-don-win) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "wh-shuffle",
+      "text": {
+        "pcm": "Make I shuffle well well.",
+        "en": "Let me shuffle properly."
+      },
+      "files": {
+        "mp3": "voice/vo-wh-shuffle.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-call",
+      "text": {
+        "pcm": "Na this shape I need!",
+        "en": "This is the shape I need!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-call.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-caught",
+      "text": {
+        "pcm": "You no talk o! Pick two!",
+        "en": "You did not call it! Pick two!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-caught.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-defend",
+      "text": {
+        "pcm": "Ehen! Pick two for you too!",
+        "en": "Ha! Pick two right back at you!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-defend.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-market-empty",
+      "text": {
+        "pcm": "Market don finish. Shuffle again!",
+        "en": "The market is empty. Reshuffling!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-market-empty.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-safe",
+      "text": {
+        "pcm": "Hold am! Card still plenty.",
+        "en": "Easy! Plenty of cards left."
+      },
+      "files": {
+        "mp3": "voice/vo-wh-safe.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-win",
+      "text": {
+        "pcm": "Hand don empty! You win!",
+        "en": "Hand empty! You win!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-win.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "wh-close",
+      "text": {
+        "pcm": "Ah ah! Na one card remain!",
+        "en": "Oh! Only one card left!"
+      },
+      "files": {
+        "mp3": "voice/vo-wh-close.mp3",
+        "ogg": null
+      },
+      "_review": true
+    }
+  ]
+}

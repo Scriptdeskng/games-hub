@@ -19,6 +19,11 @@
       "slug": "ayo-olopon",
       "title": "Ayo Olopon",
       "deploy": true
+    },
+    {
+      "slug": "naija-whot",
+      "title": "Naija Whot",
+      "deploy": true
     }
   ]
 }

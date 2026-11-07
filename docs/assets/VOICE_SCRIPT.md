@@ -87,3 +87,6 @@ Files in `games/naija-ludo/assets/audio/voice/vo-<id>.mp3` (silent placeholders)
 
 ## Game-specific lines: Ayo Olopon
 Files in `games/ayo-olopon/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Full table with directions: `docs/assets/ayo-olopon-brief.md` section 9. Lines: `ay-start` (Oya, make we play Ayo!), `ay-capture`, `ay-chain`, `ay-lost`, `ay-feed`, `ay-count`, `ay-skip`, `ay-close`. Lines marked `_review` need a native Pidgin check. Shared lines also used: `oya`, `your-turn`, `you-don-win`, `no-shaking`, `e-ku-ise`, `e-don-do`.
+
+## Game-specific lines: Naija Whot
+Files in `games/naija-whot/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Full table with directions: `docs/assets/naija-whot-brief.md` section 7. Lines: `wh-shuffle` (Make I shuffle well well.), `wh-call` (Na this shape I need!), `wh-caught` (You no talk o! Pick two!), `wh-defend` (Ehen! Pick two for you too!), `wh-market-empty` (Market don finish. Shuffle again!), `wh-safe`, `wh-close`, `wh-win`. All Pidgin lines `_review`. Shared lines also used: `last-card`, `semi-last-card`, `pick-two`, `pick-three`, `hold-on`, `suspension`, `market-don-open`, `whot`, `oya`, `your-turn`, `you-don-win`.
