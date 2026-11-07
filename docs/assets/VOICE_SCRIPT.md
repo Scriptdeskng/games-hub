@@ -45,6 +45,20 @@ Binding rules (CULTURAL_GUIDE section 3 and 5)
 ## Note on "Chai!"
 `Chai!` is an exclamation of **dismay or awe** ("Oh no!", "Wow!"). It is used only for losing a big card or point (`vo-chai`). Do **not** use it on win or celebration screens (QA flagged "You win! Chai!" as ambiguous): use `you-don-win`, `e-choke`, `sweet` or a native praise line instead. A native speaker should confirm the register.
 
+## Game-specific lines: Snakes & Ladders
+Files in `games/snakes-ladders/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Same rules as above. Lines marked `_review` need a native Pidgin check.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `sl-roll` | Oya, roll am! `_review` | Come on, roll it! | Bright, quick, smile in the voice. | F or M, 20s to 30s | prompt to roll after idle | `vo-sl-roll.mp3` |
+| `sl-ladder` | Enter, enter! Up we go! | Hop on, up we go! | Cheerful, rhythmic; never mocking conductors. | M, 20s to 40s, Lagos | ladder climbed | `vo-sl-ladder.mp3` |
+| `sl-pothole` | Ah ah! Pothole! | Oh no, a pothole! | Comic dismay, short, never mocking. | F, 30-50 | pothole snake | `vo-sl-pothole.mp3` |
+| `sl-goslow` | Go-slow don catch you! | You're stuck in traffic! | Playful, sympathetic. | M, 30s | go-slow, toll, NEPA snakes | `vo-sl-goslow.mp3` |
+| `sl-six` | Six! Roll again! | Six! Roll again! | Bright, punchy. | F, 30s | rolled a six | `vo-sl-six.mp3` |
+| `sl-reroll` | Roll am again! `_review` | Roll it again! | Upbeat, a wink. | M or F, 20s | re-roll used | `vo-sl-reroll.mp3` |
+| `sl-exact` | Exact number, abeg! `_review` | You need the exact number! | Friendly reminder. | F, 30s | overshoot near 100 | `vo-sl-exact.mp3` |
+| `sl-almost` | Almost there! E don near! `_review` | Almost there! | Encouraging, rising. | M, 30s | within 6 of finish | `vo-sl-almost.mp3` |
+Shared lines also used: `oya`, `your-turn`, `you-don-win`, `no-shaking`, `no-wahala`.
+
 ## Wiring (for the developer)
 - Manifest shape: `{ _readme, lines: [...] }`; per line `files.mp3`, `files.ogg` (null until delivered), `needsNativeReview`.
 - Load lazily after first user gesture; fall back to silence when a file is missing or 0-length.

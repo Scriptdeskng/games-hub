@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Snakes &amp; Ladders asset preview (dev only, do not ship)</title>
+<style>
+body{margin:0;background:#1D1D20;color:#fff;font:14px Nunito,system-ui,sans-serif;padding:8px}
+h2{font-size:14px;margin:14px 0 6px}
+.board{position:relative;width:min(100%,344px);aspect-ratio:1;border:4px solid #FFC20E;container-type:inline-size}
+.board img{position:absolute;inset:0;width:100%;height:100%}
+.n{position:absolute;width:10%;height:10%;font:800 max(10.5px,3.2cqw) Nunito,system-ui,sans-serif;color:#1D1D20;-webkit-text-stroke:2.5px #FFF5CC;paint-order:stroke fill;padding:1.2% 0 0 1.6%;box-sizing:border-box}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row img{height:48px;flex-shrink:0}
+.grey{filter:grayscale(1)}
+</style></head><body>
+<h2>Board 344 px (numbers are DOM text), colour</h2>
+<div class="board" id="b"><img src="../../games/snakes-ladders/assets/board/board-bg.svg" alt=""><img src="../../games/snakes-ladders/assets/board/overlay-default.svg" alt=""></div>
+<h2>Same, greyscale</h2>
+<div class="board grey" id="b2"><img src="../../games/snakes-ladders/assets/board/board-bg.svg" alt=""><img src="../../games/snakes-ladders/assets/board/overlay-default.svg" alt=""></div>
+<h2>Pawns (on cream, on red, at 17 px and 48 px)</h2>
+<div class="row" style="background:#FFF5CC;padding:6px">
+<img src="../../games/snakes-ladders/assets/pawns/pawn-you.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-tari.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-efe.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-aisha.svg">
+<img style="height:17px" src="../../games/snakes-ladders/assets/pawns/pawn-you.svg"><img style="height:17px" src="../../games/snakes-ladders/assets/pawns/pawn-tari.svg"><img style="height:17px" src="../../games/snakes-ladders/assets/pawns/pawn-efe.svg"><img style="height:17px" src="../../games/snakes-ladders/assets/pawns/pawn-aisha.svg"></div>
+<div class="row grey" style="background:#D91F26;padding:6px"><img src="../../games/snakes-ladders/assets/pawns/pawn-you.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-tari.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-efe.svg"><img src="../../games/snakes-ladders/assets/pawns/pawn-aisha.svg"></div>
+<h2>Dice, roll, pick two, hands, power-up</h2>
+<div class="row"><img src="../../games/snakes-ladders/assets/dice/die-1.svg"><img src="../../games/snakes-ladders/assets/dice/die-2.svg"><img src="../../games/snakes-ladders/assets/dice/die-3.svg"><img src="../../games/snakes-ladders/assets/dice/die-4.svg"><img src="../../games/snakes-ladders/assets/dice/die-5.svg"><img src="../../games/snakes-ladders/assets/dice/die-6.svg"><img src="../../games/snakes-ladders/assets/dice/die-roll.svg"></div>
+<div class="row"><img style="height:64px" src="../../games/snakes-ladders/assets/dice/dice-pick-two.svg"><img style="height:96px" src="../../games/snakes-ladders/assets/dice/hands-cup.svg"><img src="../../games/snakes-ladders/assets/icons/reroll.svg"><img src="../../games/snakes-ladders/assets/icons/reroll-used.svg"></div>
+<h2>Thumbnails</h2>
+<div class="row"><img style="height:160px" src="../../games/snakes-ladders/assets/thumb/thumb-512x512.svg"><img style="height:160px" src="../../games/snakes-ladders/assets/thumb/thumb-1024x500.svg"></div>
+<script>
+// boustrophedon numbering, 1 bottom-left
+for (const id of ['b','b2']) { const b=document.getElementById(id);
+for (let n=1;n<=100;n++){const r=Math.floor((n-1)/10),c0=(n-1)%10,c=r%2?9-c0:c0;const d=document.createElement('div');d.className='n';d.textContent=n;d.style.left=c*10+'%';d.style.top=(9-r)*10+'%';b.appendChild(d)}}
+</script></body></html>

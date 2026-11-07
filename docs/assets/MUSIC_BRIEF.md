@@ -46,3 +46,9 @@ Per-game "menu + play" pairs (CULTURAL_GUIDE section 4) will be listed in each g
 - Music starts only after the first user gesture; honours the Music toggle (persisted); fades in 400 ms and out 300 ms; loops with `AudioBufferSourceNode.loop` (not `<audio loop>`, which gaps).
 - Prefer `.ogg`, fall back to `.mp3`; treat a missing or near-silent file as "no music".
 - Pause with the tab (`visibilitychange`) and on the pause screen (duck to 25% rather than stop, if desired).
+
+## Game-specific slots: Snakes & Ladders
+| File (placeholder in `games/snakes-ladders/assets/audio/music/`) | Slot | Style | Length | Notes |
+|---|---|---|---|---|
+| `snakes-menu-fuji` | Menu loop | Fuji / juju-inspired, lighter density | 45 s loop | 112 BPM, talking drum sparse, agogo, shekere, round bass |
+| `snakes-play-fuji` | Play loop | Fuji / juju-inspired percussion with talking drum | 60 s loop | 120 BPM; no talking-drum fills on beats 1 and 3 of the last two bars; keep 300 to 450 Hz thin (danfo-horn SFX); avoid ritual bata. Fallback: `ng-play-juju`. Full spec in `snakes-ladders-brief.md` section 7 |

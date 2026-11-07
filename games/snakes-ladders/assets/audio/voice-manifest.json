@@ -1,0 +1,141 @@
+{
+  "_readme": "Snakes & Ladders voice placeholders (silent mp3, ogg null until human delivery). Shared lines (oya, your-turn, you-don-win, no-shaking, no-wahala) live in packages/core/assets/audio/voice-manifest.json. needsNativeReview marks doubtful Pidgin.",
+  "lines": [
+    {
+      "id": "sl-roll",
+      "text": {
+        "pcm": "Oya, roll am!",
+        "en": "Come on, roll it!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-roll.mp3",
+        "ogg": null
+      },
+      "emotion": "Bright, quick, a smile in the voice.",
+      "voice": "F or M, 20s to 30s",
+      "usedFor": "prompt to roll after idle",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "sl-ladder",
+      "text": {
+        "pcm": "Enter, enter! Up we go!",
+        "en": "Hop on, up we go!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-ladder.mp3",
+        "ogg": null
+      },
+      "emotion": "Cheerful, rhythmic, friendly; never mocking conductors.",
+      "voice": "M, 20s to 40s, Lagos",
+      "usedFor": "ladder climbed",
+      "region": "Lagos",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "sl-pothole",
+      "text": {
+        "pcm": "Ah ah! Pothole!",
+        "en": "Oh no, a pothole!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-pothole.mp3",
+        "ogg": null
+      },
+      "emotion": "Comic dismay, short, never mocking.",
+      "voice": "F, 30-50",
+      "usedFor": "pothole snake",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "sl-goslow",
+      "text": {
+        "pcm": "Go-slow don catch you!",
+        "en": "You're stuck in traffic!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-goslow.mp3",
+        "ogg": null
+      },
+      "emotion": "Playful and sympathetic.",
+      "voice": "M, 30s",
+      "usedFor": "go-slow, toll and NEPA snakes",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "sl-six",
+      "text": {
+        "pcm": "Six! Roll again!",
+        "en": "Six! Roll again!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-six.mp3",
+        "ogg": null
+      },
+      "emotion": "Bright, punchy.",
+      "voice": "F, 30s",
+      "usedFor": "rolled a six",
+      "region": "Pan-Nigerian",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "sl-reroll",
+      "text": {
+        "pcm": "Roll am again!",
+        "en": "Roll it again!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-reroll.mp3",
+        "ogg": null
+      },
+      "emotion": "Upbeat, a wink.",
+      "voice": "M or F, 20s",
+      "usedFor": "re-roll power-up used",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "sl-exact",
+      "text": {
+        "pcm": "Exact number, abeg!",
+        "en": "You need the exact number!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-exact.mp3",
+        "ogg": null
+      },
+      "emotion": "Friendly reminder, a smile.",
+      "voice": "F, 30s",
+      "usedFor": "overshoot near 100",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "sl-almost",
+      "text": {
+        "pcm": "Almost there! E don near!",
+        "en": "Almost there!"
+      },
+      "files": {
+        "mp3": "voice/vo-sl-almost.mp3",
+        "ogg": null
+      },
+      "emotion": "Encouraging, rising.",
+      "voice": "M, 30s",
+      "usedFor": "within 6 of the finish",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    }
+  ]
+}
