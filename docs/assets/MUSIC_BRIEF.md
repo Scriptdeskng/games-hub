@@ -1,6 +1,6 @@
 # Music brief (shared / core level)
 
-Status: **brief for composers. Every file named below is a silent placeholder** (`packages/core/assets/audio/music/<name>.mp3`, a fraction of a second of digital silence). Music cannot be made by the asset-designer; nothing here may be replaced with unlicensed audio. Per-game briefs repeat the relevant row and add any game-specific cues.
+Status: **brief for composers (placeholders are `.mp3` only, no `.ogg` exists yet; see HUMAN_ASSETS.md #16). Every file named below is a silent placeholder** (`packages/core/assets/audio/music/<name>.mp3`, a fraction of a second of digital silence). Music cannot be made by the asset-designer; nothing here may be replaced with unlicensed audio. Per-game briefs repeat the relevant row and add any game-specific cues.
 
 Source of truth: `CULTURAL_GUIDE.md` section 4.
 

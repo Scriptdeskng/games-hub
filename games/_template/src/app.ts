@@ -29,12 +29,12 @@ import { createPlay, type Play } from './view/play';
 export interface App {
   showMenu(): void;
   /** Test hook: play a full round quickly. `{ win: false }` lets the clock run out. */
-  autoplay(opts?: {
+  autoplay?: (opts?: {
     difficulty?: Difficulty;
     win?: boolean;
     /** play in real time through the real render loop (perf and soak tests) */
     realtime?: boolean;
-  }): Promise<GameState>;
+  }) => Promise<GameState>;
   getState(): unknown;
   setSeed(n: number): void;
   readonly screen: string;
@@ -173,29 +173,35 @@ export function createApp(core: Core, initial: Progress): App {
     render();
   }
 
+  // Test-only: `__NAIJA_TEST__` is false in production builds, so this whole function (and the
+  // string 'autoplay') is removed from the shipped bundle. scripts/prod-gate.mjs enforces it.
+  const autoplay: App['autoplay'] = __NAIJA_TEST__
+    ? async (opts = {}) => {
+        const d = DIFFICULTIES.includes(opts.difficulty as Difficulty)
+          ? (opts.difficulty as Difficulty)
+          : difficulty;
+        startRound(d);
+        const p = play as Play;
+        if (opts.realtime) {
+          const ended = new Promise<GameState>((resolve) => waiters.push(resolve));
+          p.setBot?.(opts.win !== false);
+          return ended;
+        }
+        let s = p.getState();
+        const bot = opts.win !== false;
+        for (let i = 0; i < 20000 && s.status === 'playing'; i++) {
+          s = tick(s, 50);
+          const id = bot ? oldestTarget(s) : null;
+          if (id !== null) s = hit(s, id);
+        }
+        p.setState(s);
+        return s;
+      }
+    : undefined;
+
   return {
     showMenu,
-    async autoplay(opts = {}) {
-      const d = DIFFICULTIES.includes(opts.difficulty as Difficulty)
-        ? (opts.difficulty as Difficulty)
-        : difficulty;
-      startRound(d);
-      const p = play as Play;
-      if (opts.realtime) {
-        const ended = new Promise<GameState>((resolve) => waiters.push(resolve));
-        p.setBot(opts.win !== false);
-        return ended;
-      }
-      let s = p.getState();
-      const bot = opts.win !== false;
-      for (let i = 0; i < 20000 && s.status === 'playing'; i++) {
-        s = tick(s, 50);
-        const id = bot ? oldestTarget(s) : null;
-        if (id !== null) s = hit(s, id);
-      }
-      p.setState(s);
-      return s;
-    },
+    ...(__NAIJA_TEST__ ? { autoplay } : {}),
     getState: () => ({
       screen: host.screenId,
       difficulty,

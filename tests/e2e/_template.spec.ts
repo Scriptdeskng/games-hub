@@ -1,5 +1,14 @@
 import { expect, test } from '@playwright/test';
-import { counters, eventTypes, expectScreen, openGame, press, watchErrors } from './helpers';
+import {
+  counters,
+  eventTypes,
+  expectScreen,
+  inViewport,
+  layoutProblems,
+  openGame,
+  press,
+  watchErrors,
+} from './helpers';
 
 const SLUG = '_template';
 
@@ -276,6 +285,19 @@ test.describe('_template: lifecycle and performance', () => {
     expect(watch.errors).toEqual([]);
   });
 
+  test('destroy() right after load leaves zero listeners, timers and RAF loops', async ({
+    page,
+  }) => {
+    await openGame(page, SLUG);
+    const after = await page.evaluate(() => {
+      const read = window.__naijaTest!.counters;
+      window.__naijaTest!.destroy(); // well inside the loader's 400 ms fade
+      return read();
+    });
+    expect(after).toEqual({ listeners: 0, timers: 0, rafs: 0 });
+    await expect(page.locator('.ng-loader')).toHaveCount(0);
+  });
+
   test('perf hook reports frames while playing', async ({ page }) => {
     await openGame(page, SLUG);
     await press(page.locator('#menu-play'));
@@ -345,4 +367,66 @@ test.describe('_template: mock portal (cross-origin iframe)', () => {
     expect(res.status()).toBe(200);
     expect((await res.json()).data.plays).toBe(1);
   });
+});
+
+test.describe('_template: layout on every screen (en and pcm)', () => {
+  for (const lang of ['en', 'pcm']) {
+    test(`no overflow or clipped text, primary actions in view [${lang}]`, async ({ page }) => {
+      await openGame(page, SLUG, `?lang=${lang}`);
+      const seen: string[] = [];
+      const check = async (label: string): Promise<void> => {
+        (await layoutProblems(page)).forEach((p) => seen.push(`${label}: ${p}`));
+      };
+
+      // menu: the play button AND the sound/music/language bar are visible without scrolling
+      await expectScreen(page, 'menu');
+      await check('menu');
+      expect(await inViewport(page.locator('#menu-play')), 'menu Play in view').toBe(true);
+      expect(await inViewport(page.locator('.ng-settings')), 'menu settings bar in view').toBe(
+        true,
+      );
+
+      await press(page.locator('#menu-howto'));
+      await expectScreen(page, 'howto');
+      await check('howto');
+      expect(await inViewport(page.locator('.ng-howto .ng-btn')), 'how-to close in view').toBe(
+        true,
+      );
+      await press(page.locator('.ng-howto .ng-btn'));
+
+      await press(page.locator('#menu-play'));
+      await expectScreen(page, 'play');
+      await check('play');
+      await press(page.getByRole('button', { name: /Pause/ }));
+      await expect(page.getByRole('dialog')).toBeVisible();
+      await check('pause');
+      for (const b of await page.getByRole('dialog').getByRole('button').all()) {
+        expect(await inViewport(b), 'pause button in view').toBe(true);
+      }
+      await page.getByRole('dialog').getByRole('button').last().click({ force: true });
+      await expectScreen(page, 'menu');
+
+      // results for every difficulty label ("Medium", "Normal", "Hard Well Well", ...), win and lose
+      for (const [difficulty, win] of [
+        ['easy', true],
+        ['medium', true],
+        ['hard', true],
+        ['hard', false],
+      ] as const) {
+        await page.evaluate(([d, w]) => window.__naijaTest!.autoplay({ difficulty: d, win: w }), [
+          difficulty,
+          win,
+        ] as const);
+        await expectScreen(page, 'results');
+        await check(`results ${difficulty} ${win ? 'win' : 'lose'}`);
+        expect(
+          await inViewport(page.locator('.ng-results__actions .ng-btn').first()),
+          'Play again in view',
+        ).toBe(true);
+        await press(page.locator('.ng-results__actions .ng-btn').last());
+        await expectScreen(page, 'menu');
+      }
+      expect(seen).toEqual([]);
+    });
+  }
 });

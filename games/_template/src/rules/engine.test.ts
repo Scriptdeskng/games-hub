@@ -86,6 +86,14 @@ describe('tick', () => {
     expect(s.timeLeftMs).toBe(0);
     expect(s.targets).toEqual([]);
   });
+  it('clamps negative or NaN dt: time never runs backwards', () => {
+    const s = run(createGame('easy', 4), 1000);
+    for (const bad of [-50, -1e9, NaN]) {
+      const t = tick(s, bad);
+      expect(t.timeLeftMs).toBe(s.timeLeftMs);
+      expect(t.targets.map((x) => x.ttlMs)).toEqual(s.targets.map((x) => x.ttlMs));
+    }
+  });
   it('does nothing once the game is over', () => {
     const over = run(createGame('easy', 1), PROFILES.easy.durationMs + 100);
     expect(tick(over, 50)).toBe(over);

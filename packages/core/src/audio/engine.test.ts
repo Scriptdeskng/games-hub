@@ -16,6 +16,11 @@ class Node {
   gain = new Param();
   frequency = new Param();
   Q = new Param();
+  threshold = new Param();
+  knee = new Param();
+  ratio = new Param();
+  attack = new Param();
+  release = new Param();
   type = '';
   buffer: unknown = null;
   loop = false;
@@ -45,6 +50,7 @@ class FakeCtx {
     return n;
   }
   createGain = () => this.make('gain');
+  createDynamicsCompressor = () => this.make('compressor');
   createOscillator = () => this.make('osc');
   createBiquadFilter = () => this.make('filter');
   createBufferSource = () => this.make('source');
@@ -154,6 +160,20 @@ describe('audio engine', () => {
     }
     audio.destroy();
   });
+  it('routes master through a limiter (about -6 dB, high ratio, fast attack) to the output', () => {
+    const { ctx, audio } = setup();
+    audio.unlock();
+    const master = ctx.nodes[0]!;
+    const limiter = ctx.nodes.find((n) => n.threshold.value !== 1)!;
+    expect(ctx.created.compressor).toBe(1);
+    expect(limiter.threshold.value).toBe(-6);
+    expect(limiter.ratio.value).toBeGreaterThanOrEqual(12);
+    expect(limiter.attack.value).toBeLessThanOrEqual(0.01);
+    expect(master.connect).toHaveBeenCalledWith(limiter);
+    expect(limiter.connect).toHaveBeenCalledWith(ctx.destination);
+    expect(master.connect).not.toHaveBeenCalledWith(ctx.destination);
+    audio.destroy();
+  });
   it('mute and volume come from persisted settings', () => {
     const { ctx, settings, audio } = setup();
     audio.unlock();
@@ -172,10 +192,13 @@ describe('audio engine', () => {
     const { ctx, audio } = setup();
     audio.unlock();
     audio.playVoice('agogo');
-    const oscPerVoice = ctx.created.osc; // real agogo = FM bells (2 oscillators per layer)
-    ctx.nodes.forEach((n) => n.listeners.ended?.());
+    const oscPerVoice = ctx.created.osc ?? 0; // real agogo = FM bells (several oscillators per voice)
+    expect(oscPerVoice).toBeGreaterThan(0);
+    ctx.nodes.forEach((n) => n.listeners.ended?.()); // warm-up voice finished: 0 active
+    const base = ctx.created.osc ?? 0;
     for (let i = 0; i < 40; i++) audio.playVoice('agogo');
-    expect(ctx.created.osc).toBeLessThanOrEqual(20 * oscPerVoice + oscPerVoice);
+    // exactly MAX_VOICES (20) voices may start from an idle engine, never more
+    expect((ctx.created.osc ?? 0) - base).toBe(20 * oscPerVoice);
     const before = ctx.nodes.length;
     const a = setup();
     a.audio.unlock();

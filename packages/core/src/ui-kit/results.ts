@@ -86,7 +86,7 @@ export function createResults(ctx: UiContext, o: ResultsOptions): Component {
         stat(ctx.t('results.best'), o.best),
         ...(o.rows ?? []).map((r) => stat(r.label, r.value)),
       ]),
-      h('div', { class: 'ng-results__actions' }, [replay, menu]),
+      h('div', { class: 'ng-results__actions ng-sticky-actions' }, [replay, menu]),
     ],
   );
   return { el, destroy: () => scope.destroy() };

@@ -57,8 +57,10 @@ const finish = (s: GameState): GameState =>
       : s;
 
 /** Advance time by dtMs: bells age and expire (a miss), new bells spawn, the clock runs. */
-export function tick(s: GameState, dtMs: number): GameState {
+export function tick(s: GameState, rawDtMs: number): GameState {
   if (s.status !== 'playing') return s;
+  // negative or NaN time can never add seconds to the clock
+  const dtMs = rawDtMs > 0 ? rawDtMs : 0;
   const p = PROFILES[s.difficulty];
   const rng = createRng(0);
   rng.setState(s.rng);

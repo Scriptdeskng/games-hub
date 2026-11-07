@@ -5,9 +5,16 @@ import type { Store } from '../storage';
  * only to that exact origin. The `token` is opaque, kept in memory, sent only as a Bearer header
  * to the portal API, and never written to storage, URLs or logs.
  *
- * Assumed API (to confirm with the portal team):
- *   GET  {portal}/api/games/{slug}/progress   -> 200 { data: <json> } | 404
- *   PUT  {portal}/api/games/{slug}/progress   body { data: <json> }
+ * API contract (to confirm with the portal team), Authorization: Bearer <token>:
+ *   GET  {portal}/api/games/{slug}/progress -> 200 { "data": <json> }, or 200 { "data": null } when
+ *        the player has no saved progress yet. Return 200 (not 404): browsers log every 404 as a
+ *        console error, which counts against the "0 console errors" budget. A 404 is still tolerated
+ *        and treated as "no progress".
+ *   PUT  {portal}/api/games/{slug}/progress  body { "data": <json> } -> 2xx
+ *
+ * The portal origin must be allowed: by default https origins and localhost / 127.0.0.1 / [::1]
+ * (dev); pass `allowedOrigins` (exact origins or `https://*.example.com`) to restrict further. A
+ * disallowed origin gets no events and never sees the token.
  */
 export type PortalEventType = 'ready' | 'start' | 'level_complete' | 'score' | 'end' | 'error';
 
@@ -25,14 +32,33 @@ export interface PortalParams {
   portalOrigin: string | null;
 }
 
-export function parsePortalParams(search: string): PortalParams {
+/** Is `origin` (already normalised by URL) acceptable as a portal? */
+export function isAllowedOrigin(origin: string, allowed?: readonly string[]): boolean {
+  let u: URL;
+  try {
+    u = new URL(origin);
+  } catch {
+    return false;
+  }
+  if (allowed && allowed.length) {
+    return allowed.some((a) => {
+      const star = a.match(/^(https?):\/\/\*\.(.+)$/);
+      if (!star) return a === origin;
+      return u.protocol === `${star[1]}:` && u.host.endsWith(`.${star[2]}`);
+    });
+  }
+  const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
+  return u.protocol === 'https:' || (u.protocol === 'http:' && local);
+}
+
+export function parsePortalParams(search: string, allowed?: readonly string[]): PortalParams {
   const q = new URLSearchParams(search);
   let portalOrigin: string | null = null;
   const raw = q.get('portal');
   if (raw) {
     try {
       const u = new URL(raw);
-      if (u.protocol === 'https:' || u.protocol === 'http:') portalOrigin = u.origin;
+      if (isAllowedOrigin(u.origin, allowed)) portalOrigin = u.origin;
     } catch {
       portalOrigin = null;
     }
@@ -45,6 +71,8 @@ export interface PortalOptions {
   game: string;
   storage: Store;
   search?: string;
+  /** exact origins or `https://*.example.com` patterns; default: https + localhost for dev */
+  allowedOrigins?: readonly string[];
   /** injectable for tests */
   win?: Pick<Window, 'parent'> & { top?: unknown };
   fetchFn?: typeof fetch;
@@ -59,8 +87,10 @@ export interface Portal {
   loadProgress<T>(fallback: T): Promise<T>;
 }
 
+const LOG_CAP = 500;
+
 export function createPortal(opts: PortalOptions): Portal {
-  const p = parsePortalParams(opts.search ?? window.location.search);
+  const p = parsePortalParams(opts.search ?? window.location.search, opts.allowedOrigins);
   const token = p.token;
   const win = opts.win ?? window;
   const doFetch = opts.fetchFn ?? ((...a: Parameters<typeof fetch>) => fetch(...a));
@@ -74,7 +104,11 @@ export function createPortal(opts: PortalOptions): Portal {
     params: { lang: p.lang, portalOrigin: p.portalOrigin, hasToken: !!token },
     log,
     emit(type, data = {}) {
-      log.push({ type, data, at: Date.now() });
+      // diagnostics for the test hook only: never accumulate in production
+      if (__NAIJA_TEST__) {
+        log.push({ type, data, at: Date.now() });
+        if (log.length > LOG_CAP) log.shift();
+      }
       if (!p.portalOrigin || win.parent === (win as unknown as Window)) return;
       const msg: PortalMessage = { source: 'naija-games', game: opts.game, type, data };
       try {

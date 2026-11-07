@@ -5,10 +5,11 @@ All items are **made in-repo by the asset-designer (Claude) for Naija Games** un
 ## Third-party: fonts (SIL Open Font License 1.1, embedding and subsetting permitted)
 | File | Font | Author | Licence | Source |
 |---|---|---|---|---|
-| `fonts/bungee-subset.woff2` | Bungee Regular (subset: Latin, Latin-1, Latin Ext-A, selected Ext-B/Additional for Yoruba/Igbo/Hausa, tone marks, naira) | The Bungee Project Authors (David Jonathan Ross), Copyright 2023 | SIL OFL 1.1, https://openfontlicense.org (text: `fonts/OFL-Bungee.txt`) | https://github.com/djrrb/Bungee , https://fonts.google.com/specimen/Bungee |
-| `fonts/nunito-subset.woff2` | Nunito variable (wght 400 to 800), same subset | The Nunito Project Authors (Vernon Adams, Cyreal, Jacques Le Bailly), Copyright 2014 | SIL OFL 1.1, https://openfontlicense.org (text: `fonts/OFL-Nunito.txt`) | https://github.com/googlefonts/nunito , https://fonts.google.com/specimen/Nunito |
+| `fonts/bungee-subset.woff2` (11,328 B) | Bungee Regular (subset: Latin, Latin-1, Latin Ext-A, Yoruba/Igbo letters incl. Ụ ụ, ŋ, tone marks, naira; no Hausa hooked letters, see STYLE_GUIDE section 3) | The Bungee Project Authors (David Jonathan Ross), Copyright 2023 | SIL OFL 1.1, https://openfontlicense.org (text: `fonts/OFL-Bungee.txt`) | https://github.com/djrrb/Bungee , https://fonts.google.com/specimen/Bungee |
+| `fonts/nunito-subset.woff2` (40,872 B) | Nunito variable (wght 400 to 800), same subset (has ɓ ɗ Ɓ Ɗ; lacks Ƙ ƙ Ƴ ƴ Ǹ ǹ) | The Nunito Project Authors (Vernon Adams, Cyreal, Jacques Le Bailly), Copyright 2014 | SIL OFL 1.1, https://openfontlicense.org (text: `fonts/OFL-Nunito.txt`) | https://github.com/googlefonts/nunito , https://fonts.google.com/specimen/Nunito |
+| `fonts/fallback-subset.woff2` (2,928 B) | Noto Sans (wght 500 to 800), 10-glyph subset: Ɓ ɓ Ɗ ɗ Ƙ ƙ Ƴ ƴ Ǹ ǹ, `unicode-range` fallback | The Noto Project Authors, Copyright 2022 | SIL OFL 1.1, https://openfontlicense.org (text: `fonts/OFL-NotoSans.txt`) | https://github.com/notofonts/latin-greek-cyrillic , https://fonts.google.com/noto/specimen/Noto+Sans |
 
-Subsetting was done with fontTools `pyftsubset` (kerning/mark/locl features kept) and `fontTools.varLib.instancer` (Nunito wght limited to 400:800). The OFL permits modified subsets; the Reserved Font Name clause is not triggered as the font names are unchanged in the files and the files are used under the CSS family names "NG Display" and "NG UI". Bungee outlines were also converted to paths in the logo SVGs (embedding of outlines is permitted by OFL).
+Total fonts 55,128 B. Per-language coverage is checked with `tools/font-coverage.py`. Subsetting was done with fontTools `pyftsubset` (kerning/mark/locl features kept) and `fontTools.varLib.instancer` (Nunito wght limited to 400:800). The OFL permits modified subsets; the Reserved Font Name clause is not triggered as the font names are unchanged in the files and the files are used under the CSS family names "NG Display" and "NG UI". Bungee outlines were also converted to paths in the logo SVGs (embedding of outlines is permitted by OFL).
 
 ## In-repo, original
 | Path | What | Made by | Notes |
@@ -19,7 +20,7 @@ Subsetting was done with fontTools `pyftsubset` (kerning/mark/locl features kept
 | `icons/*.svg`, `icons/icons.svg`, `icons/icons-preview.svg` | 17 icons (play, pause, sound-on/off, music-on/off, settings, home, replay, star, coin, trophy, hint, close, back, check, alert) | asset-designer, in-repo | `coin` is a game token, not currency art |
 | `logo/logo-lockup.svg` `logo-horizontal.svg` `logo-mark.svg` | logo placeholders | asset-designer, in-repo | Wordmark outlines from Bungee (OFL) |
 | `ui-preview.html` | component gallery | asset-designer | dev/review only, do not ship |
-| `tools/palettes.json`, `tools/contrast-check.mjs` | palette source and WCAG checker | asset-designer | dev only |
+| `tools/palettes.json`, `tools/contrast-check.mjs`, `tools/font-coverage.py` | palette source, WCAG checker, font coverage checker | asset-designer | dev only |
 | `audio/voice/vo-*.mp3`, `audio/voice-manifest.json` | silent voice placeholders (digital silence, about 50 ms) | asset-designer, generated | **Awaiting recorded voice actors** |
 | `audio/music/ng-*.mp3` | silent music placeholders | asset-designer, generated | **Awaiting composer/licensed loops** |
 | `../src/styles/tokens.css`, `skin.css` | design tokens and UI skin | asset-designer, in-repo | |

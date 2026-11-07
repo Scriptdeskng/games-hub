@@ -2,6 +2,7 @@
 // Default: production build of every game into dist/<slug>/.
 // --test: non-production mode (keeps window.__naijaTest) into dist-e2e/<slug>/ for Playwright.
 import { build } from 'vite';
+import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { listGames, ROOT } from './lib.mjs';
 
@@ -26,3 +27,7 @@ for (const slug of games) {
   });
 }
 console.log(`\nBuilt ${games.length} game(s) into ${process.env.NAIJA_OUT}/`);
+if (!test) {
+  const { status } = spawnSync('node', ['scripts/prod-gate.mjs'], { cwd: ROOT, stdio: 'inherit' });
+  if (status) process.exit(status);
+}

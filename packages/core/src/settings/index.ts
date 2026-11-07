@@ -8,7 +8,7 @@ export interface SettingsData {
   sfxVolume: number;
   musicVolume: number;
   lang: string;
-  vibration: boolean;
+  /** force reduced motion on (the OS prefers-reduced-motion setting always applies too) */
   reducedMotion: boolean;
 }
 
@@ -19,7 +19,6 @@ export const DEFAULT_SETTINGS: SettingsData = {
   sfxVolume: 1,
   musicVolume: 0.5,
   lang: 'en',
-  vibration: true,
   reducedMotion: false,
 };
 

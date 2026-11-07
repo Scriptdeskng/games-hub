@@ -73,3 +73,40 @@ describe('boot', () => {
     core.destroy();
   });
 });
+
+describe('reduced motion', () => {
+  it('follows the setting and the OS preference, and is removed on destroy', () => {
+    const root = document.createElement('div');
+    const listeners: (() => void)[] = [];
+    const mq = {
+      matches: false,
+      addEventListener: (_t: string, fn: () => void) => listeners.push(fn),
+      removeEventListener: () => undefined,
+    };
+    window.matchMedia = (() => mq) as unknown as typeof window.matchMedia;
+    const core = boot({ slug: 'demo', root, locales, noServiceWorker: true, search: '' });
+    expect(root.hasAttribute('data-reduced-motion')).toBe(false);
+    core.settings.set('reducedMotion', true);
+    expect(root.hasAttribute('data-reduced-motion')).toBe(true);
+    core.settings.set('reducedMotion', false);
+    expect(root.hasAttribute('data-reduced-motion')).toBe(false);
+    mq.matches = true; // OS preference flips
+    listeners.forEach((fn) => fn());
+    expect(root.hasAttribute('data-reduced-motion')).toBe(true);
+    core.destroy();
+    expect(root.hasAttribute('data-reduced-motion')).toBe(false);
+    delete (window as unknown as Record<string, unknown>).matchMedia;
+  });
+  it('honours prefers-reduced-motion at boot', () => {
+    const root = document.createElement('div');
+    window.matchMedia = (() => ({
+      matches: true,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    })) as unknown as typeof window.matchMedia;
+    const core = boot({ slug: 'demo', root, locales, noServiceWorker: true, search: '' });
+    expect(root.hasAttribute('data-reduced-motion')).toBe(true);
+    core.destroy();
+    delete (window as unknown as Record<string, unknown>).matchMedia;
+  });
+});

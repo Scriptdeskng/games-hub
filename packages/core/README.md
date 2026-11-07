@@ -2,7 +2,7 @@
 
 Shared shell for every Naija Games title. One package, subpath exports, zero runtime dependencies,
 tree-shakeable. Budget: **core <= 60 KB gzip** including ui-kit, i18n runtime and the audio synth
-(currently about 16 KB; measured by `npm run size`, see "Size" below).
+(measured by `npm run size`: 22.4 KB gzip of JS+CSS at the time of writing, fonts excluded; see "Size" below).
 
 ```ts
 import { boot } from '@naija/core/boot'; // or: import { boot } from '@naija/core'
@@ -49,9 +49,23 @@ await core.portal.saveProgress({ best: 120 }); // always writes localStorage; PU
 const p = await core.portal.loadProgress({ best: 0 });
 ```
 
-The token lives in memory only: it is sent as `Authorization: Bearer` to
-`{portal}/api/games/{slug}/progress` (GET returns `{ data }` or 404, PUT takes `{ data }`). **This API
-shape is an assumption to confirm with the portal team.** If the call fails the local copy is used.
+The token lives in memory only (never in a URL, storage key or log). **Portal API contract (assumed;
+confirm with the portal team)**, every call with `Authorization: Bearer <token>`:
+
+| Call                                                               | Response                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET {portal}/api/games/{slug}/progress`                           | `200 { "data": <json> }`, or `200 { "data": null }` when the player has no progress yet. Return 200, not 404: browsers log each 404 as a console error, which breaks the "0 console errors" budget. A 404 is still tolerated and means "no progress". |
+| `PUT {portal}/api/games/{slug}/progress` body `{ "data": <json> }` | any 2xx                                                                                                                                                                                                                                               |
+
+If a call fails the local copy is used. The portal must send CORS headers allowing the game origin,
+the `Authorization` and `Content-Type` headers, and `GET, PUT, OPTIONS`.
+
+**Origin allow-list.** Events and the Bearer token only go to an allowed portal origin. Default:
+`https:` origins, plus `http://localhost`, `127.0.0.1` and `[::1]` for development. Restrict it with
+`boot({ allowedPortalOrigins: ['https://m.gamesplash.com.ng', 'https://*.gamesplash.com.ng'] })`
+(exact origins or `https://*.domain` patterns; a list replaces the default). A disallowed `?portal=`
+is ignored: no events, no token, local storage only.
+
 `tools/mock-portal.html` (`npm run mock-portal`) implements the same contract on a second origin.
 
 ## Audio API (for sound designers)

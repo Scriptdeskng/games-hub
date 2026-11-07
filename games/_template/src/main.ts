@@ -19,6 +19,7 @@ async function main(): Promise<void> {
   const loader = runLoader({
     root,
     t: core.t,
+    scope: core.scope,
     tasks: [
       imageTask('./assets/agogo.svg'),
       {
@@ -31,16 +32,18 @@ async function main(): Promise<void> {
   await loader.done;
 
   const app = createApp(core, progress);
-  core.exposeTestHook({
-    autoplay: (opts) => app.autoplay(opts),
-    getState: () => app.getState(),
-    setSeed: (n) => app.setSeed(n),
-    screen: () => app.screen,
-    destroy: () => {
-      app.destroy();
-      core.destroy();
-    },
-  });
+  if (__NAIJA_TEST__) {
+    core.exposeTestHook({
+      autoplay: async (opts) => (app.autoplay ? app.autoplay(opts) : undefined),
+      getState: () => app.getState(),
+      setSeed: (n) => app.setSeed(n),
+      screen: () => app.screen,
+      destroy: () => {
+        app.destroy();
+        core.destroy();
+      },
+    });
+  }
   app.showMenu();
   core.portal.emit('ready', { version: gameConfig.version });
 }

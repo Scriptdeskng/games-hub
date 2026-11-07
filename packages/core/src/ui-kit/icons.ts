@@ -2,6 +2,8 @@ import pause from '../../assets/icons/pause.svg?raw';
 import soundOn from '../../assets/icons/sound-on.svg?raw';
 import soundOff from '../../assets/icons/sound-off.svg?raw';
 import musicOn from '../../assets/icons/music-on.svg?raw';
+import check from '../../assets/icons/check.svg?raw';
+import alert from '../../assets/icons/alert.svg?raw';
 import musicOff from '../../assets/icons/music-off.svg?raw';
 
 /**
@@ -15,6 +17,8 @@ const ICONS = {
   'sound-off': soundOff,
   'music-on': musicOn,
   'music-off': musicOff,
+  check,
+  alert,
 };
 export type IconName = keyof typeof ICONS;
 

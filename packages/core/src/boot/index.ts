@@ -28,6 +28,8 @@ export interface BootOptions {
   /** skip service worker registration (tests) */
   noServiceWorker?: boolean;
   search?: string;
+  /** portal origins allowed to receive events and the token (default: https + localhost) */
+  allowedPortalOrigins?: readonly string[];
 }
 
 export interface Core {
@@ -53,7 +55,12 @@ export function boot(o: BootOptions): Core {
   const scope = createScope();
   const storage = createStorage(o.slug);
   const settings = createSettings(storage);
-  const portal = createPortal({ game: o.slug, storage, search: o.search });
+  const portal = createPortal({
+    game: o.slug,
+    storage,
+    search: o.search,
+    allowedOrigins: o.allowedPortalOrigins,
+  });
   const lang = normalizeLang(portal.params.lang) ?? normalizeLang(settings.get('lang')) ?? 'en';
   const i18n = createI18n(
     { en: mergeBundles(coreEn, o.locales.en), pcm: mergeBundles(corePcm, o.locales.pcm) },
@@ -73,6 +80,16 @@ export function boot(o: BootOptions): Core {
     }),
   );
   o.root.classList.add('ng-app');
+  // Reduced motion: the OS preference or the saved setting turns animations off (see ui-kit.css).
+  const mq = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const applyMotion = (): void => {
+    const on = settings.get('reducedMotion') || !!mq?.matches;
+    if (on) o.root.setAttribute('data-reduced-motion', '');
+    else o.root.removeAttribute('data-reduced-motion');
+  };
+  applyMotion();
+  scope.add(settings.subscribe((k) => k === 'reducedMotion' && applyMotion()));
+  if (mq) scope.on(mq, 'change', applyMotion);
 
   const audio = createAudio({ settings });
   const perf = createPerf();
@@ -115,6 +132,7 @@ export function boot(o: BootOptions): Core {
       settings.destroy();
       scope.destroy();
       o.root.classList.remove('ng-app');
+      o.root.removeAttribute('data-reduced-motion');
     },
   };
 }

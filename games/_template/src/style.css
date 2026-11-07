@@ -124,3 +124,8 @@
     display: none;
   }
 }
+@media (max-height: 700px) and (orientation: portrait) {
+  .menu-art {
+    width: 72px;
+  }
+}

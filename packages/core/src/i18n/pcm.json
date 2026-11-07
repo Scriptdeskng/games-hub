@@ -19,16 +19,28 @@
   "ui.language": "Language",
   "ui.lang.en": "English",
   "ui.lang.pcm": "Pidgin",
-  "ui.difficulty": "How e hard reach",
+  "ui.difficulty": {
+    "text": "Pick your level",
+    "_review": true
+  },
   "ui.loading": "E dey load...",
   "ui.error": "Something don spoil. Abeg reload am.",
   "difficulty.easy": "Easy Easy",
   "difficulty.medium": "Normal",
-  "difficulty.hard": { "text": "Hard Well Well", "_review": true },
-  "results.win": "You win! Chai!",
+  "difficulty.hard": {
+    "text": "Hard Well Well",
+    "_review": true
+  },
+  "results.win": {
+    "text": "You win! E choke!",
+    "_review": true
+  },
   "results.lose": "E nearly be! Try again!",
   "results.score": "Score",
   "results.best": "Your best",
   "results.newBest": "New record!",
-  "results.stars": { "text": "{n} star out of 3", "_review": true }
+  "results.stars": {
+    "text": "{n} star out of 3",
+    "_review": true
+  }
 }

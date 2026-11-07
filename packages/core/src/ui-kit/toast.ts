@@ -1,5 +1,6 @@
 import { createScope } from '../lifecycle';
 import { h } from './dom';
+import { icon } from './icons';
 
 export interface Toast {
   dismiss(): void;
@@ -8,6 +9,8 @@ export interface Toast {
 export interface ToastOptions {
   ms?: number;
   kind?: 'good' | 'bad';
+  /** screen-reader prefix (translated), e.g. "Success" / "Warning"; the icon shape (tick vs triangle) is the visual cue */
+  label?: string;
 }
 
 /** Short non-blocking message (role=status). Auto-dismisses and removes its own timer. */
@@ -22,8 +25,14 @@ export function toast(mount: HTMLElement, message: string, o: ToastOptions = {})
     class: `ng-toast${o.kind ? ` ng-toast--${o.kind}` : ''}`,
     role: 'status',
     'aria-live': 'polite',
-    text: message,
   });
+  if (o.kind) {
+    const ic = icon(o.kind === 'good' ? 'check' : 'alert');
+    ic.setAttribute('class', 'ng-toast__icon');
+    el.append(ic);
+  }
+  if (o.label) el.append(h('span', { class: 'ng-sr', text: `${o.label}: ` }));
+  el.append(message);
   host.append(el);
   const dismiss = (): void => {
     scope.destroy();

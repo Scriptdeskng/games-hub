@@ -5,11 +5,12 @@
 @font-face{font-family:"NG Display";src:url(../../assets/fonts/bungee-subset.woff2) format("woff2");font-weight:400;font-style:normal;font-display:swap}
 @font-face{font-family:"NG UI";src:url(../../assets/fonts/nunito-subset.woff2) format("woff2");font-weight:400 800;font-style:normal;font-display:swap}
 
+@font-face{font-family:"NG Fallback";src:url(../../assets/fonts/fallback-subset.woff2) format("woff2");font-weight:500 800;font-style:normal;font-display:swap;unicode-range:U+0181,U+018A,U+0198-0199,U+01B3-01B4,U+01F8-01F9,U+0253,U+0257}
 :root{
   color-scheme:only light;
   /* type */
-  --ng-font-display:"NG Display","NG UI",Impact,"Arial Black",sans-serif;
-  --ng-font-ui:"NG UI",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
+  --ng-font-display:"NG Display","NG Fallback","NG UI",Impact,"Arial Black",sans-serif;
+  --ng-font-ui:"NG UI","NG Fallback",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;
   --ng-fs-xs:.75rem;--ng-fs-sm:.875rem;--ng-fs-md:1rem;--ng-fs-lg:1.125rem;--ng-fs-xl:1.375rem;
   --ng-fs-2xl:clamp(1.5rem,5.5vw,1.875rem);--ng-fs-3xl:clamp(1.75rem,7vw,2.5rem);--ng-fs-display:clamp(2rem,10vw,3.5rem);
   --ng-lh-tight:1.1;--ng-lh-body:1.45;

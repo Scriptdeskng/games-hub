@@ -285,7 +285,15 @@ export function createAudio(options: AudioOptions): AudioEngine {
     musicBus = ctx.createGain();
     sfxBus.connect(master);
     musicBus.connect(master);
-    master.connect(ctx.destination);
+    // Safety limiter: several overlapping cues plus music must never clip the output.
+    const limiter = ctx.createDynamicsCompressor();
+    limiter.threshold.value = -6;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = 0.003;
+    limiter.release.value = 0.1;
+    master.connect(limiter);
+    limiter.connect(ctx.destination);
     state = 'running';
     applyVolumes();
     void ctx.resume?.();

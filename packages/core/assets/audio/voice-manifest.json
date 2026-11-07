@@ -1,469 +1,507 @@
-[
- {
-  "id": "oya",
-  "text": {
-   "pcm": "Oya!",
-   "en": "Come on!"
+{
+ "_readme": "Voice placeholders. Only .mp3 files exist today (silent, valid MPEG-1 Layer III, decoded OK in Chrome). ogg is null on purpose: no valid .ogg could be produced in this environment (no ffmpeg/sox/oggenc) and fake files are not allowed. The human delivery adds voice/vo-<id>.ogg (Vorbis q3 or Opus 32 kbps mono) and sets files.ogg to that path. Loader: prefer ogg when not null and supported, else mp3, else silence.",
+ "lines": [
+  {
+   "id": "oya",
+   "text": {
+    "pcm": "Oya!",
+    "en": "Come on!"
+   },
+   "files": {
+    "mp3": "voice/vo-oya.mp3",
+    "ogg": null
+   },
+   "emotion": "Bright, quick call to action, rising pitch, smile in the voice.",
+   "voice": "any adult, M or F",
+   "usedFor": "game start, countdown, menu Play",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-oya.mp3",
-   "voice/vo-oya.ogg"
-  ],
-  "emotion": "Bright, quick call to action, rising pitch, smile in the voice.",
-  "voice": "any adult, M or F",
-  "usedFor": "game start, countdown, menu Play",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "na-you-dey-play",
-  "text": {
-   "pcm": "Na you dey play!",
-   "en": "It's you playing!"
+  {
+   "id": "na-you-dey-play",
+   "text": {
+    "pcm": "Na you dey play!",
+    "en": "It's you playing!"
+   },
+   "files": {
+    "mp3": "voice/vo-na-you-dey-play.mp3",
+    "ogg": null
+   },
+   "emotion": "Playful teasing, proud of the player, slightly sing-song.",
+   "voice": "F, 30s, Lagos",
+   "usedFor": "player move praised, turn start",
+   "region": "Lagos / Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-na-you-dey-play.mp3",
-   "voice/vo-na-you-dey-play.ogg"
-  ],
-  "emotion": "Playful teasing, proud of the player, slightly sing-song.",
-  "voice": "F, 30s, Lagos",
-  "usedFor": "player move praised, turn start",
-  "region": "Lagos / Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "chai",
-  "text": {
-   "pcm": "Chai!",
-   "en": "Oh no!"
+  {
+   "id": "chai",
+   "text": {
+    "pcm": "Chai!",
+    "en": "Oh no!"
+   },
+   "files": {
+    "mp3": "voice/vo-chai.mp3",
+    "ogg": null
+   },
+   "emotion": "Dramatic, comic dismay (never mocking). Long vowel, falling pitch, then a laugh.",
+   "voice": "M or F",
+   "usedFor": "player loses a big card or point",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-chai.mp3",
-   "voice/vo-chai.ogg"
-  ],
-  "emotion": "Dramatic, comic dismay (never mocking). Long vowel, falling pitch, then a laugh.",
-  "voice": "M or F",
-  "usedFor": "player loses a big card or point",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "e-don-do",
-  "text": {
-   "pcm": "E don do!",
-   "en": "That's enough!"
+  {
+   "id": "e-don-do",
+   "text": {
+    "pcm": "E don do!",
+    "en": "That's enough!"
+   },
+   "files": {
+    "mp3": "voice/vo-e-don-do.mp3",
+    "ogg": null
+   },
+   "emotion": "Satisfied and final, like closing a deal. Short and firm.",
+   "voice": "M, 40s, Lagos",
+   "usedFor": "round end, win line in Ludo / Draughts",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-e-don-do.mp3",
-   "voice/vo-e-don-do.ogg"
-  ],
-  "emotion": "Satisfied and final, like closing a deal. Short and firm.",
-  "voice": "M, 40s, Lagos",
-  "usedFor": "round end, win line in Ludo / Draughts",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "your-turn",
-  "text": {
-   "pcm": "Your turn don reach!",
-   "en": "It's your turn!"
+  {
+   "id": "your-turn",
+   "text": {
+    "pcm": "Your turn don reach!",
+    "en": "It's your turn!"
+   },
+   "files": {
+    "mp3": "voice/vo-your-turn.mp3",
+    "ogg": null
+   },
+   "emotion": "Warm nudge, not nagging. Friendly and rising.",
+   "voice": "F, 20s",
+   "usedFor": "turn prompt (optional, after idle)",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-your-turn.mp3",
-   "voice/vo-your-turn.ogg"
-  ],
-  "emotion": "Warm nudge, not nagging. Friendly and rising.",
-  "voice": "F, 20s",
-  "usedFor": "turn prompt (optional, after idle)",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "last-card",
-  "text": {
-   "pcm": "Last card!",
-   "en": "Last card!"
+  {
+   "id": "last-card",
+   "text": {
+    "pcm": "Last card!",
+    "en": "Last card!"
+   },
+   "files": {
+    "mp3": "voice/vo-last-card.mp3",
+    "ogg": null
+   },
+   "emotion": "Sharp, confident announcement like at a Whot table. Strong stress on \"last\".",
+   "voice": "M, 30s",
+   "usedFor": "Whot: someone has one card left",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-last-card.mp3",
-   "voice/vo-last-card.ogg"
-  ],
-  "emotion": "Sharp, confident announcement like at a Whot table. Strong stress on \"last\".",
-  "voice": "M, 30s",
-  "usedFor": "Whot: someone has one card left",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "semi-last-card",
-  "text": {
-   "pcm": "Semi-last card!",
-   "en": "Semi-last card!"
+  {
+   "id": "semi-last-card",
+   "text": {
+    "pcm": "Semi-last card!",
+    "en": "Semi-last card!"
+   },
+   "files": {
+    "mp3": "voice/vo-semi-last-card.mp3",
+    "ogg": null
+   },
+   "emotion": "As Last card, a notch lower in urgency.",
+   "voice": "M, 30s",
+   "usedFor": "Whot: two cards left (toggle)",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-semi-last-card.mp3",
-   "voice/vo-semi-last-card.ogg"
-  ],
-  "emotion": "As Last card, a notch lower in urgency.",
-  "voice": "M, 30s",
-  "usedFor": "Whot: two cards left (toggle)",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "pick-two",
-  "text": {
-   "pcm": "Pick two!",
-   "en": "Pick two!"
+  {
+   "id": "pick-two",
+   "text": {
+    "pcm": "Pick two!",
+    "en": "Pick two!"
+   },
+   "files": {
+    "mp3": "voice/vo-pick-two.mp3",
+    "ogg": null
+   },
+   "emotion": "Gleeful, a little wicked, quick.",
+   "voice": "F, 30s",
+   "usedFor": "Whot 2 played",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-pick-two.mp3",
-   "voice/vo-pick-two.ogg"
-  ],
-  "emotion": "Gleeful, a little wicked, quick.",
-  "voice": "F, 30s",
-  "usedFor": "Whot 2 played",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "pick-three",
-  "text": {
-   "pcm": "Pick three!",
-   "en": "Pick three!"
+  {
+   "id": "pick-three",
+   "text": {
+    "pcm": "Pick three!",
+    "en": "Pick three!"
+   },
+   "files": {
+    "mp3": "voice/vo-pick-three.mp3",
+    "ogg": null
+   },
+   "emotion": "Gleeful, slightly more menacing than Pick two.",
+   "voice": "F, 30s",
+   "usedFor": "Whot 5 played",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-pick-three.mp3",
-   "voice/vo-pick-three.ogg"
-  ],
-  "emotion": "Gleeful, slightly more menacing than Pick two.",
-  "voice": "F, 30s",
-  "usedFor": "Whot 5 played",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "hold-on",
-  "text": {
-   "pcm": "Hold on!",
-   "en": "Hold on!"
+  {
+   "id": "hold-on",
+   "text": {
+    "pcm": "Hold on!",
+    "en": "Hold on!"
+   },
+   "files": {
+    "mp3": "voice/vo-hold-on.mp3",
+    "ogg": null
+   },
+   "emotion": "Playful stop-hand energy, then an upward \"go again\".",
+   "voice": "M, 30s",
+   "usedFor": "Whot 1 played",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-hold-on.mp3",
-   "voice/vo-hold-on.ogg"
-  ],
-  "emotion": "Playful stop-hand energy, then an upward \"go again\".",
-  "voice": "M, 30s",
-  "usedFor": "Whot 1 played",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "suspension",
-  "text": {
-   "pcm": "Suspension!",
-   "en": "Suspension!"
+  {
+   "id": "suspension",
+   "text": {
+    "pcm": "Suspension!",
+    "en": "Suspension!"
+   },
+   "files": {
+    "mp3": "voice/vo-suspension.mp3",
+    "ogg": null
+   },
+   "emotion": "Announcer tone, mock-official, grinning.",
+   "voice": "M, 40s",
+   "usedFor": "Whot 8 played",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-suspension.mp3",
-   "voice/vo-suspension.ogg"
-  ],
-  "emotion": "Announcer tone, mock-official, grinning.",
-  "voice": "M, 40s",
-  "usedFor": "Whot 8 played",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "market-don-open",
-  "text": {
-   "pcm": "Market don open!",
-   "en": "The market is open!"
+  {
+   "id": "market-don-open",
+   "text": {
+    "pcm": "Market don open!",
+    "en": "The market is open!"
+   },
+   "files": {
+    "mp3": "voice/vo-market-don-open.mp3",
+    "ogg": null
+   },
+   "emotion": "Big, market-trader call, loud and joyful, like opening the shutters.",
+   "voice": "F, 40s, Igbo-Lagos",
+   "usedFor": "Whot 14 General Market",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-market-don-open.mp3",
-   "voice/vo-market-don-open.ogg"
-  ],
-  "emotion": "Big, market-trader call, loud and joyful, like opening the shutters.",
-  "voice": "F, 40s, Igbo-Lagos",
-  "usedFor": "Whot 14 General Market",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "whot",
-  "text": {
-   "pcm": "Whot!",
-   "en": "Whot!"
+  {
+   "id": "whot",
+   "text": {
+    "pcm": "Whot!",
+    "en": "Whot!"
+   },
+   "files": {
+    "mp3": "voice/vo-whot.mp3",
+    "ogg": null
+   },
+   "emotion": "Triumphant, slightly drawn out, then the caller names a shape.",
+   "voice": "M or F",
+   "usedFor": "Whot 20 played",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-whot.mp3",
-   "voice/vo-whot.ogg"
-  ],
-  "emotion": "Triumphant, slightly drawn out, then the caller names a shape.",
-  "voice": "M or F",
-  "usedFor": "Whot 20 played",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "goal",
-  "text": {
-   "pcm": "Goal!",
-   "en": "Goal!"
+  {
+   "id": "goal",
+   "text": {
+    "pcm": "Goal!",
+    "en": "Goal!"
+   },
+   "files": {
+    "mp3": "voice/vo-goal.mp3",
+    "ogg": null
+   },
+   "emotion": "Stadium commentator, long rising \"Goooal!\", high energy.",
+   "voice": "M, 30s",
+   "usedFor": "Penalty King goal",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-goal.mp3",
-   "voice/vo-goal.ogg"
-  ],
-  "emotion": "Stadium commentator, long rising \"Goooal!\", high energy.",
-  "voice": "M, 30s",
-  "usedFor": "Penalty King goal",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "saved",
-  "text": {
-   "pcm": "Saved!",
-   "en": "Saved!"
+  {
+   "id": "saved",
+   "text": {
+    "pcm": "Saved!",
+    "en": "Saved!"
+   },
+   "files": {
+    "mp3": "voice/vo-saved.mp3",
+    "ogg": null
+   },
+   "emotion": "Sharp, triumphant, punchy; shorter than Goal.",
+   "voice": "M, 30s",
+   "usedFor": "Penalty King save",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-saved.mp3",
-   "voice/vo-saved.ogg"
-  ],
-  "emotion": "Sharp, triumphant, punchy; shorter than Goal.",
-  "voice": "M, 30s",
-  "usedFor": "Penalty King save",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "madalla",
-  "text": {
-   "pcm": "Madalla!",
-   "en": "Excellent!"
+  {
+   "id": "madalla",
+   "text": {
+    "pcm": "Madalla!",
+    "en": "Excellent!"
+   },
+   "files": {
+    "mp3": "voice/vo-madalla.mp3",
+    "ogg": null
+   },
+   "emotion": "Warm, generous praise. Hausa word: native Hausa speaker records it.",
+   "voice": "M or F, Hausa speaker, 30-50",
+   "usedFor": "celebration, results (rotated)",
+   "region": "Hausa",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": true,
+   "language": "ha",
+   "_review": true,
+   "reviewNote": "Native speaker must confirm spelling, tone marks and record the line."
   },
-  "files": [
-   "voice/vo-madalla.mp3",
-   "voice/vo-madalla.ogg"
-  ],
-  "emotion": "Warm, generous praise. Hausa word: native Hausa speaker records it.",
-  "voice": "M or F, Hausa speaker, 30-50",
-  "usedFor": "celebration, results (rotated)",
-  "region": "Hausa",
-  "status": "placeholder-silent",
-  "_review": true
- },
- {
-  "id": "o-di-mma",
-  "text": {
-   "pcm": "Ọ dị mma!",
-   "en": "That's good!"
+  {
+   "id": "o-di-mma",
+   "text": {
+    "pcm": "Ọ dị mma!",
+    "en": "That's good!"
+   },
+   "files": {
+    "mp3": "voice/vo-o-di-mma.mp3",
+    "ogg": null
+   },
+   "emotion": "Gentle, smiling approval. Igbo phrase: native Igbo speaker records it.",
+   "voice": "F, 40-60, Igbo speaker",
+   "usedFor": "celebration, results (rotated)",
+   "region": "Igbo",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": true,
+   "language": "ig",
+   "_review": true,
+   "reviewNote": "Native speaker must confirm spelling, tone marks and record the line."
   },
-  "files": [
-   "voice/vo-o-di-mma.mp3",
-   "voice/vo-o-di-mma.ogg"
-  ],
-  "emotion": "Gentle, smiling approval. Igbo phrase: native Igbo speaker records it.",
-  "voice": "F, 40-60, Igbo speaker",
-  "usedFor": "celebration, results (rotated)",
-  "region": "Igbo",
-  "status": "placeholder-silent",
-  "_review": true
- },
- {
-  "id": "e-ku-ise",
-  "text": {
-   "pcm": "Ẹ kú iṣẹ́!",
-   "en": "Well done on your work!"
+  {
+   "id": "e-ku-ise",
+   "text": {
+    "pcm": "Ẹ kú iṣẹ́!",
+    "en": "Well done on your work!"
+   },
+   "files": {
+    "mp3": "voice/vo-e-ku-ise.mp3",
+    "ogg": null
+   },
+   "emotion": "Respectful and warm, elder-to-youth praise. Yoruba phrase: native Yoruba speaker records it.",
+   "voice": "M, 50-60, Yoruba speaker",
+   "usedFor": "celebration, results (rotated)",
+   "region": "Yoruba",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": true,
+   "language": "yo",
+   "_review": true,
+   "reviewNote": "Native speaker must confirm spelling, tone marks and record the line."
   },
-  "files": [
-   "voice/vo-e-ku-ise.mp3",
-   "voice/vo-e-ku-ise.ogg"
-  ],
-  "emotion": "Respectful and warm, elder-to-youth praise. Yoruba phrase: native Yoruba speaker records it.",
-  "voice": "M, 50-60, Yoruba speaker",
-  "usedFor": "celebration, results (rotated)",
-  "region": "Yoruba",
-  "status": "placeholder-silent",
-  "_review": true
- },
- {
-  "id": "you-try",
-  "text": {
-   "pcm": "You try!",
-   "en": "Well done!"
+  {
+   "id": "you-try",
+   "text": {
+    "pcm": "You try!",
+    "en": "Well done!"
+   },
+   "files": {
+    "mp3": "voice/vo-you-try.mp3",
+    "ogg": null
+   },
+   "emotion": "Encouraging, like a coach. Short.",
+   "voice": "F, 30-50",
+   "usedFor": "good move, level complete",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-you-try.mp3",
-   "voice/vo-you-try.ogg"
-  ],
-  "emotion": "Encouraging, like a coach. Short.",
-  "voice": "F, 30-50",
-  "usedFor": "good move, level complete",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "no-wahala",
-  "text": {
-   "pcm": "No wahala!",
-   "en": "No worries!"
+  {
+   "id": "no-wahala",
+   "text": {
+    "pcm": "No wahala!",
+    "en": "No worries!"
+   },
+   "files": {
+    "mp3": "voice/vo-no-wahala.mp3",
+    "ogg": null
+   },
+   "emotion": "Relaxed, reassuring, never patronising.",
+   "voice": "M, 20s-30s",
+   "usedFor": "after a mistake or fail",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-no-wahala.mp3",
-   "voice/vo-no-wahala.ogg"
-  ],
-  "emotion": "Relaxed, reassuring, never patronising.",
-  "voice": "M, 20s-30s",
-  "usedFor": "after a mistake or fail",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "no-shaking",
-  "text": {
-   "pcm": "No shaking, try again!",
-   "en": "Don't worry, try again!"
+  {
+   "id": "no-shaking",
+   "text": {
+    "pcm": "No shaking, try again!",
+    "en": "Don't worry, try again!"
+   },
+   "files": {
+    "mp3": "voice/vo-no-shaking.mp3",
+    "ogg": null
+   },
+   "emotion": "Cheerful encouragement, a smile after a loss.",
+   "voice": "F, 20s",
+   "usedFor": "lose screen",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-no-shaking.mp3",
-   "voice/vo-no-shaking.ogg"
-  ],
-  "emotion": "Cheerful encouragement, a smile after a loss.",
-  "voice": "F, 20s",
-  "usedFor": "lose screen",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "sharp-sharp",
-  "text": {
-   "pcm": "Sharp sharp!",
-   "en": "Quickly!"
+  {
+   "id": "sharp-sharp",
+   "text": {
+    "pcm": "Sharp sharp!",
+    "en": "Quickly!"
+   },
+   "files": {
+    "mp3": "voice/vo-sharp-sharp.mp3",
+    "ogg": null
+   },
+   "emotion": "Brisk, urgent but friendly.",
+   "voice": "M, 30s",
+   "usedFor": "timer low, runner speed-up",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-sharp-sharp.mp3",
-   "voice/vo-sharp-sharp.ogg"
-  ],
-  "emotion": "Brisk, urgent but friendly.",
-  "voice": "M, 30s",
-  "usedFor": "timer low, runner speed-up",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "e-choke",
-  "text": {
-   "pcm": "E choke!",
-   "en": "That's amazing!"
+  {
+   "id": "e-choke",
+   "text": {
+    "pcm": "E choke!",
+    "en": "That's amazing!"
+   },
+   "files": {
+    "mp3": "voice/vo-e-choke.mp3",
+    "ogg": null
+   },
+   "emotion": "Wide-eyed amazement, big combo or perfect round. Slang: casual youth tone.",
+   "voice": "M or F, 20s, Lagos",
+   "usedFor": "combo, perfect round",
+   "region": "Lagos slang",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-e-choke.mp3",
-   "voice/vo-e-choke.ogg"
-  ],
-  "emotion": "Wide-eyed amazement, big combo or perfect round. Slang: casual youth tone.",
-  "voice": "M or F, 20s, Lagos",
-  "usedFor": "combo, perfect round",
-  "region": "Lagos slang",
-  "status": "placeholder-silent"
- },
- {
-  "id": "correct",
-  "text": {
-   "pcm": "Correct!",
-   "en": "Correct!"
+  {
+   "id": "correct",
+   "text": {
+    "pcm": "Correct!",
+    "en": "Correct!"
+   },
+   "files": {
+    "mp3": "voice/vo-correct.mp3",
+    "ogg": null
+   },
+   "emotion": "Bright quiz-show confirmation, sharp \"t\".",
+   "voice": "F, 30s",
+   "usedFor": "Sabi Quiz right answer",
+   "region": "Pan-Nigerian",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-correct.mp3",
-   "voice/vo-correct.ogg"
-  ],
-  "emotion": "Bright quiz-show confirmation, sharp \"t\".",
-  "voice": "F, 30s",
-  "usedFor": "Sabi Quiz right answer",
-  "region": "Pan-Nigerian",
-  "status": "placeholder-silent"
- },
- {
-  "id": "ah-ah",
-  "text": {
-   "pcm": "Ah ah! No be that one.",
-   "en": "Ah ah! Not that one."
+  {
+   "id": "ah-ah",
+   "text": {
+    "pcm": "Ah ah! No be that one.",
+    "en": "Ah ah! Not that one."
+   },
+   "files": {
+    "mp3": "voice/vo-ah-ah.mp3",
+    "ogg": null
+   },
+   "emotion": "Gentle surprise, a playful scolding, not harsh.",
+   "voice": "F, 30-50",
+   "usedFor": "Sabi Quiz wrong answer",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-ah-ah.mp3",
-   "voice/vo-ah-ah.ogg"
-  ],
-  "emotion": "Gentle surprise, a playful scolding, not harsh.",
-  "voice": "F, 30-50",
-  "usedFor": "Sabi Quiz wrong answer",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "ready-go",
-  "text": {
-   "pcm": "Ready? Oya go!",
-   "en": "Ready? Go!"
+  {
+   "id": "ready-go",
+   "text": {
+    "pcm": "Ready? Oya go!",
+    "en": "Ready? Go!"
+   },
+   "files": {
+    "mp3": "voice/vo-ready-go.mp3",
+    "ogg": null
+   },
+   "emotion": "Counting-in energy, \"Oya go!\" bursts out.",
+   "voice": "M, 30s",
+   "usedFor": "Danfo Dash / Penalty King start",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-ready-go.mp3",
-   "voice/vo-ready-go.ogg"
-  ],
-  "emotion": "Counting-in energy, \"Oya go!\" bursts out.",
-  "voice": "M, 30s",
-  "usedFor": "Danfo Dash / Penalty King start",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "enter-enter",
-  "text": {
-   "pcm": "Oya enter, enter! Last seat!",
-   "en": "Hop in, hop in! Last seat!"
+  {
+   "id": "enter-enter",
+   "text": {
+    "pcm": "Oya enter, enter! Last seat!",
+    "en": "Hop in, hop in! Last seat!"
+   },
+   "files": {
+    "mp3": "voice/vo-enter-enter.mp3",
+    "ogg": null
+   },
+   "emotion": "Rapid conductor chant, rhythmic and sing-song. Keep friendly; no mocking of conductors.",
+   "voice": "M, 20s-40s, Lagos",
+   "usedFor": "Danfo Dash start / pickups",
+   "region": "Lagos",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-enter-enter.mp3",
-   "voice/vo-enter-enter.ogg"
-  ],
-  "emotion": "Rapid conductor chant, rhythmic and sing-song. Keep friendly; no mocking of conductors.",
-  "voice": "M, 20s-40s, Lagos",
-  "usedFor": "Danfo Dash start / pickups",
-  "region": "Lagos",
-  "status": "placeholder-silent"
- },
- {
-  "id": "you-don-win",
-  "text": {
-   "pcm": "You don win!",
-   "en": "You won!"
+  {
+   "id": "you-don-win",
+   "text": {
+    "pcm": "You don win!",
+    "en": "You won!"
+   },
+   "files": {
+    "mp3": "voice/vo-you-don-win.mp3",
+    "ogg": null
+   },
+   "emotion": "Full celebration, shout of joy, ends with laughter.",
+   "voice": "F or M, 30s",
+   "usedFor": "win screen, big win",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
   },
-  "files": [
-   "voice/vo-you-don-win.mp3",
-   "voice/vo-you-don-win.ogg"
-  ],
-  "emotion": "Full celebration, shout of joy, ends with laughter.",
-  "voice": "F or M, 30s",
-  "usedFor": "win screen, big win",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- },
- {
-  "id": "sweet",
-  "text": {
-   "pcm": "Sweet!",
-   "en": "Sweet!"
-  },
-  "files": [
-   "voice/vo-sweet.mp3",
-   "voice/vo-sweet.ogg"
-  ],
-  "emotion": "Short, delighted exhale.",
-  "voice": "any",
-  "usedFor": "match-3 combos, coin pickup streak",
-  "region": "Pidgin",
-  "status": "placeholder-silent"
- }
-]
+  {
+   "id": "sweet",
+   "text": {
+    "pcm": "Sweet!",
+    "en": "Sweet!"
+   },
+   "files": {
+    "mp3": "voice/vo-sweet.mp3",
+    "ogg": null
+   },
+   "emotion": "Short, delighted exhale.",
+   "voice": "any",
+   "usedFor": "match-3 combos, coin pickup streak",
+   "region": "Pidgin",
+   "status": "placeholder-silent-mp3",
+   "needsNativeReview": false
+  }
+ ]
+}

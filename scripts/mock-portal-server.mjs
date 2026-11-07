@@ -67,10 +67,10 @@ const portal = http.createServer((req, res) => {
     if (!token) return void res.writeHead(401, CORS).end('no token');
     const key = `${token}|${m[1]}`;
     if (req.method === 'GET') {
-      if (!progress.has(key)) return void res.writeHead(404, CORS).end('none');
+      // Contract: 200 { data: null } when there is no progress (a 404 would log a console error)
       return void res
         .writeHead(200, { ...CORS, 'Content-Type': MIME['.json'] })
-        .end(JSON.stringify({ data: progress.get(key) }));
+        .end(JSON.stringify({ data: progress.get(key) ?? null }));
     }
     if (req.method === 'PUT') {
       let body = '';

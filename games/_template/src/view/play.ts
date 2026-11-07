@@ -30,7 +30,7 @@ export interface Play extends Component {
   setState(s: GameState): void;
   start(): void;
   /** Test hook: hit the oldest bell every ~200 ms in real time (drives the real render loop). */
-  setBot(on: boolean): void;
+  setBot?: (on: boolean) => void;
 }
 
 export function createPlay(core: Core, o: PlayOptions): Play {
@@ -98,7 +98,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   const loop = createLoop({
     update: (dt) => {
       apply(tick(state, dt * 1000));
-      if (bot && !over && ++botTicks % 12 === 0) {
+      if (__NAIJA_TEST__ && bot && !over && ++botTicks % 12 === 0) {
         const id = oldestTarget(state);
         if (id !== null) apply(hit(state, id));
       }
@@ -154,7 +154,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     el,
     getState: () => state,
     setState: apply,
-    setBot: (on) => void (bot = on),
+    ...(__NAIJA_TEST__ ? { setBot: (on: boolean) => void (bot = on) } : {}),
     start() {
       core.audio.playSfx('start');
       loop.start();

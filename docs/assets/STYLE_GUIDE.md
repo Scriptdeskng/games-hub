@@ -92,14 +92,22 @@ The minimum text ratio in the whole table is 5.03:1 (accent label in Danfo Yello
 4. Minimum 3:1 between a piece and the square it sits on, and between adjacent teams' pieces.
 
 ## 3. Type
-Two self-hosted OFL fonts, subset to Basic Latin, Latin-1, Latin Extended-A, key Latin Extended-B and Extended Additional letters (ẹ ọ ṣ ị ɓ ɗ ƙ ŋ ń etc.), combining tone marks, punctuation and the naira sign.
+Three self-hosted OFL `.woff2` files (two faces plus a tiny glyph fallback), subset with fontTools to: Basic Latin, Latin-1, Latin Extended-A, the Yoruba/Igbo/Hausa letters that the source font actually contains (ẹ ọ ṣ ị ụ ṅ ŋ ɓ ɗ ƙ and capitals where present), combining marks U+0300 to 0304, 0307, 0308, 030C, 0323, the modifier apostrophe U+02BC, punctuation, arrows and the naira sign ₦. Coverage was verified per language with `packages/core/assets/tools/font-coverage.py` (run it after any font change; it exits 1 if any required codepoint has no shipped glyph).
 
 | Role | Font | Notes |
 |---|---|---|
-| Display (`--ng-font-display`) | **Bungee** Regular, 11 KB woff2, `assets/fonts/bungee-subset.woff2` | Chunky signage lettering (David Jonathan Ross, OFL). Chosen for the bold, sign-painted danfo-and-shopfront feel, sized for short UI headings, scores, buttons on boards. **Use ALL CAPS and 1 to 3 words.** Caveat: Bungee has no `ɓ ɗ ƙ` (Hausa hooked letters); the stack falls back to Nunito for those glyphs, which is fine in a short label |
-| UI (`--ng-font-ui`) | **Nunito** variable 400 to 800, 40 KB woff2, `assets/fonts/nunito-subset.woff2` | Rounded, very legible at 14 px, warm. Full Yoruba and Igbo coverage in the subset. Missing `ƙ Ƙ ǹ`: falls back to the system font |
+| Display (`--ng-font-display`) | **Bungee** Regular, 11.3 KB, `fonts/bungee-subset.woff2` | Chunky signage lettering (David Jonathan Ross, OFL), chosen for the bold sign-painted danfo and shopfront feel. **ALL CAPS, 1 to 3 words.** Has Yoruba and Igbo letters (ẹ ọ ṣ ị ụ ṅ ń) and ₦. **Lacks** Ɓ ɓ Ɗ ɗ Ƙ ƙ Ƴ ƴ (Hausa hooked letters) and Ǹ ǹ |
+| UI (`--ng-font-ui`) | **Nunito** variable 400 to 800, 40.9 KB, `fonts/nunito-subset.woff2` | Rounded, very legible at 14 px. Has Yoruba, Igbo and the Hausa ɓ ɗ ŋ Ɓ Ɗ Ŋ. **Lacks** Ƙ ƙ Ƴ ƴ and Ǹ ǹ |
+| Glyph fallback (`NG Fallback`) | **Noto Sans** weights 500 to 800, 10-glyph subset, 2.9 KB, `fonts/fallback-subset.woff2` | OFL, Noto Project Authors. Declared with a `unicode-range`, so it is only downloaded when a text actually contains one of these 10 letters: Ɓ ɓ Ɗ ɗ Ƙ ƙ Ƴ ƴ Ǹ ǹ. It sits second in both font stacks |
 
-Total fonts 51.5 KB (limit about 60 KB). `font-display: swap` is set. The developer should `<link rel="preload" as="font" type="font/woff2" crossorigin>` the UI font only.
+Result per language (display stack Bungee > NG Fallback > Nunito; UI stack Nunito > NG Fallback), from the script:
+- `en`, `pcm`: fully covered by the primary face.
+- `yo`: covered; `Ǹ ǹ` come from NG Fallback. Tone-marked vowels are precomposed (à á è é ì í ò ó ù ú ń) or built from combining marks U+0300 / 0301 on ẹ ọ ṣ (mark positioning kept in the subset). Check `Ẹ́`, `ọ̀` visually at 24 px on a real phone before shipping `yo`.
+- `ig`: covered, including **Ụ ụ** (U+1EE4/1EE5, which the first subset had dropped although the source fonts contain them), ị ọ ṅ, and the three tone marks.
+- `ha`: covered, but in Bungee headings the hooked letters Ɓ Ɗ Ƙ Ƴ (and in Nunito Ƙ Ƴ) are drawn by Noto Sans: a plain sans in a chunky sign face, visibly different in ALL-CAPS display text. Prefer the UI face for Hausa headings containing those letters, or accept it. A proper fix is a display face with Hausa support (see HUMAN_ASSETS.md #10).
+- Still missing from every file: the check mark U+2713 (not used; ticks are drawn with CSS borders) and any letter outside the lists above (e.g. extra Kanuri, Tiv, Nupe or Efik/Ibibio letters), which would fall to the system font.
+
+Total fonts 55.1 KB (11.3 + 40.9 + 2.9; limit 60 KB). All three `@font-face` rules use `font-display: swap`. The developer should `<link rel="preload" as="font" type="font/woff2" crossorigin>` the Nunito file only.
 
 Type scale (tokens): `--ng-fs-xs` 12 px, `sm` 14, `md` 16 (body), `lg` 18, `xl` 22, `2xl` clamp 24 to 30, `3xl` clamp 28 to 40, `display` clamp 32 to 56. Line heights: `--ng-lh-tight` 1.1 (display), `--ng-lh-body` 1.45. Body copy 16 px minimum; labels never below 12 px and then bold + uppercase.
 
@@ -142,7 +150,7 @@ State classes are `is-*`. Add theme class on the root. Root wrapper: `<body clas
 - `.ng-pat` + `.ng-pat--adire|asooke|akwete|uli|arewa|ankara` pattern overlay (see section 5).
 
 **Buttons** (`<button class="ng-btn ...">`, min 44 px, hard bottom edge, press-down, focus ring)
-- Variants: `.ng-btn--primary` (default look), `.ng-btn--secondary` (light surface), `.ng-btn--accent`, `.ng-btn--ghost` (outlined). Sizes: `.ng-btn--lg` (56 px), `.ng-btn--block` (full width), `.ng-btn--icon` (44 px round, icon only; always give `aria-label`).
+- Variants: `.ng-btn--primary` (default look), `.ng-btn--secondary` (light surface with a 2 px inset edge in `ink-s-2`; inside a modal it switches to `surface-2`, so it is never white on white), `.ng-btn--accent`, `.ng-btn--ghost` (outlined). Sizes: `.ng-btn--lg` (56 px), `.ng-btn--block` (full width), `.ng-btn--icon` (44 px round, icon only; always give `aria-label`).
 - Disabled: `disabled` or `aria-disabled="true"` (55% opacity, no edge, not-allowed cursor; do not rely on opacity alone: also change the label, e.g. "Locked").
 - Icons inside: `<svg class="ng-icon"><use href="#ng-play"/></svg>`. Toggle buttons use `aria-pressed` with two icons inside: `.ng-icon--on` and `.ng-icon--off` (only one shows).
 
@@ -181,7 +189,7 @@ State classes are `is-*`. Add theme class on the root. Root wrapper: `<body clas
 **Icons** (sprite `packages/core/assets/icons/icons.svg`, inline it once into the page, then `<use href="#ng-name">`; individual files `icons/<name>.svg` also exist): `play, pause, sound-on, sound-off, music-on, music-off, settings, home, replay, star, coin, trophy, hint, close, back, check, alert`. All fill with `currentColor`. `coin` is a ring token with an N and double bars, **inspired by the naira sign, clearly a game token and never real money**. Off icons differ by shape (X, slash), not colour.
 
 ## 7. Logo
-`packages/core/assets/logo/`: `logo-lockup.svg` (stacked NAIJA over GAMES ribbon, 360x170), `logo-horizontal.svg` (die emblem + words), `logo-mark.svg` (emblem only, 128): a Naija-green die with five **adire-ring pips** in gold, wordmark set in Bungee outlines (OFL allows embedding converted outlines) with a woven aso-oke stripe. Original, no brand reference. **Placeholder**: a professional identity is a human task (HUMAN_ASSETS.md). Minimum sizes: lockup 120 px wide, mark 24 px.
+`packages/core/assets/logo/`: `logo-lockup.svg` (stacked NAIJA over GAMES ribbon, 360x170), `logo-horizontal.svg` (emblem + words), `logo-mark.svg` (emblem only, 128): a Naija-green rounded tile with **gold adire rings and a play triangle** (no dice; changed after QA round 1 because the portal is a telco subscription service and a die as brand mark can read as gambling), wordmark set in Bungee outlines (OFL allows embedding converted outlines) with a woven aso-oke stripe. Original, no brand reference. **Placeholder**: a professional identity is a human task (HUMAN_ASSETS.md). Minimum sizes: lockup 120 px wide, mark 24 px.
 
 ## 8. CPU persona sheet
 Eight avatars (128x128 viewBox, shape-built, rounded to ~24 px by the sheet or `border-radius:50%` by `.ng-avatar`): Mama Nkechi (Igbo, orange gele), Baba Ade (Yoruba, fila and glasses), Malam Sani (Hausa-Fulani, kufi), Tari (Ijaw, braids and headphones), Efe (Urhobo, danfo-yellow, singing), Aisha (Hausa, hijab and glasses), Chidi (Igbo, keeper jersey numbered 1), Funmi (Yoruba, cornrow bun and green blazer). Skin tones run `#3B2314` to `#A8744C`. See `PERSONAS.md` for regions, play styles and 8 banter lines each (EN + Pidgin). Always sit the avatar on a coloured square (never transparent), face forward, dignified expression. Never recolour skin tones to a team colour.

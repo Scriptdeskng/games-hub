@@ -16,6 +16,8 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: npm run check
+      # landscape phone + desktop viewports are not part of the local `check` (slow); CI runs them
+      - run: npm run e2e:extra
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

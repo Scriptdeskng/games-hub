@@ -268,6 +268,17 @@ describe('hud, results, toast, settings bar', () => {
     expect(document.querySelectorAll('.ng-toast')).toHaveLength(1);
     t1.dismiss();
     t2.dismiss();
+    const good = toast(document.body, 'Saved', { kind: 'good', label: 'Success', ms: 500 });
+    const bad = toast(document.body, 'Oops', { kind: 'bad', label: 'Warning', ms: 500 });
+    const els = document.querySelectorAll('.ng-toast');
+    expect(els[0]!.querySelector('svg.ng-toast__icon')).not.toBeNull();
+    expect(els[0]!.textContent).toBe('Success: Saved');
+    expect(els[1]!.textContent).toBe('Warning: Oops');
+    expect(els[0]!.querySelector('path')!.getAttribute('d')).not.toBe(
+      els[1]!.querySelector('path')!.getAttribute('d'),
+    );
+    good.dismiss();
+    bad.dismiss();
     expect(document.querySelector('.ng-toast-host')).toBeNull();
     expect(leakCounters()).toEqual(base);
     vi.useRealTimers();

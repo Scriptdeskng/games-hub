@@ -1,7 +1,7 @@
 import '../ui-kit/ui-kit.css';
 import '../styles/tokens.css';
 import '../styles/skin.css';
-import { createScope } from '../lifecycle';
+import { createScope, type Scope } from '../lifecycle';
 import type { TFn } from '../i18n';
 
 export interface LoadTask {
@@ -18,6 +18,8 @@ export interface LoaderOptions {
   logo?: Node;
   /** shortest time the loader stays up, to avoid a flash (ms, default 0) */
   minMs?: number;
+  /** register timers and cleanup in this scope (pass `core.scope` so `core.destroy()` removes everything) */
+  scope?: Scope;
 }
 
 export interface Loader {
@@ -40,7 +42,7 @@ export const imageTask = (url: string, weight = 1): LoadTask => ({
 });
 
 export function runLoader(o: LoaderOptions): Loader {
-  const scope = createScope();
+  const scope = o.scope ?? createScope();
   const fill = document.createElement('div');
   fill.className = 'ng-progress__fill';
   const bar = document.createElement('div');
@@ -59,6 +61,7 @@ export function runLoader(o: LoaderOptions): Loader {
   if (o.logo) el.append(o.logo);
   el.append(bar, label);
   o.root.append(el);
+  scope.add(() => el.remove());
 
   const total = o.tasks.reduce((s, t) => s + (t.weight ?? 1), 0) || 1;
   let doneW = 0;
@@ -93,8 +96,9 @@ export function runLoader(o: LoaderOptions): Loader {
       return progress;
     },
     destroy() {
-      scope.destroy();
-      el.remove();
+      // with a shared scope only our own element goes; the owner destroys the rest
+      if (o.scope) el.remove();
+      else scope.destroy();
     },
   };
 }

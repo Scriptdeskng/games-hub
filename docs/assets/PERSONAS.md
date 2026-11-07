@@ -24,21 +24,21 @@ Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 ---
 
 ## Mama Nkechi (`mama-nkechi`)
-**Region:** Igbo, Enugu. Runs a mama-put canteen; coaches the player.
-**Play style:** steady and generous. In Whot she plays safe cards first and keeps one Whot 20 in reserve; as guide she gives hints and praise. Difficulty: Easy and Medium by default.
+**Region:** Igbo, Enugu. Runs a mama-put canteen (guide brief); her role in the games is **coach**, not trader.
+**Play style:** a coach: steady, encouraging, explains why a move was good. No haggling, bargaining or trade lines. In Whot she plays safe cards first and keeps one Whot 20 in reserve; as guide she gives hints and praise. Difficulty: Easy and Medium by default.
 **Colour world:** Market Spice / Aso-oke Gold.
 **Animation cue:** avatar pops with a warm smile; spoon-tap ekwe click.
 
 | # | en | pcm | flags |
 |---|---|---|---|
 | 1 | Come, let me show you something small. | Come, make I show you small something. | |
-| 2 | Good move, my dear. Eat well, play well. | Correct move, my dear. Chop well, play well. | |
+| 2 | Good move, my dear. You are thinking well. | Correct move, my dear. You dey think well. | |
 | 3 | Ehen! You are learning fast. | Ehen! You dey learn fast o. | |
 | 4 | Don't rush. The soup is still on the fire. | No rush. Soup still dey fire. | |
 | 5 | Ah ah, not your best, but we go again. | Ah ah, that one no too sharp, but we go again. | `_review: true` |
 | 6 | Well done! Ọ dị mma! | Well done! Ọ dị mma! | Igbo `Ọ dị mma` ("it is good"): `_review: true` (native speaker) |
 | 7 | I am watching you o, don't think I am not. | I dey watch you o, no think say I no dey see. | |
-| 8 | Sit down, take your plate. You have earned it. | Sit down, collect your plate. You don earn am. | |
+| 8 | Sit down small and take some water. You have earned it. | Sit down small, drink water. You don earn am. | |
 
 ## Baba Ade (`baba-ade`)
 **Region:** Yoruba, Ibadan. Proud retired teacher, loves Ayo.
@@ -144,7 +144,7 @@ Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 
 ## Funmi (`funmi`)
 **Region:** Yoruba, Lagos. Bubbly banker who never backs down at Ludo.
-**Play style:** competitive. Captures whenever she can; avoids safe squares unless threatened; celebrates every capture with a cheerful line. Difficulty: Hard.
+**Play style:** competitive; her job (banker) is background only: **no money, interest or bargain banter**. Captures whenever she can; avoids safe squares unless threatened; celebrates every capture with a cheerful line. Difficulty: Hard.
 **Colour world:** Naija Green with Aso-oke Gold.
 **Animation cue:** clap and wink; agogo ting on capture.
 
@@ -153,13 +153,21 @@ Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 | 1 | Ah ah, you want to capture me? Try it! | Ah ah, you wan capture me? Try am! | |
 | 2 | Six! Come out, come out! | Six! Come out, come out! | |
 | 3 | I never retreat. I never surrender. | I no dey retreat. I no dey surrender. | |
-| 4 | Captured! That is interest on my seed. | Capture! Na interest for my seed be that. | `_review: true` |
+| 4 | Captured! Back to the start you go, my friend. | Captured! Go back to start, my padi. | `_review: true` |
 | 5 | Ẹ má bínú, I had to do it. | Ẹ má bínú, I no get choice. | Yoruba `Ẹ má bínú` ("don't be angry"): `_review: true` (native speaker) |
 | 6 | Abeg, roll again. I'm not afraid. | Abeg, roll again. I no fear. | |
 | 7 | Home sweet home! One in, three to go. | Home sweet home! One don reach, three remain. | |
 | 8 | Smile, it's only Ludo! | Smile na, na Ludo only! | `_review: true` |
 
 ---
+
+## Review changes after QA round 1
+- **Mama Nkechi**: the food-and-hospitality references were 4 of 8 lines (eat, chop, soup, plate) and, with a mama-put canteen and an Igbo identity, risked reading as an "Igbo trader / market mama" trope. Changed: lines 2 and 8 no longer mention food (now "You are thinking well" and "sit down small and take some water"); only line 4 ("soup is still on the fire") keeps one food image. Her role is explicitly coach. The occupation itself comes from the cultural guide and is kept.
+- **Funmi**: the "interest on my seed" line (money banter tied to her banker job) is replaced by "Back to the start you go, my friend." Her occupation stays background only.
+- **Efe**: unchanged (danfo driver is a Lagos everyday job named in the guide, lines are about the ride, not about the person).
+- **"Chai!"**: not used in any persona line. In the voice script it is a dismay/awe exclamation only; it must not be used as a joy or win exclamation (VOICE_SCRIPT.md, "Note on Chai").
+- **Religious-marker balance (decision)**: Malam Sani (embroidered cap) and Aisha (hijab) read as Muslim-coded and no southern persona carries a faith marker. My call: **do not add a Christian or traditional-religion marker to a southern persona**. The guide's avoid list forbids "religious symbols of any faith" and shrine imagery as decoration, and a cross or similar added only for balance would be exactly that tokenism. Instead: (1) Malam Sani's cap is documented as the **Hausa embroidered cap (hula/kufi)**, everyday northern headwear; (2) the northern pair stay, because the guide names both kufi and hijab for variety and Hausa-Fulani Muslim identity is simply the lived reality in much of the north; (3) the final illustrator is asked to give every persona the **same dignity of everyday dress** (no one dressed for worship), and (4) a human cultural reviewer decides whether to offer Aisha and Malam Sani **alternative non-religious headwear variants** selectable per region. Logged in HUMAN_ASSETS.md.
+- **Regional balance (proposal for a later phase)**: Middle Belt, Edo, Efik/Ibibio and Kanuri have no persona. Proposed: (a) add a **9th persona, "Dung"** (Berom, Jos, Plateau, 30s; calm, observant photographer who plays a patient "wait and strike" style; no ethnic trope; avatar hand-painted by the illustrator); (b) add a **10th, "Ekaette"** (Efik, Calabar, 40s; cheerful teacher of word games, a natural host for Sabi Words; drawn with a headwrap, not a masquerade or carnival costume); (c) alternatively re-label Efe from Urhobo to **Edo (Benin City)** at zero art cost, trading one South-South group for another. Names and regions need native confirmation. Not implemented in this phase.
 
 ## Self-check
 - Names original; no real person likeness; no brand.

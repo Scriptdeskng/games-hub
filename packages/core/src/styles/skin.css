@@ -30,7 +30,9 @@
 .ng-btn[disabled],.ng-btn[aria-disabled=true]{opacity:.55;cursor:not-allowed;box-shadow:none}
 .ng-btn:focus-visible,.ng-seg input:focus-visible+.ng-seg__opt,.ng-modal__panel:focus-visible{outline:3px solid var(--ng-focus);outline-offset:2px;box-shadow:0 0 0 2px var(--ng-bg)}
 .ng-btn--primary{}
-.ng-btn--secondary{background:var(--ng-surface);color:var(--ng-ink-s)}
+.ng-btn--secondary{background:var(--ng-surface);color:var(--ng-ink-s);box-shadow:var(--ng-sh-btn),inset 0 0 0 2px var(--ng-ink-s-2)}
+.ng-btn--secondary:active:not([disabled]){box-shadow:0 1px 0 rgba(0,0,0,.3),inset 0 0 0 2px var(--ng-ink-s-2)}
+.ng-modal__panel .ng-btn--secondary{background:var(--ng-surface-2)}
 .ng-btn--accent{background:var(--ng-accent);color:var(--ng-on-accent)}
 .ng-btn--ghost{background:transparent;color:var(--ng-ink);box-shadow:inset 0 0 0 2px var(--ng-ink-2)}
 .ng-btn--ghost:active:not([disabled]){box-shadow:inset 0 0 0 2px var(--ng-ink-2);background:rgba(255,255,255,.12)}
@@ -67,7 +69,7 @@
 @keyframes ng-toast-out{to{opacity:0;transform:translateY(-12px)}}
 
 /* ---------- HUD bar ---------- */
-.ng-hud{position:relative;z-index:var(--ng-z-hud);display:flex;align-items:center;gap:var(--ng-s-2);width:100%;min-height:52px;padding:var(--ng-s-2) var(--ng-s-3);border-radius:var(--ng-r-lg);background:rgba(0,0,0,.32);color:var(--ng-ink)}
+.ng-hud{position:relative;z-index:var(--ng-z-hud);display:flex;align-items:center;gap:var(--ng-s-4);width:100%;min-height:52px;padding:var(--ng-s-2) var(--ng-s-3);border-radius:var(--ng-r-lg);background:rgba(0,0,0,.32);color:var(--ng-ink)}
 .ng-hud::after{content:"";position:absolute;left:var(--ng-s-4);right:var(--ng-s-4);bottom:0;height:4px;border-radius:var(--ng-r-pill) var(--ng-r-pill) 0 0;background:repeating-linear-gradient(90deg,var(--ng-stripe-1) 0 14px,var(--ng-stripe-2) 14px 18px,var(--ng-stripe-3) 18px 30px,var(--ng-stripe-2) 30px 34px)}
 .ng-hud__item{display:flex;flex-direction:column;min-width:0;line-height:1.1}
 .ng-hud__label{font-size:var(--ng-fs-xs);font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ng-ink-2)}

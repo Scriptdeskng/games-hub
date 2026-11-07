@@ -25,6 +25,30 @@ describe('registerServiceWorker', () => {
   it('is skipped on the Vite dev server (no sw.js there)', async () => {
     expect(await registerServiceWorker()).toBe('skipped');
   });
+  describe('in a production build', () => {
+    const setSw = (value: unknown): void =>
+      void Object.defineProperty(navigator, 'serviceWorker', { configurable: true, value });
+    afterEach(() => {
+      vi.unstubAllEnvs();
+      delete (navigator as unknown as Record<string, unknown>).serviceWorker;
+    });
+    it('registers sw.js next to the page', async () => {
+      vi.stubEnv('DEV', false);
+      const register = vi.fn().mockResolvedValue({});
+      setSw({ register });
+      expect(await registerServiceWorker()).toBe('registered');
+      expect(register).toHaveBeenCalledWith(expect.stringMatching(/\/sw\.js$/));
+    });
+    it('reports unsupported when there is no serviceWorker API', async () => {
+      vi.stubEnv('DEV', false);
+      expect(await registerServiceWorker()).toBe('unsupported');
+    });
+    it('never throws when registration is refused (private mode, blocked storage)', async () => {
+      vi.stubEnv('DEV', false);
+      setSw({ register: vi.fn().mockRejectedValue(new Error('SecurityError')) });
+      expect(await registerServiceWorker()).toBe('failed');
+    });
+  });
 });
 
 /** Execute the real worker template in a sandbox with fake caches and check its behaviour. */

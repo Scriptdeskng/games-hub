@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createStorage } from '../storage';
-import { createPortal, parsePortalParams } from './index';
+import { createPortal, isAllowedOrigin, parsePortalParams } from './index';
 
 afterEach(() => localStorage.clear());
 
@@ -132,5 +132,64 @@ describe('portal progress', () => {
       fetchFn: vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) }),
     });
     expect(await empty.loadProgress({ n: 0 })).toEqual({ n: 2 });
+  });
+});
+
+describe('portal origin allow-list', () => {
+  it('default: https anywhere, http only for localhost / 127.0.0.1 / [::1]', () => {
+    expect(isAllowedOrigin('https://m.gamesplash.com.ng')).toBe(true);
+    expect(isAllowedOrigin('http://localhost:4180')).toBe(true);
+    expect(isAllowedOrigin('http://127.0.0.1:3000')).toBe(true);
+    expect(isAllowedOrigin('http://[::1]:3000')).toBe(true);
+    expect(isAllowedOrigin('http://evil.example')).toBe(false);
+    expect(isAllowedOrigin('http://localhost.evil.example')).toBe(false);
+    expect(isAllowedOrigin('ftp://localhost')).toBe(false);
+    expect(isAllowedOrigin('not a url')).toBe(false);
+  });
+  it('explicit list: exact origins and https://*.domain patterns only', () => {
+    const list = ['https://m.gamesplash.com.ng', 'https://*.example.com'];
+    expect(isAllowedOrigin('https://m.gamesplash.com.ng', list)).toBe(true);
+    expect(isAllowedOrigin('https://a.b.example.com', list)).toBe(true);
+    expect(isAllowedOrigin('https://example.com', list)).toBe(false);
+    expect(isAllowedOrigin('https://evilexample.com', list)).toBe(false);
+    expect(isAllowedOrigin('http://a.example.com', list)).toBe(false);
+    expect(isAllowedOrigin('https://other.org', list)).toBe(false);
+    expect(isAllowedOrigin('http://localhost:4180', list)).toBe(false); // list replaces the default
+  });
+  it('a disallowed origin gets no events and never sees the token', async () => {
+    const { win, post } = iframeWin();
+    const fetchFn = vi.fn();
+    const p = createPortal({
+      game: 'g',
+      storage: createStorage('g'),
+      search: '?token=secret&portal=https://evil.example',
+      allowedOrigins: ['https://m.gamesplash.com.ng'],
+      win,
+      fetchFn,
+    });
+    p.emit('ready');
+    await p.saveProgress({ n: 1 });
+    await p.loadProgress({ n: 0 });
+    expect(post).not.toHaveBeenCalled();
+    expect(fetchFn).not.toHaveBeenCalled();
+    expect(p.params.portalOrigin).toBeNull();
+  });
+  it('treats {data:null} and 404 as no progress; the log is bounded', async () => {
+    const st = createStorage('g');
+    st.set('progress', { n: 3 });
+    const args = { game: 'g', storage: st, search: '?token=t&portal=https://p.example' };
+    const empty = createPortal({
+      ...args,
+      fetchFn: vi.fn().mockResolvedValue({ ok: true, json: async () => ({ data: null }) }),
+    });
+    expect(await empty.loadProgress({ n: 0 })).toEqual({ n: 3 });
+    const nf = createPortal({
+      ...args,
+      fetchFn: vi.fn().mockResolvedValue({ ok: false, status: 404 }),
+    });
+    expect(await nf.loadProgress({ n: 0 })).toEqual({ n: 3 });
+    for (let i = 0; i < 700; i++) empty.emit('score', { i });
+    expect(empty.log.length).toBe(500);
+    expect((empty.log[499]!.data as { i: number }).i).toBe(699);
   });
 });

@@ -34,7 +34,7 @@ export function createHowToPlay(ctx: UiContext, o: HowToPlayOptions): Component 
       { class: 'ng-howto__steps' },
       o.steps.map((s) => h('li', { class: 'ng-howto__step', text: s })),
     ),
-    close,
+    h('div', { class: 'ng-sticky-actions' }, [close]),
   ]);
   return { el, destroy: () => scope.destroy() };
 }

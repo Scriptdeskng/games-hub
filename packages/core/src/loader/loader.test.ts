@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { leakCounters } from '../lifecycle';
+import { createScope, leakCounters } from '../lifecycle';
 import { imageTask, runLoader } from './index';
 
 afterEach(() => {
@@ -39,6 +39,18 @@ describe('runLoader', () => {
     vi.advanceTimersByTime(500);
     expect(document.querySelector('.ng-loader')).toBeNull();
     expect(leakCounters()).toEqual(base);
+  });
+  it('with a shared scope, destroying the owner right after load leaves no timer and no element', async () => {
+    vi.useFakeTimers();
+    const base = leakCounters();
+    const scope = createScope();
+    const loader = runLoader({ root: document.body, t, tasks: [], scope });
+    await loader.done; // the 400 ms fade timer is now pending in the shared scope
+    expect(leakCounters().timers).toBe(base.timers + 1);
+    scope.destroy();
+    expect(leakCounters()).toEqual(base);
+    expect(document.querySelector('.ng-loader')).toBeNull();
+    loader.destroy();
   });
   it('honours minMs and can be destroyed early', async () => {
     vi.useFakeTimers();
