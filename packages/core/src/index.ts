@@ -13,3 +13,5 @@ export * from './audio';
 export * from './boot';
 export * from './loader';
 export * from './ui-kit';
+export * from './board-kit';
+export * from './ai-kit';

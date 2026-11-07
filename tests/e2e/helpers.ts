@@ -54,9 +54,13 @@ export async function press(target: Locator, opts: { timeout?: number } = {}): P
 /**
  * Layout problems on the current screen: any element whose content is wider than its box
  * (clipped or overflowing text, e.g. a stat tile that cuts "Medium"), or that sits outside the
- * viewport horizontally. Decorative layers (aria-hidden, confetti, the play arena) are skipped.
+ * viewport horizontally. Decorative layers (aria-hidden, confetti, the play arena) are skipped
+ * unless `include` (a CSS selector) names elements that must be checked anyway.
  */
-export async function layoutProblems(page: Page): Promise<string[]> {
+export async function layoutProblems(
+  page: Page,
+  opts: { include?: string } = {},
+): Promise<string[]> {
   // let entrance animations (title slam, toasts) finish: measure the settled layout
   await page.evaluate(() =>
     Promise.all(
@@ -66,13 +70,16 @@ export async function layoutProblems(page: Page): Promise<string[]> {
         .map((a) => a.finished.catch(() => undefined)),
     ),
   );
-  return page.evaluate(() => {
+  return page.evaluate((include) => {
     const vw = window.innerWidth;
     const out: string[] = [];
     for (const el of document.querySelectorAll<HTMLElement>('body *')) {
+      // `include` names elements that are checked even inside an aria-hidden layer (board labels)
+      const forced = include ? el.matches(include) : false;
       if (
-        el instanceof SVGElement ||
-        el.closest('[aria-hidden="true"],.arena,.ng-confetti,.ng-sweep,.ng-sr')
+        !forced &&
+        (el instanceof SVGElement ||
+          el.closest('[aria-hidden="true"],.arena,.ng-confetti,.ng-sweep,.ng-sr'))
       )
         continue;
       const cs = getComputedStyle(el);
@@ -89,7 +96,7 @@ export async function layoutProblems(page: Page): Promise<string[]> {
         );
     }
     return out;
-  });
+  }, opts.include);
 }
 
 /** Is the element fully inside the viewport right now, without scrolling? */

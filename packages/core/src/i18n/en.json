@@ -30,5 +30,8 @@
   "results.score": "Score",
   "results.best": "Best",
   "results.newBest": "New best!",
-  "results.stars": "{n} of 3 stars"
+  "results.stars": "{n} of 3 stars",
+  "dice.roll": "Roll the die",
+  "dice.pick": "Pick a die",
+  "dice.option": "Die {n}: {value}"
 }

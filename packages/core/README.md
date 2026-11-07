@@ -2,7 +2,7 @@
 
 Shared shell for every Naija Games title. One package, subpath exports, zero runtime dependencies,
 tree-shakeable. Budget: **core <= 60 KB gzip** including ui-kit, i18n runtime and the audio synth
-(measured by `npm run size`: 22.4 KB gzip of JS+CSS at the time of writing, fonts excluded; see "Size" below).
+(measured by `npm run size`: 22.5 KB gzip of JS+CSS for a game that uses only the shell, 27.9 KB for one that also pulls in board-kit and ai-kit; fonts excluded; see "Size" below).
 
 ```ts
 import { boot } from '@naija/core/boot'; // or: import { boot } from '@naija/core'
@@ -24,6 +24,8 @@ import { boot } from '@naija/core/boot'; // or: import { boot } from '@naija/cor
 | `/test-hook` | `window.__naijaTest` (non-production builds only).                                                                                                                                                                                                    |
 | `/lifecycle` | `createScope()`: `on / timeout / interval / raf / add / destroy`. Use it for EVERY listener, timer and RAF so `destroy()` cleans up and the leak counters are accurate.                                                                               |
 | `/sw`        | `registerServiceWorker()`. The worker file itself is generated at build time.                                                                                                                                                                         |
+| `/board-kit` | Seeded dice, a one-human-plus-N-CPU turn manager, transform-only piece movement, the dice view (cupped-hands shake, shake-to-roll, pick one of two). See "board-kit and ai-kit".                                                                      |
+| `/ai-kit`    | CPU opponent plumbing: difficulty profiles, natural thinking delay, personas, banter triggers and the bubble view. See "board-kit and ai-kit".                                                                                                        |
 | `/ui-kit`    | DOM + CSS components, see "UI kit". Importing it pulls in `styles/tokens.css`, `styles/skin.css` and `ui-kit.css`.                                                                                                                                    |
 
 ## Conventions
@@ -114,9 +116,77 @@ it) and use the designer's `.ng-*` classes (see `docs/assets/STYLE_GUIDE.md` sec
 `createHowToPlay`, `createDifficultyPicker` (native radios, Easy / Medium / Hard), `createPause`,
 `createModal` (dialog role, focus trap, Esc, focus restore), `createHud` (writes the DOM only when a
 value changes), `createResults`, `toast`, `createSettingsBar` (sound, music, language),
-`createScreenHost` (swap screens, destroy the old one, move focus), `button`, `h`.
+`createScreenHost` (swap screens, destroy the old one, move focus), `createSegmented` (generic radio-based choice, e.g. number of opponents), `button`, `h`.
 Tap targets are >= 44 px (skin.css), everything works with keyboard, strings come from `t()`.
 Language switches fire `i18n.onChange`; re-render the current screen there (the template does).
+
+## board-kit and ai-kit
+
+Built with Snakes & Ladders and reused by Ludo, Ayo and Whot. Everything is pure data plus small DOM
+helpers, tree-shakeable, and cleaned up through a core `Scope`.
+
+```ts
+import { createRng } from '@naija/core/rng';
+import {
+  rollDie,
+  rollTwoDice,
+  rollSum,
+  rollChoice,
+  takeChoice,
+  dieOutcomes, // seeded dice
+  createTurns,
+  advanceTurn,
+  currentSeat,
+  isHumanTurn,
+  isEveryNth, // 1 human + N CPUs
+  createMover,
+  trackSteps, // transform-only movement
+  createDiceView,
+  createShakeDetector,
+  bindShake, // dice UI
+} from '@naija/core/board-kit';
+import {
+  createCpu,
+  withMistakes,
+  PROFILES,
+  thinkDelayMs,
+  createThinker, // CPU opponents
+  createBanter,
+  createBubbleView, // personas and banter
+} from '@naija/core/ai-kit';
+```
+
+**Dice** take an `Rng` (`rng.getState()` goes into your saved state, so games replay exactly).
+`rollChoice(rng)` returns plain data `{ options: [a, b] }` for "pick one of two"; `takeChoice(choice, i)`.
+
+**Turns.** `createTurns({ human, cpus: [first, ...more], firstSeat? })`: `human` is one object and
+`cpus` a non-empty tuple, so a second human seat does not type-check (no pass-and-play, no player
+count). State is plain JSON; `advanceTurn(state, { again?, skip? })` returns a new state and counts
+each seat's own turns (`turnsTaken`, `isEveryNth(state, 5)`, `turnsUntilNth`).
+
+**Movement.** `createMover(el, { scope, format?, reducedMotion?, hopMs?, slideMs?, lift? })` moves a
+positioned element with the Web Animations API (`transform` only). `run(steps, { onStep })` hops
+through `PathStep[]` (`kind: 'hop' | 'slide'`) and resolves at the end; `place`, `finish`, `busy`.
+Coordinates are board units; `format(x, y)` returns the CSS transform, so cell fractions with
+`translate(x*100%, y*100%)` need no measuring and survive resizes. `trackSteps(from, to, cellOf)`
+builds the hops along a linear track. No `animate` support or reduced motion means it jumps.
+
+**Dice view.** `createDiceView(ctx, { reducedMotion?, shakeMs?, rollMs?, handsSrc?, art?, shake? })`:
+a >= 44 px die button (`el`), `roll(value | null)` (cupped-hands shake, then a tumble; `null` = shake
+only), `show`, `setEnabled`, `onRequest(cb)` (tap, or a shake via `devicemotion` where it exists; iOS
+permission is asked on the first tap), `choose([a, b])` (resolves 0 or 1; tap or keys 1/2),
+`showChoice` for a CPU's pick, `skip()`. `art: { src(n), blank? }` swaps the CSS pips for your die
+images. Strings `dice.roll`, `dice.pick`, `dice.option` live in core i18n.
+
+**CPU opponents.** A `Persona` is `{ id, nameKey, avatar, think?, banter: { [event]: i18nKeys[] } }`.
+`createCpu({ id, persona, difficulty, brains: { easy, medium, hard }, seed })` returns
+`{ decide(ctx), thinkMs(), profile, ... }`; each `Brain` is `{ decide(ctx, rng) }`, pure and seeded
+(the CPU owns its own rng so the dice sequence is never disturbed). `PROFILES` give every level a
+shared `skill`, `mistakeRate` (Medium slips 20 % of the time with `withMistakes`) and `thinkScale`.
+`thinkDelayMs(rng, persona, profile)` is always 0.4 to 1.2 s; `createThinker(scope, instant)` schedules
+the move through the scope (and runs it at once when `instant()` is true, for test autoplay).
+`createBanter({ t, rng, show })` picks a seeded line per event with a cooldown, per-event chance and a
+per-game cap; `createBubbleView(scope, { name })` shows one avatar bubble at a time (`.ng-banter`).
 
 ## Test hook
 

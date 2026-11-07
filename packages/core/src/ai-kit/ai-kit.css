@@ -1,0 +1,21 @@
+/* ai-kit: persona banter bubble (extends .ng-banter from skin.css) */
+.ng-bubble {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+  width: 100%;
+  pointer-events: none;
+}
+.ng-banter__avatar {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--ng-surface, #fff);
+  box-shadow: 0 0 0 2px var(--ng-accent, #ffc933);
+}
+.ng-banter__text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
+}

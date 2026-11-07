@@ -182,6 +182,20 @@ test.describe('_template: full playthrough', () => {
   });
 });
 
+test.describe('_template: narrow screens (QA D15)', () => {
+  test('HUD labels do not overflow at 320px wide, even on Hard', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await openGame(page, SLUG);
+    await press(page.locator('.ng-seg label', { hasText: 'Hard' }));
+    await press(page.locator('#menu-play'));
+    await expectScreen(page, 'play');
+    expect(await layoutProblems(page)).toEqual([]);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth),
+    ).toBeLessThanOrEqual(0);
+  });
+});
+
 test.describe('_template: settings, i18n, persistence', () => {
   test('sound, music and language persist across reloads', async ({ page }) => {
     const watch = watchErrors(page);

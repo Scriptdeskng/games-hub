@@ -22,6 +22,9 @@
     "./test-hook": "./src/test-hook/index.ts",
     "./lifecycle": "./src/lifecycle/index.ts",
     "./sw": "./src/sw/index.ts",
-    "./ui-kit": "./src/ui-kit/index.ts"
+    "./ui-kit": "./src/ui-kit/index.ts",
+    "./board-kit": "./src/board-kit/index.ts",
+    "./ai-kit": "./src/ai-kit/index.ts",
+    "./assets/*": "./assets/*"
   }
 }

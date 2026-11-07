@@ -1,3 +1,14 @@
 {
-  "games": [{ "slug": "_template", "title": "Tap the Agogo", "deploy": false }]
+  "games": [
+    {
+      "slug": "_template",
+      "title": "Tap the Agogo",
+      "deploy": false
+    },
+    {
+      "slug": "snakes-ladders",
+      "title": "Snakes & Ladders: Lagos Edition",
+      "deploy": true
+    }
+  ]
 }

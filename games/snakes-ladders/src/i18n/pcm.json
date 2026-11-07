@@ -1,0 +1,176 @@
+{
+  "game.title": "Snakes & Ladders",
+  "game.tagline": "Lagos Edition. Enter BRT, avoid go-slow!",
+  "game.howto.1": {
+    "text": "Tap di dice (or press Space) make e roll. Your pawn go hop as many squares as di dice show. Who reach square 100 first, na him win.",
+    "_review": true
+  },
+  "game.howto.2": {
+    "text": "If you land for di foot of ladder (BRT, okada, keke or bridge), you go ride up. If you land for pothole, go-slow, NEPA or toll queue, you go slide go down.",
+    "_review": true
+  },
+  "game.howto.3": {
+    "text": "You must roll di exact number to land for 100. If e too big, you go stay where you dey (you fit change am for Rules).",
+    "_review": true
+  },
+  "game.howto.4": {
+    "text": "One time for each game, you fit use Re-roll after you don see wetin you roll. You must keep di new one.",
+    "_review": true
+  },
+  "game.howto.5": {
+    "text": "Every 5th turn, you go roll two dice and keep one. Tap one dice, or press 1 or 2.",
+    "_review": true
+  },
+  "game.howto.6": {
+    "text": "If you dey use keyboard: Space or Enter na to roll and move, R na to re-roll, P or Esc na to pause. Di computer players dey follow di same rules.",
+    "_review": true
+  },
+  "menu.opponents": "Who you wan play against",
+  "menu.rules": "Rules",
+  "rules.title": "Rules",
+  "rules.note": "Di computer players dey follow di same rules as you.",
+  "rules.exact": "Exact roll to finish",
+  "rules.exact.help": "You must land for 100 exactly. If e too big, you go stay put.",
+  "rules.reroll": "Re-roll power-up",
+  "rules.reroll.help": "One time for each game, you fit throw away your roll and roll again.",
+  "rules.choice": "Two dice every 5th turn",
+  "rules.choice.help": "Roll two dice and keep di one wey you like.",
+  "player.you": "You",
+  "board.label": "Game board wey get 100 squares",
+  "play.yourTurn": "Your turn. Tap di dice make e roll.",
+  "play.yourTurnTwo": "Two dice this turn o! Tap di dice make e roll.",
+  "play.cpuTurn": "{name} dey think...",
+  "play.youRolled": "You roll {n}.",
+  "play.rolled": "{name} roll {n}.",
+  "play.decide": "You roll {n}. You wan move, or you go use your re-roll?",
+  "play.move": "Move",
+  "play.moveBy": "Move {n}",
+  "play.reroll": "Roll again",
+  "play.rerollLeft": "Roll again (you get one)",
+  "play.rerollUsed": "Roll again don finish",
+  "play.rerolled": "{name} don use di re-roll.",
+  "play.pick": "Pick one dice: tap am, or press 1 or 2.",
+  "play.cpuKeeps": "{name} take di {n}.",
+  "results.turns": "Your turns",
+  "results.wins": "Wins",
+  "results.streak": "Win streak",
+  "voice.sl.roll": {
+    "text": "Oya, roll am!",
+    "_review": true
+  },
+  "voice.sl.ladder": "Enter, enter! Up we go!",
+  "voice.sl.pothole": "Ah ah! Pothole!",
+  "voice.sl.goslow": "Go-slow don catch you!",
+  "voice.sl.six": "Six! Roll again!",
+  "voice.sl.reroll": {
+    "text": "Roll am again!",
+    "_review": true
+  },
+  "voice.sl.exact": {
+    "text": "Exact number, abeg!",
+    "_review": true
+  },
+  "voice.sl.almost": {
+    "text": "Almost there! E don near!",
+    "_review": true
+  },
+  "snakes.cap.8": {
+    "text": "Okada carry you! You pass the traffic.",
+    "_review": true
+  },
+  "snakes.cap.12": "BRT lane clear. Enter, make we go!",
+  "snakes.cap.22": {
+    "text": "Keke carry you pass the back road.",
+    "_review": true
+  },
+  "snakes.cap.32": "BRT express! No go-slow today.",
+  "snakes.cap.50": {
+    "text": "Okada shortcut, you no touch jam.",
+    "_review": true
+  },
+  "snakes.cap.56": {
+    "text": "Next stop dey far front o!",
+    "_review": true
+  },
+  "snakes.cap.64": {
+    "text": "Okada dey follow gap pass jam. Hold body!",
+    "_review": true
+  },
+  "snakes.cap.76": {
+    "text": "Bridge clear, you fly pass!",
+    "_review": true
+  },
+  "snakes.cap.98": "Toll-gate queue! Everybody dey wait.",
+  "snakes.cap.92": "Go-slow! Nothing dey move.",
+  "snakes.cap.88": {
+    "text": "Pothole! Bounce, bounce, you don slide back.",
+    "_review": true
+  },
+  "snakes.cap.80": {
+    "text": "Go-slow for the junction. Calm down, e go clear.",
+    "_review": true
+  },
+  "snakes.cap.62": "NEPA take light. Traffic light don off!",
+  "snakes.cap.58": "Big pothole! Slow down small.",
+  "snakes.cap.52": {
+    "text": "Market day go-slow! Everybody dey horn.",
+    "_review": true
+  },
+  "snakes.cap.44": "Pothole for service lane!",
+  "persona.tari.name": "Tari",
+  "persona.efe.name": "Efe",
+  "persona.aisha.name": "Aisha",
+  "persona.tari.2": "No wahala, I get this one.",
+  "persona.tari.3": "Wait, you sabi like this? Respect.",
+  "persona.tari.4": "I just dey warm up, abeg.",
+  "persona.tari.6": "Relax, make I cook.",
+  "persona.tari.7": "Lecture don end. Na game time now.",
+  "persona.efe.1": "Oya, enter, we dey go!",
+  "persona.efe.3": "Hold body, no go-slow for this road.",
+  "persona.efe.4": "Ehen! Who wan hear song?",
+  "persona.efe.6": "Na small pothole. We move on.",
+  "persona.efe.8": "Free ride today, but no miss your turn o!",
+  "persona.aisha.1": "You ready for challenge? I don read the whole book.",
+  "persona.aisha.4": "Fast hand, good brain. I like am.",
+  "persona.aisha.6": {
+    "text": "Sabi na power, but speed na points.",
+    "_review": true
+  },
+  "persona.aisha.7": "No worry. Everybody dey fail first time.",
+  "snakes.banter.tari.ladder": {
+    "text": "Omo, free ride! Respect.",
+    "_review": true
+  },
+  "snakes.banter.tari.snake": "Pothole? Abeg, na small thing.",
+  "snakes.banter.tari.six": "Six! Relax, make I cook.",
+  "snakes.banter.tari.win": {
+    "text": "Lecture don end. Game time na my own.",
+    "_review": true
+  },
+  "snakes.banter.tari.lose": "Wait, you sabi like this? Respect.",
+  "snakes.banter.efe.ladder": "Yellow bus, yellow luck!",
+  "snakes.banter.efe.snake": "Na small pothole. We move on.",
+  "snakes.banter.efe.six": "Oya, enter, we dey go!",
+  "snakes.banter.efe.win": "Last stop! Everybody don enjoy.",
+  "snakes.banter.efe.lose": {
+    "text": "You win the road today! Who wan hear song?",
+    "_review": true
+  },
+  "snakes.banter.aisha.ladder": "Correct route. I like am.",
+  "snakes.banter.aisha.snake": {
+    "text": "Haba! That one no lucky.",
+    "_review": true
+  },
+  "snakes.banter.aisha.six": {
+    "text": "Six. E no easy to get, but e sweet.",
+    "_review": true
+  },
+  "snakes.banter.aisha.win": {
+    "text": "Sabi na power, but luck dey help too.",
+    "_review": true
+  },
+  "snakes.banter.aisha.lose": {
+    "text": "Well played. Madalla!",
+    "_review": true
+  }
+}
