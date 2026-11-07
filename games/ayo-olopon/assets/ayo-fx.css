@@ -1,0 +1,84 @@
+/* Ayo Olopon art helpers (asset-designer). Import once from the game (import '../assets/ayo-fx.css').
+   Board box: set --ayo-ar to 1400/520 (landscape) or 520/1400 (portrait) on .ayo-board.
+   Positions come from board/layout.json (xPct, yPct). Transform and opacity only, so it stays at 50 fps. */
+.ayo-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--ayo-ar, 1400 / 520);
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ayo-board > img.ayo-board__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+/* a pit tap target: pit diameter = --d (percent of board width), centred on --x/--y (percent) */
+.ayo-pit {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  width: calc(var(--d) * 1%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.ayo-pit:focus-visible { outline: 3px solid var(--ng-focus, #ffd84d); outline-offset: 4px; }
+.ayo-pit[disabled] { cursor: default; }
+.ayo-state {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  width: calc(var(--o) * 1%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.ayo-seed {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--sz);
+  will-change: transform;
+  pointer-events: none;
+}
+.ayo-chip {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 3.4%;
+  min-width: 22px;
+  aspect-ratio: 1;
+  background: #2a1308;
+  border: 2px solid #f4f1e8;
+  border-radius: 50%;
+  box-sizing: border-box;
+  color: #f4f1e8;
+  font: 800 clamp(11px, 2.4vw, 16px) / 1 var(--ng-font-ui, system-ui);
+  pointer-events: none;
+}
+/* motion */
+@keyframes ayo-select { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.06); opacity: .85; } }
+.ayo-state--select, .ayo-state--hint { animation: ayo-select 900ms ease-in-out infinite; }
+@keyframes ayo-seed-drop { from { transform: translate3d(var(--fx, 0), var(--fy, -40%), 0) scale(1.35); opacity: 0; } 60% { opacity: 1; } to { transform: translate3d(var(--tx, 0), var(--ty, 0), 0) scale(1); } }
+.ayo-seed--drop { animation: ayo-seed-drop 140ms cubic-bezier(.3, 1.5, .5, 1) both; }
+@keyframes ayo-ripple { from { transform: translate(-50%, -50%) scale(.5); opacity: .9; } to { transform: translate(-50%, -50%) scale(1.15); opacity: 0; } }
+.ayo-fx--ripple { animation: ayo-ripple 380ms ease-out both; }
+@keyframes ayo-burst { 0% { transform: translate(-50%, -50%) scale(.3) rotate(0); opacity: 0; } 30% { opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.1) rotate(25deg); opacity: 0; } }
+.ayo-fx--burst { animation: ayo-burst 520ms ease-out both; }
+@keyframes ayo-tray-pop { 0% { transform: scale(1); } 40% { transform: scale(1.06); } 100% { transform: scale(1); } }
+.ayo-tray--pop { animation: ayo-tray-pop 260ms ease-out; transform-origin: center; }
+@keyframes ayo-drum { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-9deg); } 75% { transform: rotate(9deg); } }
+.ayo-turn-drum { animation: ayo-drum 600ms ease-in-out 2; }
+@media (prefers-reduced-motion: reduce) {
+  .ayo-state--select, .ayo-state--hint, .ayo-turn-drum { animation: none; }
+  .ayo-seed--drop, .ayo-fx--ripple, .ayo-fx--burst, .ayo-tray--pop { animation-duration: 1ms; }
+}

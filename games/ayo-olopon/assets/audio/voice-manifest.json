@@ -1,0 +1,141 @@
+{
+  "_readme": "Ayo Olopon voice placeholders (silent mp3, ogg null until human delivery). Shared lines (oya, your-turn, you-don-win, no-shaking, e-ku-ise, e-don-do) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "ay-start",
+      "text": {
+        "pcm": "Oya, make we play Ayo!",
+        "en": "Come on, let's play Ayo!"
+      },
+      "files": {
+        "mp3": "voice/vo-ay-start.mp3",
+        "ogg": null
+      },
+      "emotion": "Warm, inviting, like pulling up a stool at the game table.",
+      "voice": "M, 60s, Yoruba-English speaker (Baba Ade)",
+      "usedFor": "game start (Baba Ade)",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "ay-capture",
+      "text": {
+        "pcm": "Ehen! Those seeds don enter my tray.",
+        "en": "Ehen! Those seeds are in my tray now."
+      },
+      "files": {
+        "mp3": "voice/vo-ay-capture.mp3",
+        "ogg": null
+      },
+      "emotion": "Pleased and calm, a teacher making a point; never gloating.",
+      "voice": "M, 60s (Baba Ade)",
+      "usedFor": "CPU captures",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ay-chain",
+      "text": {
+        "pcm": "Chain o! E dey go, e dey go!",
+        "en": "A chain! It keeps going!"
+      },
+      "files": {
+        "mp3": "voice/vo-ay-chain.mp3",
+        "ogg": null
+      },
+      "emotion": "Excited, rising, sing-song; a little breathless on the repeat.",
+      "voice": "M or F, 30s",
+      "usedFor": "capture chain of 3 or more pits",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ay-lost",
+      "text": {
+        "pcm": "Ah ah, you carry my seeds!",
+        "en": "Oh, you took my seeds!"
+      },
+      "files": {
+        "mp3": "voice/vo-ay-lost.mp3",
+        "ogg": null
+      },
+      "emotion": "Playful surprise, a laugh at the end; never bitter.",
+      "voice": "M, 60s (Baba Ade) or M, 30s (Efe)",
+      "usedFor": "player captures",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ay-feed",
+      "text": {
+        "pcm": "Give am seed, abeg. Rule be rule.",
+        "en": "Give them seeds, please. The rule is the rule."
+      },
+      "files": {
+        "mp3": "voice/vo-ay-feed.mp3",
+        "ogg": null
+      },
+      "emotion": "Patient teacher reminding, friendly and clear.",
+      "voice": "M, 60s (Baba Ade)",
+      "usedFor": "must-feed rule prompt",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ay-count",
+      "text": {
+        "pcm": "Count your seeds well well.",
+        "en": "Count your seeds carefully."
+      },
+      "files": {
+        "mp3": "voice/vo-ay-count.mp3",
+        "ogg": null
+      },
+      "emotion": "Slow, measured, like counting aloud on the fingers.",
+      "voice": "M, 60s (Baba Ade)",
+      "usedFor": "idle hint prompt",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "ay-skip",
+      "text": {
+        "pcm": "We no dey drop for the same house.",
+        "en": "We skip the house we started from."
+      },
+      "files": {
+        "mp3": "voice/vo-ay-skip.mp3",
+        "ogg": null
+      },
+      "emotion": "Gentle explanation, a small smile.",
+      "voice": "M, 60s (Baba Ade)",
+      "usedFor": "origin-skip rule tooltip (12+ seeds)",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ay-close",
+      "text": {
+        "pcm": "E don almost do. Count your tray!",
+        "en": "It's almost over. Count your tray!"
+      },
+      "files": {
+        "mp3": "voice/vo-ay-close.mp3",
+        "ogg": null
+      },
+      "emotion": "Friendly, building anticipation as the game nears its end.",
+      "voice": "F or M, 30s",
+      "usedFor": "few seeds left on the board",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "include": [
+    "agogo.svg",
+    "board/board-landscape.svg",
+    "board/board-portrait.svg",
+    "seeds/*.svg",
+    "counters/*.svg",
+    "states/*.svg",
+    "fx/*.svg",
+    "icon/menu-mark.svg"
+  ],
+  "dynamic": [
+    "seeds/seed-*.svg",
+    "counters/counter-*.svg",
+    "states/pit-*.svg"
+  ],
+  "keep": []
+}

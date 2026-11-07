@@ -84,3 +84,6 @@ Files in `games/naija-ludo/assets/audio/voice/vo-<id>.mp3` (silent placeholders)
 | `ld-exact` | Exact number, abeg! `_review` | You need the exact number! | Friendly reminder. | F, 30s | exact-roll rule | `vo-ld-exact.mp3` |
 | `ld-safe` | You safe for here! `_review` | Safe on the star! | Reassuring. | F, 30s | landing on a star | `vo-ld-safe.mp3` |
 | `ld-last` | Last one! Carry am go home! `_review` | Last seed! Take it home! | Encouraging, rising. | M, 30s | final seed | `vo-ld-last.mp3` |
+
+## Game-specific lines: Ayo Olopon
+Files in `games/ayo-olopon/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Full table with directions: `docs/assets/ayo-olopon-brief.md` section 9. Lines: `ay-start` (Oya, make we play Ayo!), `ay-capture`, `ay-chain`, `ay-lost`, `ay-feed`, `ay-count`, `ay-skip`, `ay-close`. Lines marked `_review` need a native Pidgin check. Shared lines also used: `oya`, `your-turn`, `you-don-win`, `no-shaking`, `e-ku-ise`, `e-don-do`.
