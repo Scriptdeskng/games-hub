@@ -67,7 +67,6 @@ export const LAST_TRACK = 50;
 /** progress of the home triangle (the end of the 6-square home column 51..56) */
 export const HOME = 56;
 export const MAX_ROLL = 6;
-export const MAX_SLOTS = 4;
 export const SEEDS_CLASSIC = 4;
 export const SEEDS_QUICK = 2;
 /** 1 CPU sits opposite the human; 3 CPUs fill the other corners. Never 2. */

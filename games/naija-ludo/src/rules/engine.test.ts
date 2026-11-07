@@ -207,7 +207,7 @@ describe('movement, capture and safe squares', () => {
   });
 
   it('cannot capture on a star square or on any start square', () => {
-    for (const idx of [8, 21, 34, 47, 13, 39, 26, 0]) {
+    for (const idx of [8, 21, 34, 47, 13, 39, 26]) {
       const from = (idx - 3 + 52) % 52;
       // human is slot 0: it can stand on idx only at progress idx (0..50)
       if (idx > 50) continue;
@@ -218,6 +218,19 @@ describe('movement, capture and safe squares', () => {
       const s = apply(s0, { type: 'move', seed: 0 });
       expect(s.players[1]!.seeds[0]).toBe(cpuAt(idx));
     }
+  });
+
+  it('a release onto the start square does not capture a lone opponent seed there', () => {
+    // square 0 is the human start square; the opponent seed sits on it (progress 26 for slot 2)
+    const s0 = setup(make(), { you: YARD4, c1: [cpuAt(0), -1, -1, -1] }, 6);
+    const mv = legalMoves(s0).find((m) => m.seed === 0);
+    expect(mv, 'release is legal').toBeTruthy();
+    expect(mv!.to).toBe(0);
+    expect(mv!.captures).toEqual([]);
+    const s = apply(s0, { type: 'move', seed: 0 });
+    expect(s.players[1]!.seeds[0]).toBe(cpuAt(0));
+    expect(s.players[0]!.seeds[0]).toBe(0);
+    expect(s.lastMove!.again).toBe('six');
   });
 
   it('the bonus roll only follows a real capture', () => {
@@ -280,6 +293,25 @@ describe('stacks (two or more same-colour seeds on a square)', () => {
     const s = apply(stackSetup({ stacks: 'off' }), { type: 'move', seed: 0 });
     expect(s.lastMove!.captures).toHaveLength(2);
     expect(s.players[1]!.seeds).toEqual(YARD4);
+  });
+
+  it('off: capturing a whole stack earns no bonus roll, even with captureBonus on', () => {
+    const s = apply(stackSetup({ stacks: 'off', captureBonus: true }), { type: 'move', seed: 0 });
+    expect(s.lastMove!.captures).toHaveLength(2);
+    expect(s.lastMove!.again).toBeNull();
+    expect(currentPlayer(s).id).toBe('c1');
+  });
+
+  it('off: capturing a lone seed still earns the bonus roll', () => {
+    const s0 = setup(
+      make({ stacks: 'off' }),
+      { you: [6, -1, -1, -1], c1: [cpuAt(10), -1, -1, -1] },
+      4,
+    );
+    const s = apply(s0, { type: 'move', seed: 0 });
+    expect(s.lastMove!.captures).toHaveLength(1);
+    expect(s.lastMove!.again).toBe('capture');
+    expect(currentPlayer(s).id).toBe('you');
   });
 
   it('block: nobody may land on or pass a blockade', () => {

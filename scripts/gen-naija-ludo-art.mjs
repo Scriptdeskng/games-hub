@@ -360,35 +360,6 @@ w(
     ' width="128" height="128"',
   ),
 );
-const RB = {
-  gold: '#E8AE32',
-  wine: '#8C1D3D',
-  orange: '#E4702A',
-  green: '#0E7A3B',
-  cream: '#F3FAF4',
-};
-w(
-  'fx/confetti.svg',
-  svg(
-    '0 0 16 44',
-    `${Object.entries(RB)
-      .map(
-        ([n, c]) =>
-          `<symbol id="rb-${n}" viewBox="0 0 16 44"><path d="M4 2C13 10 3 16 12 22S3 34 8 42" fill="none" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M4 2C13 10 3 16 12 22S3 34 8 42" fill="none" stroke="${c}" stroke-width="5.5" stroke-linecap="round"/></symbol>`,
-      )
-      .join('')}`,
-    ' width="0" height="0" style="position:absolute"',
-  ),
-);
-w(
-  'fx/stripe-sweep.svg',
-  svg(
-    '0 0 256 48',
-    `<rect width="256" height="48" fill="#8C1D3D"/><rect y="4" width="256" height="8" fill="#E8AE32"/><rect y="16" width="256" height="4" fill="#F3FAF4"/><rect y="24" width="256" height="10" fill="#E4702A"/><rect y="38" width="256" height="6" fill="#E8AE32"/><path d="M0 22h256M0 36h256" stroke="${INK}" stroke-width="1.5" stroke-dasharray="6 6" opacity=".5"/>`,
-    ' width="256" height="48" preserveAspectRatio="none"',
-  ),
-);
-
 // ---- thumbnails (no text)
 const seedUse = (s, x, y, k) =>
   `<g transform="translate(${x} ${y}) scale(${k})">${(() => {

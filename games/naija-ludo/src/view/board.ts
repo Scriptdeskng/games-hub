@@ -59,8 +59,6 @@ export interface BoardView extends Component {
   setSelected(seed: number | null): void;
   /** Whose turn it is: that colour's seeds bob. */
   setTurn(id: string | null): void;
-  /** Finish every running animation at once. */
-  finish(): void;
 }
 
 interface Seed {
@@ -323,9 +321,6 @@ export function createBoard(o: BoardOptions): BoardView {
     },
     setTurn(id) {
       for (const s of seeds) s.el.classList.toggle('is-turn', s.id === id);
-    },
-    finish() {
-      for (const s of seeds) s.mover.finish();
     },
     destroy() {
       scope.destroy();

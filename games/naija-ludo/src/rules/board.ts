@@ -5,7 +5,6 @@ export const trackIndex = (slot: number, progress: number): number =>
   (ARM * slot + progress) % TRACK_SIZE;
 
 /** A colour's start square. */
-export const startIndex = (slot: number): number => ARM * slot;
 
 /**
  * Safe squares: every colour's start square and the star square 8 steps after it

@@ -1,5 +1,5 @@
 import { isSafeSquare, trackDistance, trackIndex } from '../rules/board';
-import { LAST_TRACK, MAX_ROLL, type Rules } from '../rules/config';
+import { LAST_TRACK, MAX_ROLL } from '../rules/config';
 import { apply, currentPlayer, type GameState, type Move, type Player } from '../rules/engine';
 
 /**
@@ -85,5 +85,3 @@ export function scoreMove(s: GameState, m: Move): number {
   v += m.to * 0.05;
   return v;
 }
-
-export const rulesKey = (r: Rules): string => JSON.stringify(r);

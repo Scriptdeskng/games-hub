@@ -111,8 +111,8 @@ members exist only inside `__NAIJA_TEST__` branches and `scripts/prod-gate.mjs` 
 
 Listed with their licences in `assets/CREDITS.md`. `assets/ship.json` is the ship list and is
 checked both ways: every shipped file must be referenced by the built code, `dynamic` (names built at
-run time) or `keep`. `fx/confetti.svg`, `fx/stripe-sweep.svg`, the thumbnails and the placeholder
+run time) or `keep`. The thumbnails and the placeholder
 audio are not shipped: the shared results screen already celebrates a win, and nothing in the game
-references them. The music is synthesised by `src/audio/music.ts` until a composer delivers the
+references them. The home confetti and stripe sweep art was removed (deferred, see the brief). The music is synthesised by `src/audio/music.ts` until a composer delivers the
 highlife loops (`assets/audio/music/*.mp3` are silent placeholders and do not ship). The voice
 player is not wired yet (the same known gap as Snakes & Ladders).

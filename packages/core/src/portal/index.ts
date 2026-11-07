@@ -63,8 +63,12 @@ export function isAllowedOrigin(
     });
   }
   if (origin === DEFAULT_PORTAL_ORIGIN) return true;
-  const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
-  return allowLocal && local && u.protocol === 'http:';
+  // dev-only branch: `__NAIJA_TEST__` is a compile-time constant, so production drops it entirely
+  if (typeof __NAIJA_TEST__ !== 'undefined' && __NAIJA_TEST__) {
+    const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
+    return allowLocal && local && u.protocol === 'http:';
+  }
+  return false;
 }
 
 export function parsePortalParams(

@@ -212,7 +212,6 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
 
   async function showRoll(value: number): Promise<void> {
-    core.audio.playSfx('roll');
     await alive(ui.dice.roll(value));
     core.audio.playSfx('diceLand');
     if (value === MAX_ROLL) {

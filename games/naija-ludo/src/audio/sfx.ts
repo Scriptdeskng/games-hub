@@ -5,11 +5,6 @@
 import type { SfxMap } from '@naija/core/audio';
 
 export const ludoSfx: SfxMap = {
-  /** Shekere dice shake, ekwe thud as the die lands on the wooden table. */
-  roll: [
-    { voice: 'shekere', gain: 0.9 },
-    { voice: 'ekwe', pitch: 0.6, when: 0.2, gain: 0.8 },
-  ],
   diceLand: [
     { voice: 'ekwe', pitch: 0.77 },
     { voice: 'udu', pitch: 1.2, when: 0.02, gain: 0.6 },

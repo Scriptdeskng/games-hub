@@ -283,7 +283,7 @@ function execute(s: GameState, m: Move): GameState {
   const mover = players[s.turns.index] as Player;
   const won = homeCount(mover) >= homeTarget(s.rules);
   const again: MoveRecord['again'] =
-    value === MAX_ROLL ? 'six' : m.captures.length && s.rules.captureBonus ? 'capture' : null;
+    value === MAX_ROLL ? 'six' : m.captures.length === 1 && s.rules.captureBonus ? 'capture' : null;
   const lastMove: MoveRecord = { ...m, playerId: me.id, roll: value, again, won };
   const next: GameState = { ...s, players, lastMove };
   if (won) return { ...next, phase: 'over', roll: null, winner: me.id };

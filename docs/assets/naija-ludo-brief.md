@@ -5,7 +5,7 @@ Palette: **Naija Green** (`theme-naija-green`: `#0B3D22` bg, `#06281A` bg-2, `#F
 Status: all art is **made in-repo** (original SVG from shapes, generator `scripts/gen-naija-ludo-art.mjs`). Hero art, music and voice need humans (section 9).
 
 ## 1. Cultural concept
-A Ludo table on a "Naija Green" cloth: a 15x15 cross board whose cream track runs between four seat yards, each woven in a different Nigerian textile. Safe squares carry a gold star over an **adire** resist-dye fill (indigo rings and dots on cream). Each yard has its own pattern: **adire rings** (Pepper Red), **aso-oke stripes** (Danfo Yellow), **akwete zigzag** (Adire Indigo), **uli leaf-and-wave line** (Ugu Green). Home arrival is celebrated with an aso-oke stripe sweep and gele-ribbon confetti. Opponents are Funmi (bubbly, never retreats), Baba Ade (proud retired teacher) and Malam Sani (calm strategist).
+A Ludo table on a "Naija Green" cloth: a 15x15 cross board whose cream track runs between four seat yards, each woven in a different Nigerian textile. Safe squares carry a gold star over an **adire** resist-dye fill (indigo rings and dots on cream). Each yard has its own pattern: **adire rings** (Pepper Red), **aso-oke stripes** (Danfo Yellow), **akwete zigzag** (Adire Indigo), **uli leaf-and-wave line** (Ugu Green). Home arrival is celebrated with a home rosette; the aso-oke stripe sweep and gele-ribbon confetti are deferred (see Deferred items). Opponents are Funmi (bubbly, never retreats), Baba Ade (proud retired teacher) and Malam Sani (calm strategist).
 
 Regions and traditions: **Yoruba** (adire, aso-oke, gele, Funmi from Lagos, Baba Ade from Ibadan), **Igbo** (akwete diamonds, uli line, udu and ekwe in the SFX), **Hausa-Fulani** (Malam Sani from Kano; highlife music is pan-Nigerian, West-African coastal in origin, born in Ghana and Nigeria, so we brief it with Nigerian highlife players), **urban Lagos** (shekere/talking-drum street feel). Third CPU reason: two Yoruba personas already sit at the table, so the third seat goes to the **North (Hausa-Fulani)** for regional balance (Principle 3). Rotation alternative for a later game counter: Chidi (Igbo, Owerri).
 
@@ -47,8 +47,6 @@ Seat order is **clockwise** and fixed to board positions (art is baked). Colour 
 | 9 | `fx/move-ring.svg` | 64x64 | SVG | Movable-seed dashed ring (white over ink, readable on every cell) | |
 | 10 | `fx/target-marker.svg` | 48x48 | SVG | Landing-square pin | |
 | 11 | `fx/home-rosette.svg` | 128x128 | SVG | Home reached: aso-oke stripes bent into a rosette, pops at the centre | aso-oke |
-| 12 | `fx/confetti.svg` | sprite, 5 ribbon symbols 16x44 (`rb-gold`, `rb-wine`, `rb-orange`, `rb-green`, `rb-cream`) | SVG sprite | Gele-ribbon confetti, tiny | gele |
-| 13 | `fx/stripe-sweep.svg` | 256x48 tile | SVG | Aso-oke stripe band swept across the screen on a win | aso-oke |
 | 14 | `thumb/thumb-512x512.svg`, `thumb/thumb-1024x500.svg` | | SVG sources | Portal thumbnails, no text (export to `.webp` at the human pass) | hero art placeholder |
 | 15 | `audio/music/ludo-menu-highlife.mp3`, `ludo-play-highlife.mp3` | silent | mp3 | Music placeholders (section 7) | |
 | 16 | `audio/voice/vo-ld-*.mp3` (8) and `audio/voice-manifest.json` | silent | mp3, json | Voice placeholders (section 8) | |
@@ -131,3 +129,7 @@ Files `assets/audio/voice/vo-<id>.mp3`; shared lines reused: `oya`, `your-turn`,
 4. **Celebrate, never mock:** banter is about the game only; capture lines are kind; no money jokes. Pass.
 5. **Original work only:** all shapes drawn in the generator; no traced textile, brand or logo; nsibidi and ceremonial uli compositions not used (uli is an abstract leaf and wave line). Pass.
 Avoid-list: no sacred, shrine, masquerade or party-colour symbols; stars are plain game safety marks; no real banknotes; plain board-game die only (HUMAN_ASSETS #11); no generic blips. Accessibility: seats differ by silhouette, inner mark, yard pattern, letter tag and centre mini shape, checked in greyscale at 16 and 24 px (`scripts/check-naija-ludo-art.mjs`).
+
+## Deferred items (QA D-03 / D-05)
+
+Deferred to the human / polish phase: the home-arrival aso-oke stripe sweep and gele-ribbon confetti (the `fx/confetti.svg` and `fx/stripe-sweep.svg` art was removed from the repo and the generator; recreate it if the polish phase wires it), and the 8 voice lines (`vo-ld-*.mp3`, not recorded and not wired). Home arrival currently uses the home rosette only.

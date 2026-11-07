@@ -79,14 +79,20 @@
   "ludo.banter.baba-ade.captured": "Hmm. Interesting move. Very interesting.",
   "ludo.banter.baba-ade.home": "One seed is home. Patience pays.",
   "ludo.banter.baba-ade.forfeit": "Three sixes. Even the dice can be too eager.",
-  "ludo.banter.baba-ade.win": "Ẹ kú iṣẹ́! Well done on your work.",
+  "ludo.banter.baba-ade.win": {
+    "text": "Ẹ kú iṣẹ́! Well done on your work.",
+    "_review": true
+  },
   "ludo.banter.baba-ade.lose": "Ah! You have caught me. Well played.",
   "ludo.banter.malam-sani.six": "Six. I waited, and it came.",
   "ludo.banter.malam-sani.capture": "Sorry, my friend. Patience is also a move.",
   "ludo.banter.malam-sani.captured": "No problem. We learn from every game.",
   "ludo.banter.malam-sani.home": "One is home.",
   "ludo.banter.malam-sani.forfeit": "Three sixes. The turn goes on. No problem.",
-  "ludo.banter.malam-sani.win": "Madalla! A good move.",
+  "ludo.banter.malam-sani.win": {
+    "text": "Madalla! A good move.",
+    "_review": true
+  },
   "ludo.banter.malam-sani.lose": "A calm mind wins. Well played.",
   "persona.funmi.short": "Funmi",
   "persona.baba-ade.short": "Ade",
