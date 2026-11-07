@@ -1,0 +1,16 @@
+{
+  "include": [
+    "board/board.svg",
+    "board/yards.svg",
+    "board/legend.svg",
+    "seeds/*.svg",
+    "dice/*.svg",
+    "fx/capture-burst.svg",
+    "fx/six-burst.svg",
+    "fx/home-rosette.svg",
+    "fx/move-ring.svg",
+    "fx/target-marker.svg"
+  ],
+  "dynamic": ["seeds/seed-*.svg", "seeds/badge-*.svg", "dice/die-*.svg"],
+  "keep": []
+}

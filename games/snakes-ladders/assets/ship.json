@@ -5,6 +5,8 @@
     "board/landmarks.svg",
     "dice/*.svg",
     "icons/*.svg",
-    "pawns/*.svg"
-  ]
+    "pawns/pawn-*.svg"
+  ],
+  "dynamic": ["dice/die-*.svg", "icons/*.svg", "pawns/pawn-*.svg"],
+  "keep": []
 }

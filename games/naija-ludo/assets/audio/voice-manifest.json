@@ -1,0 +1,141 @@
+{
+  "_readme": "Naija Ludo voice placeholders (silent mp3, ogg null until human delivery). Shared lines (oya, your-turn, you-don-win, no-shaking, e-don-do, sweet) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "ld-six",
+      "text": {
+        "pcm": "Six! Oya, comot!",
+        "en": "Six! Out you come!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-six.mp3",
+        "ogg": null
+      },
+      "emotion": "Punchy, bright.",
+      "voice": "F, 30s",
+      "usedFor": "rolled a six",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ld-capture",
+      "text": {
+        "pcm": "Ah ah, captured!",
+        "en": "Oh, captured!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-capture.mp3",
+        "ogg": null
+      },
+      "emotion": "Playful surprise, never mocking.",
+      "voice": "M, 30s",
+      "usedFor": "a capture",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "ld-home",
+      "text": {
+        "pcm": "E don reach house!",
+        "en": "One seed home!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-home.mp3",
+        "ogg": null
+      },
+      "emotion": "Warm, pleased.",
+      "voice": "F, 40s",
+      "usedFor": "seed reaches home",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ld-again",
+      "text": {
+        "pcm": "Roll again o!",
+        "en": "Roll again!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-again.mp3",
+        "ogg": null
+      },
+      "emotion": "Friendly nudge.",
+      "voice": "M or F, 20s",
+      "usedFor": "bonus roll",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": false
+    },
+    {
+      "id": "ld-triple",
+      "text": {
+        "pcm": "Three sixes o! Turn don pass.",
+        "en": "Three sixes! Turn passes."
+      },
+      "files": {
+        "mp3": "voice/vo-ld-triple.mp3",
+        "ogg": null
+      },
+      "emotion": "Gentle comic sympathy.",
+      "voice": "M, 30s",
+      "usedFor": "triple six forfeits the turn",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ld-exact",
+      "text": {
+        "pcm": "Exact number, abeg!",
+        "en": "You need the exact number!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-exact.mp3",
+        "ogg": null
+      },
+      "emotion": "Friendly reminder.",
+      "voice": "F, 30s",
+      "usedFor": "exact-roll rule",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ld-safe",
+      "text": {
+        "pcm": "You safe for here!",
+        "en": "Safe on the star!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-safe.mp3",
+        "ogg": null
+      },
+      "emotion": "Reassuring.",
+      "voice": "F, 30s",
+      "usedFor": "landing on a star",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    },
+    {
+      "id": "ld-last",
+      "text": {
+        "pcm": "Last one! Carry am go home!",
+        "en": "Last seed! Take it home!"
+      },
+      "files": {
+        "mp3": "voice/vo-ld-last.mp3",
+        "ogg": null
+      },
+      "emotion": "Encouraging, rising.",
+      "voice": "M, 30s",
+      "usedFor": "final seed",
+      "region": "Pidgin",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true
+    }
+  ]
+}
