@@ -170,3 +170,119 @@ Pidgin suggestions for SL-07 (keys in `pcm.json`; `_review` lines still need a n
 ### Other notes
 - Core `perf()` reports 0 fps because the game has no RAF loop. The e2e fps numbers come from Playwright's frame sampler. Consider a core fps sampler that does not depend on the loop.
 - Landscape results (SL-01) and the portrait Pidgin pick (SL-02) need a visual re-check after the fix on real hardware.
+
+---
+
+# Round 2 (2026-11-07, commit 02b77a7 on `game/snakes-ladders`, tree clean at HEAD)
+
+Verdict: **PASS** (0 blockers, 0 majors; all gates green). Round 1 FAILED on SL-01, SL-02 and SL-03; all three are fixed and re-verified below. Remaining items are minors and human-review questions, listed at the end of this section.
+
+## Summary
+- Every gate is green, including the template e2e and e2e:extra that the portal and shared-code fixes touched. Numbers are higher than round 1: 279 unit tests (was 267), 42 mobile e2e (was 32), 42 landscape and desktop e2e (was 32), game 108.6 KB gz (was 112.6), core 28.5 KB gz (was 27.9). The coordinator's claimed numbers match exactly.
+- Each of SL-01 to SL-13 was checked against the round 1 behaviour, not just the code. A side-by-side probe on the round 1 build (built from `git archive b1a541b` into tmp/qa) and the round 2 build gave: landscape tiles covered 3 to 0; spent pick button right edge 364 to 345 px; portal iframe console messages 5 to 0; token Referer on subresources 9 to 0; requests to a crafted `evil.example` portal 2 to 0. Six of the new e2e tests fail on the round 1 tree (see item 2).
+- The remaining issues are minor: the art generator no longer reproduces the redrawn pawns, `ship.json` does not fail the build on unreferenced assets, pawns lost their shape distinction and still cover the square-1 landmark, plus unreachable test-API methods in the production bundle and a module-level planner memo. Cultural review items are listed at the end.
+
+## Gates (re-run in round 2)
+
+| Gate | Result | Numbers |
+|---|---|---|
+| lint (eslint + prettier) | PASS | exit 0 |
+| typecheck | PASS | exit 0 |
+| i18n:check | PASS | "i18n check OK"; 47 `_review` lines in total, 38 of them snakes-ladders/pcm |
+| `npm test -- --coverage` | PASS | 30 files, 279 tests passed (was 267). All files 99.73% stmts. `games/snakes-ladders/src/rules`: 100% stmts, 99.11% branches, 100% funcs, 100% lines (threshold 90). `design.ts` and `layout.ts` 100% |
+| build + prod-gate | PASS | "prod-gate OK: 12 files scanned, no test hook or autoplay code in dist/" |
+| size | PASS | snakes-ladders game 108.6 KB gz (102.0 br) of 3072 KB; core 28.5 KB gz of 60 KB. Matches the claim |
+| e2e snakes-ladders (375x812, 360x640) | PASS | 42 passed (was 32) |
+| e2e:extra snakes-ladders (812x375, 1280x800) | PASS | 42 passed (was 32) |
+| e2e:perf snakes-ladders | PASS | time to menu 1513 ms (budget 4000); fps avg 59.9, min 59; core `perf()` hook now reports avg 60, min 59 (round 1 reported 0, now fixed); heap 2.17 MB |
+| e2e _template (375x812, 360x640) | PASS | 36 passed |
+| e2e:extra _template (landscape, desktop) | PASS | 36 passed |
+| soak 3 min | PASS | 33 rounds. Heap 0.1 min 2.11 MB, 1.0 min 2.42, 2.1 min 2.49, 3.0 min 2.48. Slope 24 KB/min (limit 100). Counters flat |
+
+## Round 1 defects: fix verification
+
+| ID | Status | Evidence |
+|---|---|---|
+| SL-01 landscape results hide tiles (major) | FIXED | Round 1 build: 3 stat tiles under the action bar. Round 2 build, 812x375, en and pcm, win and lose: 0 tiles covered, all five tiles and both actions visible at scroll top, no horizontal overflow. I read the screenshots `tmp/qa/r2/land-results-en-win.png` and `land-results-pcm-lose.png`: the banner and tiles sit side by side, the actions below them, nothing hidden. The new `stickyOverlaps` test was not run on the round 1 tree (the landscape project was not re-run there); the round 1 probe showed the overlap. Fix is the landscape grid in `ui-kit.css:168-206` |
+| SL-02 pcm re-roll 4 px past 360 px (major) | FIXED | 360x640 pcm, two-dice pick, re-roll spent: button right edge 345 px (round 1: 364). Screenshot `tmp/qa/r2/pick-spent-360-pcm.png` read: "Re-roll don use" fits in the card, grey fill, dark text, slashed icon. The new test "play pick, re-roll spent" plus the spent-state contrast assertion fails on the round 1 tree. `.sl-actions` is now `flex-wrap: wrap` (`style.css:400-410`) |
+| SL-03 five permissions-policy console errors in the portal iframe (major) | FIXED | Iframe with `allow="accelerometer; gyroscope"`: 0 console errors, order "ready > start > score... > level_complete > end, order OK". Iframe with the attribute removed (`?noallow=1`): 0 console errors, same event order. Round 1 build: 5 policy errors. `shake.ts` `motionAllowed()` attaches the `devicemotion` listener only when both sensors are allowed. Mock portal now sets the attribute by default (`tools/mock-portal.html:108-110`). Two new e2e tests (with and without the attribute) fail on the round 1 tree |
+| SL-04 D14: crafted `?portal=` gets the token (minor) | FIXED | Round 2: `?portal=` values `https://evil.example`, `https://m.gamesplash.com.ng.evil.example`, `http://m.gamesplash.com.ng`, `https://localhost.evil.example`: 0 requests to any of them, 0 tokens sent. Round 1: 2 requests carrying `Bearer tok_probe_evil`. Default is now `DEFAULT_PORTAL_ORIGIN` only (`portal/index.ts:21`, `isAllowedOrigin` 36-58). See item 3 for the bypass audit |
+| SL-05 token in Referer (minor) | FIXED | `<meta name="referrer" content="no-referrer">` in `index.html:11` (and in `_template`). Subresource requests in an iframe playthrough: round 1 9 of 12 carried `?token=` in Referer; round 2 0 of 12 (empty Referer). The document URL still contains the token by portal contract (see human review) |
+| SL-06 unused assets shipped (minor) | FIXED | `assets/ship.json` include list. `dist/snakes-ladders/assets` now holds only: board-bg, connectors, landmarks; dice (9 SVGs: die-1 to die-6, die-roll, dice-pick-two, hands-cup); icons (2); pawns (5). Overlay, thumbs, music and voice placeholders are no longer shipped (round 1: about 43 KB raw). Verified by `find dist/snakes-ladders` |
+| SL-07 Pidgin naturalness (minor) | FIXED | All 8 suggested fixes are applied in `pcm.json`: "Okada go carry you", "Keke go carry you", "squeeze pass di jam", "for di junction", "You don win di road today", "Dat one no lucky", "Tap one of di dice", "Pick di one wey you want". "Re-roll don use" and "You ready for wahala?" were also reworded. Remaining Pidgin notes are in the new round 2 review list below |
+| SL-08 "New record!" on a loss (minor) | FIXED | Pcm loss and en loss: no record banner (`newRecord=false`). A win still shows "New best!" (en) or "New record!" (pcm). Round 1 showed "New record!" on the loss |
+| SL-09 spent re-roll contrast (minor) | FIXED | `style.css:419-424`: opacity 1, grey fill `#c9c9cf`, text `#1d1d20`, computed contrast 10.2:1 (round 1: about 3.5:1 at 60% opacity) |
+| SL-10 test gaps (minor) | MOSTLY FIXED | (a) re-roll on turn 4 and turn 5 now tested: `engine.test.ts:435` and `:448`; (b) pawns sharing a square tested: `engine.test.ts:473`; (c) layout checks added in `rules/design.ts` (6 to 10 entries, no crossings, no touching ends, gain/loss within 10%), run by `layout.test.ts:173-183`. Landmark clearance is still not checked |
+| SL-11 pawns (minor) | NOT FIXED (new finding) | Pawns were redrawn (see item 5). Colour now distinguishes them, but the shape distinction the brief requires is gone, the four start pawns are hard to tell apart in greyscale, and they still sit over the square-1 bus-stop landmark. Filed again as SL-14 |
+| SL-12 dead exports (minor) | FIXED | `dieOutcomes`, `humanSeat`, `isHumanTurn`, `seatById`, `cellToSquare`, `isDifficulty` removed. The generator now reads `src/rules/layout.json`, the same file as the game (`layout.ts:9`). Duplicate table gone |
+| SL-13 planner on the main thread (minor) | FIXED (with a new minor) | `getPlanner` memoises per layout and rules (`ai/planner.ts:139`), and the menu warms Hard's planner (`app.ts:83`, `:92`). Test "is solved once per layout and rules and then shared (cached)" passes. The memo is a module-level `Map`, which CLAUDE.md forbids outside the game instance (SL-16) |
+| Perf hook 0 fps (WARN, round 1) | FIXED | `corePerf` avg 60, min 59 in e2e:perf |
+| Voice lines not wired (WARN) | NOT CHANGED | voice mp3 files are no longer shipped (SL-06). The voice player is still absent. Known gap, see human review |
+
+## Round 2 new-test check on the round 1 tree
+I copied the round 2 spec and helpers into `git archive b1a541b` (tmp/qa/old), built it, and ran the new layout, portal iframe, Referer, crafted-origin and perf tests on mobile 375x812. Results: 6 failed, 2 passed. The six failures: "layout on every screen [pcm]" (the spent-state overflow), "portal iframe with allow" and "portal iframe WITHOUT allow" (console noise), "token is never sent as a Referer", "crafted ?portal= origin", and "perf hook reports real frames". The two passes are the existing events and layout tests. So the new tests do discriminate the round 1 behaviour.
+
+## Item 3: code audit
+
+- **`motionAllowed()` (shake.ts:53-68).** Uses `permissionsPolicy`, falling back to `featurePolicy`. No policy API means allowed. Both accelerometer and gyroscope must be allowed, because either one being blocked logs an error. Behaviour: with motion allowed, six synthetic `devicemotion` jolts in a browser moved the human's turn from roll to decide (probe `tmp/qa/r2/shake.mjs`), so shake still works. Unit tests cover allowed, blocked (no listener attached), no devicemotion, and iOS-style permission grant and refusal (`shake.test.ts`, 8 tests). iOS `requestPermission` is still called from the first tap (`dice-view.ts`). I could not test a real iOS device.
+- **Default portal origins (portal/index.ts:21, 36-58).** Bypasses checked by probe and reading: `https://m.gamesplash.com.ng.evil.example` rejected; userinfo `https://m.gamesplash.com.ng@evil.example` normalises to `evil.example` and is rejected; port tricks (`:8443` on the portal host) rejected, `:443` normalises to the same origin and is accepted, which is correct; http downgrade rejected; `localhost.evil.com` and `localhost.evil.example` rejected (hostname must equal `localhost`). Wildcard entries `https://*.domain` match only host suffixes with a leading dot. Minor (SL-17): the default also accepts `https://localhost:<any port>` and `https://127.0.0.1` in production builds. Risk is low (an attacker would need the victim's own machine), but dev-only origins should not ship in production.
+- **`ship.json` and the build failure (vite-naija-plugin.ts:23-43, 105).** The plugin fails the build when the bundle references a literal `./assets/...` file that is not shipped. It does not fail on unreferenced shipped assets, so the behaviour described in the brief for this round ("build failure on unreferenced assets") is not implemented. Dynamic references (`pawn-${…}.svg`, `die-${n}.svg`) are not checked by the literal regex. Current includes cover every referenced family, so nothing is missing today. Minor (SL-15).
+- **`design.ts` layout checks (design.ts, layout.test.ts:173-183).** Run by unit tests only, not by the game at load time. Shipped layout: 8 ladders, 8 snakes, no crossings, no touching ends, balanced. Probe in the unit test catches a crossing and touching ends. Not run at runtime, by design.
+- **Test-build-only code in production.** The core loop and portal logging are behind `__NAIJA_TEST__` constants. prod-gate passes. Grep of `dist/snakes-ladders`: no `naijaTest`, `NAIJA_TEST`, `autoplay`, `setBot`, `fastForward`, `liveMoves`, `counters`, `tempo=`. One hit: `setSeed` appears in the shipped app object (`app.ts` return object, `getState`, `setSeed`, `screen`, `destroy` are not inside `__NAIJA_TEST__`). `window.__naijaTest` is undefined in the production smoke, so nothing is reachable from the page, but the methods ship. Minor (SL-16). prod-gate's literal list does not include `setSeed`, so it cannot catch this.
+- **Funmi/Aisha rotation (ai/index.ts:19-23, progress.ts, app.ts:141).** Deterministic: the seat is `gameCounter % 2` (Funmi on even counts, Aisha on odd), and `games` increments on every `startRound`, so quits count. Stored as a plain number (`games`), sanitised to a non-negative integer. No token or phone number in it. Probe: first game with three CPUs seated Funmi, second game (after Quit) seated Aisha (HUD names read from the DOM, `tmp/qa/r2/pawns.mjs`).
+- **`layout.json` shared by the generator.** Yes, the generator reads `games/snakes-ladders/src/rules/layout.json` (`gen-snakes-ladders-art.mjs:37`). Its output for the board, connectors, dice, icons and thumbs is pixel-identical to round 1 (same percentages: board-bg 9.01%, overlay 0.531%, die-roll 1.678%, hands-cup 3.972%, thumbs 0.2 to 0.3%; all anti-aliasing). The pawns do not regenerate (see SL-14). `pawn-funmi.svg` is not produced by the generator at all.
+- **Planner cache (ai/planner.ts:139-158).** Key is `JSON.stringify` of layout and the four rule fields, so changing a rule gives a new planner (tested). Cache is capped at 16 entries and cleared when full. Module-level state (SL-16).
+
+## Item 4: game length, real controls, tempo 1, one game each
+
+| Setup | Human actions | Round 1 | Round 2 |
+|---|---|---|---|
+| 1 CPU (Medium), seed 101 | 33 | 1.77 min | 1.63 min |
+| 3 CPUs (Medium), seed 202 | 55 | 5.25 min | 4.71 min |
+
+The shorter dice tumble (360 to 210 ms, `board-kit.css`) accounts for most of the saving. Judgement: 1 CPU is fine for a casual portal game. 3 CPUs at about 4.7 minutes measured (about 6 to 7 minutes at a slower human pace) is still long but acceptable if the portal wants a longer session. Human review.
+
+## Item 5: pawns, cultural recheck, Pidgin
+
+- **Pawn SVGs.** `pawn-you`, `pawn-tari`, `pawn-efe`, `pawn-aisha`, `pawn-funmi` are now figure silhouettes (shoulders and head) with a detail each: You blue with a white figure mark, Tari teal with headphones, Efe red with a cap, Aisha plum with a head wrap, Funmi green with a hair bun. Colours are distinct (blue, teal, red, plum, green).
+- **In-game at 360x640, 3 CPUs.** Game 1 seats Efe, Tari, Funmi; game 2 seats Efe, Tari, Aisha. Pawns are drawn as coloured figures with a white initial letter. All four start on square 1 in a 2x2 cluster that covers the bus-stop start landmark (`pawns-3cpu-game1-360.png`, `pawns-3cpu-game2-360.png`, read).
+- **Greyscale (`pawns-3cpu-greyscale-360.png`, read).** The four figures look almost the same. Initials (Y, T, E, F) are about 4 px and not reliably readable. Shape and colour distinction fails in greyscale at this size. This is the brief's "pawns distinct by shape" requirement, now unmet (SL-14).
+- **Funmi cultural recheck.** Funmi's avatar (`packages/core/assets/avatars/funmi.svg`, read): green top, hair bun, gold hoop earrings, a small white rectangle on the chest. No money symbol, no banker prop. The banter has no money or banking reference in en or pcm. Her lines are about not retreating and taking another road. Respectful. The white chest rectangle could read as a card; human review.
+- **Efe's jacket.** Yellow body with a black stripe, music note icon (sings in banter). It echoes the danfo livery. I judge it a transport reference, not a brand or ethnic marker. Accepted; human review confirms.
+- **Persona set.** Tari (Ijaw, headphones, student), Efe (Urhobo, danfo driver with music note), Aisha (Hausa, head wrap, red book), Funmi (Yoruba, bun, earrings, green top). Each has individual personality and everyday banter; none carries a group stereotype or a money trope. Regional balance is better (four regions) but still no Igbo or Middle Belt persona. Human review.
+- **Pidgin lines changed this round (38 `_review` lines in snakes-ladders/pcm).** Naturalness judgement:
+  - Natural: "Okada go carry you! You pass di traffic.", "Keke go carry you pass di back road.", "Okada dey squeeze pass di jam. Hold body!", "Go-slow for di junction. Calm down, e go clear.", "Re-roll don use", "Pick di one wey you want: tap am, or press 1 or 2.", "You ready for wahala? I don read the whole book.", "Ah ah, free ride! I no go complain.", "Pothole? I no dey retreat, I dey take another road.", "Abeg, roll again. I no fear.", "I no dey retreat. I no dey surrender.", "Hmm, you catch me! Well played." (acceptable).
+  - Suggest changing: "Six! Come out, come out!" (snakes.banter.funmi.six, English idiom, not Pidgin) → "Six! E don come o!"; "Home sweet home! Smile na, na game only." → "Home sweet! Smile, na just game."; "Hmm, you catch me!" → "Hmm, you don catch me!"; "Dat one no lucky" (aisha.snake) is fine but "Haba!" is Hausa; keep for review.
+  - Mixed English stays in: "Well played. Madalla!" (aisha.lose), "Okada shortcut, you no touch jam.", "Bridge clear, you fly pass!" are acceptable Pidgin-English.
+  - Consistency: "Sabi na power, but speed na points" and "Sabi na power, but luck dey help too" repeat the same proverb in two personas. Fine, but a native speaker may want variety.
+
+## Item 6: test integrity (`b1a541b..HEAD`)
+
+- No lint rule, coverage threshold, size budget, or Playwright config changed (`eslint.config.js`, `vitest.config.ts` thresholds, `scripts/size-budget.mjs`, `playwright*.config.ts`, `scripts/prod-gate.mjs`, `scripts/i18n-check.mjs`, `tsconfig.json`, `.prettierignore`, `package.json`: no diff).
+- Removed test assertions, all justified: `dieOutcomes`, `humanSeat`, `isHumanTurn`, `seatById`, `cellToSquare`, `isDifficulty` tests were deleted together with the dead functions. `pickPersonas(3, 3)[2] === 'aisha'` was replaced by an explicit counter test (`ai.test.ts:289`), which is stronger. The `shared` planner argument was removed from the Hard-vs-Easy turns test; the test still runs 400 games.
+- AI thresholds unchanged: `GAMES = 2000`, `>= 0.55` Hard vs Easy (`ai.test.ts:239`), lower bounds `> 0.5` for Medium and Hard.
+- Portal test assertions were tightened (the default list now rejects `http://` and any non-listed `https://` origin). Test strings `p.example` became the real portal host; no assertion was loosened.
+- New e2e assertions strengthen the layout test (spent-state pick, `stickyOverlaps`, contrast), add the iframe policy tests, the Referer test, and the crafted-origin test. `helpers.ts` gained an opt-in `include` option (round 1) and the new `stickyOverlaps` and `contrastOf` helpers. Nothing removed.
+
+## Item 7: git status
+- Commits: none made by QA. Only file written: `docs/qa/snakes-ladders-report.md` (this section appended to round 1). `git status --short` after cleanup: `M docs/qa/snakes-ladders-report.md` (the appended round 2 section, uncommitted). Scratch `tmp/` deleted. No `git` state change (no add, commit, checkout, stash, worktree).
+
+## Remaining defects (round 2)
+- **Blocker:** none.
+- **Major:** none.
+- **Minor, new in round 2:**
+  - SL-14 (pawn art, from SL-11): shape distinction lost; greyscale unreadable at 360 px; four start pawns cluster over the square-1 landmark. Fix: give each pawn a shape cue again (e.g. a distinct outline or base per persona), move the start cluster off the landmark or give square 0 an off-board tray.
+  - SL-15 (build): `ship.json` has no check for unreferenced shipped assets, and dynamic `./assets/...` references are not verified. `scripts/vite-naija-plugin.ts:23-43, 105`. Fix: either fail on shipped-but-unreferenced files, or document the one-way check.
+  - SL-16 (code health): module-level `solved` Map in `games/snakes-ladders/src/ai/planner.ts:139` (CLAUDE.md: no global state outside the game instance). Also `setSeed`, `getState`, `screen` ship in the production app object (`games/snakes-ladders/src/app.ts` return), unreachable but present. Fix: move the memo into the game instance, and gate the test-only methods with `__NAIJA_TEST__`.
+  - SL-17 (portal default): production accepts `https://localhost:<any>` and `https://127.0.0.1` (`portal/index.ts:56-57`). Fix: allow loopback only when a dev flag is set, or only in test builds.
+  - SL-18 (art pipeline): `scripts/gen-snakes-ladders-art.mjs:309-330` still writes the round 1 pawns (circle, square, triangle, diamond) and has no Funmi pawn. Running the generator would revert the redrawn pawns and drop Funmi's file from the output. Fix: move the pawn art into the generator or stop claiming it regenerates the pawns.
+  - SL-10(c) partly open: landmark clearance is not checked by any test.
+- **Carried minors:** voice player not wired (known gap). Peak levels of the synth SFX not measured on the real engine.
+
+## Needs human review (round 2)
+- Cultural: Aisha's head wrap and book (religious-marker balance); Funmi's chest tag (card-like); Efe's yellow-and-black jacket; no Igbo or Middle Belt persona; four persona regions are respectful and non-stereotyped.
+- Pidgin: the 38 `_review` lines in snakes-ladders/pcm, plus my suggestions above ("Six! E don come o!", "Home sweet! Smile, na just game.", "Hmm, you don catch me!").
+- Game length: 1.63 min (1 CPU) and 4.71 min (3 CPUs) at tempo 1 with a 1.5 s reaction per action. Decide whether the 3-CPU length is acceptable for a casual portal session.
+- Pawns: colour and silhouette judgement on a phone screen and in greyscale (SL-14 unresolved).
+- Portal: the token still appears in the page URL (contract). Decide hash or postMessage handoff. The Referer half is fixed.
+- Real device: shake permission on iOS and the real portal iframe `allow` attribute, not tested here.
