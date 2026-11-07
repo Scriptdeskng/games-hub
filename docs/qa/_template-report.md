@@ -1,6 +1,6 @@
 # QA report: _template + @naija/core (2026-11-07, commit 75a294c, branch core/foundation)
 
-Verdict: **FAIL**
+Verdict (round 1, commit 75a294c): **FAIL**. Round 2 verdict (commit d7aa614): see "Round 2" at the end of this file.
 
 ## Summary
 - All automated gates pass (lint, typecheck, i18n, 112 unit tests, build, size, e2e 26/26 on mobile and 26/26 on landscape and desktop, perf, 3-minute soak). Core architecture is sound: portal bridge, storage, SW, lifecycle and audio all behave as specified under my independent probes.
@@ -133,3 +133,92 @@ Unflagged, my view:
 
 ## Evidence files
 Scratch files and screenshots were created under `tmp/qa/` and then deleted; `games/registry.json`, `package-lock.json` and git status verified unchanged after the `new-game` probe.
+
+---
+
+# Round 2 (2026-11-07, commit d7aa614, branch core/foundation)
+
+**Round 2 verdict: PASS** (0 blockers, 0 majors, every gate green). 2 new minor defects and a few carried-over human-review items remain; none block Phase 0.
+
+## Gates (all re-run by me)
+
+| Gate | Result | Numbers |
+|---|---|---|
+| lint (eslint + prettier) | PASS | clean |
+| typecheck | PASS | clean |
+| i18n:check | PASS | OK; 9 `_review` lines listed (below) |
+| `npm test -- --coverage` | PASS | form works now (script is plain `vitest run`; `test:cov` used by `check`). 17 files, 124 tests. Statements 99.57, Branches 94.62, Functions 97.5, Lines 99.57. `_template/src/rules` 100/100/100/100. `sw/index.ts` now 100% lines (was 56%), `portal` 100% lines |
+| build + prod-gate | PASS | "prod-gate OK: 6 files scanned, no test hook or autoplay code in dist/". I proved the gate bites: `node scripts/prod-gate.mjs dist-e2e` exits 1 listing `__naijaTest`, `autoplay`, `setBot` |
+| size | PASS | `_template` 80.5 KB gzip (77.1 brotli) of 3072 KB; core 22.4 KB of 60 KB |
+| e2e `_template` | PASS | 32/32 (375x812 and 360x640; includes the new "layout on every screen (en and pcm)" test) |
+| e2e:extra | PASS | 32/32 (landscape 812x375 and desktop 1280x800) |
+| e2e:perf (4x CPU + Fast 3G) | PASS | time to menu 1204 ms, fps avg 60 / min 60, worst frame 16.8 ms, heap 1.8 MB |
+| soak 3 min | PASS | 45 rounds; 0 m 1.72 MB, 1 m 1.93, 2 m 1.95, 3 m 1.95 MB (flat for the last 1.5 min); slope 11.3 KB/min (limit 100; round 1 was 28.8) |
+
+## Round 1 defects: re-verification
+
+| ID | Status | Evidence |
+|---|---|---|
+| D1 results tile overflow | FIXED | Measured every leaf text for `scrollWidth > clientWidth` on results (easy/medium/hard, en/pcm) at 360x640, 375x812, 812x375: none overflow. Screenshots read: 360 en "MEDIUM" fully inside its tile; 360 pcm "HARD WELL WELL" wraps to two lines inside the tile; landscape pcm "NORMAL" fits. **The new e2e layout test fails on the old CSS**: I extracted HEAD to a scratch dir, restored the 75a294c `skin.css`, `ui-kit.css`, `tokens.css`, `results.ts`, built and ran it: all 4 mobile runs fail (375: element-overflow assertion; 360: "menu settings bar in view" false). Against the fixed CSS it passes. Note: the fixed-code test only passes in the scratch dir when `@naija/core` resolves to the scratch copy (my first attempt resolved to the real package and falsely passed; corrected) |
+| D2 menu fit / scrolling | FIXED (with a landscape remark) | 360x640 menu: page height 640, Sound/Music/Language bar at y 528-624, Play 317-365, all >= 44 px, no scroll (en and pcm). 375x812 fits. Results at 360x640 scroll 14 px (page 654) but both actions stay visible (Main menu bottom 630). Landscape results still scrolls (page 490 to 513 of 375) but Play again / Main menu are sticky and visible. Below the supported minimum (320x480) the menu scrolls; the game HUD labels clip at 320 px width (out of the 360x640 spec, informational) |
+| Sticky actions: hide content? break on small heights? | PASS | At 812x375, 320x480 and 360x320 I scrolled to the bottom: every stat tile's bottom is above the action bar top (e.g. landscape tiles end at 215, bar at 223; 360x320 tiles end at 160, bar at 168) and the title is reachable at the top. At scroll top the bar overlays lower tiles (landscape screenshot) but they are reachable by scrolling. `.ng-app{overflow-x:clip}` is needed for sticky; WebViews older than Chrome 90 ignore `clip`, keep the skin's `hidden` and simply lose stickiness (actions then scroll normally): acceptable degradation, test on a real old Tecno WebView |
+| D3 `npm test -- --coverage` | FIXED | runs and prints coverage |
+| D4 fonts | FIXED | I re-parsed the WOFF2 cmap tables of all three fonts with my own parser, then rendered text in Chromium. Per-language coverage (display stack Bungee > Fallback > Nunito, UI stack Nunito > Fallback) for en, pcm, yo, ig, ha: **nothing missing** in any stack. Bungee and Nunito now contain Ụ ụ; Ɓ ɓ Ɗ ɗ Ƴ ƴ and Ǹ ǹ (Bungee) / Ƙ ƙ Ƴ ƴ Ǹ ǹ (Nunito) come from `NG Fallback` (Noto Sans, 10 glyphs, 2,928 B). `unicode-range` is U+0181,U+018A,U+0198-0199,U+01B3-01B4,U+01F8-01F9,U+0253,U+0257 (exactly those 10). The fallback is inlined as a data URI in the CSS (no extra request). Screenshot read: Ɓ ɗ Ƙ ƙ Ụ ụ Ǹ ǹ Ị ẹ ọ ṣ render with no tofu in display and UI stacks, weights 600 and 800. Visual note: the fallback glyphs are Noto Sans, so in Bungee headings they look lighter than their neighbours (documented as HUMAN_ASSETS #15). Total fonts 55,128 B (Bungee 11,328 + Nunito 40,872 + Fallback 2,928); OFL-NotoSans.txt present; CREDITS row correct |
+| D5 prod strip / dead settings | FIXED | prod-gate in `build` (see above). `vibration` removed; `reducedMotion` wired: `data-reduced-motion` attribute set from the setting (verified in the browser by writing the setting then reloading) and from the OS preference (verified with Playwright `reducedMotion: 'reduce'`), CSS neutralises animations. Gate limitation below (W6) |
+| D6 voice manifest | FIXED | Manifest restructured (`files: {mp3, ogg: null}` with a readme explaining that ogg is intentionally null). All 29 mp3 paths exist, no unlisted files. `needsNativeReview: true` + `_review` + note on `madalla`, `o-di-mma`, `e-ku-ise`. HUMAN_ASSETS #16 asks for the ogg deliverables |
+| D7 GET 404 / portal origin | PARTIAL, see D14 | GET contract is now `200 {data:null}` (404 still tolerated), tested. Allow-list implemented and tested; my bypass attempts all rejected (table below). But the shipped template does not set `allowedPortalOrigins`, so the default (any `https:` origin) is active and a crafted `?portal=https://evil.example` link made the game call `https://evil.example/api/games/_template/progress` (I observed the request with a mocked route). Token only leaks if the attacker already has the token, so risk is low, but the hardening is opt-in and not enabled |
+| D8 loader timer | FIXED | `destroy()` immediately after load, from menu and from results: `{listeners:0, timers:0, rafs:0}` and the root is empty (loader now takes `core.scope`) |
+| D9 portal.log / heap | FIXED | log only recorded when `__NAIJA_TEST__`, capped at 500 (unit-tested); soak slope 11.3 KB/min, plateau |
+| D10 Restart edge, toasts, HUD | FIXED | Pause dialog screenshot: Restart has a visible inset border and tinted fill, HUD "TIME  BELLS" has a gap. Toasts now carry a check / alert-triangle icon plus optional screen-reader prefix (unit-tested, CSS reviewed; I did not render a toast in the browser because the template triggers none) |
+| D11 README / noscript | FIXED | README now states 22.4 KB; `<noscript>` is bilingual |
+| D12 CI / sw tests | FIXED | `check.yml` now runs `npm run e2e:extra`; `sw.test.ts` +24 lines, `sw/index.ts` 100% line coverage; my round 1 browser probes (reject / absent / blocked SW) remain valid |
+| D13 negative dt | FIXED | `tick` clamps `rawDtMs > 0 ? rawDtMs : 0` (NaN too); test added for -50, -1e9, NaN |
+| W2 master limiter | FIXED | Unit test asserts master to limiter to destination. In a real Chromium graph I logged `AudioNode.connect` calls: the only connection to the destination is `DynamicsCompressorNode -> destination`, fed by the master gain (threshold -6 dB, ratio 20, attack 3 ms). Note it is a compressor-based limiter, not a true brick-wall: it greatly reduces clipping risk but the "never clips" test still uses the offline mirror model |
+
+## New code audit
+
+- **Allow-list (`isAllowedOrigin`)**. It tests the already-normalised `new URL(raw).origin` against exact strings or `^https?://\*\.(.+)$` patterns with `host.endsWith('.' + domain)` and a matching scheme. I ran these against `['https://*.gamesplash.com.ng', 'https://m.gamesplash.com.ng']`: `https://evil.com/.gamesplash.com.ng` rejected, `https://a.gamesplash.com.ng.evil.com` rejected, `https://m.gamesplash.com.ng@evil.com` (userinfo) rejected (origin evil.com), `https://evil.com\@m.gamesplash.com.ng` rejected, `https://evil.com#.gamesplash.com.ng` rejected, `http://m.gamesplash.com.ng` (downgrade) rejected, `https://gamesplash.com.ng` (apex) rejected, `https://evilgamesplash.com.ng` rejected, `:8443` ports on a wildcard host rejected (host includes the port; safe, but a portal on a non-default port needs an exact entry), upper-case host normalised and accepted. One oddity: `https://.gamesplash.com.ng` (empty label) is accepted; it cannot resolve to an attacker host, so harmless. Default list: https anywhere plus http only for localhost/127.0.0.1/[::1]; `http://localhost.evil.example` rejected (unit-tested).
+- **Contract / log / loader / limiter / reducedMotion / sw tests**: reviewed code and tests; verified in browser as listed above.
+- **prod-gate coverage**: scans `.js .mjs .html .css .json` in `dist/` for four literals (`__naijaTest`, `__NAIJA_TEST__`, `autoplay`, `setBot`). It would miss test-only code that does not contain those words (for example a future game-specific hook with another name, or strings assembled dynamically such as `'auto'+'play'`). Property names survive minification, so it is effective for the current names, but each new game must extend the list or reuse the same names. Logged as W6.
+- **Test-code strip**: `autoplay`/`setBot` and the hook install are behind `__NAIJA_TEST__`, so the production bundle contains none of it (gate OK).
+
+## New defects (round 2)
+
+| ID | Severity | Description | Location |
+|---|---|---|---|
+| D14 | minor | The portal allow-list is opt-in and not configured by `_template/src/main.ts` (nor by `new-game` scaffolds): with `?portal=https://evil.example&token=...` the game sends the Bearer token to that origin. Pass `allowedPortalOrigins: ['https://m.gamesplash.com.ng', 'https://*.gamesplash.com.ng']` (README already shows it) in the template `boot()` call, or make it the default for production builds | `games/_template/src/main.ts` `boot({...})` |
+| D15 | minor | `results.stars` Pidgin "{n} star out of 3" is still singular for n > 1 and still `_review`; and 360x320/320-wide play HUD labels (Score/Time/Combo) overflow on the Hard profile at 320 px wide (outside the 360x640 minimum, informational) | `packages/core/src/i18n/pcm.json`; `ui-kit` HUD CSS |
+
+## Asset side re-check
+
+- **Contrast**: `contrast-check.mjs` re-run: `ALL PAIRS PASS`.
+- **Logo**: mark and horizontal lockup rendered and read. The die with five pips is replaced by a green tile with gold dotted/solid adire rings, four corner dots and a white-cream play triangle. It reads as a play button; no dice, cards, coins or money. `logo-lockup.svg` is text only and unchanged. HUMAN_ASSETS #11 asks the telco compliance owner to confirm in-game dice/cards (Ludo, Whot) are acceptable.
+- **PERSONAS.md**: Mama Nkechi now explicitly a coach, banter food references cut from 4 of 8 lines to 1 ("soup is still on the fire"), no bargaining lines; Funmi's "interest on my seed" line replaced by "Back to the start you go, my friend." Efe unchanged. The Muslim-coded dress (Malam Sani, Aisha) is handled by a documented decision (no tokenistic southern faith marker) and forwarded to a human reviewer. Judgement: the trope risk is reasonably mitigated; remaining items are genuine human decisions, not defects.
+- **HUMAN_ASSETS.md** rows 11 to 16 added (logo vs telco rules, persona regional balance with proposed Dung (Berom) and Ekaette (Efik) personas, religious-marker balance, musician check of synthesised instruments, Hausa hooked letters in the display face, ogg files). Accurate and honest.
+- **CREDITS**: fonts table lists all 3 files with sizes and OFL; font-coverage.py listed; every other asset still covered.
+
+## Pidgin lines and noscript (judgement)
+
+`_review` lines now listed by `i18n:check` (9):
+1. core `ui.difficulty` "Pick your level": plain English rather than Pidgin; acceptable, but a native speaker might prefer "Choose how e go hard".
+2. core `difficulty.hard` "Hard Well Well": natural.
+3. core `results.win` "You win! E choke!": "E choke" is Lagos slang for "that's amazing/overwhelming"; fits a win and replaces the ambiguous "Chai!". Confirm tone.
+4. core `results.stars` "{n} star out of 3": grammatical but singular for all n (D15).
+5. `_template` `game.howto.1` "Golden agogo bells dey pop up for screen...": good, idiomatic.
+6. `game.howto.2` "...before time finish and you go win. Di target dey for top.": fixed ("don win" to "go win"), correct.
+7. `game.howto.4` "...press Space to hit di oldest bell, and press P if you wan pause.": grammatical and natural (fixes "P na to pause").
+8. `banter.win.0` "Your hand quick pass danfo conductor": idiomatic.
+9. `banter.lose.2` "Calm down. Di bells no go run anywhere.": fine, may read as slightly patronising.
+`<noscript>`: "This game needs JavaScript. / Dis game need JavaScript make e work." is acceptable Pidgin ("Dis game need JavaScript to work" would also do); it is in HTML, so it is not tracked by `_review`.
+
+## Test integrity (diff vs 75a294c)
+
+No test, lint rule, coverage threshold, size budget, perf threshold or Playwright config was weakened: `eslint.config.js`, `.prettierignore`, `tsconfig.json`, `vitest.config.ts`, `size-budget.mjs`, `playwright*.config.ts` are unchanged. Test files only gained assertions; the only removed lines are three import lines and the old polyphony assertion. The polyphony test is now **stricter** than round 1: it snapshots the count after the warm-up voice ends and asserts exactly `20 * oscPerVoice` oscillators for the 40-voice burst (`.toBe`), plus a new limiter-routing test.
+
+## Remaining items
+
+- Defects: **0 blocker, 0 major, 2 minor (D14, D15)**.
+- Warnings: W1 (core budget excludes fonts; 22.4 KB code+CSS, plus 55 KB fonts) unchanged; W3 (SW first-load staleness after deploy); W5 (13 dev-only npm audit advisories, none in runtime); W6 prod-gate is a literal-word scan.
+- Still needs human review: native-speaker review of every `_review` Pidgin line and all Yoruba/Igbo/Hausa words (Madalla, Ọ dị mma, Ẹ kú iṣẹ́, Ẹ má bínú, Sannu, Haba, Ndo); the Cultural review list from round 1 (persona archetypes, Muslim-coded dress balance, no Middle Belt/Edo/Efik persona, musician listening test of synthesised kakaki/ogene/gangan, telco view on in-game dice/cards); art and logo placeholders and silent audio placeholders; ogg deliverables; a real-device test on low-end Android (including an old WebView for the sticky actions and `overflow-x: clip`); portal team confirmation of the API shape and the allowed origin list.
+
+`git status` at the end of this round: only this report file is modified; `tmp/qa` was deleted and no source, test, config or asset was touched.
