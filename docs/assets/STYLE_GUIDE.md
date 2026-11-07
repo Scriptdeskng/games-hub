@@ -224,6 +224,13 @@ Event mapping (shared preset names, in `core-sfx.ts`):
 | obstacle (Danfo Dash) | Danfo horn | `ng.horn` | 360 ms |
 | goal / save (Penalty King) | Crowd cheer / whistle + talking-drum build-up | `ng.crowd`, `ng.whistle` | 1.2 s / 250 ms |
 
+### 9.1 As implemented (supersedes the table above where different)
+Code: `packages/core/src/audio/instruments.ts` (voices), `core-sfx.ts` (event cues, `softSfx()`), `instruments.test.ts` (offline-render peak, duration and coverage checks; run `SFX_REPORT=1 npx vitest run packages/core/src/audio/instruments.test.ts` to print peak levels per voice and cue).
+- **Voice ids:** `talkingDrum` (up glide), `talkingDrumDown`, `talkingDrumSqueeze`, `agogo` (double bell), `agogoTing` (single bell), `ogene` (0.3 s strike), `ogeneRing` (0.65 s, fanfares), `shekere` (5-burst shake), `shekereShuffle`, `shekereTick`, `udu`, `ekwe`, `danfoHorn`, `crowd`, `whistle`, `fanfare` (kakaki-goje phrase), `fanfareShort`. Fanfare-class (<= 1.5 s): `fanfare`, `fanfareShort`, `ogeneRing`, `crowd`; all others <= 0.3 s.
+- **Events** are the engine's names (`tap`, `select`, `win`...), not `ng.*`. `ng.menu` is `menu` (alias of `select`), `ng.deal` is `deal`, `ng.special` is `special`, `ng.horn` is `horn`, `ng.crowd`/`ng.whistle` are `crowd`/`whistle`; `build` is a talking-drum fill. Extras are cues in `coreSfx`, callable with `playSfx`.
+- **Synth limits vs the design:** the engine has no filter on oscillators, so the kakaki "low-pass swell" is approximated with 1:1 FM brass plus a quiet vibrato sawtooth; the danfo horn mixes squares with a triangle an octave down to soften the buzz; the crowd's 8 Hz flutter is replaced by staggered noise layers. Ogene is split into a 0.3 s strike and a 0.65 s ring so SFX stay under 300 ms. Win = drum fill + fanfare + ogene ring, span 1.43 s.
+- **Soft vs full mix:** the engine has no switch; full = `registerSfx(coreSfx)`, soft = `registerSfx(softSfx(coreSfx))` (every cue at 50%). Voices are capped at 0.6 in the engine; every voice and cue renders offline at peak <= 0.43 (full), well below clipping.
+
 ## 10. Do's and don'ts
 **Do**
 - Use Nigerian references specifically (adire, aso-oke, akwete, Arewa relief, danfo, keke, BRT, mama-put, gele) and rotate regions.

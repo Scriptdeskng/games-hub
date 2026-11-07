@@ -171,8 +171,11 @@ describe('audio engine', () => {
   it('caps polyphony and retriggers keyed voices', () => {
     const { ctx, audio } = setup();
     audio.unlock();
+    audio.playVoice('agogo');
+    const oscPerVoice = ctx.created.osc; // real agogo = FM bells (2 oscillators per layer)
+    ctx.nodes.forEach((n) => n.listeners.ended?.());
     for (let i = 0; i < 40; i++) audio.playVoice('agogo');
-    expect(ctx.created.osc).toBeLessThanOrEqual(20);
+    expect(ctx.created.osc).toBeLessThanOrEqual(20 * oscPerVoice + oscPerVoice);
     const before = ctx.nodes.length;
     const a = setup();
     a.audio.unlock();
