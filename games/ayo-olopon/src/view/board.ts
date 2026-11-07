@@ -12,34 +12,10 @@ import {
   type Who,
 } from './geometry';
 import { PITS } from '../rules/config';
+import { ART, MARKS, MARK_URL, SEED_URL, type Mark } from './board-assets';
+import { createFx } from './board-fx';
 
-const ART = {
-  landscape: './assets/board/board-landscape.svg',
-  portrait: './assets/board/board-portrait.svg',
-} as const;
-const SEED_URL = {
-  a: './assets/seeds/seed-a.svg',
-  b: './assets/seeds/seed-b.svg',
-  c: './assets/seeds/seed-c.svg',
-  d: './assets/seeds/seed-d.svg',
-} as const;
-const COUNTER_URL = {
-  1: './assets/counters/counter-1.svg',
-  5: './assets/counters/counter-5.svg',
-  10: './assets/counters/counter-10.svg',
-} as const;
-
-/** A pit marker (asset brief section 4, states). The highest priority one is drawn. */
-export type Mark = 'capture' | 'skip' | 'hint' | 'select' | 'last' | 'danger';
-const MARKS: readonly Mark[] = ['capture', 'skip', 'hint', 'select', 'last', 'danger'];
-const MARK_URL: Record<Mark, string> = {
-  capture: './assets/states/pit-capture.svg',
-  skip: './assets/states/pit-skip.svg',
-  hint: './assets/states/pit-hint.svg',
-  select: './assets/states/pit-select.svg',
-  last: './assets/states/pit-last.svg',
-  danger: './assets/states/pit-danger.svg',
-};
+export type { Mark } from './board-assets';
 
 export interface BoardOptions {
   /** accessible name of the board */
@@ -162,59 +138,9 @@ export function createBoard(o: BoardOptions): BoardView {
   }
 
   // ---- fx pools (WAAPI, transform and opacity only) ----
-  const hand = h('img', {
-    class: 'ayo-hand',
-    alt: '',
-    draggable: 'false',
-    hidden: '',
-    src: './assets/seeds/seed-lift.svg',
-  });
-  const ripples = Array.from({ length: 4 }, () =>
-    h('img', {
-      class: 'ayo-fx ayo-fx--ripple',
-      alt: '',
-      draggable: 'false',
-      src: './assets/fx/sow-ripple.svg',
-    }),
-  );
-  const bursts = Array.from({ length: 2 }, () =>
-    h('img', {
-      class: 'ayo-fx ayo-fx--burst',
-      alt: '',
-      draggable: 'false',
-      src: './assets/fx/capture-burst.svg',
-    }),
-  );
-  const glows: Record<Who, HTMLImageElement> = {
-    human: h('img', {
-      class: 'ayo-glow',
-      alt: '',
-      draggable: 'false',
-      src: './assets/fx/tray-glow.svg',
-    }),
-    cpu: h('img', {
-      class: 'ayo-glow',
-      alt: '',
-      draggable: 'false',
-      src: './assets/fx/tray-glow.svg',
-    }),
-  };
-  const flyers = Array.from({ length: 3 }, () =>
-    h('img', { class: 'ayo-flyer', alt: '', draggable: 'false', src: COUNTER_URL[1] }),
-  );
-  const links = Array.from({ length: 5 }, () =>
-    h('img', {
-      class: 'ayo-flyer',
-      alt: '',
-      draggable: 'false',
-      src: './assets/fx/chain-link.svg',
-    }),
-  );
-  let nextLink = 0;
-  let nextRipple = 0;
-  let nextBurst = 0;
-  let nextFlyer = 0;
-  el.append(...ripples, ...bursts, glows.cpu, glows.human, ...flyers, ...links, hand);
+  const fxp = createFx();
+  const { hand, glows } = fxp;
+  el.append(...fxp.nodes);
 
   // ---- placement ----
   const pct = (v: number): string => `${num(v)}%`;
@@ -285,16 +211,7 @@ export function createBoard(o: BoardOptions): BoardView {
       g.style.width = pct(Math.max(t.w, (t.h * l.h) / l.w) * 1.5);
     }
     for (let pit = 0; pit < PITS; pit++) layoutPit(pit);
-    const hs = pct(((44 / 1400) * 100 * 1400) / l.w);
-    hand.style.width = hs;
-    const rs = pct((120 / l.w) * 100);
-    for (const r of ripples) r.style.width = rs;
-    const bs = pct((240 / l.w) * 100);
-    for (const b of bursts) b.style.width = bs;
-    const fs = pct((64 / l.w) * 100);
-    for (const f of flyers) f.style.width = fs;
-    const ls = pct((96 / l.w) * 100);
-    for (const k of links) k.style.width = ls;
+    fxp.size(l.w);
   }
 
   /** Pixel centre of a pit inside the board box. */
@@ -381,18 +298,7 @@ export function createBoard(o: BoardOptions): BoardView {
     }
   }
 
-  function fx(target: HTMLImageElement, pit: number, from: number, to: number, dur: number): void {
-    if (!animates()) return;
-    const p = centre(pit);
-    const base = `translate(${num(p.x)}px, ${num(p.y)}px) translate(-50%, -50%)`;
-    target.animate(
-      [
-        { transform: `${base} scale(${from})`, opacity: 0.9 },
-        { transform: `${base} scale(${to})`, opacity: 0 },
-      ],
-      { duration: ms(dur), easing: 'ease-out' },
-    );
-  }
+  const fx = fxp.bind({ animates, ms, centre, trayCentre, at });
 
   const view: BoardView = {
     el,
@@ -467,44 +373,10 @@ export function createBoard(o: BoardOptions): BoardView {
     handHide() {
       hand.hidden = true;
     },
-    ripple(pit) {
-      const r = ripples[nextRipple++ % ripples.length] as HTMLImageElement;
-      fx(r, pit, 0.5, 1.15, 380);
-    },
-    burst(pit) {
-      const b = bursts[nextBurst++ % bursts.length] as HTMLImageElement;
-      fx(b, pit, 0.3, 1.1, 520);
-    },
-    flyCounter(pit, who, seeds, dur) {
-      const f = flyers[nextFlyer++ % flyers.length] as HTMLImageElement;
-      const key = seeds >= 10 ? 10 : seeds >= 5 ? 5 : 1;
-      f.src = COUNTER_URL[key];
-      if (!animates()) return;
-      f.animate(
-        [
-          { transform: at(centre(pit), 0.6), opacity: 0 },
-          { transform: at(centre(pit), 1.1), opacity: 1, offset: 0.25 },
-          { transform: at(trayCentre(who), 0.8), opacity: 0 },
-        ],
-        { duration: ms(dur), easing: 'ease-in-out' },
-      );
-    },
-    chainLink(a, b) {
-      if (!animates()) return;
-      const pa = centre(a);
-      const pb = centre(b);
-      const mid = { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 };
-      const deg = (Math.atan2(pb.y - pa.y, pb.x - pa.x) * 180) / Math.PI;
-      const base = `translate(${num(mid.x)}px, ${num(mid.y)}px) translate(-50%, -50%) rotate(${num(deg)}deg)`;
-      (links[nextLink++ % links.length] as HTMLImageElement).animate(
-        [
-          { transform: `${base} scale(.5)`, opacity: 0 },
-          { transform: `${base} scale(1)`, opacity: 1, offset: 0.3 },
-          { transform: `${base} scale(1)`, opacity: 0 },
-        ],
-        { duration: ms(560), easing: 'ease-out' },
-      );
-    },
+    ripple: (pit) => fx.ripple(pit),
+    burst: (pit) => fx.burst(pit),
+    flyCounter: (pit, who, seeds, dur) => fx.flyCounter(pit, who, seeds, dur),
+    chainLink: (a, b) => fx.chainLink(a, b),
     focusPit(pit) {
       buttons[pit]?.focus({ preventScroll: true });
     },

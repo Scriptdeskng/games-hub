@@ -209,6 +209,8 @@ export interface ResultsScreenOptions {
   newBest: boolean;
   /** "you - CPU" in seeds */
   seeds: string;
+  /** seeds still on the board when 25 was reached early (0: show no row) */
+  onBoard?: number;
   bestCapture: number;
   moves: number;
   wins: number;
@@ -227,7 +229,10 @@ export function createResultsScreen(core: Core, o: ResultsScreenOptions): Compon
     newBest: o.newBest,
     banter: o.banter,
     rows: [
-      { label: t('results.seeds'), value: o.seeds },
+      {
+        label: t('results.seeds'),
+        value: o.onBoard ? `${o.seeds} (${t('results.onBoard', { n: o.onBoard })})` : o.seeds,
+      },
       { label: t('results.bestCapture'), value: o.bestCapture },
       { label: t('results.moves'), value: o.moves },
       { label: t('results.wins'), value: `${o.wins}/${o.plays}` },

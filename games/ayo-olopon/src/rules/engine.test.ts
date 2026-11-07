@@ -24,16 +24,12 @@ import {
   apply,
   createGame,
   currentSide,
-  deserialize,
   isLegal,
   isOver,
   legalMoves,
   mustFeedNow,
-  onSide,
-  serialize,
   sweepOf,
   threatenedPits,
-  totalOf,
   type GameState,
   type Side,
 } from './engine';
@@ -57,6 +53,7 @@ const board = (set: Record<number, number>): number[] => {
   for (const [k, v] of Object.entries(set)) p[Number(k)] = v;
   return p;
 };
+const snap = (s: GameState): string => JSON.stringify(s);
 const play = (s: GameState, pit: number): GameState => apply(s, { type: 'move', pit });
 
 describe('setup', () => {
@@ -188,8 +185,12 @@ describe('capture', () => {
     expect(n.lastMove?.captures).toEqual([{ pit: 6, count: 2 }]);
     expect(n.pits[5]).toBe(2);
     // the CPU's chain stops at pit 6 and does not run into pit 5
-    const c = mk(board({ 4: 1, 5: 1, 9: 3, 0: 0, 6: 0 }), { side: 1 });
-    expect(c.pits[5]).toBe(1);
+    const c = play(mk(board({ 11: 2, 10: 2, 0: 1, 1: 2, 3: 1 }), { side: 1 }), 11);
+    expect(c.lastMove?.captures).toEqual([
+      { pit: 1, count: 3 },
+      { pit: 0, count: 2 },
+    ]);
+    expect(c.pits[10]).toBe(2); // the chain stopped at its own row
   });
   it('the chain wraps for the CPU: last in pit 1, then pit 0, and pit 11 is its own', () => {
     // CPU sows 3 from pit 10: 11, 0, 1. pit 0 holds 1 -> 2, pit 1 holds 2 -> 3
@@ -261,7 +262,7 @@ describe('legal moves and the must-feed rule', () => {
     expect(mustFeedNow(s)).toBe(false);
     expect(legalMoves(s).map((m) => m.pit)).toEqual([0]);
   });
-  it('a feeding move may capture what it fed; then the opponent has nothing and the game ends', () => {
+  it('a feeding move that captures nothing leaves the game running', () => {
     const s = mk(board({ 5: 1, 0: 3 }), { store: [10, 5] }); // pit 5 feeds pit 6 with 1 seed: 1, no capture
     const n = play(s, 5);
     expect(n.pits[6]).toBe(1);
@@ -298,23 +299,23 @@ describe('end of the game', () => {
     expect(n.winner).toBeNull();
     expect(n.draw).toBe(true); // 14 vs 6: nobody has 25
   });
-  it('toggle endSeeds capturer: the other player takes what is left on the board', () => {
+  it('toggle endSeeds starver: the other player takes what is left on the board', () => {
     const s = mk(board({ 11: 1, 1: 1, 2: 2 }), {
       side: 1,
       store: [10, 6],
-      rules: { endSeeds: 'capturer' },
+      rules: { endSeeds: 'starver' },
     });
     const n = play(s, 11);
     expect(n.end?.reason).toBe('stuck');
     expect(n.end?.swept).toEqual([0, 4]);
     expect(n.store).toEqual([10, 10]);
   });
-  it('sweepOf: owners vs capturer, and a cap-out always sweeps to the owners', () => {
+  it('sweepOf: owners vs starver, and a cap-out always sweeps to the owners', () => {
     const p = board({ 0: 3, 7: 2 });
     expect(sweepOf(p, 0, DEFAULT_RULES)).toEqual([3, 2]);
-    expect(sweepOf(p, 0, { ...DEFAULT_RULES, endSeeds: 'capturer' })).toEqual([0, 5]);
-    expect(sweepOf(p, 1, { ...DEFAULT_RULES, endSeeds: 'capturer' })).toEqual([5, 0]);
-    expect(sweepOf(p, null, { ...DEFAULT_RULES, endSeeds: 'capturer' })).toEqual([3, 2]);
+    expect(sweepOf(p, 0, { ...DEFAULT_RULES, endSeeds: 'starver' })).toEqual([0, 5]);
+    expect(sweepOf(p, 1, { ...DEFAULT_RULES, endSeeds: 'starver' })).toEqual([5, 0]);
+    expect(sweepOf(p, null, { ...DEFAULT_RULES, endSeeds: 'starver' })).toEqual([3, 2]);
   });
   it('an emptied player ends the game (no seeds to move) and the mover keeps the board', () => {
     // CPU captures the last human seeds
@@ -342,17 +343,15 @@ describe('end of the game', () => {
     expect(isOver(n)).toBe(true);
     expect(n.winner).toBeNull();
     expect(n.draw).toBe(true);
-    expect(totalOf(n, 0)).toBe(24);
   });
-  it('the sweep can decide the game: owners keep their side', () => {
-    const s = mk(board({ 5: 1, 1: 6, 11: 0, 7: 0 }), { store: [18, 24], side: 1 });
-    // CPU has no seeds: it is the CPU's turn with nothing to play
-    expect(onSide(s, 1)).toBe(0);
-    const t = mk(board({ 11: 1, 1: 0, 2: 3 }), { side: 1, store: [20, 21] });
-    const n = play(t, 11);
-    expect(n.end?.reason).toBe('stuck');
-    expect(n.store).toEqual([20 + 4, 21]);
-    expect(n.draw).toBe(true);
+  it('the sweep can decide the game: owners keep their side and reach 25', () => {
+    // human takes pit 6 (2 seeds): store 20, the CPU side is empty, the human keeps pits 0 and 1 (5)
+    const s = mk(board({ 5: 1, 6: 1, 0: 3, 1: 2 }), { store: [18, 10] });
+    const n = play(s, 5);
+    expect(n.end?.reason).toBe('empty');
+    expect(n.end?.swept).toEqual([5, 0]);
+    expect(n.store).toEqual([25, 10]);
+    expect(n.winner).toBe('you');
   });
   it('the move cap ends a game that never finishes; every side keeps its own seeds', () => {
     const s = mk(board({ 0: 1, 6: 1, 3: 3, 9: 3 }), { plies: MAX_PLIES - 1 });
@@ -384,9 +383,9 @@ describe('threatened pits (hint markers)', () => {
   });
   it('does not change the state', () => {
     const s = mk(board({ 11: 1, 0: 2, 3: 4, 7: 2 }));
-    const before = serialize(s);
+    const before = snap(s);
     threatenedPits(s, 0);
-    expect(serialize(s)).toBe(before);
+    expect(snap(s)).toBe(before);
   });
 });
 
@@ -409,7 +408,7 @@ describe('records and serialisation', () => {
       createGame({ seed: 2, human: { id: 'a', name: 'A' }, cpu: { id: 'b', name: 'B' }, first: 0 }),
       2,
     );
-    expect(deserialize(serialize(s))).toEqual(s);
+    expect(JSON.parse(snap(s))).toEqual(s);
   });
   it('apply never mutates the state it was given', () => {
     const s = createGame({
@@ -418,9 +417,9 @@ describe('records and serialisation', () => {
       cpu: { id: 'b', name: 'B' },
       first: 0,
     });
-    const before = serialize(s);
+    const before = snap(s);
     play(s, 1);
-    expect(serialize(s)).toBe(before);
+    expect(snap(s)).toBe(before);
   });
 });
 
@@ -435,9 +434,11 @@ describe('rules sanitising', () => {
       captureChain: false,
       capture: 'threeOnly',
       mustFeed: false,
-      endSeeds: 'capturer',
+      endSeeds: 'starver',
     };
     expect(sanitizeRules(custom)).toEqual(custom);
+    // saves written before the rename keep working
+    expect(sanitizeRules({ endSeeds: 'capturer' }).endSeeds).toBe('starver');
     expect(CAPTURE_RULES).toHaveLength(2);
     expect(END_SEEDS).toHaveLength(2);
   });

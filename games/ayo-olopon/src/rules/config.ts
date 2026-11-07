@@ -8,7 +8,7 @@
  * so every variation is a toggle. The defaults are the GAMES.md rules.
  */
 export type CaptureRule = 'twoThree' | 'threeOnly';
-export type EndSeeds = 'owners' | 'capturer';
+export type EndSeeds = 'owners' | 'starver';
 
 export interface Rules {
   /** A sow of 12 or more seeds skips the pit it started from (default on). Off: the origin pit gets a seed too. */
@@ -21,8 +21,8 @@ export interface Rules {
   mustFeed: boolean;
   /**
    * When the game ends because the player to move cannot (or may not) move, who gets the seeds
-   * still on the board: `owners` (each side's owner, default) or `capturer` (the other player,
-   * the one who starved the mover, takes everything that is left).
+   * still on the board: `owners` (each side's owner, default) or `starver` (the other player,
+   * the one who starved the mover, takes everything that is left; he may have captured nothing).
    */
   endSeeds: EndSeeds;
 }
@@ -36,7 +36,13 @@ export const DEFAULT_RULES: Readonly<Rules> = {
 };
 
 export const CAPTURE_RULES: readonly CaptureRule[] = ['twoThree', 'threeOnly'];
-export const END_SEEDS: readonly EndSeeds[] = ['owners', 'capturer'];
+export const END_SEEDS: readonly EndSeeds[] = ['owners', 'starver'];
+
+/** 'capturer' was the first name of 'starver' in saved progress: keep those saves working. */
+function sanitizeEndSeeds(v: unknown): EndSeeds {
+  if (v === 'capturer') return 'starver';
+  return END_SEEDS.includes(v as EndSeeds) ? (v as EndSeeds) : DEFAULT_RULES.endSeeds;
+}
 
 /** Repair rules loaded from storage or the portal: never trust them. */
 export function sanitizeRules(raw: unknown): Rules {
@@ -49,9 +55,7 @@ export function sanitizeRules(raw: unknown): Rules {
       ? (r.capture as CaptureRule)
       : DEFAULT_RULES.capture,
     mustFeed: flag(r.mustFeed, DEFAULT_RULES.mustFeed),
-    endSeeds: END_SEEDS.includes(r.endSeeds as EndSeeds)
-      ? (r.endSeeds as EndSeeds)
-      : DEFAULT_RULES.endSeeds,
+    endSeeds: sanitizeEndSeeds(r.endSeeds),
   };
 }
 

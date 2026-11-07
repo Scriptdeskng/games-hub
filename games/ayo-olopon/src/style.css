@@ -305,8 +305,11 @@
 }
 
 /* ---------- board (classes from assets/ayo-fx.css) ---------- */
+/* fx (bursts, ripples, glows) are decoration: clip them to the board so they never spill past the
+   viewport (landscape) or sit behind the banner bubble above the board (portrait) */
 .ayo-board {
   contain: layout style;
+  overflow: hidden;
 }
 .ayo-board__art {
   -webkit-user-drag: none;

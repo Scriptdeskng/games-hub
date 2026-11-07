@@ -220,8 +220,10 @@ describe('Hard search', () => {
       times.push(performance.now() - t);
     }
     times.sort((a, b) => a - b);
-    // measured 2-4 ms on a laptop and no browser long task over a whole game at 4x throttle (e2e);
-    // the bound here is loose on purpose: coverage instrumentation makes this loop several times slower
+    // Smoke check only: measured 2-4 ms on a laptop; the 120 ms bound is loose on purpose because
+    // coverage instrumentation and busy CI make this loop many times slower, so it cannot catch a
+    // 5-10x regression. The real guard on decision cost is the node-budget test above/below
+    // (a deterministic node count, not a clock). No browser long task is measured in e2e.
     expect(times[Math.floor(times.length * 0.9)]).toBeLessThan(120);
   });
   it('stops deepening when the node budget runs out, and still answers', () => {
@@ -323,13 +325,13 @@ describe('simulations (seeded, no UI)', () => {
       { captureChain: false },
       { capture: 'threeOnly' },
       { mustFeed: false },
-      { endSeeds: 'capturer' },
+      { endSeeds: 'starver' },
       {
         skipOrigin: false,
         captureChain: false,
         capture: 'threeOnly',
         mustFeed: false,
-        endSeeds: 'capturer',
+        endSeeds: 'starver',
       },
     ];
     for (const rules of variants) {

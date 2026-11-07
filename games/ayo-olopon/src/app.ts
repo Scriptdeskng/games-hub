@@ -184,6 +184,7 @@ export function createApp(core: Core, initial: Progress): App {
           best: progress.best[currentDifficulty],
           newBest,
           seeds: `${s.store[0]} - ${s.store[1]}`,
+          onBoard: s.pits.reduce((a, b) => a + b, 0),
           bestCapture: stats.bestCapture,
           moves: stats.moves,
           wins: progress.wins,

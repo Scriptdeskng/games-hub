@@ -117,7 +117,7 @@
     "_review": true
   },
   "rules.end.owners": "Owners",
-  "rules.end.capturer": {
+  "rules.end.starver": {
     "text": "Other player",
     "_review": true
   },
@@ -125,7 +125,7 @@
     "text": "When the game end before time, each person go keep the seeds wey dey im own side.",
     "_review": true
   },
-  "rules.end.help.capturer": {
+  "rules.end.help.starver": {
     "text": "When the game end before time, the person wey no fit move go lose the remaining seeds to the other person.",
     "_review": true
   },
@@ -208,6 +208,10 @@
     "text": "Seeds (you - dem)",
     "_review": true
   },
+  "results.onBoard": {
+    "text": "{n} still dey board",
+    "_review": true
+  },
   "results.bestCapture": {
     "text": "Biggest carry",
     "_review": true
@@ -221,9 +225,18 @@
   "persona.efe.name": "Efe",
   "persona.baba-ade.name": "Baba Ade",
   "persona.malam-sani.name": "Malam Sani",
-  "ayo.banter.baba-ade.start": "My pikin, make I teach you lesson for patience.",
-  "ayo.banter.baba-ade.capture": "Ehen. Count your seed well well.",
-  "ayo.banter.baba-ade.captured": "Hmm. Interesting move. Very interesting.",
+  "ayo.banter.baba-ade.start": {
+    "text": "My pikin, make I teach you lesson for patience.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.capture": {
+    "text": "Ehen. Count your seed well well.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.captured": {
+    "text": "Hmm. Interesting move. Very interesting.",
+    "_review": true
+  },
   "ayo.banter.baba-ade.chain": {
     "text": "Ah, chain! Even teacher must learn.",
     "_review": true
@@ -280,7 +293,10 @@
     "text": "Sannu o, my padi. Make we start.",
     "_review": true
   },
-  "ayo.banter.malam-sani.capture": "Patience na move too.",
+  "ayo.banter.malam-sani.capture": {
+    "text": "Patience na move too.",
+    "_review": true
+  },
   "ayo.banter.malam-sani.captured": {
     "text": "Madalla! Correct move.",
     "_review": true
@@ -293,7 +309,10 @@
     "text": "Correct game. We dey learn from every game.",
     "_review": true
   },
-  "ayo.banter.malam-sani.lose": "No wahala. We dey learn from every game.",
+  "ayo.banter.malam-sani.lose": {
+    "text": "No wahala. We dey learn from every game.",
+    "_review": true
+  },
   "ayo.banter.malam-sani.draw": {
     "text": "E equal. Fair play.",
     "_review": true

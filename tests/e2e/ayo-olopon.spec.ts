@@ -89,7 +89,9 @@ test.describe('ayo-olopon: full playthrough', () => {
     await page.evaluate(() => window.__naijaTest!.autoplay({ win: true }));
     await expectScreen(page, 'results');
     await expect(page.locator('.ng-results__title')).toHaveText('You win!');
+    // a win by score (25 reached early) also shows the seeds left on the board in the seeds stat
     await expect(page.locator('.ng-stat')).toHaveCount(6);
+    await expect(page.locator('.ng-stat', { hasText: /\d+ on board/ })).toHaveCount(1);
     await press(page.getByRole('button', { name: 'Play again' }));
     await expectScreen(page, 'play');
     await press(page.getByRole('button', { name: 'Pause' }));
@@ -329,7 +331,7 @@ test.describe('ayo-olopon: rules, settings, i18n, persistence', () => {
       captureChain: false,
       capture: 'threeOnly',
       mustFeed: false,
-      endSeeds: 'capturer',
+      endSeeds: 'starver',
     });
     expect(st.fastPlay).toBe(true);
     await press(page.locator('#menu-play'));

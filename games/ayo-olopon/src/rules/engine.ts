@@ -1,10 +1,4 @@
-import {
-  advanceTurn,
-  createTurns,
-  currentSeat,
-  type Seat,
-  type TurnState,
-} from '@naija/core/board-kit';
+import { advanceTurn, createTurns, type Seat, type TurnState } from '@naija/core/board-kit';
 import { createRng } from '@naija/core/rng';
 import { capture, isCapped, ownerOf, reachesOpponent, sideSeeds, sow } from './board';
 import { DEFAULT_RULES, PITS, SEEDS_PER_PIT, SIDE, WIN_SCORE, type Rules } from './config';
@@ -105,7 +99,6 @@ export function createGame(o: NewGame): GameState {
 }
 
 export const currentSide = (s: GameState): Side => s.turns.index as Side;
-export const currentSeatOf = (s: GameState): Seat => currentSeat(s.turns);
 export const isOver = (s: GameState): boolean => s.end !== null;
 export const seatId = (s: GameState, side: Side): string => (s.turns.seats[side] as Seat).id;
 
@@ -162,7 +155,7 @@ export function sweepOf(
 ): [number, number] {
   const mine = sideSeeds(pits as number[], 0);
   const theirs = sideSeeds(pits as number[], 1);
-  if (stuck !== null && rules.endSeeds === 'capturer') {
+  if (stuck !== null && rules.endSeeds === 'starver') {
     // the player who could not move loses what is left on the board to the other player
     return stuck === 0 ? [0, mine + theirs] : [mine + theirs, 0];
   }
@@ -230,9 +223,3 @@ export function apply(s: GameState, a: Action): GameState {
   else if (legalMoves(next).length === 0) next = finish(next, 'stuck');
   return next;
 }
-
-/** Final seeds of a seat (captured plus swept), the number the winner is judged on. */
-export const totalOf = (s: GameState, side: Side): number => s.store[side];
-
-export const serialize = (s: GameState): string => JSON.stringify(s);
-export const deserialize = (raw: string): GameState => JSON.parse(raw) as GameState;

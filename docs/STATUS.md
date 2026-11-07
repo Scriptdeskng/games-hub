@@ -5,7 +5,7 @@
 | core + `_template` | 0 | PASS (round 2) | core 22.4 KB / 60; template 80.5 KB / 3 MB | Pidgin `_review` lines; Yoruba/Igbo/Hausa words; cultural review; musician check of synths; portal API shape and allowed origins; real-device test |
 | snakes-ladders | 1 | PASS (round 2) | game 108.6 KB / 3 MB; core 28.5 KB / 60 | 38 pcm `_review` lines; cultural review (Aisha/Funmi/Efe, regional balance); game length (3 CPUs 4.7 min); pawn greyscale legibility; token in page URL contract; real-device test |
 | naija-ludo | 1 | PASS (round 1, 7 minors fixed) | game 106 KB / 3 MB; core 28.3 KB / 60 | 45 pcm `_review` lines; Yoruba/Hausa words; rules sign-off (stacks default safe, 6 always rolls again); game length (3 CPUs classic ~13.6 min); regional balance (no Igbo/South-South persona); synth music and voice lines deferred; re-run 10-min soak alone; real-device test |
-| ayo-olopon | 1 | not started | | |
+| ayo-olopon | 1 | PASS (round 1, minors fixed) | game 108.8 KB / 3 MB; core 26.1 KB / 60 | exact Ayo rule variant and toggles (incl. `starver` end rule) need a Nigerian player; 71+ pcm `_review` lines; Yoruba/Hausa words; Efe/Malam Sani regional-mapping cultural review; Hard-vs-Hard 4.5% move-cap draws; music/voice/hero art placeholders; real-device test of Hard AI cost |
 | naija-whot | 1 | not started | | |
 | sabi-quiz | 2 | not started | | |
 | sabi-words | 2 | not started | | |

@@ -20,7 +20,8 @@ yours (numbered 1..6 in the UI and on the 1-6 keys), 6..11 are the CPU's.
   If no move can, the game ends.
 - **Seeds left at the end** (toggle `owners` or `other player`): when the game ends because the
   player to move cannot move or feed, `owners` leaves each side's seeds to its owner; `other player`
-  gives everything left to the player who starved the mover.
+  gives everything left to the player who starved the mover (the rule value is `starver`; saves written
+  with the earlier name `capturer` are migrated). That player may have captured nothing.
 - **Winning:** the first to 25 of the 48 seeds wins at once. When the game ends early the leftover
   seeds are swept first, then the totals decide.
 - **Tie rule (documented, not a toggle):** 24 each is a **draw**; the results screen says "A draw!".
@@ -30,6 +31,11 @@ yours (numbered 1..6 in the UI and on the 1-6 keys), 6..11 are the CPU's.
 
 The exact variant must still be confirmed by a Nigerian player; change a toggle on the Rules screen
 (saved with the progress) to match the way it is played.
+
+## Pause behaviour
+
+Hiding the tab auto-pauses through core. The pause dialog stays open when the tab is shown again and
+the player taps Resume: this is core's intended behaviour (same as naija-ludo), not a leak.
 
 ## Code map
 
@@ -46,7 +52,8 @@ The exact variant must still be confirmed by a Nigerian player; change a toggle 
 
 ## Why no Web Worker for Hard
 
-A Hard decision visits at most 24 000 nodes: about 3 to 7 ms on a laptop; no browser long task (> 50 ms)
-appeared over a whole game against Hard on a 4x CPU-throttled profile. The cap is a node count, not a
+A Hard decision visits at most 24 000 nodes: about 3 to 7 ms on a laptop. The 4x-throttled perf run
+(`tests/perf`) only measures frame rate, not long tasks; one manual check saw a single 58 ms task in 30
+live Hard moves. The guard is the node-budget unit test (`ai.test.ts`), not a clock. The cap is a node count, not a
 clock, so games replay identically on every phone. If the cap is ever raised past about 100 000 nodes,
 move `searchBest` into a Worker (it is a pure function of plain data, so that is a small change).
