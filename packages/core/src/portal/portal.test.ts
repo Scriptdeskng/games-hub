@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createStorage } from '../storage';
-import { createPortal, isAllowedOrigin, parsePortalParams } from './index';
+import { DEFAULT_PORTAL_ORIGIN, createPortal, isAllowedOrigin, parsePortalParams } from './index';
 
 afterEach(() => localStorage.clear());
 
@@ -28,7 +28,7 @@ describe('portal events', () => {
     const p = createPortal({
       game: 'g',
       storage: createStorage('g'),
-      search: '?portal=https://p.example',
+      search: '?portal=https://m.gamesplash.com.ng',
       win,
     });
     p.emit('ready', { v: 1 });
@@ -36,9 +36,9 @@ describe('portal events', () => {
     expect(post).toHaveBeenNthCalledWith(
       1,
       { source: 'naija-games', game: 'g', type: 'ready', data: { v: 1 } },
-      'https://p.example',
+      'https://m.gamesplash.com.ng',
     );
-    expect(post.mock.calls.every((c) => c[1] === 'https://p.example')).toBe(true);
+    expect(post.mock.calls.every((c) => c[1] === 'https://m.gamesplash.com.ng')).toBe(true);
     expect(p.log.map((e) => e.type)).toEqual(['ready', 'end']);
   });
   it('never posts when the portal param is missing (no wildcard origin)', () => {
@@ -56,7 +56,7 @@ describe('portal events', () => {
     createPortal({
       game: 'g',
       storage: createStorage('g'),
-      search: '?portal=https://p.example',
+      search: '?portal=https://m.gamesplash.com.ng',
       win: self as unknown as Window,
     }).emit('ready');
     expect(post).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('portal events', () => {
       createPortal({
         game: 'g',
         storage: createStorage('g'),
-        search: '?portal=https://p.example',
+        search: '?portal=https://m.gamesplash.com.ng',
         win: bad,
       }).emit('ready'),
     ).not.toThrow();
@@ -80,7 +80,7 @@ describe('portal events', () => {
     const p = createPortal({
       game: 'g',
       storage: createStorage('g'),
-      search: '?token=secret&portal=https://p.example',
+      search: '?token=secret&portal=https://m.gamesplash.com.ng',
     });
     expect(p.params.hasToken).toBe(true);
     expect(JSON.stringify(p.params)).not.toContain('secret');
@@ -101,13 +101,13 @@ describe('portal progress', () => {
     const p = createPortal({
       game: 'g',
       storage: createStorage('g'),
-      search: '?token=tok1&portal=https://p.example',
+      search: '?token=tok1&portal=https://m.gamesplash.com.ng',
       fetchFn,
     });
     expect(await p.loadProgress({ n: 0 })).toEqual({ n: 9 });
     await p.saveProgress({ n: 10 });
     const [loadUrl, loadInit] = fetchFn.mock.calls[0]!;
-    expect(loadUrl).toBe('https://p.example/api/games/g/progress');
+    expect(loadUrl).toBe('https://m.gamesplash.com.ng/api/games/g/progress');
     expect(loadUrl).not.toContain('tok1');
     expect(loadInit.headers.Authorization).toBe('Bearer tok1');
     const [, saveInit] = fetchFn.mock.calls[1]!;
@@ -118,7 +118,7 @@ describe('portal progress', () => {
   it('falls back to the local copy when the API fails, errors or returns nothing', async () => {
     const st = createStorage('g');
     st.set('progress', { n: 1 });
-    const args = { game: 'g', storage: st, search: '?token=t&portal=https://p.example' };
+    const args = { game: 'g', storage: st, search: '?token=t&portal=https://m.gamesplash.com.ng' };
     const down = createPortal({
       ...args,
       fetchFn: vi.fn().mockRejectedValue(new Error('offline')),
@@ -136,8 +136,15 @@ describe('portal progress', () => {
 });
 
 describe('portal origin allow-list', () => {
-  it('default: https anywhere, http only for localhost / 127.0.0.1 / [::1]', () => {
+  it('default: only the GameSplash portal, plus localhost / 127.0.0.1 / [::1] for development', () => {
     expect(isAllowedOrigin('https://m.gamesplash.com.ng')).toBe(true);
+    expect(isAllowedOrigin(DEFAULT_PORTAL_ORIGIN)).toBe(true);
+    expect(isAllowedOrigin('http://m.gamesplash.com.ng')).toBe(false); // no downgrade
+    expect(isAllowedOrigin('https://evil.example')).toBe(false);
+    expect(isAllowedOrigin('https://gamesplash.com.ng')).toBe(false);
+    expect(isAllowedOrigin('https://x.gamesplash.com.ng')).toBe(false); // no wildcard by default
+    expect(isAllowedOrigin('https://m.gamesplash.com.ng.evil.example')).toBe(false);
+    expect(isAllowedOrigin('https://localhost:8443')).toBe(true);
     expect(isAllowedOrigin('http://localhost:4180')).toBe(true);
     expect(isAllowedOrigin('http://127.0.0.1:3000')).toBe(true);
     expect(isAllowedOrigin('http://[::1]:3000')).toBe(true);
@@ -155,6 +162,41 @@ describe('portal origin allow-list', () => {
     expect(isAllowedOrigin('http://a.example.com', list)).toBe(false);
     expect(isAllowedOrigin('https://other.org', list)).toBe(false);
     expect(isAllowedOrigin('http://localhost:4180', list)).toBe(false); // list replaces the default
+  });
+  it('with the DEFAULT list an evil origin gets no events and no token', async () => {
+    for (const evil of [
+      'https://evil.example',
+      'http://m.gamesplash.com.ng',
+      'https://m.gamesplash.com.ng.evil.example',
+      'http://localhost.evil.example',
+    ]) {
+      const { win, post } = iframeWin();
+      const fetchFn = vi.fn();
+      const p = createPortal({
+        game: 'g',
+        storage: createStorage('g'),
+        search: `?token=secret&portal=${evil}`,
+        win,
+        fetchFn,
+      });
+      p.emit('ready');
+      await p.saveProgress({ n: 1 });
+      await p.loadProgress({ n: 0 });
+      expect(post, evil).not.toHaveBeenCalled();
+      expect(fetchFn, evil).not.toHaveBeenCalled();
+      expect(p.params.portalOrigin).toBeNull();
+    }
+    // the real portal still works with the default
+    const { win, post } = iframeWin();
+    const p = createPortal({
+      game: 'g',
+      storage: createStorage('g'),
+      search: '?token=t&portal=https://m.gamesplash.com.ng',
+      win,
+      fetchFn: vi.fn().mockResolvedValue({ ok: true, json: async () => ({ data: null }) }),
+    });
+    p.emit('ready');
+    expect(post).toHaveBeenCalledWith(expect.anything(), 'https://m.gamesplash.com.ng');
   });
   it('a disallowed origin gets no events and never sees the token', async () => {
     const { win, post } = iframeWin();
@@ -177,7 +219,7 @@ describe('portal origin allow-list', () => {
   it('treats {data:null} and 404 as no progress; the log is bounded', async () => {
     const st = createStorage('g');
     st.set('progress', { n: 3 });
-    const args = { game: 'g', storage: st, search: '?token=t&portal=https://p.example' };
+    const args = { game: 'g', storage: st, search: '?token=t&portal=https://m.gamesplash.com.ng' };
     const empty = createPortal({
       ...args,
       fetchFn: vi.fn().mockResolvedValue({ ok: true, json: async () => ({ data: null }) }),

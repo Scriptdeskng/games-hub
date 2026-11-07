@@ -4,7 +4,6 @@ import type { Difficulty } from '@naija/core/ui-kit';
 import type { Action, GameState } from '../rules/engine';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
 import { personaById } from './personas';
-import type { Planner } from './planner';
 
 export * from './brains';
 export * from './personas';
@@ -13,12 +12,14 @@ export * from './planner';
 export type Cpu = CpuOpponent<GameState, Action>;
 
 /**
- * Which personas sit at the table: Tari and Efe in a seeded order, Aisha joining for three
- * opponents. The same seed always seats the same personas.
+ * Which personas sit at the table: Tari and Efe in a seeded order, and for three opponents a
+ * third seat that alternates by the stored game counter: Funmi (Yoruba, Lagos) on even counts,
+ * Aisha (Hausa) on odd ones. Never random per round: the same seed and counter seat the same people.
  */
-export function pickPersonas(seed: number, count: number): string[] {
+export function pickPersonas(seed: number, count: number, gameCounter = 0): string[] {
   const pair = createRng(seed ^ 0x5eed).shuffle(['tari', 'efe']);
-  return [...pair, 'aisha'].slice(0, Math.max(1, Math.min(3, count)));
+  const third = gameCounter % 2 === 0 ? 'funmi' : 'aisha';
+  return [...pair, third].slice(0, Math.max(1, Math.min(3, count)));
 }
 
 /**
@@ -30,14 +31,13 @@ export function createOpponents(o: {
   difficulty: Difficulty;
   seats: readonly { id: string; persona: string }[];
 }): Cpu[] {
-  const shared: { planner?: Planner } = {};
   return o.seats.map((seat, i) =>
     createCpu<GameState, Action>({
       id: seat.id,
       persona: personaById(seat.persona),
       difficulty: o.difficulty,
       seed: (o.seed + 1 + i * 7919) >>> 0,
-      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain(shared) },
+      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain() },
     }),
   );
 }

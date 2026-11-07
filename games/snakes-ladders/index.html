@@ -7,6 +7,8 @@
       content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
     />
     <meta name="theme-color" content="#1d1d20" />
+    <!-- the portal passes ?token= in this page's URL: never leak it as a Referer to subresources -->
+    <meta name="referrer" content="no-referrer" />
     <link rel="icon" href="data:," />
     <title>Snakes &amp; Ladders: Lagos Edition</title>
     <style>

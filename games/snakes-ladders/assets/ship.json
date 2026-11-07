@@ -1,0 +1,10 @@
+{
+  "include": [
+    "board/board-bg.svg",
+    "board/connectors.svg",
+    "board/landmarks.svg",
+    "dice/*.svg",
+    "icons/*.svg",
+    "pawns/*.svg"
+  ]
+}

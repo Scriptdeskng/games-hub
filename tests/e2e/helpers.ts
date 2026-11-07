@@ -108,3 +108,42 @@ export function inViewport(target: Locator): Promise<boolean> {
     );
   });
 }
+
+/**
+ * Results screens: no stat tile may sit under the sticky action bar (QA SL-01: on a short
+ * landscape phone the bar used to hide tiles). Measured at the current scroll position.
+ */
+export function stickyOverlaps(page: Page): Promise<string[]> {
+  return page.evaluate(() => {
+    const bar = document.querySelector('.ng-sticky-actions');
+    if (!bar) return [];
+    const b = bar.getBoundingClientRect();
+    const out: string[] = [];
+    for (const t of document.querySelectorAll('.ng-stat')) {
+      const r = t.getBoundingClientRect();
+      const x = Math.min(r.right, b.right) - Math.max(r.left, b.left);
+      const y = Math.min(r.bottom, b.bottom) - Math.max(r.top, b.top);
+      if (x > 1 && y > 1)
+        out.push(`"${(t.textContent ?? '').trim().slice(0, 18)}" is under the action bar`);
+    }
+    return out;
+  });
+}
+
+/** WCAG contrast ratio of an element's text colour on its own background colour. */
+export function contrastOf(target: Locator): Promise<number> {
+  return target.evaluate((el) => {
+    const rgb = (c: string): number[] => (c.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    const lum = ([r, g, b]: number[]): number => {
+      const f = (v: number): number => {
+        const c = (v ?? 0) / 255;
+        return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * f(r!) + 0.7152 * f(g!) + 0.0722 * f(b!);
+    };
+    const cs = getComputedStyle(el);
+    const a = lum(rgb(cs.color));
+    const b = lum(rgb(cs.backgroundColor));
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+}

@@ -12,7 +12,6 @@ import {
   isOver,
   legalActions,
   playerById,
-  seatById,
   serialize,
   turnsOf,
   turnsUntilChoice,
@@ -74,7 +73,7 @@ describe('setup', () => {
       expect(currentSeatOf(s).kind).toBe('human');
       expect(s.players.every((p) => p.pos === 0 && p.rerollLeft)).toBe(true);
     }
-    expect(seatById(game(), 'cpu1').persona).toBe('tari');
+    expect(game().turns.seats[1]?.persona).toBe('tari');
   });
 
   it('rejects 0 or 4 CPUs', () => {
@@ -417,5 +416,70 @@ describe('determinism and serialization', () => {
         expect(isOver(s)).toBe(true);
       }
     }
+  });
+});
+
+describe('the two-dice cycle survives a re-roll', () => {
+  const noLadders: BoardLayout = { size: 10, ladders: [], snakes: [] };
+  const fresh = (): GameState => game({ layout: noLadders });
+
+  /** one human turn with plain rolls (accepting any re-roll offer) then the CPU's */
+  function bothTurns(s: GameState): GameState {
+    s = apply({ ...s, rng: rngFor(2) }, { type: 'roll' });
+    if (s.phase === 'decide') s = apply(s, { type: 'accept' });
+    s = apply({ ...s, rng: rngFor(1) }, { type: 'roll' });
+    if (s.phase === 'decide') s = apply(s, { type: 'accept' });
+    return s;
+  }
+
+  it('re-rolling on turn 4 leaves turn 5 a two-dice turn', () => {
+    let s = fresh();
+    for (let i = 0; i < 3; i++) s = bothTurns(s);
+    s = apply({ ...s, rng: rngFor(3) }, { type: 'roll' }); // human turn 4 (decide)
+    expect(s.phase).toBe('decide');
+    s = apply(s, { type: 'reroll' });
+    expect(s.turns.taken[0]).toBe(4);
+    s = apply({ ...s, rng: rngFor(1) }, { type: 'roll' }); // CPU turn 4
+    if (s.phase === 'decide') s = apply(s, { type: 'accept' });
+    expect(currentPlayer(s).id).toBe('you');
+    expect(isChoiceTurn(s)).toBe(true);
+  });
+
+  it('re-rolling on the 5th turn still completes exactly one turn, and turn 6 is a single die', () => {
+    let s = fresh();
+    for (let i = 0; i < 4; i++) s = bothTurns(s);
+    expect(isChoiceTurn(s)).toBe(true);
+    s = apply({ ...s, rng: rngForPair(2, 4) }, { type: 'roll' });
+    s = apply(s, { type: 'pick', index: 1 });
+    expect(s.phase).toBe('decide');
+    s = apply(s, { type: 'reroll' });
+    expect(s.turns.taken[0]).toBe(5); // one turn, not two
+    expect(s.lastMove?.picked).not.toBeNull();
+    expect(currentPlayer(s).id).toBe('cpu1');
+    // the CPU's own 5th turn is a two-dice turn too
+    s = apply({ ...s, rng: rngForPair(1, 1) }, { type: 'roll' });
+    expect(s.phase).toBe('pick');
+    s = apply(s, { type: 'pick', index: 0 });
+    if (s.phase === 'decide') s = apply(s, { type: 'accept' });
+    expect(currentPlayer(s).id).toBe('you');
+    expect(isChoiceTurn(s)).toBe(false); // turn 6
+    expect(turnsUntilChoice(s)).toBe(5);
+    s = apply({ ...s, rng: rngFor(2) }, { type: 'roll' });
+    expect(s.phase).toBe('roll'); // no re-roll left, single die moved at once
+  });
+});
+
+describe('pawns share squares', () => {
+  it('two pawns on the same square coexist: no capture, no block', () => {
+    let s = plain({ layout: small });
+    s = place(s, 20, 0);
+    s = place(s, 23, 1);
+    s = apply(rolling(s, 3), { type: 'roll' }); // human 20 -> 23, onto the CPU
+    expect(playerById(s, 'you').pos).toBe(23);
+    expect(playerById(s, 'cpu1').pos).toBe(23);
+    expect(s.lastMove).toMatchObject({ via: null, to: 23 });
+    s = apply(rolling(s, 2), { type: 'roll' }); // the CPU moves on; the human is untouched
+    expect(playerById(s, 'you').pos).toBe(23);
+    expect(playerById(s, 'cpu1').pos).toBe(25);
   });
 });

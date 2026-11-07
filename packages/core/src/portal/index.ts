@@ -12,10 +12,14 @@ import type { Store } from '../storage';
  *        and treated as "no progress".
  *   PUT  {portal}/api/games/{slug}/progress  body { "data": <json> } -> 2xx
  *
- * The portal origin must be allowed: by default https origins and localhost / 127.0.0.1 / [::1]
- * (dev); pass `allowedOrigins` (exact origins or `https://*.example.com`) to restrict further. A
- * disallowed origin gets no events and never sees the token.
+ * The portal origin must be allowed. By default that is `DEFAULT_PORTAL_ORIGIN`
+ * (https://m.gamesplash.com.ng, the portal named in CLAUDE.md) plus localhost / 127.0.0.1 / [::1]
+ * for development (the only http origins ever accepted). No wildcards. A game or test that talks
+ * to another portal passes `allowedOrigins` (exact origins, or `https://*.example.com`), which
+ * REPLACES the default. A disallowed origin gets no events and never sees the token.
  */
+export const DEFAULT_PORTAL_ORIGIN = 'https://m.gamesplash.com.ng';
+
 export type PortalEventType = 'ready' | 'start' | 'level_complete' | 'score' | 'end' | 'error';
 
 export interface PortalMessage {
@@ -47,8 +51,9 @@ export function isAllowedOrigin(origin: string, allowed?: readonly string[]): bo
       return u.protocol === `${star[1]}:` && u.host.endsWith(`.${star[2]}`);
     });
   }
+  if (origin === DEFAULT_PORTAL_ORIGIN) return true;
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(u.hostname);
-  return u.protocol === 'https:' || (u.protocol === 'http:' && local);
+  return local && (u.protocol === 'http:' || u.protocol === 'https:');
 }
 
 export function parsePortalParams(search: string, allowed?: readonly string[]): PortalParams {
@@ -71,7 +76,7 @@ export interface PortalOptions {
   game: string;
   storage: Store;
   search?: string;
-  /** exact origins or `https://*.example.com` patterns; default: https + localhost for dev */
+  /** exact origins or `https://*.example.com` patterns; default: the GameSplash portal + localhost for dev */
   allowedOrigins?: readonly string[];
   /** injectable for tests */
   win?: Pick<Window, 'parent'> & { top?: unknown };

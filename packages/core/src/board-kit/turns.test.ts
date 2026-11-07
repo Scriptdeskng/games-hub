@@ -3,9 +3,7 @@ import {
   advanceTurn,
   createTurns,
   currentSeat,
-  humanSeat,
   isEveryNth,
-  isHumanTurn,
   seatIndex,
   turnsTaken,
   turnsUntilNth,
@@ -24,15 +22,14 @@ describe('turn manager', () => {
   it('seats one human first and CPUs after', () => {
     const t = createTurns(setup);
     expect(t.seats.map((s) => s.kind)).toEqual(['human', 'cpu', 'cpu']);
-    expect(humanSeat(t).id).toBe('you');
-    expect(isHumanTurn(t)).toBe(true);
+    expect(currentSeat(t).kind).toBe('human');
     expect(t.seats.filter((s) => s.kind === 'human')).toHaveLength(1);
   });
 
   it('can start with a CPU', () => {
     const t = createTurns({ ...setup, firstSeat: 'cpu' });
     expect(currentSeat(t).id).toBe('c1');
-    expect(isHumanTurn(t)).toBe(false);
+    expect(currentSeat(t).kind).toBe('cpu');
   });
 
   it('rejects duplicate seat ids', () => {

@@ -120,3 +120,30 @@ export function createPlanner(layout: BoardLayout, rules: Rules): Planner {
     },
   };
 }
+
+const solved = new Map<string, Planner>();
+
+/**
+ * The planner for a layout and rule set, solved once and then reused by every game and every Hard
+ * CPU (a pure memo of a deterministic function: there are only a handful of rule combinations).
+ * Solving takes a few ms natively; `warmPlanner` lets the menu do it while the player is choosing.
+ */
+export function getPlanner(layout: BoardLayout, rules: Rules): Planner {
+  const key = JSON.stringify([
+    layout,
+    rules.exactFinish,
+    rules.reroll,
+    rules.choiceDice,
+    rules.choiceEvery,
+  ]);
+  let p = solved.get(key);
+  if (!p) {
+    if (solved.size >= 16) solved.clear();
+    p = createPlanner(layout, rules);
+    solved.set(key, p);
+  }
+  return p;
+}
+
+export const warmPlanner = (layout: BoardLayout, rules: Rules): void =>
+  void getPlanner(layout, rules);

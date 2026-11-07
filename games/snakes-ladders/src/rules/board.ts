@@ -18,11 +18,6 @@ export function squareToCell(square: number, size = 10): Cell {
   return { row, col: row % 2 === 0 ? k : size - 1 - k };
 }
 
-export function cellToSquare(cell: Cell, size = 10): number {
-  const k = cell.row % 2 === 0 ? cell.col : size - 1 - cell.col;
-  return cell.row * size + k + 1;
-}
-
 export interface Landing {
   /** where the die takes the pawn before any ladder or snake (or the start square if it cannot move) */
   landed: number;

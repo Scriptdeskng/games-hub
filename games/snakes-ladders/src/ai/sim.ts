@@ -4,7 +4,6 @@ import { DEFAULT_RULES, type Rules } from '../rules/config';
 import { apply, createGame, isOver, turnsOf, type Action, type GameState } from '../rules/engine';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
 import { personaById } from './personas';
-import type { Planner } from './planner';
 
 export interface SimResult {
   /** index into `seats` of the winner */
@@ -22,8 +21,6 @@ export function simulate(o: {
   seats: readonly Difficulty[];
   rules?: Partial<Rules>;
   first?: number;
-  /** share one solved planner between games with the same layout and rules */
-  shared?: { planner?: Planner };
 }): SimResult {
   const rules = { ...DEFAULT_RULES, ...o.rules };
   const seatIds = o.seats.map((_, i) => `s${i}`);
@@ -33,14 +30,13 @@ export function simulate(o: {
     cpus: seatIds.slice(1).map((id) => ({ id, name: id })) as [{ id: string; name: string }],
     rules,
   });
-  const shared = o.shared ?? {};
   const cpus = o.seats.map((difficulty, i) =>
     createCpu<GameState, Action>({
       id: seatIds[i] as string,
       persona: personaById('tari'),
       difficulty,
       seed: (o.seed * 31 + i * 7919 + 1) >>> 0,
-      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain(shared) },
+      brains: { easy: easyBrain, medium: mediumBrain, hard: createHardBrain() },
     }),
   );
   // rotate the start so the first-move advantage is shared out
@@ -83,14 +79,12 @@ export function headToHead(
 ): MatchStats {
   let wins = 0;
   let turns = 0;
-  const shared: { planner?: Planner } = {};
   for (let i = 0; i < games; i++) {
     const r = simulate({
       seed: (o.seed ?? 1000) + i,
       seats: [a, b],
       rules: o.rules,
       first: i % 2,
-      shared,
     });
     if (r.winner === 0) wins++;
     turns += r.turns;

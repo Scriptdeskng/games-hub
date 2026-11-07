@@ -7,6 +7,7 @@ import {
   layoutProblems,
   openGame,
   press,
+  stickyOverlaps,
   watchErrors,
 } from './helpers';
 
@@ -179,6 +180,23 @@ test.describe('_template: full playthrough', () => {
     await press(page.locator('#menu-play'));
     await expectScreen(page, 'play');
     await check();
+  });
+});
+
+test.describe('_template: portal origin (QA D14)', () => {
+  test('a crafted ?portal= origin gets no request and no token', async ({ page }) => {
+    const hits: string[] = [];
+    await page.route(
+      (u) => u.hostname === 'evil.example',
+      (route) => {
+        hits.push(route.request().url());
+        return route.abort();
+      },
+    );
+    await openGame(page, SLUG, '?token=tok_d14_secret&portal=https://evil.example');
+    await page.evaluate(() => window.__naijaTest!.autoplay());
+    await expectScreen(page, 'results');
+    expect(hits).toEqual([]);
   });
 });
 
@@ -433,6 +451,9 @@ test.describe('_template: layout on every screen (en and pcm)', () => {
         ] as const);
         await expectScreen(page, 'results');
         await check(`results ${difficulty} ${win ? 'win' : 'lose'}`);
+        if ((page.viewportSize()?.height ?? 999) <= 500) {
+          (await stickyOverlaps(page)).forEach((p) => seen.push(`results: ${p}`));
+        }
         expect(
           await inViewport(page.locator('.ng-results__actions .ng-btn').first()),
           'Play again in view',

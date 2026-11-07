@@ -1,4 +1,4 @@
-import { personaById } from './ai';
+import { personaById, warmPlanner } from './ai';
 import type { Core } from '@naija/core/boot';
 import {
   createScreenHost,
@@ -7,6 +7,7 @@ import {
   DIFFICULTIES,
 } from '@naija/core/ui-kit';
 import {
+  DEFAULT_LAYOUT,
   MAX_CPUS,
   recordResult,
   scoreFor,
@@ -79,6 +80,7 @@ export function createApp(core: Core, initial: Progress): App {
       onDifficulty: (d) => {
         currentDifficulty = d;
         save({ ...progress, lastDifficulty: d });
+        if (d === 'hard') warmPlanner(DEFAULT_LAYOUT, progress.rules);
       },
       onCpuCount: (n) => save({ ...progress, cpuCount: Math.max(1, Math.min(MAX_CPUS, n)) }),
       onPlay: () => startRound(currentDifficulty),
@@ -86,6 +88,8 @@ export function createApp(core: Core, initial: Progress): App {
       onRules: showRules,
     });
     show('menu', c, showMenu);
+    // solve Hard's tables here, on a menu with nothing animating, so the game never hitches
+    if (currentDifficulty === 'hard') warmPlanner(DEFAULT_LAYOUT, progress.rules);
   }
 
   function showHowTo(): void {
@@ -116,6 +120,7 @@ export function createApp(core: Core, initial: Progress): App {
     const p = createPlay(core, {
       difficulty: d,
       cpuCount: x.cpus ?? progress.cpuCount,
+      gameCounter: progress.games,
       rules: progress.rules,
       seed,
       onMove: (s, m) => (quiet ? undefined : reportMove(s, m)),
@@ -133,6 +138,7 @@ export function createApp(core: Core, initial: Progress): App {
     const built = buildPlay(d, x);
     play = built.play;
     roundOpen = true;
+    save({ ...progress, games: progress.games + 1 });
     core.portal.emit('start', {
       level: d,
       cpus: x.cpus ?? progress.cpuCount,
@@ -215,7 +221,11 @@ export function createApp(core: Core, initial: Progress): App {
         if (opts.realtime) {
           const ended = new Promise<GameState>((resolve) => waiters.push(resolve));
           const seed = nextSeed();
-          startRound(d, { seed, cpus, test: { tempo: 0.25, bot: true, liveMoves: 10 } });
+          startRound(d, {
+            seed,
+            cpus,
+            test: { tempo: urlTempo ?? 0.25, bot: true, liveMoves: 10 },
+          });
           return ended;
         }
         // instant: look for the first seed (from the current one) that gives the wanted result

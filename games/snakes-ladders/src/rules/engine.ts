@@ -115,8 +115,6 @@ export const currentPlayer = (s: GameState): Player => s.players[s.turns.index] 
 export const currentSeatOf = (s: GameState): Seat => currentSeat(s.turns);
 export const playerById = (s: GameState, id: string): Player =>
   s.players.find((p) => p.id === id) as Player;
-export const seatById = (s: GameState, id: string): Seat =>
-  s.turns.seats.find((x) => x.id === id) as Seat;
 
 /** Is the current player's next roll a pick-one-of-two turn? */
 export const isChoiceTurn = (s: GameState): boolean =>

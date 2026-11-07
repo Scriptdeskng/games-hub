@@ -43,9 +43,6 @@ export const PROFILES: Readonly<Record<Difficulty, DifficultyProfile>> = {
   hard: { skill: 1, mistakeRate: 0, thinkScale: 1.1 },
 };
 
-export const isDifficulty = (v: unknown): v is Difficulty =>
-  v === 'easy' || v === 'medium' || v === 'hard';
-
 /**
  * A CPU opponent's brain for one kind of decision: pure, deterministic given the rng.
  * `Ctx` is whatever the game gives it (usually the game state plus the options).

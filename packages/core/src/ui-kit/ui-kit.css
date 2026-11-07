@@ -165,6 +165,45 @@ body {
   .ng-results__stars {
     margin-top: var(--ng-s-2, 8px);
   }
+  /* QA SL-01: never let the sticky bar cover stat tiles. Banner on the left, tiles on the right,
+     the actions in normal flow underneath (everything fits above the fold at 812x375). */
+  .ng-results {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-content: center;
+    align-items: center;
+    column-gap: var(--ng-s-4, 16px);
+  }
+  .ng-results > .ng-results__banner {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .ng-results > .ng-banner,
+  .ng-results > .ng-banter {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: center;
+  }
+  .ng-results > .ng-results__stats {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ng-results > .ng-results__actions {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    position: static;
+    justify-self: center;
+    flex-direction: row;
+    max-width: 520px;
+    margin-top: 0;
+    padding: 0;
+    background: none;
+  }
+  .ng-results > .ng-results__actions .ng-btn {
+    flex: 1;
+    min-width: 0;
+  }
   .ng-howto {
     gap: var(--ng-s-2, 8px);
   }

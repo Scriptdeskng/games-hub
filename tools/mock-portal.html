@@ -105,7 +105,9 @@
       <button type="button" id="clear">Clear log</button>
     </form>
     <main>
-      <iframe id="frame" title="game"></iframe>
+      <!-- allow="accelerometer; gyroscope": lets the game use shake-to-roll. A portal that leaves it out still
+           works (the game checks the permissions policy and stays silent); ?noallow=1 tests that. -->
+      <iframe id="frame" title="game" allow="accelerometer; gyroscope"></iframe>
       <section>
         <p>Event order: <span id="order">(none)</span> <span id="verdict"></span></p>
         <table>
@@ -200,6 +202,9 @@
         if (!$('noportal').checked) u.searchParams.set('portal', location.origin);
         if ($('token').value) u.searchParams.set('token', $('token').value);
         u.searchParams.set('lang', $('lang').value);
+        if (q.get('tempo')) u.searchParams.set('tempo', q.get('tempo')); // test builds only
+        if (q.get('noallow')) $('frame').removeAttribute('allow');
+        else $('frame').setAttribute('allow', 'accelerometer; gyroscope');
         $('frame').src = u.href;
       }
 

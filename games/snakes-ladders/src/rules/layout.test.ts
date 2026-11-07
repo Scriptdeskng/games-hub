@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LayoutError, type BoardLayout } from './config';
+import { designProblems } from './design';
 import { DEFAULT_LAYOUT, LAYOUT_DATA, jumpMap, loadLayout, validateLayout } from './layout';
 
 const ok = (): BoardLayout => ({
@@ -165,5 +166,35 @@ describe('layout validation', () => {
     }
     expect(() => loadLayout(null)).toThrow(LayoutError);
     expect(() => loadLayout({ size: 10, ladders: [null], snakes: [] })).toThrow(LayoutError);
+  });
+});
+
+describe('design rules (the brief): a layout edit that breaks the look is caught here', () => {
+  it('the shipped layout passes: 8 + 8, no crossings, no touching ends, balanced', () => {
+    expect(designProblems(DEFAULT_LAYOUT)).toEqual([]);
+    expect(DEFAULT_LAYOUT.ladders).toHaveLength(8);
+    expect(DEFAULT_LAYOUT.snakes).toHaveLength(8);
+  });
+
+  it('catches crossings, touching end squares, wrong counts and imbalance', () => {
+    const base = DEFAULT_LAYOUT;
+    // a ladder 8 -> 36 and a new snake 40 -> 5 cross
+    const crossing = { ...base, snakes: [...base.snakes.slice(1), { id: 'x', from: 40, to: 5 }] };
+    expect(designProblems(crossing).join()).toMatch(/crosses/);
+    // end squares 36 and 35 are orthogonal neighbours in the grid (same row)
+    const touching = {
+      ...base,
+      snakes: [...base.snakes.slice(1), { id: 'near', from: 99, to: 35 }],
+    };
+    expect(designProblems(touching).join()).toMatch(/touch/);
+    expect(designProblems({ ...base, ladders: base.ladders.slice(0, 3) }).join()).toMatch(
+      /3 ladders/,
+    );
+    expect(designProblems({ ...base, snakes: base.snakes.slice(0, 2) }).join()).toMatch(/2 snakes/);
+    const skew = {
+      ...base,
+      ladders: base.ladders.map((j) => ({ ...j, to: Math.min(100, j.to + 3) })),
+    };
+    expect(designProblems(skew).join()).toMatch(/unbalanced/);
   });
 });

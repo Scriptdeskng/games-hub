@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cellToSquare, resolveLanding, squareToCell } from './board';
+import { resolveLanding, squareToCell } from './board';
 import { jumpMap } from './layout';
 import type { BoardLayout } from './config';
 
@@ -24,7 +24,6 @@ describe('boustrophedon board', () => {
     for (let n = 1; n <= 100; n++) {
       const c = squareToCell(n);
       seen.add(`${c.row},${c.col}`);
-      expect(cellToSquare(c)).toBe(n);
     }
     expect(seen.size).toBe(100);
   });
@@ -39,7 +38,6 @@ describe('boustrophedon board', () => {
 
   it('other board sizes', () => {
     expect(squareToCell(6, 5)).toEqual({ row: 1, col: 4 });
-    expect(cellToSquare({ row: 1, col: 4 }, 5)).toBe(6);
   });
 });
 

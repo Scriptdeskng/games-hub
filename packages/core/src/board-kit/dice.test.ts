@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createRng } from '../rng';
-import { dieOutcomes, rollChoice, rollDie, rollSum, rollTwoDice, takeChoice } from './dice';
+import { rollChoice, rollDie, rollSum, rollTwoDice, takeChoice } from './dice';
 
 describe('dice', () => {
   it('rolls stay in range and every face shows up', () => {
@@ -43,8 +43,6 @@ describe('dice', () => {
     expect(s).toBeGreaterThanOrEqual(3);
     expect(s).toBeLessThanOrEqual(18);
     expect(rollSum(rng, 0)).toBe(0);
-    expect(dieOutcomes()).toEqual([1, 2, 3, 4, 5, 6]);
-    expect(dieOutcomes(4)).toHaveLength(4);
   });
 
   it('pick one of two is plain data and takeChoice rejects bad indexes', () => {

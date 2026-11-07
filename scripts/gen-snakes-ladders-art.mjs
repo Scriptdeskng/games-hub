@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Generates the original SVG art for Snakes & Ladders: Lagos Edition (asset-designer, in-repo).
 // Output: games/snakes-ladders/assets/{board,pawns,dice,icons,thumb}. Re-run after editing the layout.
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -33,24 +33,11 @@ const g = (inner) =>
   `<g stroke="${INK}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">${inner}</g>`;
 const r1 = (n) => Math.round(n * 10) / 10;
 
-// ---------------- layout (data; the developer owns the real one, see brief section 3) ----------------
+// ---------------- layout: one source of truth, games/snakes-ladders/src/rules/layout.json ----------------
+const layoutJson = JSON.parse(readFileSync(join(OUT, '..', 'src', 'rules', 'layout.json'), 'utf8'));
 export const LAYOUT = [
-  [8, 36, 'ladder', 'okada'],
-  [12, 34, 'ladder', 'brt'],
-  [22, 42, 'ladder', 'keke'],
-  [32, 54, 'ladder', 'brt'],
-  [50, 70, 'ladder', 'okada'],
-  [56, 74, 'ladder', 'brt'],
-  [64, 84, 'ladder', 'okada'],
-  [76, 95, 'ladder', 'bridge'],
-  [98, 78, 'snake', 'tollqueue'],
-  [92, 72, 'snake', 'goslow'],
-  [88, 68, 'snake', 'pothole'],
-  [80, 60, 'snake', 'goslow'],
-  [62, 40, 'snake', 'nepa'],
-  [58, 38, 'snake', 'pothole'],
-  [52, 30, 'snake', 'goslow'],
-  [44, 24, 'snake', 'pothole'],
+  ...layoutJson.ladders.map((l) => [l.from, l.to, 'ladder', l.theme]),
+  ...layoutJson.snakes.map((l) => [l.from, l.to, 'snake', l.theme]),
 ];
 const LANDMARKS = {
   3: 'danfo',

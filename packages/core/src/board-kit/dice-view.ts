@@ -16,9 +16,9 @@ const PIPS: readonly (readonly number[])[] = [
 export interface DiceViewOptions {
   /** true = no shaking or tumbling, the face just changes */
   reducedMotion?: () => boolean;
-  /** cupped-hands shake time in ms (default 480) */
+  /** cupped-hands shake time in ms (default 290) */
   shakeMs?: number;
-  /** tumble time in ms (default 360) */
+  /** tumble time in ms (default 210) */
   rollMs?: number;
   /** optional artwork for the two cupped hands (otherwise CSS-drawn) */
   handsSrc?: string;
@@ -91,8 +91,8 @@ const face = (art?: Art): { el: HTMLElement; set(v: number | null): void } => {
 
 export function createDiceView(ctx: UiContext, o: DiceViewOptions = {}): DiceView {
   const scope = createScope();
-  const shakeMs = o.shakeMs ?? 480;
-  const rollMs = o.rollMs ?? 360;
+  const shakeMs = o.shakeMs ?? 290;
+  const rollMs = o.rollMs ?? 210;
   const reduced = (): boolean => o.reducedMotion?.() ?? false;
   const main = face(o.art);
   const hand = (side: 'l' | 'r'): HTMLElement =>

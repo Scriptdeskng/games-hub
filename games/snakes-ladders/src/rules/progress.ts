@@ -6,6 +6,8 @@ import { playerById, turnsOf, type GameState } from './engine';
 export interface Progress {
   best: Record<Difficulty, number>;
   plays: number;
+  /** games started (quits included): rotates the third CPU persona */
+  games: number;
   wins: number;
   streak: number;
   bestStreak: number;
@@ -19,6 +21,7 @@ export interface Progress {
 export const emptyProgress = (): Progress => ({
   best: { easy: 0, medium: 0, hard: 0 },
   plays: 0,
+  games: 0,
   wins: 0,
   streak: 0,
   bestStreak: 0,
@@ -37,6 +40,7 @@ export function sanitizeProgress(raw: unknown): Progress {
     typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0;
   for (const d of DIFFICULTIES) base.best[d] = num(r.best?.[d]);
   base.plays = num(r.plays);
+  base.games = Math.max(num(r.games), base.plays);
   base.wins = Math.min(num(r.wins), base.plays);
   base.streak = num(r.streak);
   base.bestStreak = Math.max(num(r.bestStreak), base.streak);
@@ -65,7 +69,8 @@ export function recordResult(
 ): { next: Progress; newBest: boolean } {
   const won = s.winner === humanId;
   const score = scoreFor(s, humanId);
-  const newBest = score > p.best[difficulty];
+  // a "new best" is a win that beat the record: a lost game never earns the banner
+  const newBest = won && score > p.best[difficulty];
   const streak = won ? p.streak + 1 : 0;
   const turns = turnsOf(s, humanId);
   return {

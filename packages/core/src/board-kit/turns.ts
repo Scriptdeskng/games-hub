@@ -61,10 +61,6 @@ export function createTurns(setup: TurnSetup): TurnState {
 
 export const currentSeat = (s: TurnState): Seat => s.seats[s.index] as Seat;
 
-export const isHumanTurn = (s: TurnState): boolean => currentSeat(s).kind === 'human';
-
-export const humanSeat = (s: TurnState): Seat => s.seats[0] as Seat;
-
 export const seatIndex = (s: TurnState, id: string): number =>
   s.seats.findIndex((x) => x.id === id);
 

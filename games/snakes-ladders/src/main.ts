@@ -4,6 +4,7 @@ import '@naija/core/ai-kit';
 import './style.css';
 import { boot } from '@naija/core/boot';
 import { imageTask, runLoader } from '@naija/core/loader';
+import { createLoop } from '@naija/core/loop';
 import { gameConfig } from '../game.config';
 import { createApp } from './app';
 import { snakesInstruments, snakesSfx } from './audio/sfx';
@@ -44,6 +45,10 @@ async function main(): Promise<void> {
 
   const app = createApp(core, progress);
   if (__NAIJA_TEST__) {
+    // this game has no frame loop of its own: a no-op loop feeds perf() so the hook reports real fps
+    const frames = createLoop({ update: () => undefined, perf: core.perf });
+    frames.start();
+    core.scope.add(() => frames.destroy());
     core.exposeTestHook({
       autoplay: async (opts) => (app.autoplay ? app.autoplay(opts) : undefined),
       getState: () => app.getState(),

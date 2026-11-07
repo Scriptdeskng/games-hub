@@ -4,7 +4,7 @@ import { createRng } from '../rng';
 import { createBanter, createBubbleView } from './banter';
 import { createCpu, withMistakes } from './cpu';
 import { THINK_MAX_MS, THINK_MIN_MS, createThinker, thinkDelayMs } from './think';
-import { PROFILES, isDifficulty, type Brain, type Persona } from './types';
+import { PROFILES, type Brain, type Persona } from './types';
 
 const persona: Persona = {
   id: 'tari',
@@ -104,8 +104,6 @@ describe('cpu opponent', () => {
     expect(PROFILES.medium.skill).toBeLessThan(PROFILES.hard.skill);
     expect(PROFILES.easy.mistakeRate).toBeGreaterThan(PROFILES.medium.mistakeRate);
     expect(PROFILES.medium.mistakeRate).toBeGreaterThan(PROFILES.hard.mistakeRate);
-    expect(isDifficulty('hard')).toBe(true);
-    expect(isDifficulty('legend')).toBe(false);
   });
 
   it('withMistakes follows the mistake rate', () => {

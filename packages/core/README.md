@@ -62,11 +62,19 @@ confirm with the portal team)**, every call with `Authorization: Bearer <token>`
 If a call fails the local copy is used. The portal must send CORS headers allowing the game origin,
 the `Authorization` and `Content-Type` headers, and `GET, PUT, OPTIONS`.
 
-**Origin allow-list.** Events and the Bearer token only go to an allowed portal origin. Default:
-`https:` origins, plus `http://localhost`, `127.0.0.1` and `[::1]` for development. Restrict it with
-`boot({ allowedPortalOrigins: ['https://m.gamesplash.com.ng', 'https://*.gamesplash.com.ng'] })`
-(exact origins or `https://*.domain` patterns; a list replaces the default). A disallowed `?portal=`
-is ignored: no events, no token, local storage only.
+**Origin allow-list.** Events and the Bearer token only go to an allowed portal origin. Default
+(no configuration needed): `https://m.gamesplash.com.ng` (`DEFAULT_PORTAL_ORIGIN`) plus
+`localhost`, `127.0.0.1` and `[::1]` for development (the only origins where http is accepted). No
+wildcards, nothing else. A game or test that talks to another portal passes
+`boot({ allowedPortalOrigins: ['https://portal.example'] })` (exact origins or `https://*.domain`
+patterns); a list REPLACES the default. A disallowed `?portal=` is ignored: no events, no token,
+local storage only. The mock portal runs on `http://localhost:4180`, so it is allowed by default.
+
+**Shake-to-roll in an iframe.** The dice view listens to `devicemotion` only when the page's
+permissions policy allows the accelerometer and gyroscope (`devicemotion` needs both), and stays silent (tap still works) when it does not.
+The portal can enable shake-to-roll by embedding the game with
+`<iframe allow="accelerometer; gyroscope" ...>`; `tools/mock-portal.html` does, and `?noallow=1` loads it
+without, which an e2e test uses to prove there are zero console errors either way.
 
 `tools/mock-portal.html` (`npm run mock-portal`) implements the same contract on a second origin.
 
@@ -214,6 +222,16 @@ warm-up exceeds 100 KB/min or if listener/timer/RAF counters drift. A game opts 
 and resolve when the round ends, plus `screen() === 'menu'` once interactive.
 Icons: the ui-kit inlines only the designer icons it uses (`ui-kit/icons.ts`, about 1.2 KB) because
 `assets/icons/icons.svg` is currently an empty file.
+
+## Which assets ship
+
+`vite.config.ts` copies `games/<slug>/assets/**` (not `*.md`) into `dist/<slug>/assets/`. A game can
+add `assets/ship.json` (`{ "include": ["board/*.svg", "pawns/**"] }`; `*` stays inside a folder,
+`**` crosses folders) and then ONLY matching files ship, so unused art, thumbnails and placeholder
+audio stay out of the download. Portal catalogue assets (thumbnails) are not runtime assets: they
+stay out of `dist` unless you add their path to `include`. The build fails if the bundle references
+a literal `./assets/...` file that is not shipped (names built at runtime are not checked, so keep
+the include patterns for those, e.g. `dice/*.svg`).
 
 ## Service worker
 

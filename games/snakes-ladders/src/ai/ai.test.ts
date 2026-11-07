@@ -14,7 +14,7 @@ import { DEFAULT_LAYOUT } from '../rules/layout';
 import { resolveLanding } from '../rules/board';
 import { createHardBrain, easyBrain, mediumBrain } from './brains';
 import { PERSONAS, createOpponents, pickPersonas } from './index';
-import { createPlanner } from './planner';
+import { createPlanner, getPlanner, warmPlanner } from './planner';
 import { headToHead, simulate, wilson } from './sim';
 
 const GAMES = 2000;
@@ -86,6 +86,23 @@ describe('planner (exact expected turns)', () => {
     expect(p.shouldReroll(93, 0, 5)).toBe(true);
     // a roll that wins is never thrown away
     expect(p.shouldReroll(97, 0, 3)).toBe(false);
+  });
+
+  it('is solved once per layout and rules and then shared (cached)', () => {
+    const rules = { ...DEFAULT_RULES, choiceEvery: 7 };
+    const t0 = performance.now();
+    const a = getPlanner(DEFAULT_LAYOUT, rules);
+    const solve = performance.now() - t0;
+    const t1 = performance.now();
+    const b = getPlanner(DEFAULT_LAYOUT, rules);
+    const again = performance.now() - t1;
+    expect(b).toBe(a);
+    expect(again).toBeLessThan(1);
+    expect(getPlanner(DEFAULT_LAYOUT, { ...rules, exactFinish: false })).not.toBe(a);
+    warmPlanner(DEFAULT_LAYOUT, rules);
+    expect(getPlanner(DEFAULT_LAYOUT, rules)).toBe(a);
+    // main-thread budget: a few ms natively, far below the 50 ms limit even at 4x slower
+    expect(solve * 4).toBeLessThan(400);
   });
 
   it('works for the other toggles too', () => {
@@ -233,9 +250,8 @@ describe('difficulty raises the challenge (seeded simulations)', () => {
 
   it('stronger CPUs finish in fewer turns', () => {
     const avg = (d: 'easy' | 'medium' | 'hard'): number => {
-      const shared = {};
       let t = 0;
-      for (let i = 0; i < 400; i++) t += simulate({ seed: 500 + i, seats: [d, d], shared }).turns;
+      for (let i = 0; i < 400; i++) t += simulate({ seed: 500 + i, seats: [d, d] }).turns;
       return t / 400;
     };
     const [e, m, h] = [avg('easy'), avg('medium'), avg('hard')];
@@ -269,8 +285,32 @@ describe('opponents and personas', () => {
     // one opponent is Tari or Efe (varies with the seed); Aisha only joins for three
     const seen = new Set(Array.from({ length: 40 }, (_, i) => pickPersonas(i, 1)[0]));
     expect([...seen].sort()).toEqual(['efe', 'tari']);
-    expect(pickPersonas(3, 3)[2]).toBe('aisha');
+    // the third seat alternates with the stored game counter: Funmi, Aisha, Funmi, ...
+    expect([0, 1, 2, 3].map((g) => pickPersonas(3, 3, g)[2])).toEqual([
+      'funmi',
+      'aisha',
+      'funmi',
+      'aisha',
+    ]);
+    expect(pickPersonas(3, 3, 5)).toEqual(pickPersonas(3, 3, 5)); // never random per round
+    expect(pickPersonas(3, 2, 1)).toEqual(pickPersonas(3, 2, 0));
     expect(pickPersonas(3, 2)).not.toContain('aisha');
+    expect(pickPersonas(3, 2)).not.toContain('funmi');
+  });
+
+  it('Funmi has the same thinking range and no money banter, Aisha and Funmi share the AI profile', () => {
+    const a = PERSONAS.find((p) => p.id === 'aisha')!;
+    const f = PERSONAS.find((p) => p.id === 'funmi')!;
+    expect(f.think).toEqual(a.think);
+    const cpus = createOpponents({
+      seed: 2,
+      difficulty: 'hard',
+      seats: [
+        { id: 'a', persona: 'aisha' },
+        { id: 'f', persona: 'funmi' },
+      ],
+    });
+    expect(cpus[0]!.profile).toBe(cpus[1]!.profile);
   });
 
   it('createOpponents builds one CPU per seat with a natural thinking delay', () => {

@@ -2,7 +2,7 @@ import { PROFILES, withMistakes, type Brain } from '@naija/core/ai-kit';
 import { resolveLanding } from '../rules/board';
 import { jumpMap } from '../rules/layout';
 import { currentPlayer, type Action, type GameState } from '../rules/engine';
-import { createPlanner, type Planner } from './planner';
+import { getPlanner } from './planner';
 
 /** Every CPU decision is a function of the whole game state (the current player is the CPU). */
 export type CpuBrain = Brain<GameState, Action>;
@@ -64,18 +64,17 @@ export const mediumBrain: CpuBrain = {
     ),
 };
 
-/** Hard: exact expected-turns tables (see planner.ts), built lazily on the first decision. */
-export function createHardBrain(shared?: { planner?: Planner }): CpuBrain {
-  const cache = shared ?? {};
-  const planner = (s: GameState): Planner => (cache.planner ??= createPlanner(s.layout, s.rules));
+/** Hard: exact expected-turns tables (see planner.ts), solved once per layout and rules. */
+export function createHardBrain(): CpuBrain {
   return {
     decide(s) {
       const me = currentPlayer(s);
+      const planner = getPlanner(s.layout, s.rules);
       switch (s.phase) {
         case 'pick':
           return {
             type: 'pick',
-            index: planner(s).pick(
+            index: planner.pick(
               me.pos,
               turnIndex(s),
               me.rerollLeft && s.rules.reroll,
@@ -85,7 +84,7 @@ export function createHardBrain(shared?: { planner?: Planner }): CpuBrain {
         case 'decide':
           return {
             type:
-              me.rerollLeft && planner(s).shouldReroll(me.pos, turnIndex(s), s.roll as number)
+              me.rerollLeft && planner.shouldReroll(me.pos, turnIndex(s), s.roll as number)
                 ? 'reroll'
                 : 'accept',
           };

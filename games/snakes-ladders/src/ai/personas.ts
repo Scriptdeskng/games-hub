@@ -1,11 +1,12 @@
 import type { Persona } from '@naija/core/ai-kit';
 import aisha from '@naija/core/assets/avatars/aisha.svg?url';
 import efe from '@naija/core/assets/avatars/efe.svg?url';
+import funmi from '@naija/core/assets/avatars/funmi.svg?url';
 import tari from '@naija/core/assets/avatars/tari.svg?url';
 
 /**
  * The CPU characters of this game (docs/assets/PERSONAS.md and the asset brief): Tari and Efe,
- * with Aisha joining when there are three opponents. Banter keys point at the persona's own
+ * with Funmi (Yoruba, Lagos) or Aisha (Hausa) as the third seat on alternate games. Banter keys point at the persona's own
  * numbered lines (`persona.<id>.<n>`) or at the game's event lines (`snakes.banter.<id>.<event>`).
  * Events: start, ladder / snake / six (this CPU), humanLadder / humanSnake (the player),
  * idle (the player is slow), win (this CPU won), lose (the player won).
@@ -13,6 +14,24 @@ import tari from '@naija/core/assets/avatars/tari.svg?url';
 const own = (id: string, ...n: number[]): string[] => n.map((i) => `persona.${id}.${i}`);
 const ev = (id: string, name: string): string[] => [`snakes.banter.${id}.${name}`];
 
+/** Funmi has the same AI profile and thinking range as Aisha; her banker job is never mentioned. */
+const FUNMI: Persona = {
+  id: 'funmi',
+  nameKey: 'persona.funmi.name',
+  avatar: funmi,
+  think: [700, 1100],
+  banter: {
+    start: own('funmi', 3, 6),
+    ladder: ev('funmi', 'ladder'),
+    snake: ev('funmi', 'snake'),
+    six: ev('funmi', 'six'),
+    humanLadder: ev('funmi', 'ladder'),
+    humanSnake: ev('funmi', 'snake'),
+    idle: own('funmi', 6),
+    win: ev('funmi', 'win'),
+    lose: ev('funmi', 'lose'),
+  },
+};
 export const PERSONAS: readonly Persona[] = [
   {
     id: 'tari',
@@ -65,6 +84,7 @@ export const PERSONAS: readonly Persona[] = [
       lose: ev('aisha', 'lose'),
     },
   },
+  FUNMI,
 ];
 
 export const personaById = (id: string): Persona =>

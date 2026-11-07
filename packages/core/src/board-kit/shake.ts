@@ -55,13 +55,35 @@ export function createShakeDetector(o: ShakeOptions): ShakeDetector {
 }
 
 export interface ShakeBinding {
-  /** false when the browser has no devicemotion at all (tap fallback only) */
+  /** false when the browser has no devicemotion, or the page may not use it (tap fallback only) */
   readonly supported: boolean;
   /**
    * iOS asks for motion permission and only from a user gesture: call this inside the first tap.
    * Resolves true when shake events may arrive. Never rejects.
    */
   requestPermission(): Promise<boolean>;
+}
+
+/**
+ * Inside a portal iframe the accelerometer is blocked unless the iframe has
+ * `allow="accelerometer; gyroscope"`; attaching a `devicemotion` listener anyway logs a console error.
+ * So: attach only when the permissions policy allows it (no policy API means allowed).
+ */
+export function motionAllowed(doc: Document = document): boolean {
+  const d = doc as Document & {
+    permissionsPolicy?: { allowsFeature?: (f: string) => boolean };
+    featurePolicy?: { allowsFeature?: (f: string) => boolean };
+  };
+  const policy = d.permissionsPolicy ?? d.featurePolicy;
+  try {
+    // devicemotion needs both sensors: either one blocked makes the browser log an error
+    return (
+      (policy?.allowsFeature?.('accelerometer') ?? true) &&
+      (policy?.allowsFeature?.('gyroscope') ?? true)
+    );
+  } catch {
+    return true;
+  }
 }
 
 interface MotionCtor {
@@ -74,7 +96,7 @@ export function bindShake(
   o: ShakeOptions & { enabled(): boolean; now?: () => number },
 ): ShakeBinding {
   const Ctor = (globalThis as { DeviceMotionEvent?: MotionCtor }).DeviceMotionEvent;
-  const supported = typeof Ctor !== 'undefined';
+  const supported = typeof Ctor !== 'undefined' && motionAllowed();
   const now = o.now ?? ((): number => performance.now());
   if (supported) {
     const det = createShakeDetector({

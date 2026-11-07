@@ -85,6 +85,22 @@ describe('progress', () => {
     expect(scoreFor(won('cpu1'), 'you')).toBe(200); // human on 40
   });
 
+  it('a new best is only announced for a win, never for a loss', () => {
+    const p = emptyProgress();
+    const lost = recordResult(p, won('cpu1'), 'hard', 'you');
+    expect(scoreFor(won('cpu1'), 'you')).toBeGreaterThan(p.best.hard); // a record-sized score...
+    expect(lost.newBest).toBe(false); // ...but no banner for a loss
+    expect(lost.next.best.hard).toBe(200);
+    expect(recordResult(p, won('you', 30), 'hard', 'you').newBest).toBe(true);
+  });
+
+  it('counts started games for the persona rotation, never fewer than plays', () => {
+    expect(emptyProgress().games).toBe(0);
+    expect(sanitizeProgress({ plays: 4, games: 1 }).games).toBe(4);
+    expect(sanitizeProgress({ plays: 1, games: 9 }).games).toBe(9);
+    expect(sanitizeProgress({ games: -3 }).games).toBe(0);
+  });
+
   it('records wins, streaks, best score and fastest win', () => {
     let p = emptyProgress();
     let r = recordResult(p, won('you', 30), 'hard', 'you');

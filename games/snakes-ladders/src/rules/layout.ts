@@ -1,3 +1,4 @@
+import layoutJson from './layout.json';
 import { LayoutError, MAX_ROLL, type BoardLayout, type Jump } from './config';
 
 /**
@@ -6,29 +7,8 @@ import { LayoutError, MAX_ROLL, type BoardLayout, type Jump } from './config';
  * tests re-check the shipped layout. Ladder = bus or okada lift, snake = pothole or go-slow;
  * the `id` links each entry to its caption (i18n `jump.<id>`) and artwork.
  */
-export const LAYOUT_DATA = {
-  size: 10,
-  ladders: [
-    { id: 'ladder-8', from: 8, to: 36, theme: 'okada' },
-    { id: 'ladder-12', from: 12, to: 34, theme: 'brt' },
-    { id: 'ladder-22', from: 22, to: 42, theme: 'keke' },
-    { id: 'ladder-32', from: 32, to: 54, theme: 'brt' },
-    { id: 'ladder-50', from: 50, to: 70, theme: 'okada' },
-    { id: 'ladder-56', from: 56, to: 74, theme: 'brt' },
-    { id: 'ladder-64', from: 64, to: 84, theme: 'okada' },
-    { id: 'ladder-76', from: 76, to: 95, theme: 'bridge' },
-  ],
-  snakes: [
-    { id: 'snake-98', from: 98, to: 78, theme: 'tollqueue' },
-    { id: 'snake-92', from: 92, to: 72, theme: 'goslow' },
-    { id: 'snake-88', from: 88, to: 68, theme: 'pothole' },
-    { id: 'snake-80', from: 80, to: 60, theme: 'goslow' },
-    { id: 'snake-62', from: 62, to: 40, theme: 'nepa' },
-    { id: 'snake-58', from: 58, to: 38, theme: 'pothole' },
-    { id: 'snake-52', from: 52, to: 30, theme: 'goslow' },
-    { id: 'snake-44', from: 44, to: 24, theme: 'pothole' },
-  ],
-};
+/** The table itself is JSON so the art generator (scripts/gen-snakes-ladders-art.mjs) reads the same file. */
+export const LAYOUT_DATA: unknown = layoutJson;
 
 const isInt = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v);
 

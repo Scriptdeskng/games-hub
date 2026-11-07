@@ -41,7 +41,3 @@ export function takeChoice(choice: DiceChoice, index: number): number {
   if (index !== 0 && index !== 1) throw new RangeError(`dice choice index must be 0 or 1`);
   return choice.options[index];
 }
-
-/** Every outcome of one die with its probability, for expectation maths in CPU brains. */
-export const dieOutcomes = (sides = 6): readonly number[] =>
-  Array.from({ length: sides }, (_, i) => i + 1);

@@ -399,7 +399,9 @@
 }
 .sl-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
   gap: var(--ng-s-2);
 }
 .sl-actions .ng-btn {
@@ -416,8 +418,13 @@
   width: 28px;
   height: 28px;
 }
-.sl-reroll.is-used {
-  opacity: 0.6;
+/* spent: grey fill, dark text (about 11:1) and the slashed icon, never just faded */
+.sl-reroll.is-used,
+.sl-reroll.is-used[aria-disabled='true'] {
+  opacity: 1;
+  background: #c9c9cf;
+  color: #1d1d20;
+  box-shadow: inset 0 0 0 2px #55555c;
 }
 
 @media (prefers-reduced-motion: reduce) {

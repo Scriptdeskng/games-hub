@@ -72,8 +72,8 @@ export function createPlayUi(o: PlayUiOptions): PlayUi {
 
   const dice = createDiceView(ctx, {
     reducedMotion: o.reducedMotion,
-    shakeMs: Math.round(480 * o.tempo) || 1,
-    rollMs: Math.round(360 * o.tempo) || 1,
+    shakeMs: Math.round(290 * o.tempo) || 1,
+    rollMs: Math.round(210 * o.tempo) || 1,
     handsSrc: `${ASSETS}/dice/hands-cup.svg`,
     art: { src: (n) => `${ASSETS}/dice/die-${n}.svg`, blank: `${ASSETS}/dice/die-roll.svg` },
   });

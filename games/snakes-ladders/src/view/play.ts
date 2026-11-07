@@ -26,6 +26,8 @@ import { jumpSfx, playMusic } from '../audio/cues';
 export interface PlayOptions {
   difficulty: Difficulty;
   cpuCount: number;
+  /** stored game counter: rotates the third CPU (Funmi / Aisha) */
+  gameCounter: number;
   rules: Rules;
   seed: number;
   /** after every move (the app reports the score to the portal) */
@@ -60,7 +62,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   // ---- seats, personas, game ----
-  const personaIds = pickPersonas(o.seed, o.cpuCount);
+  const personaIds = pickPersonas(o.seed, o.cpuCount, o.gameCounter);
   const cpuSeats = personaIds.map((persona, i) => ({
     id: `cpu${i + 1}`,
     name: t(personaById(persona).nameKey),
@@ -302,7 +304,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       choice = (bot.decide(state, botRng) as { type: 'accept' | 'reroll' }).type;
     } else {
       ui.setStatus(rolledText(me(), rollValue));
-      await sleep(550);
+      await sleep(300);
       choice = (cpuOf(me()).decide(state) as { type: 'accept' | 'reroll' }).type;
     }
     await gate();

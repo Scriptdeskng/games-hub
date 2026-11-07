@@ -1,6 +1,6 @@
 # Snakes & Ladders: Lagos Edition (`snakes-ladders`)
 
-One human against 1 to 3 CPU opponents (Tari, Efe and, for three opponents, Aisha). A 10 x 10
+One human against 1 to 3 CPU opponents (Tari, Efe and, for three opponents, Funmi (Yoruba, Lagos) or Aisha (Hausa) on alternate games). A 10 x 10
 board, ladders are the lucky rides (BRT, okada, keke, the clear bridge) and snakes are the
 everyday Lagos hold-ups (potholes, go-slow, NEPA, the toll-gate queue). Dice are a board-game
 mechanic only: there are no wagers, prizes or real money anywhere.
@@ -35,7 +35,9 @@ turn; the pause button, P or Esc pauses. Shake-to-roll works on phones that repo
 ```
 src/rules/      pure, serializable, seeded rules (no DOM, no timers)
   config.ts       Rules + defaults + sanitizeRules, Jump / BoardLayout types
-  layout.ts       the ladder and snake table (LAYOUT_DATA), validateLayout, loadLayout
+  layout.json     the ladder and snake table (the single source of truth)
+  layout.ts       validateLayout, loadLayout (hard rules, checked at load)
+  design.ts       designProblems: crossings, touching ends, counts, balance (checked by tests)
   board.ts        squareToCell (boustrophedon) and resolveLanding (one move, pure)
   engine.ts       GameState, apply(state, action), legalActions, serialize/deserialize
   progress.ts     local stats (wins, best per level, streak, fastest win) and score
@@ -54,7 +56,8 @@ src/app.ts      screens, progress, portal events, the test hook
 
 ## How the layout config works
 
-The whole board lives in one table, `LAYOUT_DATA` in `src/rules/layout.ts`:
+The whole board lives in one JSON table, `src/rules/layout.json` (the art generator
+`scripts/gen-snakes-ladders-art.mjs` reads the same file):
 
 ```ts
 { id: 'ladder-8', from: 8, to: 36, theme: 'okada' }   // up
@@ -71,7 +74,7 @@ The whole board lives in one table, `LAYOUT_DATA` in `src/rules/layout.ts`:
   finish.
 - The ladders and snakes are **drawn from the table** (`view/connectors.ts`: rails and rungs, wavy
   snakes, badges from `assets/board/connectors.svg`). `assets/board/overlay-default.svg` is the
-  designer's static version of the same layout and is not used at runtime.
+  designer's static version of the same layout; it is not shipped.
 - The board background (`board-bg.svg`) carries the landmark tiles. If you move ladders or snakes,
   re-run `scripts/gen-snakes-ladders-art.mjs` so no landmark sits under a connector, and add or
   update the caption keys for the new `from` squares.
@@ -104,5 +107,12 @@ state; `setSeed(n)` fixes the seed of the next game.
 ## Assets
 
 Everything is listed with its licence in `assets/CREDITS.md`. The synthesized music loops in
-`src/audio/cues.ts` stand in for `assets/audio/music/snakes-*.mp3` (silent placeholders) until a
-composer delivers them.
+`src/audio/cues.ts` are the music. `assets/audio/music/snakes-*.mp3` and the `vo-sl-*` voice files are
+silent placeholders that do NOT ship: `assets/ship.json` lists what goes into the build (board,
+sprites, dice, icons, pawns), so overlay-default.svg, `thumb/*` and the placeholder audio stay out of
+`dist`. When a composer delivers loops, load them with `playMusic({ kind: 'file' })` and add their
+path to `ship.json`.
+
+The third CPU alternates by the stored game counter (`progress.games`): Funmi on even counts,
+Aisha on odd ones, never random per round. Both use the same AI profile; Funmi's banter never
+mentions money.

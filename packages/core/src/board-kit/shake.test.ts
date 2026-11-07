@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createScope } from '../lifecycle';
-import { bindShake, createShakeDetector } from './shake';
+import { bindShake, createShakeDetector, motionAllowed } from './shake';
 
 const a = (x: number, y = 0, z = 0): { x: number; y: number; z: number } => ({ x, y, z });
 
@@ -32,6 +32,45 @@ describe('shake detector', () => {
     d.feed(undefined, 0);
     d.feed({ x: null, y: 1, z: 1 }, 0);
     expect(onShake).not.toHaveBeenCalled();
+  });
+});
+
+describe('motion permissions policy', () => {
+  const withPolicy = (key: string, allows: (f: string) => boolean): Document =>
+    ({ [key]: { allowsFeature: allows } }) as unknown as Document;
+
+  it('is allowed when there is no policy API, and follows the policy when there is one', () => {
+    expect(motionAllowed({} as Document)).toBe(true);
+    expect(motionAllowed(withPolicy('featurePolicy', () => false))).toBe(false);
+    expect(
+      motionAllowed(
+        withPolicy('permissionsPolicy', (f) => f === 'accelerometer' || f === 'gyroscope'),
+      ),
+    ).toBe(true);
+    expect(
+      motionAllowed(
+        withPolicy('featurePolicy', () => {
+          throw new Error('x');
+        }),
+      ),
+    ).toBe(true);
+  });
+
+  it('stays completely silent when the accelerometer is blocked: no listener is attached', () => {
+    (globalThis as { DeviceMotionEvent?: unknown }).DeviceMotionEvent = class {};
+    const spy = vi.spyOn(window, 'addEventListener');
+    Object.defineProperty(document, 'featurePolicy', {
+      value: { allowsFeature: () => false },
+      configurable: true,
+    });
+    const scope = createScope();
+    const b = bindShake(scope, { enabled: () => true, onShake: () => undefined });
+    expect(b.supported).toBe(false);
+    expect(spy.mock.calls.filter((c) => c[0] === 'devicemotion')).toHaveLength(0);
+    delete (document as unknown as { featurePolicy?: unknown }).featurePolicy;
+    delete (globalThis as { DeviceMotionEvent?: unknown }).DeviceMotionEvent;
+    spy.mockRestore();
+    scope.destroy();
   });
 });
 

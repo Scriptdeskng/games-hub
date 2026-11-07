@@ -41,6 +41,9 @@
   "results.newBest": "New record!",
   "results.stars": "{n} out of 3 stars",
   "dice.roll": "Roll di dice",
-  "dice.pick": "Pick one dice",
+  "dice.pick": {
+    "text": "Pick di one wey you want",
+    "_review": true
+  },
   "dice.option": "Dice {n}: {value}"
 }

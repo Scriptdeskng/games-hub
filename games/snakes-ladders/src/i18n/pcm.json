@@ -18,7 +18,7 @@
     "_review": true
   },
   "game.howto.5": {
-    "text": "Every 5th turn, you go roll two dice and keep one. Tap one dice, or press 1 or 2.",
+    "text": "Every 5th turn, you go roll two dice and keep one. Tap one of di dice, or press 1 or 2.",
     "_review": true
   },
   "game.howto.6": {
@@ -47,9 +47,15 @@
   "play.moveBy": "Move {n}",
   "play.reroll": "Roll again",
   "play.rerollLeft": "Roll again (you get one)",
-  "play.rerollUsed": "Roll again don finish",
+  "play.rerollUsed": {
+    "text": "Re-roll don use",
+    "_review": true
+  },
   "play.rerolled": "{name} don use di re-roll.",
-  "play.pick": "Pick one dice: tap am, or press 1 or 2.",
+  "play.pick": {
+    "text": "Pick di one wey you want: tap am, or press 1 or 2.",
+    "_review": true
+  },
   "play.cpuKeeps": "{name} take di {n}.",
   "results.turns": "Your turns",
   "results.wins": "Wins",
@@ -75,12 +81,12 @@
     "_review": true
   },
   "snakes.cap.8": {
-    "text": "Okada carry you! You pass the traffic.",
+    "text": "Okada go carry you! You pass di traffic.",
     "_review": true
   },
   "snakes.cap.12": "BRT lane clear. Enter, make we go!",
   "snakes.cap.22": {
-    "text": "Keke carry you pass the back road.",
+    "text": "Keke go carry you pass di back road.",
     "_review": true
   },
   "snakes.cap.32": "BRT express! No go-slow today.",
@@ -93,7 +99,7 @@
     "_review": true
   },
   "snakes.cap.64": {
-    "text": "Okada dey follow gap pass jam. Hold body!",
+    "text": "Okada dey squeeze pass di jam. Hold body!",
     "_review": true
   },
   "snakes.cap.76": {
@@ -107,7 +113,7 @@
     "_review": true
   },
   "snakes.cap.80": {
-    "text": "Go-slow for the junction. Calm down, e go clear.",
+    "text": "Go-slow for di junction. Calm down, e go clear.",
     "_review": true
   },
   "snakes.cap.62": "NEPA take light. Traffic light don off!",
@@ -130,7 +136,10 @@
   "persona.efe.4": "Ehen! Who wan hear song?",
   "persona.efe.6": "Na small pothole. We move on.",
   "persona.efe.8": "Free ride today, but no miss your turn o!",
-  "persona.aisha.1": "You ready for challenge? I don read the whole book.",
+  "persona.aisha.1": {
+    "text": "You ready for wahala? I don read the whole book.",
+    "_review": true
+  },
   "persona.aisha.4": "Fast hand, good brain. I like am.",
   "persona.aisha.6": {
     "text": "Sabi na power, but speed na points.",
@@ -153,12 +162,12 @@
   "snakes.banter.efe.six": "Oya, enter, we dey go!",
   "snakes.banter.efe.win": "Last stop! Everybody don enjoy.",
   "snakes.banter.efe.lose": {
-    "text": "You win the road today! Who wan hear song?",
+    "text": "You don win di road today! Who wan hear song?",
     "_review": true
   },
   "snakes.banter.aisha.ladder": "Correct route. I like am.",
   "snakes.banter.aisha.snake": {
-    "text": "Haba! That one no lucky.",
+    "text": "Haba! Dat one no lucky.",
     "_review": true
   },
   "snakes.banter.aisha.six": {
@@ -171,6 +180,38 @@
   },
   "snakes.banter.aisha.lose": {
     "text": "Well played. Madalla!",
+    "_review": true
+  },
+  "persona.funmi.name": {
+    "text": "Funmi",
+    "_review": true
+  },
+  "persona.funmi.3": {
+    "text": "I no dey retreat. I no dey surrender.",
+    "_review": true
+  },
+  "persona.funmi.6": {
+    "text": "Abeg, roll again. I no fear.",
+    "_review": true
+  },
+  "snakes.banter.funmi.ladder": {
+    "text": "Ah ah, free ride! I no go complain.",
+    "_review": true
+  },
+  "snakes.banter.funmi.snake": {
+    "text": "Pothole? I no dey retreat, I dey take another road.",
+    "_review": true
+  },
+  "snakes.banter.funmi.six": {
+    "text": "Six! Come out, come out!",
+    "_review": true
+  },
+  "snakes.banter.funmi.win": {
+    "text": "Home sweet home! Smile na, na game only.",
+    "_review": true
+  },
+  "snakes.banter.funmi.lose": {
+    "text": "Hmm, you catch me! Well played.",
     "_review": true
   }
 }

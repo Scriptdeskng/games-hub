@@ -5,8 +5,10 @@ import {
   expectScreen,
   inViewport,
   layoutProblems,
+  contrastOf,
   openGame,
   press,
+  stickyOverlaps,
   watchErrors,
 } from './helpers';
 import {
@@ -457,12 +459,19 @@ test.describe('snakes-ladders: layout on every screen (en and pcm)', () => {
       await check('play decide');
       await inView('Move', page.locator('#sl-move'));
       await inView('Re-roll', page.locator('#sl-reroll'));
-      await press(page.locator('#sl-move'));
+      // spend the re-roll now, so the two-dice turn below is checked with a SPENT re-roll
+      await press(page.locator('#sl-reroll'));
       for (let i = 0; i < 3; i++) await humanTurn(page); // turns 2 to 4
       await waitForHuman(page);
       await press(page.locator('.ng-dice'));
       await expect(page.locator('.ng-dice__opt')).toHaveCount(2, { timeout: 15_000 });
-      await check('play pick');
+      await check('play pick, re-roll spent');
+      await inView('spent Re-roll', page.locator('#sl-reroll'));
+      await expect(page.locator('#sl-reroll')).toHaveClass(/is-used/);
+      expect(
+        await contrastOf(page.locator('#sl-reroll')),
+        'spent Re-roll contrast',
+      ).toBeGreaterThanOrEqual(4.5);
       for (const b of await page.locator('.ng-dice__opt').all()) await inView('die choice', b);
       await press(page.locator('.ng-dice__opt').first());
 
@@ -487,6 +496,9 @@ test.describe('snakes-ladders: layout on every screen (en and pcm)', () => {
         ] as const);
         await expectScreen(page, 'results');
         await check(`results ${difficulty} ${win ? 'win' : 'lose'}`);
+        if ((page.viewportSize()?.height ?? 999) <= 500) {
+          (await stickyOverlaps(page)).forEach((p) => seen.push(`results: ${p}`));
+        }
         await inView('Play again', page.locator('.ng-results__actions .ng-btn').first());
         await press(page.locator('.ng-results__actions .ng-btn').last());
         await expectScreen(page, 'menu');
@@ -494,4 +506,82 @@ test.describe('snakes-ladders: layout on every screen (en and pcm)', () => {
       expect(seen).toEqual([]);
     });
   }
+});
+
+test.describe('snakes-ladders: portal iframe, permissions, referrer, origins', () => {
+  const policyNoise = /permissions policy|devicemotion|accelerometer/i;
+  for (const allow of [true, false]) {
+    test(`portal iframe ${allow ? 'with' : 'WITHOUT'} allow="accelerometer; gyroscope": a game logs no console errors or policy warnings`, async ({
+      page,
+    }) => {
+      const noise: string[] = [];
+      const watch = watchErrors(page);
+      page.on(
+        'console',
+        (m) => policyNoise.test(m.text()) && noise.push(`${m.type()}: ${m.text()}`),
+      );
+      const token = `tok_e2e_perm_${Date.now()}`;
+      await page.goto(
+        `http://localhost:4180/?game=${SLUG}&token=${token}&tempo=0.15${allow ? '' : '&noallow=1'}`,
+      );
+      const frame = page.frameLocator('#frame');
+      await expect(frame.locator('#menu-play')).toBeVisible();
+      const f = await (await page.locator('#frame').elementHandle())!.contentFrame();
+      const allowed = await f!.evaluate(
+        () =>
+          (
+            document as unknown as { featurePolicy?: { allowsFeature(f: string): boolean } }
+          ).featurePolicy?.allowsFeature('accelerometer') ?? true,
+      );
+      expect(allowed, 'the iframe policy is the one under test').toBe(allow);
+      await frame.locator('#menu-play').click();
+      await expect(frame.locator('.ng-dice')).toBeVisible();
+      await frame.locator('.ng-dice').click();
+      await page.waitForTimeout(1500);
+      expect(noise).toEqual([]);
+      expect(watch.errors).toEqual([]);
+    });
+  }
+
+  test('the token is never sent as a Referer, and the portal API still works', async ({ page }) => {
+    const token = 'tok_referer_probe_9f3a';
+    const reqs: import('@playwright/test').Request[] = [];
+    page.on('request', (r) => reqs.push(r));
+    await openGame(page, SLUG, `?token=${token}&lang=en`);
+    await press(page.locator('#menu-play'));
+    await expectScreen(page, 'play');
+    const heads = await Promise.all(reqs.map((r) => r.allHeaders()));
+    expect(reqs.length).toBeGreaterThan(5);
+    for (const h of heads) expect(h.referer ?? '').not.toContain(token);
+    expect(
+      await page.evaluate(() =>
+        document.querySelector('meta[name=referrer]')?.getAttribute('content'),
+      ),
+    ).toBe('no-referrer');
+  });
+
+  test('a crafted ?portal= origin gets no request, no events and no token', async ({ page }) => {
+    const hits: string[] = [];
+    await page.route(
+      (u) => u.hostname === 'evil.example',
+      (route) => {
+        hits.push(route.request().url());
+        return route.abort();
+      },
+    );
+    await openGame(page, SLUG, '?token=tok_d14_secret&portal=https://evil.example&lang=en');
+    await page.evaluate(() => window.__naijaTest!.autoplay({ win: true }));
+    await expectScreen(page, 'results');
+    expect(hits).toEqual([]);
+  });
+
+  test('perf hook reports real frames while playing', async ({ page }) => {
+    await openGame(page, SLUG);
+    await press(page.locator('#menu-play'));
+    await expectScreen(page, 'play');
+    await page.waitForTimeout(1600);
+    const perf = await page.evaluate(() => window.__naijaTest!.perf());
+    expect(perf!.frames).toBeGreaterThan(30);
+    expect(perf!.fps).toBeGreaterThan(20);
+  });
 });
