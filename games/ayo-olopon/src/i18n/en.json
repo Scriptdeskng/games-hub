@@ -1,25 +1,146 @@
 {
   "game.title": "Ayo Olopon",
-  "game.tagline": "Hit the bells before they vanish!",
-  "game.arenaLabel": "Play area",
-  "game.bell": "Agogo bell",
-  "game.hint": "Goal: {goal} bells in {time} seconds",
-  "game.howto.1": "Golden agogo bells pop up on the screen. Tap or click each one before it vanishes.",
-  "game.howto.2": "Hit enough bells before the time runs out to win. The goal is at the top.",
-  "game.howto.3": "Hit bells in a row to build a combo and score more. A miss breaks your combo.",
-  "game.howto.4": "On a keyboard, press Space to hit the oldest bell and P to pause.",
-  "hud.score": "Score",
-  "hud.time": "Time",
-  "hud.goal": "Bells",
-  "hud.combo": "Combo",
-  "results.accuracy": "Accuracy",
-  "results.combo": "Best combo",
-  "results.level": "Level",
-  "persona.name": "Mama Nkechi",
-  "banter.win.0": "Well done! Your hand is quicker than a danfo conductor.",
-  "banter.win.1": "That is how it is done! Come and sit down, the jollof is ready.",
-  "banter.win.2": "Sharp sharp! The bells are scared of you.",
-  "banter.lose.0": "No wahala, try again. Even NEPA brings the light back.",
-  "banter.lose.1": "Small by small, you will get it.",
-  "banter.lose.2": "Take it easy. The bells will wait for you."
+  "game.tagline": "Sow the seeds, capture the pits!",
+  "game.howto.1": "Each side has 6 pits with 4 seeds in each. On your turn tap one of your pits (or press 1 to 6). Its seeds are sown one by one, counter-clockwise, starting with the next pit.",
+  "game.howto.2": "If you sow 12 or more seeds, the pit you started from is skipped.",
+  "game.howto.3": "If your last seed lands in an opponent's pit and makes it 2 or 3 seeds, you capture that pit. You also capture the pits just before it, as long as each one holds 2 or 3.",
+  "game.howto.4": "If the other side is empty, you must play a pit that gives them seeds. If you cannot, the game ends and the seeds left on the board go to their owners.",
+  "game.howto.5": "Seeds in your tray are yours. The first to collect 25 of the 48 seeds wins. 24 each is a draw.",
+  "game.howto.6": "Not sure what to play? Tap Hint. The Rules page lets you change the rules to the way you play Ayo at home.",
+  "legend.select": "A pit you can play",
+  "legend.hint": "The hint: try this pit",
+  "legend.capture": "Pit being captured",
+  "legend.skip": "The starting pit is skipped",
+  "legend.danger": "A pit that can be captured next",
+  "legend.last": "Where the last seed landed",
+  "menu.opponent": "You play against {name}",
+  "menu.rules": "Rules",
+  "rules.title": "Rules",
+  "rules.variant": "Ayo is played a little differently from house to house. The usual rules are on; change anything to the way you play it.",
+  "rules.tie": "If both sides finish with 24 seeds, the game is a draw. The computer follows the same rules as you.",
+  "rules.skip": "Skip the starting pit on 12+ seeds",
+  "rules.skip.help": "On: a sow of 12 or more seeds skips the pit it started from. Off: that pit gets a seed too.",
+  "rules.chain": "Capture chains",
+  "rules.chain.help": "On: the pits just before a captured pit are captured too while they hold 2 or 3. Off: only the last pit is captured.",
+  "rules.feed": "Must give seeds to an empty side",
+  "rules.feed.help": "On: when the other side has no seeds, you must play a pit that reaches it. Off: any pit may be played.",
+  "rules.fast": "Faster animations",
+  "rules.fast.help": "Seeds are sown and the computer thinks about 1.7 times quicker.",
+  "rules.capture": "What captures",
+  "rules.capture.twoThree": "2 or 3",
+  "rules.capture.threeOnly": "3 only",
+  "rules.capture.help.twoThree": "A pit that your last seed brings to 2 or 3 seeds is captured.",
+  "rules.capture.help.threeOnly": "Only a pit that your last seed brings to exactly 3 seeds is captured.",
+  "rules.end": "Seeds left at the end",
+  "rules.end.owners": "Owners",
+  "rules.end.capturer": "Other player",
+  "rules.end.help.owners": "When the game ends early, each player keeps the seeds on their own side.",
+  "rules.end.help.capturer": "When the game ends early, the player who could not move loses the seeds left on the board to the other player.",
+  "player.you": "You",
+  "board.label": "Ayo board: 12 pits in two rows and a seed tray on each side",
+  "play.yourTurn": "Your turn. Tap a glowing pit.",
+  "play.mustFeed": "The other side has no seeds. Play a pit that reaches them.",
+  "play.mustFeedTap": "That pit cannot reach the other side. Pick a glowing one.",
+  "play.emptyTap": "That pit is empty.",
+  "play.cpuTurn": "{name} is thinking...",
+  "play.cpuPicks": "{name} plays pit {n}.",
+  "play.youPlayed": "You played pit {n}.",
+  "play.cpuPlayed": "{name} played pit {n}.",
+  "play.youCaptured": "You captured {n} seeds!",
+  "play.cpuCaptured": "{name} captured {n} seeds.",
+  "play.chain": "A chain of {n} pits: {seeds} seeds!",
+  "play.skip": "The starting pit is skipped.",
+  "play.hint": "Hint",
+  "play.hintSay": "Try pit {n}. Pits marked with ! can be captured next.",
+  "play.pitLabel": "Pit {n}, {seeds} seeds",
+  "play.nudge": "Go on, tap a pit!",
+  "play.end.stuck": "No move can give seeds to the other side. The game ends and the seeds are counted.",
+  "play.end.empty": "One side has no seeds left. The game ends and the seeds are counted.",
+  "play.end.cap": "This game has gone on too long. The seeds are counted now.",
+  "results.seeds": "Seeds (you - them)",
+  "results.bestCapture": "Biggest capture",
+  "results.moves": "Your moves",
+  "results.wins": "Wins",
+  "results.draw": "A draw!",
+  "persona.efe.name": "Efe",
+  "persona.baba-ade.name": "Baba Ade",
+  "persona.malam-sani.name": "Malam Sani",
+  "ayo.banter.baba-ade.start": "My child, let me teach you a lesson in patience.",
+  "ayo.banter.baba-ade.capture": "Ehen. Count your seeds carefully.",
+  "ayo.banter.baba-ade.captured": "Hmm. Interesting move. Very interesting.",
+  "ayo.banter.baba-ade.chain": {
+    "text": "Ah, a chain! Even a teacher must learn.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.win": "In my school days, I never lost at Ayo.",
+  "ayo.banter.baba-ade.lose": {
+    "text": "Ẹ kú iṣẹ́! Well done on your work.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.draw": {
+    "text": "Equal seeds. Teacher and student, side by side.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.idle": {
+    "text": "Count your seeds well, my child. No hurry.",
+    "_review": true
+  },
+  "ayo.banter.efe.start": {
+    "text": "Oya, let us play! I will sing while I sow.",
+    "_review": true
+  },
+  "ayo.banter.efe.capture": {
+    "text": "Sorry o, I took your seeds!",
+    "_review": true
+  },
+  "ayo.banter.efe.captured": {
+    "text": "Ehen! You have a good hand o!",
+    "_review": true
+  },
+  "ayo.banter.efe.chain": {
+    "text": "Look at that chain! Ah ah!",
+    "_review": true
+  },
+  "ayo.banter.efe.win": {
+    "text": "I won! Ah, I will sing for the two of us.",
+    "_review": true
+  },
+  "ayo.banter.efe.lose": {
+    "text": "You win! I will sing for you.",
+    "_review": true
+  },
+  "ayo.banter.efe.draw": {
+    "text": "Same seeds! Nobody loses, nobody wins o.",
+    "_review": true
+  },
+  "ayo.banter.efe.idle": {
+    "text": "Come on, tap a pit! I am waiting.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.start": {
+    "text": "Sannu, my friend. Let us begin.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.capture": "Patience is also a move.",
+  "ayo.banter.malam-sani.captured": {
+    "text": "Madalla! A good move.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.chain": {
+    "text": "One pit leads to the next. Patience pays.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.win": {
+    "text": "Good game. We learn from every game.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.lose": "No problem. We learn from every game.",
+  "ayo.banter.malam-sani.draw": {
+    "text": "Equal. A fair end.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.idle": {
+    "text": "Take your time, my friend. The seeds will wait.",
+    "_review": true
+  }
 }

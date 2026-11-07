@@ -70,7 +70,7 @@ for (const orient of ['landscape', 'portrait']) {
     steps.every((d) => d <= PITCH * 2.4),
     `${orient}: neighbouring pit indices are neighbours on the board`,
   );
-  const [x0, y0, w0, h0] = TRAYS[orient].human;
+  const [, , w0, h0] = TRAYS[orient].human;
   ok(
     pts.every(
       ([x, y]) => x - PIT_R > 20 && y - PIT_R > 20 && x + PIT_R < W - 20 && y + PIT_R < H - 20,

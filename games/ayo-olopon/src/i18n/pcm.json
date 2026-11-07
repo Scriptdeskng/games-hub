@@ -1,40 +1,305 @@
 {
   "game.title": "Ayo Olopon",
-  "game.tagline": "Hit di bells before dem vanish!",
-  "game.arenaLabel": "Where we dey play",
-  "game.bell": "Agogo bell",
-  "game.hint": "Target: {goal} bells inside {time} seconds",
+  "game.tagline": {
+    "text": "Drop the seeds, carry the pits!",
+    "_review": true
+  },
   "game.howto.1": {
-    "text": "Golden agogo bells dey pop up for screen. Tap or click each one before e vanish.",
+    "text": "Everybody get 6 pits with 4 seeds inside each. When na your turn, tap one of your pits (or press 1 to 6). The seeds go drop one by one, go round the other way, from the next pit.",
     "_review": true
   },
   "game.howto.2": {
-    "text": "Hit plenty bells before time finish and you go win. Di target dey for top.",
+    "text": "If you sow 12 seeds or more, the pit wey you start from no go get seed.",
     "_review": true
   },
-  "game.howto.3": "Hit bells one after di other to build combo and get more points. If you miss, combo go break.",
+  "game.howto.3": {
+    "text": "If your last seed land for opponent pit and the pit become 2 or 3 seeds, you don carry am. You go carry the pits wey dey before am too, as long as each one get 2 or 3.",
+    "_review": true
+  },
   "game.howto.4": {
-    "text": "If you dey use keyboard, press Space to hit di oldest bell, and press P if you wan pause.",
+    "text": "If the other side no get seed again, you must play pit wey go give dem seed. If you no fit, the game don end and the seeds wey remain go back to the owners.",
     "_review": true
   },
-  "hud.score": "Score",
-  "hud.time": "Time",
-  "hud.goal": "Bells",
-  "hud.combo": "Combo",
-  "results.accuracy": "How you hit am",
-  "results.combo": "Best combo",
-  "results.level": "Level",
-  "persona.name": "Mama Nkechi",
-  "banter.win.0": {
-    "text": "Well done! Your hand quick pass danfo conductor.",
+  "game.howto.5": {
+    "text": "Seeds wey dey your tray na your own. Who collect 25 out of the 48 seeds first, na him win. If una get 24 each, e be draw.",
     "_review": true
   },
-  "banter.win.1": "Na so! Come siddon, di jollof don ready.",
-  "banter.win.2": "Sharp sharp! Di bells dey fear you.",
-  "banter.lose.0": "No wahala, try again. Even NEPA dey bring light back.",
-  "banter.lose.1": "Small small, you go get am.",
-  "banter.lose.2": {
-    "text": "Calm down. Di bells no go run anywhere.",
+  "game.howto.6": {
+    "text": "You no sure wetin to play? Tap Hint. For Rules page you fit change the rules to the way you dey play Ayo for house.",
+    "_review": true
+  },
+  "legend.select": {
+    "text": "Pit wey you fit play",
+    "_review": true
+  },
+  "legend.hint": {
+    "text": "The hint: try this pit",
+    "_review": true
+  },
+  "legend.capture": {
+    "text": "Pit wey dem dey carry",
+    "_review": true
+  },
+  "legend.skip": {
+    "text": "The starting pit no go collect seed",
+    "_review": true
+  },
+  "legend.danger": {
+    "text": "Pit wey dem fit carry next",
+    "_review": true
+  },
+  "legend.last": {
+    "text": "Where the last seed land",
+    "_review": true
+  },
+  "menu.opponent": {
+    "text": "You go play with {name}",
+    "_review": true
+  },
+  "menu.rules": "Rules",
+  "rules.title": "Rules",
+  "rules.variant": {
+    "text": "Ayo no be the same for every house. The usual rules dey on; change any one make e be the way you dey play am.",
+    "_review": true
+  },
+  "rules.tie": {
+    "text": "If both sides finish with 24 seeds, na draw. The computer dey follow the same rules wey you dey follow.",
+    "_review": true
+  },
+  "rules.skip": {
+    "text": "No drop for the starting pit when seeds reach 12",
+    "_review": true
+  },
+  "rules.skip.help": {
+    "text": "On: if you sow 12 seeds or more, the pit wey you start from no go collect seed. Off: the pit go collect seed too.",
+    "_review": true
+  },
+  "rules.chain": {
+    "text": "Capture chain",
+    "_review": true
+  },
+  "rules.chain.help": {
+    "text": "On: the pits wey dey before the one wey you carry go follow if each get 2 or 3. Off: na only the last pit you go carry.",
+    "_review": true
+  },
+  "rules.feed": {
+    "text": "You must give seed if the other side empty",
+    "_review": true
+  },
+  "rules.feed.help": {
+    "text": "On: when the other side no get seed, you must play pit wey go reach dem. Off: you fit play any pit.",
+    "_review": true
+  },
+  "rules.fast": {
+    "text": "Make animation quick",
+    "_review": true
+  },
+  "rules.fast.help": {
+    "text": "Seeds go drop and the computer go think about 1.7 times quicker.",
+    "_review": true
+  },
+  "rules.capture": {
+    "text": "Wetin dey capture",
+    "_review": true
+  },
+  "rules.capture.twoThree": "2 or 3",
+  "rules.capture.threeOnly": "3 only",
+  "rules.capture.help.twoThree": {
+    "text": "Pit wey your last seed make 2 or 3 seeds, you don carry am.",
+    "_review": true
+  },
+  "rules.capture.help.threeOnly": {
+    "text": "Na only pit wey your last seed make exactly 3 seeds you go carry.",
+    "_review": true
+  },
+  "rules.end": {
+    "text": "Seeds wey remain for the end",
+    "_review": true
+  },
+  "rules.end.owners": "Owners",
+  "rules.end.capturer": {
+    "text": "Other player",
+    "_review": true
+  },
+  "rules.end.help.owners": {
+    "text": "When the game end before time, each person go keep the seeds wey dey im own side.",
+    "_review": true
+  },
+  "rules.end.help.capturer": {
+    "text": "When the game end before time, the person wey no fit move go lose the remaining seeds to the other person.",
+    "_review": true
+  },
+  "player.you": "You",
+  "board.label": {
+    "text": "Ayo board: 12 pits for two rows and seed tray for each side",
+    "_review": true
+  },
+  "play.yourTurn": {
+    "text": "Your turn. Tap one glowing pit.",
+    "_review": true
+  },
+  "play.mustFeed": {
+    "text": "The other side no get seed. Play pit wey go reach dem.",
+    "_review": true
+  },
+  "play.mustFeedTap": {
+    "text": "That pit no fit reach the other side. Pick one wey dey glow.",
+    "_review": true
+  },
+  "play.emptyTap": {
+    "text": "That pit empty.",
+    "_review": true
+  },
+  "play.cpuTurn": {
+    "text": "{name} dey think...",
+    "_review": true
+  },
+  "play.cpuPicks": {
+    "text": "{name} dey play pit {n}.",
+    "_review": true
+  },
+  "play.youPlayed": {
+    "text": "You play pit {n}.",
+    "_review": true
+  },
+  "play.cpuPlayed": {
+    "text": "{name} play pit {n}.",
+    "_review": true
+  },
+  "play.youCaptured": {
+    "text": "You carry {n} seeds!",
+    "_review": true
+  },
+  "play.cpuCaptured": {
+    "text": "{name} carry {n} seeds.",
+    "_review": true
+  },
+  "play.chain": {
+    "text": "Chain of {n} pits: {seeds} seeds!",
+    "_review": true
+  },
+  "play.skip": {
+    "text": "The starting pit no collect seed.",
+    "_review": true
+  },
+  "play.hint": "Hint",
+  "play.hintSay": {
+    "text": "Try pit {n}. Pit wey get ! fit enter next.",
+    "_review": true
+  },
+  "play.pitLabel": "Pit {n}, {seeds} seeds",
+  "play.nudge": {
+    "text": "Oya, tap one pit!",
+    "_review": true
+  },
+  "play.end.stuck": {
+    "text": "No move fit give the other side seed. The game don end, make we count the seeds.",
+    "_review": true
+  },
+  "play.end.empty": {
+    "text": "One side no get seed again. The game don end, make we count the seeds.",
+    "_review": true
+  },
+  "play.end.cap": {
+    "text": "This game don too long. Make we count the seeds now.",
+    "_review": true
+  },
+  "results.seeds": {
+    "text": "Seeds (you - dem)",
+    "_review": true
+  },
+  "results.bestCapture": {
+    "text": "Biggest carry",
+    "_review": true
+  },
+  "results.moves": "Your moves",
+  "results.wins": "Wins",
+  "results.draw": {
+    "text": "Draw!",
+    "_review": true
+  },
+  "persona.efe.name": "Efe",
+  "persona.baba-ade.name": "Baba Ade",
+  "persona.malam-sani.name": "Malam Sani",
+  "ayo.banter.baba-ade.start": "My pikin, make I teach you lesson for patience.",
+  "ayo.banter.baba-ade.capture": "Ehen. Count your seed well well.",
+  "ayo.banter.baba-ade.captured": "Hmm. Interesting move. Very interesting.",
+  "ayo.banter.baba-ade.chain": {
+    "text": "Ah, chain! Even teacher must learn.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.win": {
+    "text": "For my school time, I never lose Ayo before.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.lose": {
+    "text": "Ẹ kú iṣẹ́! You don try.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.draw": {
+    "text": "Seed equal. Teacher and student, one level.",
+    "_review": true
+  },
+  "ayo.banter.baba-ade.idle": {
+    "text": "Count your seeds well, my pikin. No hurry.",
+    "_review": true
+  },
+  "ayo.banter.efe.start": {
+    "text": "Oya, make we play! I go sing as I dey sow.",
+    "_review": true
+  },
+  "ayo.banter.efe.capture": {
+    "text": "Sorry o, I don carry your seeds!",
+    "_review": true
+  },
+  "ayo.banter.efe.captured": {
+    "text": "Ehen! You get hand o!",
+    "_review": true
+  },
+  "ayo.banter.efe.chain": {
+    "text": "See chain o! Ah ah!",
+    "_review": true
+  },
+  "ayo.banter.efe.win": {
+    "text": "I don win! I go sing for the two of us.",
+    "_review": true
+  },
+  "ayo.banter.efe.lose": {
+    "text": "You don win! I go sing for you.",
+    "_review": true
+  },
+  "ayo.banter.efe.draw": {
+    "text": "Same seed! Nobody lose, nobody win o.",
+    "_review": true
+  },
+  "ayo.banter.efe.idle": {
+    "text": "Oya, tap one pit na! I dey wait.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.start": {
+    "text": "Sannu o, my padi. Make we start.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.capture": "Patience na move too.",
+  "ayo.banter.malam-sani.captured": {
+    "text": "Madalla! Correct move.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.chain": {
+    "text": "One pit dey lead the next one. Patience dey pay.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.win": {
+    "text": "Correct game. We dey learn from every game.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.lose": "No wahala. We dey learn from every game.",
+  "ayo.banter.malam-sani.draw": {
+    "text": "E equal. Fair play.",
+    "_review": true
+  },
+  "ayo.banter.malam-sani.idle": {
+    "text": "Take your time, my padi. The seeds no dey run.",
     "_review": true
   }
 }

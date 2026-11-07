@@ -1,131 +1,396 @@
-.ng-play {
-  gap: var(--ng-s-3);
+/* Ayo Olopon. Adire theme (tokens from @naija/core), board classes from assets/ayo-fx.css.
+   Transform and opacity only for anything that moves. Portrait 360x640 first; landscape and desktop below. */
+
+/* ---------- menu ---------- */
+.ay-menu-art {
+  width: 88px;
+  height: 88px;
 }
-.arena {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 240px;
-  border-radius: var(--ng-r-lg);
-  background: rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
+.ay-menu .ng-h--display {
+  font-size: clamp(1.75rem, 9vw, 2.75rem);
 }
-.arena:focus-visible {
-  outline: 3px solid var(--ng-focus);
-  outline-offset: 2px;
-}
-.target {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--size);
-  height: var(--size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.target.is-on {
-  opacity: 1;
-  pointer-events: auto;
-}
-.target.is-hit,
-.target.is-gone {
-  pointer-events: none;
-}
-.target__in {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-.target img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.target__ring {
-  position: absolute;
-  inset: -4px;
-  border: 3px solid var(--ng-accent);
-  border-radius: 50%;
-  opacity: 0.9;
-}
-.target.is-on .target__in {
-  animation: bell-in 180ms var(--ng-ease-spring) both;
-}
-.target.is-on .target__ring {
-  animation: bell-ring var(--life) linear both;
-}
-.target.is-hit .target__in {
-  animation: bell-hit 200ms var(--ng-ease) both;
-}
-.target.is-gone .target__in {
-  animation: bell-gone 180ms linear both;
-}
-.target.is-hit .target__ring,
-.target.is-gone .target__ring {
-  animation: none;
-  opacity: 0;
-}
-@keyframes bell-in {
-  from {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-}
-@keyframes bell-ring {
-  from {
-    transform: scale(1.25);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.85);
-    opacity: 0.3;
-  }
-}
-@keyframes bell-hit {
-  to {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes bell-gone {
-  to {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-}
-.menu-art {
-  width: min(40vw, 150px);
-  height: auto;
-  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.25));
-}
-.hint {
+.ay-opponent {
   margin: 0;
   text-align: center;
   font-weight: 700;
+  font-size: var(--ng-fs-sm);
 }
-@media (prefers-reduced-motion: reduce) {
-  .target.is-on .target__ring {
-    animation: none;
+.ay-menu .ng-menu__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 340px;
+}
+.ay-menu .ng-menu__list li {
+  min-width: 0;
+}
+.ay-menu .ng-menu__list li:first-child {
+  grid-column: 1 / -1;
+}
+.ay-menu .ng-menu__list .ng-btn--lg {
+  min-width: 0;
+  padding-inline: var(--ng-s-2);
+  font-size: var(--ng-fs-lg);
+}
+.ay-menu .ng-settings .ng-btn {
+  padding-inline: var(--ng-s-2);
+  white-space: nowrap;
+}
+@media (max-height: 700px) and (orientation: portrait) {
+  .ay-menu {
+    gap: var(--ng-s-3);
+  }
+  .ay-menu-art {
+    width: 56px;
+    height: 56px;
+  }
+  .ay-menu .ng-seg__opt {
+    min-height: 48px;
   }
 }
-@media (max-height: 500px) and (orientation: landscape) {
-  .menu-art {
+@media (max-height: 640px) and (orientation: portrait) {
+  .ay-menu-art,
+  .ay-menu .ng-menu__tag {
     display: none;
   }
 }
-@media (max-height: 700px) and (orientation: portrait) {
-  .menu-art {
-    width: 72px;
+@media (max-height: 500px) and (orientation: landscape) {
+  .ay-menu-art {
+    display: none;
+  }
+  .ay-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--ng-s-5);
+    row-gap: var(--ng-s-2);
+    align-content: center;
+    max-width: 760px;
+  }
+  .ay-menu > .ng-h {
+    grid-column: 1 / -1;
+  }
+  .ay-menu > .ng-field,
+  .ay-menu > .ay-opponent {
+    grid-column: 1;
+    max-width: none;
+  }
+  .ay-menu > .ng-menu__list {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    align-self: center;
+    max-width: none;
+  }
+  .ay-menu > .ng-menu__footer {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .ay-menu .ng-seg__opt {
+    min-height: 48px;
+  }
+}
+
+/* ---------- how to play ---------- */
+.ay-legend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ng-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ay-legend__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.ay-legend__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #3a2210;
+}
+@media (max-height: 640px) {
+  .ay-legend__icon {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ---------- rules screen ---------- */
+.ay-rules {
+  align-items: stretch;
+  gap: var(--ng-s-3);
+}
+.ay-rules__list {
+  display: grid;
+  gap: var(--ng-s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ay-rules__item {
+  padding: var(--ng-s-3);
+  border-radius: var(--ng-r-md);
+  background: var(--ng-surface);
+  color: var(--ng-ink-s);
+}
+.ay-rules__item .ng-field,
+.ay-rules__item .ng-seg {
+  color: var(--ng-ink-s);
+}
+.ay-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-3);
+  width: 100%;
+  min-height: var(--ng-tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 800 var(--ng-fs-md) / 1.2 var(--ng-font-ui);
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.ay-switch:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+.ay-switch__txt {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ay-switch__state {
+  flex: none;
+  min-width: 56px;
+  padding: 6px 10px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-surface-2);
+  box-shadow: inset 0 0 0 2px var(--ng-ink-s-2);
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+.ay-switch[aria-checked='true'] .ay-switch__state {
+  background: var(--ng-good);
+  color: #fff;
+  box-shadow: none;
+}
+.ay-switch[aria-checked='true'] .ay-switch__state::before {
+  content: '';
+  display: inline-block;
+  width: 0.3em;
+  height: 0.55em;
+  margin: 0 0.4em 0.1em 0;
+  border: solid currentColor;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+.ay-rules__help {
+  margin: 0 0 var(--ng-s-1);
+  font-size: var(--ng-fs-sm);
+  color: var(--ng-ink-s-2);
+}
+.ay-rules__note {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+
+/* ---------- play screen ---------- */
+.ay-play {
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: var(--ng-s-2);
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  max-width: min(100%, 1180px);
+  padding-top: max(var(--ng-s-2), env(safe-area-inset-top));
+  padding-bottom: max(var(--ng-s-2), env(safe-area-inset-bottom));
+  padding-left: max(var(--ng-s-2), env(safe-area-inset-left));
+  padding-right: max(var(--ng-s-2), env(safe-area-inset-right));
+  overflow: hidden;
+}
+.ay-play .ng-hud {
+  min-height: 48px;
+  gap: var(--ng-s-2);
+  flex-wrap: nowrap;
+}
+.ay-play .ng-hud__item {
+  flex: 0 1 auto;
+}
+.ay-play .ng-hud__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ay-play .ng-hud .ng-btn {
+  flex: none;
+}
+.ay-play .ng-hud__item {
+  position: relative;
+  padding-bottom: 3px;
+  border-bottom: 3px solid transparent;
+}
+.ay-play .ng-hud__item.is-turn {
+  border-bottom-color: var(--ng-primary);
+}
+.ay-play .ng-hud__item.is-turn .ng-hud__label {
+  color: var(--ng-primary);
+}
+.ay-play .ng-hud__item {
+  padding-right: 22px;
+}
+.ay-drum {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+}
+.ay-drum[hidden] {
+  display: block;
+  visibility: hidden;
+}
+.ay-hint {
+  min-width: var(--ng-tap);
+  padding-inline: var(--ng-s-3);
+  font-size: var(--ng-fs-sm);
+}
+.ay-msg {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+}
+.ay-status {
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+  font-weight: 800;
+  font-size: var(--ng-fs-sm);
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.ay-msg .ng-bubble {
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  z-index: 5;
+}
+/* the stage takes what is left of the screen; the board inside it is sized in script to the
+   biggest portrait or landscape board that fits, so no layout depends on the board's own size */
+.ay-stage {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  width: 100%;
+}
+.ay-stage > .ayo-board {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: auto;
+  aspect-ratio: auto;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------- board (classes from assets/ayo-fx.css) ---------- */
+.ayo-board {
+  contain: layout style;
+}
+.ayo-board__art {
+  -webkit-user-drag: none;
+}
+.ayo-cell {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  width: calc(var(--d) * 1%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.ayo-cell > .ayo-seed {
+  transform: translate(-50%, -50%);
+}
+.ayo-tray {
+  position: absolute;
+  pointer-events: none;
+}
+.ayo-tray > .ayo-seed {
+  transform: translate(-50%, -50%);
+}
+.ayo-chip {
+  position: absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  z-index: 5;
+}
+.ayo-state {
+  z-index: 3;
+}
+.ayo-state[hidden],
+.ayo-hand[hidden] {
+  display: none;
+}
+.ayo-pit {
+  z-index: 4;
+}
+.ayo-pit.is-selected,
+.ayo-pit:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 3px;
+}
+.ayo-pit:not(.is-playable) {
+  cursor: default;
+}
+.ayo-hand,
+.ayo-fx,
+.ayo-flyer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 6;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.ayo-hand {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+.ayo-glow {
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* ---------- landscape phones and desktop ---------- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .ay-play {
+    gap: var(--ng-s-1);
+  }
+  .ay-play .ng-hud {
+    min-height: 44px;
+  }
+  .ay-msg {
+    min-height: 32px;
+  }
+}
+@media (min-width: 900px) {
+  .ay-play {
+    gap: var(--ng-s-3);
   }
 }

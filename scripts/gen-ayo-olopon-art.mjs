@@ -35,7 +35,6 @@ const C = {
 // ---- geometry contract (board units) -------------------------------------------------
 export const PIT_R = 66;
 export const PITCH = 170;
-const FIELD0 = 190; // start of the pit field along the long axis
 const MID = 275; // first pit centre along the long axis
 export const SIZES = { landscape: [1400, 520], portrait: [520, 1400] };
 
@@ -340,11 +339,6 @@ w(
 );
 
 // ---- pit highlight and hint states (200x200 overlays centred on the pit) -------------------
-const under = (inner, extra = 5) =>
-  inner.replace(
-    /stroke-width="(\d+)"/,
-    (m, v) => `stroke="${C.ink}" stroke-opacity=".55" stroke-width="${+v + extra}"`,
-  );
 const O = (body) => svg('0 0 200 200', body);
 w(
   'states/pit-select.svg',
