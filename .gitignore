@@ -5,3 +5,4 @@ tmp/
 test-results/
 playwright-report/
 coverage/
+dist-e2e/

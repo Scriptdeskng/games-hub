@@ -1,0 +1,27 @@
+{
+  "name": "@naija/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./boot": "./src/boot/index.ts",
+    "./loader": "./src/loader/index.ts",
+    "./audio": "./src/audio/index.ts",
+    "./i18n": "./src/i18n/index.ts",
+    "./settings": "./src/settings/index.ts",
+    "./storage": "./src/storage/index.ts",
+    "./portal": "./src/portal/index.ts",
+    "./input": "./src/input/index.ts",
+    "./rng": "./src/rng/index.ts",
+    "./loop": "./src/loop/index.ts",
+    "./perf": "./src/perf/index.ts",
+    "./test-hook": "./src/test-hook/index.ts",
+    "./lifecycle": "./src/lifecycle/index.ts",
+    "./sw": "./src/sw/index.ts",
+    "./ui-kit": "./src/ui-kit/index.ts"
+  }
+}

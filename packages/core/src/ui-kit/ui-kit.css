@@ -1,0 +1,81 @@
+/* Structural additions to the designer's skin.css (.ng-*). Uses --ng-* tokens with fallbacks. */
+html,
+body {
+  margin: 0;
+}
+.ng-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-s-2, 8px);
+  width: 100%;
+  max-width: 320px;
+}
+.ng-label {
+  font-size: var(--ng-fs-sm, 0.875rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ng-ink-2, #ccc);
+}
+.ng-settings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ng-s-2, 8px);
+  justify-content: center;
+}
+.ng-settings .ng-btn {
+  font-size: var(--ng-fs-sm, 0.875rem);
+  padding: var(--ng-s-2, 8px) var(--ng-s-3, 12px);
+}
+.ng-settings .ng-btn[aria-pressed='false'] {
+  opacity: 0.7;
+}
+.ng-play {
+  align-items: stretch;
+  gap: var(--ng-s-3, 12px);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+.ng-menu__list li {
+  display: block;
+}
+.ng-loader__label {
+  margin: 0;
+  font-weight: 800;
+}
+.ng-seg input:focus-visible + .ng-seg__opt {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 2px;
+}
+.ng-modal__panel {
+  outline: none;
+}
+
+/* Pause/modal actions: always stacked and never wider than the panel (skin's >=600px row layout
+   clips three buttons inside a 400px panel). */
+.ng-modal__actions {
+  flex-direction: column;
+}
+.ng-modal__actions .ng-btn {
+  min-width: 0;
+  width: 100%;
+}
+/* Short landscape phones: keep the whole menu above the fold */
+@media (max-height: 500px) and (orientation: landscape) {
+  .ng-menu {
+    gap: var(--ng-s-2, 8px);
+  }
+  .ng-menu .ng-h--display {
+    font-size: var(--ng-fs-2xl, 1.5rem);
+  }
+  .ng-menu__tag {
+    display: none;
+  }
+  .ng-menu .ng-btn--lg {
+    min-height: 48px;
+    font-size: var(--ng-fs-lg, 1.125rem);
+  }
+  .ng-menu__list {
+    gap: var(--ng-s-2, 8px);
+  }
+}

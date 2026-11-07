@@ -1,0 +1,142 @@
+# @naija/core
+
+Shared shell for every Naija Games title. One package, subpath exports, zero runtime dependencies,
+tree-shakeable. Budget: **core <= 60 KB gzip** including ui-kit, i18n runtime and the audio synth
+(currently about 16 KB; measured by `npm run size`, see "Size" below).
+
+```ts
+import { boot } from '@naija/core/boot'; // or: import { boot } from '@naija/core'
+```
+
+| Subpath      | What it gives you                                                                                                                                                                                                                                     |
+| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/boot`      | `boot({ slug, root, locales })` wires everything below and returns a `Core` (`t`, `i18n`, `storage`, `settings`, `audio`, `portal`, `perf`, `scope`, `exposeTestHook`, `destroy`). Also reports uncaught errors to the portal (`error` event, max 5). |
+| `/loader`    | `runLoader({ root, t, tasks })` progress screen (`.ng-loader`); `imageTask(url)`. Failing tasks never block the game.                                                                                                                                 |
+| `/audio`     | Web Audio synth engine, see "Audio API".                                                                                                                                                                                                              |
+| `/i18n`      | `createI18n`, `t('key', { n })`, `{param}` interpolation, en + pcm, fallback to en then key.                                                                                                                                                          |
+| `/settings`  | Persisted sound / music / volumes / lang. `settings.subscribe(fn)`.                                                                                                                                                                                   |
+| `/storage`   | Namespaced localStorage (`naija:<slug>:<key>`) with in-memory fallback. Rejects keys that look like phone numbers or tokens.                                                                                                                          |
+| `/portal`    | Bridge, see "Portal bridge".                                                                                                                                                                                                                          |
+| `/input`     | `createInput(el, { onTap, onSwipe, keys })`: tap, 4-way swipe, keyboard map. `destroy()` removes everything.                                                                                                                                          |
+| `/rng`       | `createRng(seed)` (mulberry32, `getState()/setState()` serializable), `seedFromString`.                                                                                                                                                               |
+| `/loop`      | `createLoop({ update, render, step })` fixed timestep, spiral-of-death cap, auto-pause on hidden tab (`onHidden`), `advance(n)` for tests.                                                                                                            |
+| `/perf`      | `createPerf()` fps / min fps / heap samples; the loop feeds it.                                                                                                                                                                                       |
+| `/test-hook` | `window.__naijaTest` (non-production builds only).                                                                                                                                                                                                    |
+| `/lifecycle` | `createScope()`: `on / timeout / interval / raf / add / destroy`. Use it for EVERY listener, timer and RAF so `destroy()` cleans up and the leak counters are accurate.                                                                               |
+| `/sw`        | `registerServiceWorker()`. The worker file itself is generated at build time.                                                                                                                                                                         |
+| `/ui-kit`    | DOM + CSS components, see "UI kit". Importing it pulls in `styles/tokens.css`, `styles/skin.css` and `ui-kit.css`.                                                                                                                                    |
+
+## Conventions
+
+- No global state. Everything you create has `destroy()`.
+- Never touch `localStorage` directly (an ESLint rule enforces it): use `core.storage`.
+- All UI strings go through `t('key')`. Locale files are flat JSON. A line a human should check:
+  `"key": { "text": "...", "_review": true }`. `npm run i18n:check` (part of `npm run check`) fails
+  on missing keys, empty values, mismatched `{params}` and `t('literal')` keys with no entry; it
+  lists every `_review` line.
+- Animate `transform` and `opacity` only.
+
+## Portal bridge
+
+URL in: `?token=<opaque>&lang=en|pcm&portal=<origin>`. Out (`window.parent.postMessage`, **only** to
+the validated `portal` origin and **only** when that param is present, never `*`):
+`{ source: 'naija-games', game: <slug>, type, data }` with `type` in
+`ready | start | level_complete | score | end | error`.
+
+```ts
+core.portal.emit('start', { level: 'hard' });
+await core.portal.saveProgress({ best: 120 }); // always writes localStorage; PUTs to the portal API if a token exists
+const p = await core.portal.loadProgress({ best: 0 });
+```
+
+The token lives in memory only: it is sent as `Authorization: Bearer` to
+`{portal}/api/games/{slug}/progress` (GET returns `{ data }` or 404, PUT takes `{ data }`). **This API
+shape is an assumption to confirm with the portal team.** If the call fails the local copy is used.
+`tools/mock-portal.html` (`npm run mock-portal`) implements the same contract on a second origin.
+
+## Audio API (for sound designers)
+
+Instruments are **data**. The engine (`audio/engine.ts`) turns presets into Web Audio nodes; the
+types are in `audio/types.ts`.
+
+```ts
+// audio/instruments.ts  (asset-designer owns this file)
+export const instruments: Record<string, InstrumentPreset> = { agogo: { id: 'agogo', description, duration, layers: [...] }, ... };
+// audio/core-sfx.ts     (asset-designer owns this file)
+export const coreSfx: SfxMap = { tap: { voice: 'ekwe' }, success: [{ voice: 'agogo' }, { voice: 'agogo', pitch: 1.5, when: 0.1 }], ... };
+```
+
+A preset has `layers`, played together. Layer kinds: `osc` (wave, freq, optional glide `freqEnd` +
+`glide`, optional `lfo` on pitch or gain), `fm` (carrier `freq`, `ratio`, `index`, optional
+`indexDecay`; bells), `noise` (`filter` bandpass | lowpass | highpass, `freq`, `freqEnd`, `q`;
+shekere, crowd, wood clicks). Every layer has `env: { attack?, decay }`, optional `gain` and `delay`
+(strikes, flams). `duration` is a hard stop (SFX <= 0.3 s, fanfares <= 1.5 s).
+
+Ids the code expects: `talkingDrum agogo ogene shekere udu ekwe danfoHorn crowd fanfare`.
+Core events every `SfxMap` must cover are listed in `CORE_SFX_EVENTS`: `tap select back success fail
+coin card dice move drop turn tick start win lose unlock`. A cue is one step or an array of steps
+`{ voice, pitch?, gain?, when?, key? }` (`key` retriggers instead of stacking).
+
+```ts
+core.audio.playSfx('success');                      // named event
+core.audio.playSfx('coin', { pitch: 1.2 });         // pitch multiplies every frequency
+core.audio.playVoice('ogene', { gain: 0.8 });       // raw instrument
+core.audio.registerSfx({ goal: [{ voice: 'crowd' }, { voice: 'fanfare', when: 0.2 }] }); // game cues
+core.audio.registerInstruments({ myBell: preset });                                       // game voices
+core.audio.playMusic({ kind: 'pattern', bpm: 96, steps: [{ voice: 'ekwe' }, null, ...] }); // synth loop
+core.audio.playMusic({ kind: 'file', url: './assets/menu.ogg' });                          // <= 300 KB loop
+core.audio.stopMusic();
+```
+
+Rules the engine enforces: audio starts only after the first user gesture (the AudioContext is not
+even created before it); `settings.sound` mutes SFX, `settings.music` mutes music, both persisted;
+master/sfx/music volumes; max 20 simultaneous voices; suspended while the tab is hidden; unknown
+voice or event names are silent no-ops (never throw); a missing music file is ignored.
+
+## UI kit
+
+All components return `{ el, destroy() }` (or a richer object), take a `UiContext` (`core` satisfies
+it) and use the designer's `.ng-*` classes (see `docs/assets/STYLE_GUIDE.md` section 6): `createMenu`,
+`createHowToPlay`, `createDifficultyPicker` (native radios, Easy / Medium / Hard), `createPause`,
+`createModal` (dialog role, focus trap, Esc, focus restore), `createHud` (writes the DOM only when a
+value changes), `createResults`, `toast`, `createSettingsBar` (sound, music, language),
+`createScreenHost` (swap screens, destroy the old one, move focus), `button`, `h`.
+Tap targets are >= 44 px (skin.css), everything works with keyboard, strings come from `t()`.
+Language switches fire `i18n.onChange`; re-render the current screen there (the template does).
+
+## Test hook
+
+In dev and in the e2e build (`__NAIJA_TEST__` is true; the production build removes it):
+
+```ts
+window.__naijaTest = {
+  game, autoplay(opts), getState(), setSeed(n),
+  counters(),   // live listeners / timers / RAF loops registered through scopes: leak checks
+  perf(),       // { fps, minFps, frames, heapMB, heapSamples }
+  events(),     // portal events emitted so far
+  screen(),     // 'menu' | 'howto' | 'play' | 'results' ...
+  destroy(),    // tears the whole game down; counters() should then read 0
+};
+```
+
+## Service worker
+
+`vite.config.ts` generates `dist/<slug>/sw.js` from `src/sw/sw-template.js`: precaches every built
+file (hash-versioned cache `naija-<slug>-<hash>`), cache-first, ignores the query string (so
+`?token=` still hits the cache and is never stored), deletes older caches of the same game on
+activate. `registerServiceWorker()` never throws: if registration is refused the game just loads
+online. The worker is registered from the game's own origin and folder, so it also works inside an
+iframe on another origin. Host `sw.js` with a JavaScript content type and short cache lifetime.
+
+## Size
+
+`npm run size` gzips and brotli-compresses every file in `dist/<slug>`. "Core" is the `core-*.js` and
+`core-*.css` chunks: `vite.config.ts` puts everything under `packages/core` in a chunk named `core`.
+Fonts and images pulled in by core CSS count toward the game total, not the core code budget.
+
+## Gotcha found while building the template
+
+Rollup (via Vite 7) constant-folded `slot.id` to `0` and deleted a pointer handler when the objects
+were created inside an `Array.from(n, () => ({ id: 0 }))` callback and mutated later. Build such
+pools with a plain `for` loop and `push`. The e2e tests exist partly to catch this class of bug:
+always test the production bundle, not only the dev server.

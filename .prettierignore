@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-e2e
+coverage
+test-results
+playwright-report
+package-lock.json
+packages/core/assets
+packages/core/src/styles
+packages/core/src/audio/instruments.ts
+packages/core/src/audio/core-sfx.ts
+docs
+MASTER_PROMPT.md
+CLAUDE.md
+.claude

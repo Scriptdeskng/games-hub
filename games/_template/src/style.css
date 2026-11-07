@@ -1,0 +1,126 @@
+.ng-play {
+  gap: var(--ng-s-3);
+}
+.arena {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 240px;
+  border-radius: var(--ng-r-lg);
+  background: rgba(0, 0, 0, 0.28);
+  overflow: hidden;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.arena:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+.target {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--size);
+  height: var(--size);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.target.is-on {
+  opacity: 1;
+  pointer-events: auto;
+}
+.target.is-hit,
+.target.is-gone {
+  pointer-events: none;
+}
+.target__in {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.target img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.target__ring {
+  position: absolute;
+  inset: -4px;
+  border: 3px solid var(--ng-accent);
+  border-radius: 50%;
+  opacity: 0.9;
+}
+.target.is-on .target__in {
+  animation: bell-in 180ms var(--ng-ease-spring) both;
+}
+.target.is-on .target__ring {
+  animation: bell-ring var(--life) linear both;
+}
+.target.is-hit .target__in {
+  animation: bell-hit 200ms var(--ng-ease) both;
+}
+.target.is-gone .target__in {
+  animation: bell-gone 180ms linear both;
+}
+.target.is-hit .target__ring,
+.target.is-gone .target__ring {
+  animation: none;
+  opacity: 0;
+}
+@keyframes bell-in {
+  from {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+}
+@keyframes bell-ring {
+  from {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.85);
+    opacity: 0.3;
+  }
+}
+@keyframes bell-hit {
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes bell-gone {
+  to {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+}
+.menu-art {
+  width: min(40vw, 150px);
+  height: auto;
+  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.25));
+}
+.hint {
+  margin: 0;
+  text-align: center;
+  font-weight: 700;
+}
+@media (prefers-reduced-motion: reduce) {
+  .target.is-on .target__ring {
+    animation: none;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .menu-art {
+    display: none;
+  }
+}
