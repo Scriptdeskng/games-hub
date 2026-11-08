@@ -1,0 +1,8 @@
+{
+  "name": "@naija-games/sabi-words",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@naija/core": "*"
+  }
+}

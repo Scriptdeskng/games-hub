@@ -29,6 +29,11 @@
       "slug": "sabi-quiz",
       "title": "Sabi Quiz",
       "deploy": true
+    },
+    {
+      "slug": "sabi-words",
+      "title": "Sabi Words",
+      "deploy": true
     }
   ]
 }
