@@ -1,23 +1,22 @@
-# QA report: naija-whot (round 2 summary, commit c15681f)
+# QA report: naija-whot (round 3, commit 667c242; N-05 fixed afterwards)
 
-Verdict (round 2): FAIL (one major: N-01). Round 3 follows the N-01/N-02/N-03 fixes; this file is overwritten by the round-3 report.
+Verdict: PASS (no blocker or major; N-05 minor found in round 3 and fixed after it).
 
-The round-2 QA agent could not write this file (harness refused), so the lead saved this condensed record of its returned report.
+The QA agent could not write this file (harness refuses report files), so the lead saved this condensed record of its returned report. Round 1 and 2 history: FAIL (W-01..W-14, then N-01).
 
-## Round 2 results
-- Gates on c15681f: lint, typecheck, i18n, test:cov (2 of 2 runs, 600/600), build + prod-gate, size 115.3 KB gzip, e2e 62/62, e2e:extra 62/62, e2e:perf, 10-minute soak (165 rounds, heap slope 3.2 KB/min): all PASS.
-- AI: 0 illegal moves in 17,700 seeded games; 600-turn cap 0.0% in 9,000 games (1/2/3 CPUs x Easy/Medium/Hard); Hard vs Easy 83.7-85.0% (Wilson lower bounds 82.3-83.7%) over 3,000 games per style; Medium vs Easy 73.3%; Hard vs Medium 66.0%; AI reads public information only (0 of 107,844 decisions changed when hidden cards were scrambled).
-- Privacy: portal `start` payload no longer carries the seed; seed from crypto.getRandomValues; test hooks absent from the production bundle.
-- Round 1: W-01..W-14 fixed except W-03 (persona styles) partly; W-04 soak stall explained by host sleep (caffeinate added to scripts/e2e.mjs), not reproduced.
+## Gates (round 3, run alone)
+lint, typecheck, i18n (127 keys en = pcm), test:cov x2 (604/604; Whot src/rules 100% lines, 98.5% branches), build + prod-gate, size 115.6 KB gzip / 3072 KB (core 26.2 KB), e2e 64/64, e2e:extra 64/64, e2e:perf (menu 2.17 s, 59.8 fps avg, worst frame 50 ms, heap 2.41 MB), 10-minute soak (165 rounds, slope 5.1 KB/min vs 100): all PASS.
 
-## Round 2 defects
-- N-01 (major): Aisha's Whot hoard and Mama Nkechi's Whot reserve had no effect at Medium. Fixed after the round (slip path), pending round-3 verification.
-- N-02 (minor): five pcm banter lines unflagged. Fixed after the round.
-- N-03 (minor, not reproduced): one double tap ended in a market draw. Defensive guards plus tests added after the round.
-- N-04 (warn): music and voice are placeholders (human delivery item).
+## Verified defects
+- N-01 (persona Whot hold at Medium): FIXED. Whot-with-alternative at Medium over 4000 games per style: balanced 14.8%, cautious (Mama Nkechi) 6.3%, hoarder (Aisha) 3.0%, aggressive 14.7%.
+- Hard vs Easy, 24 configs, all point estimates >= 81.5%. WARN: cautious mirror Wilson lower bound 79.0% / 79.8% on two seed sets (repo test passes). Medium > Easy 72.6%; Hard > Medium 65.0%.
+- 600-turn cap: 0 of 500 in all 9 CPU-count x difficulty cells. 0 illegal moves (1,800 games).
+- N-02 (pcm banter flags): all 30 banter lines flagged `_review`; 95 `_review` in total.
+- N-03 (double tap): double/triple taps play once, picker opens once, never a draw. Not reproduced originally; guards added.
+- N-05 (minor, new): a refused card tap armed the 450 ms draw lockout. FIXED after this round: lockout arms only on accepted taps and resets at each new human turn; unit and e2e regression tests added; e2e unseeded flakes fixed (setSeed(11)); `npm run e2e` 248/248 four times, e2e:extra 66/66 twice.
 
-## calmLate judgement (QA)
-Defensible as a visible toggle; not yet defensible as the default without human rules sign-off. It applies in 17-21% of 3-CPU games; with it off the 600-turn cap fires in 2.6% (Medium) and 11.4% (Hard). QA recommends default-off, or rebalancing Hard's hand growth, until a Nigerian rules reviewer signs off. Left ON for now; decision for the owner.
+## Not re-run in round 3 (passed in round 2)
+Privacy, cultural, content, portal, single-player.
 
 ## Needs human review
-Rules sign-off (calmLate default and 240-turn threshold, Lagos defaults, stack cap, difficulty-applies-to-all-CPUs); Pidgin/Igbo/Hausa lines ("Omo", "Haba", "Madalla", "Oya", "Ọ dị mma!", calm lines); Mama Nkechi framing; highlife music, voice lines, avatars, thumbnails; check the last rule card clears the fixed "Got it" bar on a real phone; real-device test (7-card fan at 360, double tap, 10-minute thermal run).
+Rules sign-off (calmLate default ON and the 240-turn threshold; Lagos defaults; stack cap; difficulty applies to all CPUs); Pidgin/Igbo/Hausa lines ("Omo", "Haba", "Madalla", "Oya", "Ọ dị mma!"); Mama Nkechi framing; highlife music, 8 voice lines, avatars, thumbnails; last rule card vs the fixed "Got it" bar on a real phone; real-device tests (7-card fan at 360, double tap, 10-minute thermal run).

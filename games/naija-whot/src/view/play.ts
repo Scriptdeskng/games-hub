@@ -204,8 +204,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   const taps = createTapGuard();
   function onTapCard(id: number): void {
     if (!awaiting || over || flow.modalOpen || taps.busy) return;
-    taps.cardTapped();
     if (!legalPlays(state).includes(id)) return illegal('whot.noFit');
+    taps.cardTapped();
     if (ui.hand.selected !== id) {
       ui.hand.select(id);
       // focus follows the selection, so Enter/Space (a native click) plays this card
@@ -218,8 +218,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
   function onFlick(id: number): void {
     if (!awaiting || over || flow.modalOpen || taps.busy) return;
-    taps.cardTapped();
     if (!legalPlays(state).includes(id)) return illegal('whot.noFit');
+    taps.cardTapped();
     ui.hand.select(id);
     void taps.once(() => confirmPlay(id));
   }
@@ -279,6 +279,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       action = { type: 'draw' };
     } else {
       const idle = scope.timeout(() => ui.setStatus(t('whot.nudge')), 9000);
+      taps.reset();
       const chosen = new Promise<Action>((r) => (awaiting = r));
       presenter.render(playable());
       flags();

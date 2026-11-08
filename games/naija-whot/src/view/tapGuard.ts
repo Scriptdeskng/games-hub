@@ -8,6 +8,8 @@ export interface TapGuard {
   cardTapped(): void;
   /** may a market tap draw right now (not right after a card tap)? */
   drawAllowed(): boolean;
+  /** a new human turn began: a tap from the previous turn must not lock this one */
+  reset(): void;
   /** run `fn` unless one is already in flight; resolves when it ends */
   once(fn: () => Promise<void>): Promise<void>;
   readonly busy: boolean;
@@ -22,6 +24,9 @@ export function createTapGuard(now: () => number = () => performance.now()): Tap
   return {
     cardTapped: () => {
       lastCard = now();
+    },
+    reset: () => {
+      lastCard = -Infinity;
     },
     drawAllowed: () => now() - lastCard >= DRAW_AFTER_CARD_MS,
     async once(fn) {

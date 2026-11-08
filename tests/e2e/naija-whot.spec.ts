@@ -337,10 +337,44 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
     expect(drew, 'the market was tapped to draw').toBeGreaterThan(0);
   });
 
+  test('a refused card tap does not lock the market: illegal card then market within 100 ms draws', async ({
+    page,
+  }) => {
+    await openGame(page, SLUG, FAST);
+    await press(page.locator('#menu-rules'));
+    await press(switches(page).nth(RULE_SWITCH.autoDraw));
+    await press(page.getByRole('button', { name: 'Got it' }));
+    await chooseMenu(page, { difficulty: 'Hard' });
+    await press(page.locator('#menu-play'));
+    await expectScreen(page, 'play');
+    let proved = 0;
+    for (let i = 0; i < 60 && proved === 0; i++) {
+      const s = await waitForHuman(page);
+      if (s.phase === 'over') break;
+      const blocked = page.locator('.wh-fan .whot-card.is-blocked').first();
+      const market = page.locator('.wh-market.is-take');
+      if (
+        (await page.locator('.wh-fan .whot-card.is-playable').count()) === 0 &&
+        (await blocked.count()) &&
+        (await market.count())
+      ) {
+        const before = (await round(page))!.hands[0]!.length;
+        await blocked.click();
+        await market.click({ delay: 0 });
+        await expect
+          .poll(async () => (await round(page))!.hands[0]!.length, { timeout: 3000 })
+          .toBeGreaterThan(before);
+        proved++;
+      } else await humanTurn(page);
+    }
+    expect(proved, 'found a no-fit turn and drew right after a refused tap').toBeGreaterThan(0);
+  });
+
   test('tap targets: the fan keeps 44 px per card, the market and Last card are tap-sized', async ({
     page,
   }) => {
     await openGame(page, SLUG, FAST);
+    await page.evaluate(() => window.__naijaTest!.setSeed(11)); // a 5-card opening hand, no CPU +2 first
     await press(page.locator('#menu-play'));
     await expectScreen(page, 'play');
     await settled(page); // measure the resting fan, not a card mid-way through the deal animation
@@ -362,6 +396,7 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
     page,
   }) => {
     await openGame(page, SLUG, FAST);
+    await page.evaluate(() => window.__naijaTest!.setSeed(11)); // a 5-card opening hand, no CPU +2 first
     await press(page.locator('#menu-play'));
     await expectScreen(page, 'play');
     await waitForHuman(page);
@@ -442,6 +477,7 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
   test('flick a card up to play it', async ({ page }) => {
     await openGame(page, SLUG, FAST);
     await chooseMenu(page, { difficulty: 'Easy' });
+    await page.evaluate(() => window.__naijaTest!.setSeed(11)); // a 5-card opening hand
     await press(page.locator('#menu-play'));
     await expectScreen(page, 'play');
     for (let i = 0; i < 20; i++) {

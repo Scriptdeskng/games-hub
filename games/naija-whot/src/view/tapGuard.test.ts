@@ -12,6 +12,24 @@ describe('tap guard', () => {
     t += DRAW_AFTER_CARD_MS;
     expect(g.drawAllowed()).toBe(true);
   });
+  it('a refused card tap never arms the lockout (only accepted taps call cardTapped)', () => {
+    let t = 1000;
+    const g = createTapGuard(() => t);
+    t += 30; // refused tap: caller does not call cardTapped()
+    expect(g.drawAllowed()).toBe(true);
+    g.cardTapped(); // later accepted tap arms it
+    t += 10;
+    expect(g.drawAllowed()).toBe(false);
+  });
+  it('reset() on a new human turn lifts the lockout from the previous turn', () => {
+    let t = 1000;
+    const g = createTapGuard(() => t);
+    g.cardTapped();
+    t += 10;
+    expect(g.drawAllowed()).toBe(false);
+    g.reset();
+    expect(g.drawAllowed()).toBe(true);
+  });
   it('runs a second tap during an in-flight action zero times', async () => {
     const g = createTapGuard(() => 0);
     let runs = 0;
