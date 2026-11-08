@@ -14,6 +14,7 @@ import {
 import type { PublicView } from '../rules/view';
 import { cover, knowledge, pCanAnswer, type Knowledge } from './knowledge';
 import type { Style } from './personas';
+import { TRAITS, easyWeight, lastPlayedShape, weightedPick } from './styles';
 
 /** Every decision is a function of the PUBLIC view plus the CPU's own rng. */
 export type CpuBrain = Brain<PublicView, Action>;
@@ -72,12 +73,21 @@ function bestShape(rest: readonly number[], fallback: ShapeName = 'circle'): Sha
   return best;
 }
 
-/** Easy: any legal move, picked at random. Forgets to call Last card and rarely catches. */
+/**
+ * Easy: any legal move, picked at random but tilted by the persona style (Mama Nkechi rarely leads
+ * with a 2, 5 or 14, Tari likes them, Aisha rarely plays a Whot). Forgets to call Last card.
+ */
 export const easyBrain = (style: Style = 'balanced'): CpuBrain => ({
   decide(v, rng) {
     const c = catchChoice(v, rng, rate('easy', style, 'catch'));
     if (c) return c;
-    return withCall(v, rng.pick(plays(v)), rng, rate('easy', style, 'announce'));
+    const acts = plays(v);
+    const pick = weightedPick(
+      acts,
+      acts.map((a) => easyWeight(v, a, style)),
+      rng,
+    );
+    return withCall(v, pick, rng, rate('easy', style, 'announce'));
   },
 });
 
@@ -96,7 +106,8 @@ const followUps = (v: PublicView, id: number, call: ShapeName | undefined): numb
  * when the next player is nearly out), ordinary cards that leave a follow-up, Whot only when
  * nothing else fits, and the shape it holds most.
  */
-function sensible(v: PublicView, rng: Rng): Action {
+function sensible(v: PublicView, rng: Rng, style: Style): Action {
+  const tr = TRAITS[style];
   const acts = plays(v);
   const cards = acts.map(asPlay).filter((a): a is NonNullable<typeof a> => a !== null);
   if (cards.length === 0) return { type: 'draw' };
@@ -107,10 +118,11 @@ function sensible(v: PublicView, rng: Rng): Action {
     if (c.shape === 'whot') return -50 + (v.pending ? 40 : 0);
     const fu = followUps(v, a.card, undefined);
     if (v.pending) return 50;
-    if (c.n === 14) return 90 + (fu ? 5 : -30);
+    const lead = v.hand.length > tr.leadAbove ? tr.lead : 0;
+    if (c.n === 14) return (v.seats > 2 ? 20 : 90) + (fu ? 5 : -30) + lead;
     if (c.n === 1) return 80 + (fu ? 5 : -40);
-    if (c.n === 8) return (nextLow ? 85 : 60) + (fu ? 3 : 0);
-    if (c.n === 2 || c.n === 5) return nextLow ? 88 : 45;
+    if (c.n === 8) return (nextLow ? 85 : 60) + (fu ? 3 : 0) + (tr.eight > 1 ? lead : 0);
+    if (c.n === 2 || c.n === 5) return (nextLow ? 88 : 45) + lead;
     return fu * 10 + c.n / 4;
   };
   let best = cards[0] as (typeof cards)[number];
@@ -124,7 +136,8 @@ function sensible(v: PublicView, rng: Rng): Action {
   }
   if (cardOf(best.card).shape === 'whot') {
     const rest = v.hand.filter((x) => x !== best.card);
-    return { type: 'play', card: best.card, call: bestShape(rest) };
+    const shape = tr.callLast ? lastPlayedShape(v) : null;
+    return { type: 'play', card: best.card, call: shape ?? bestShape(rest) };
   }
   if (v.pending && acts.some((a) => a.type === 'draw') && bs < 0) return { type: 'draw' };
   return { type: 'play', card: best.card };
@@ -137,7 +150,7 @@ export const mediumBrain = (style: Style = 'balanced'): CpuBrain => ({
     const a = withMistakes(
       rng,
       PROFILES.medium.mistakeRate,
-      () => sensible(v, rng),
+      () => sensible(v, rng, style),
       () => rng.pick(plays(v)),
     );
     return withCall(v, a, rng, rate('medium', style, 'announce'));
@@ -150,15 +163,36 @@ interface Weights {
   attack: number;
   tempo: number;
   risk: number;
-  whotKeep: number;
-  whotFree: number; // play a Whot freely at this many cards or fewer left in hand
+  /** score taken off a Whot played while the hand still has more than `TRAITS.whotFree` cards */
+  hold: number;
   denyShape: number;
+  /** score added to leading with a 2, 5, 14 (and 8 for the aggressive style) */
+  lead: number;
+  /** score added to naming the shape the other player just played */
+  callLast: number;
 }
 const WEIGHTS: Record<Style, Weights> = {
-  balanced: { attack: 1, tempo: 1, risk: 1, whotKeep: 3, whotFree: 2, denyShape: 2.5 },
-  cautious: { attack: 0.75, tempo: 1, risk: 1.35, whotKeep: 3.6, whotFree: 2, denyShape: 2.5 },
-  aggressive: { attack: 1.3, tempo: 1.1, risk: 0.9, whotKeep: 3, whotFree: 2, denyShape: 2.5 },
-  hoarder: { attack: 1, tempo: 1, risk: 1, whotKeep: 4, whotFree: 3, denyShape: 3.2 },
+  balanced: { attack: 1, tempo: 1, risk: 1, hold: 3, denyShape: 2.5, lead: 0, callLast: 0 },
+  cautious: {
+    attack: 0.75,
+    tempo: 1,
+    risk: 1.35,
+    hold: 5,
+    denyShape: 2.5,
+    lead: -1,
+    callLast: 0,
+  },
+  aggressive: {
+    attack: 1.3,
+    tempo: 1.1,
+    risk: 0.9,
+    hold: 3,
+    denyShape: 2.5,
+    lead: 0.6,
+    callLast: 0.5,
+  },
+  // never plays a Whot while another card fits, until three cards or fewer are left
+  hoarder: { attack: 1, tempo: 1, risk: 1, hold: 1000, denyShape: 3.2, lead: 0, callLast: 0 },
 };
 
 function pDefend(v: PublicView, k: Knowledge, seat: number, kind: 'two' | 'three'): number {
@@ -183,7 +217,6 @@ const T = {
   risk: 3,
   hi: 0.1,
   again: 2.2,
-  whot: 3,
   noFu: -2.2,
   mine: 1.1,
   deny: 0.5,
@@ -194,8 +227,10 @@ function scorePlay(
   k: Knowledge,
   a: Extract<Action, { type: 'play' }>,
   w: Weights,
+  style: Style,
 ): number {
   const c = cardOf(a.card);
+  const tr = TRAITS[style];
   const rest = v.hand.filter((x) => x !== a.card);
   if (rest.length === 0) return 1000;
   const seats = v.seats;
@@ -206,13 +241,17 @@ function scorePlay(
   let s = 1;
   let again = false;
   if (c.shape === 'whot') {
-    s -= rest.length > w.whotFree ? T.whot : 0;
+    // held back while the hand is big (never while a penalty is pending: that is a defence)
+    if (!v.pending && v.hand.length > tr.whotFree) s -= w.hold;
     if (v.pending) s += v.pending.count;
   } else if (c.n === 1) {
     again = true;
     s += T.again * w.tempo;
   } else if (c.n === 14) {
-    s += (seats - 1) * 0.95 + (v.rules.marketAgain ? 2.2 * w.tempo : 0);
+    // At a bigger table a General Market feeds everybody and the cards pile up for all: it is
+    // worth much less than at a 2-seat table (where it is a clean free turn). Keeps games short.
+    const feed = seats > 2 ? 0 : (seats - 1) * 0.95;
+    s += feed + (v.rules.marketAgain ? (seats > 2 ? 0.8 : 2.2) * w.tempo : 0);
     again = v.rules.marketAgain;
   } else if (c.n === 8) {
     if (seats === 2) again = true;
@@ -223,6 +262,14 @@ function scorePlay(
     const pd = pDefend(v, k, next, kind);
     s += T.att * w.attack * low * (add * (1 - pd) - pd * add * 0.5) * 0.8;
     if (v.pending) s += v.pending.count * 0.6;
+  }
+  const early = v.hand.length > tr.leadAbove;
+  if (
+    early &&
+    !v.pending &&
+    (c.n === 2 || c.n === 5 || c.n === 14 || (c.n === 8 && tr.eight > 1))
+  ) {
+    s += w.lead;
   }
   if (again) {
     s += fu > 0 ? 0.4 : T.noFu;
@@ -241,6 +288,7 @@ function scorePlay(
     const mine = rest.filter((x) => cardOf(x).shape === a.call).length;
     const oppHas = pCanAnswer(v, k, next, a.call as ShapeName, null);
     s += mine * T.mine + (1 - oppHas) * w.denyShape * T.deny;
+    if (w.callLast && a.call === lastPlayedShape(v)) s += w.callLast;
   } else {
     s += (1 - cover(k, a.card)) * T.risk * w.risk + 0;
     s += c.n * T.hi;
@@ -266,7 +314,7 @@ export const hardBrain = (style: Style = 'balanced'): CpuBrain => ({
     for (const a of acts) {
       const p = asPlay(a);
       const s =
-        (p ? scorePlay(v, k, p, w) : v.pending ? -(v.pending.count as number) : -1) +
+        (p ? scorePlay(v, k, p, w, style) : v.pending ? -(v.pending.count as number) : -1) +
         rng.next() * 0.001;
       if (s > bs) {
         bs = s;

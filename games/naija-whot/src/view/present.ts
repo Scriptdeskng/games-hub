@@ -243,6 +243,11 @@ export function createPresenter(o: PresenterOptions): Presenter {
           case 'announce':
             await onAnnounce(e);
             break;
+          case 'calm':
+            ui.banner(t('whot.calm'), ms(2200));
+            ui.setStatus(t('whot.calm'));
+            await flow.sleep(500);
+            break;
           case 'catch':
             sfx('lastCardCaught');
             ui.banner(t('whot.caught'), ms(1100));

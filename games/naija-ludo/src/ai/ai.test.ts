@@ -164,7 +164,7 @@ describe('every difficulty plays legally', () => {
         }
       }
     }
-  });
+  }, 60000);
 });
 
 describe('fairness: no dice peeking, dice independent of difficulty', () => {

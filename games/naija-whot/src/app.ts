@@ -1,4 +1,5 @@
 import type { Core } from '@naija/core/boot';
+import { randomSeed } from '@naija/core/rng';
 import {
   createScreenHost,
   type Component,
@@ -8,7 +9,7 @@ import {
 import { personaById, pickPersonas } from './ai';
 import { menuMusic, playMusic } from './audio/music';
 import { CPU_COUNTS, handOf, recordResult, scoreFor, type GameState, type Progress } from './rules';
-import { createPlay, HUMAN_ID, type Play, type PlayStats } from './view/play';
+import { createPlay, HUMAN_ID, type Play, type PlayDiag, type PlayStats } from './view/play';
 import {
   createHowToScreen,
   createMenuScreen,
@@ -27,6 +28,24 @@ export interface AutoplayOptions {
   realtime?: boolean;
   /** with `realtime`: how many steps to play live (default 14; a huge number plays the whole game live) */
   liveMoves?: number;
+  /** with `realtime`: wall-clock limit for one round before the guard finishes it (default 120 s) */
+  budgetMs?: number;
+}
+
+/** Test builds only: what the autoplay rounds did, so a slow or stuck round can be explained. */
+export interface AutoplayDiag {
+  rounds: number;
+  maxMs: number;
+  lastMs: number;
+  /** rounds that hit the wall-clock guard: each one is a stall (the flow was held somewhere) */
+  rescues: {
+    ms: number;
+    /** wall-clock time minus monotonic time: how long the machine slept during the round */
+    sleptMs: number;
+    screen: string;
+    hidden: boolean;
+    flow: PlayDiag | null;
+  }[];
 }
 
 /** Test builds only: what window.__naijaTest drives. Not part of the production app object. */
@@ -55,6 +74,7 @@ export function createApp(core: Core, initial: Progress): App {
   let rerender: (() => void) | null = null;
   let waiters: ((s: GameState) => void)[] = [];
   /** test builds only: `?tempo=0.2` speeds every animation and CPU pause up */
+  const diag: AutoplayDiag = { rounds: 0, maxMs: 0, lastMs: 0, rescues: [] };
   const urlTempo = __NAIJA_TEST__
     ? Number(new URLSearchParams(location.search).get('tempo')) || undefined
     : undefined;
@@ -63,7 +83,7 @@ export function createApp(core: Core, initial: Progress): App {
     progress = next;
     void core.portal.saveProgress(progress);
   };
-  const nextSeed = (): number => seedOverride ?? Date.now() & 0x7fffffff;
+  const nextSeed = (): number => seedOverride ?? randomSeed();
   const show = (id: string, c: Component, again: (() => void) | null): void => {
     rerender = again;
     host.show(id, c);
@@ -147,7 +167,6 @@ export function createApp(core: Core, initial: Progress): App {
     core.portal.emit('start', {
       level: d,
       cpus: x.cpus ?? progress.cpuCount,
-      seed: built.seed,
     });
     // the play screen keeps its own state; re-rendering mid-game would lose it
     show('play', play, null);
@@ -204,6 +223,7 @@ export function createApp(core: Core, initial: Progress): App {
           plays: progress.plays,
           streak: progress.streak,
           banter: line,
+          endedBy: s.endedBy,
           onReplay: () => startRound(currentDifficulty),
           onMenu: showMenu,
         }),
@@ -212,6 +232,43 @@ export function createApp(core: Core, initial: Progress): App {
     };
     render();
   }
+
+  /**
+   * Test builds: a round must always end. If `ended` has not settled after `budgetMs`, record
+   * what the flow was doing (paused dialog? tab hidden? whose turn?) and play the rest at once;
+   * with no round left to finish, reject. A normal round takes seconds, so this only ever fires
+   * on a real stall, and the soak fails on every rescue.
+   */
+  const guarded = __NAIJA_TEST__
+    ? (ended: Promise<GameState>, budgetMs: number): Promise<GameState> => {
+        const t0 = performance.now();
+        const wall0 = Date.now();
+        let timer = 0;
+        const rescue = new Promise<GameState>((resolve, reject) => {
+          timer = window.setTimeout(() => {
+            const live = play;
+            diag.rescues.push({
+              ms: Math.round(performance.now() - t0),
+              sleptMs: Math.max(0, Math.round(Date.now() - wall0 - (performance.now() - t0))),
+              screen: host.screenId,
+              hidden: document.hidden,
+              flow: live?.diag?.() ?? null,
+            });
+            const s = live?.fastForward?.();
+            if (!live || !s)
+              return reject(new Error('autoplay round stalled and has no game to finish'));
+            finishRound(s, live.stats());
+            resolve(s);
+          }, budgetMs);
+        });
+        return Promise.race([ended, rescue]).finally(() => {
+          window.clearTimeout(timer);
+          diag.rounds++;
+          diag.lastMs = Math.round(performance.now() - t0);
+          diag.maxMs = Math.max(diag.maxMs, diag.lastMs);
+        });
+      }
+    : undefined;
 
   // Test-only: `__NAIJA_TEST__` is false in production builds, so this whole function (and the
   // word "autoplay") is removed from the shipped bundle. scripts/prod-gate.mjs enforces it.
@@ -230,7 +287,7 @@ export function createApp(core: Core, initial: Progress): App {
             cpus,
             test: { tempo: urlTempo ?? 0.25, bot: true, liveMoves: opts.liveMoves ?? 14 },
           });
-          return ended;
+          return (guarded as NonNullable<typeof guarded>)(ended, opts.budgetMs ?? 120_000);
         }
         // instant: look for the first seed (from the current one) that gives the wanted result
         const wantWin = opts.win !== false;
@@ -261,6 +318,7 @@ export function createApp(core: Core, initial: Progress): App {
             seed: seedOverride,
             progress,
             round: play ? play.snapshot() : null,
+            autoplay: diag,
           }),
           setSeed(n) {
             seedOverride = n >>> 0;

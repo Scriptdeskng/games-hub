@@ -108,6 +108,7 @@ const TOGGLES: Flag[] = [
   'lastCard',
   'semiLast',
   'marketEnds',
+  'calmLate',
   'autoDraw',
   'fastPlay',
 ];
@@ -195,13 +196,15 @@ export interface ResultsScreenOptions {
   plays: number;
   streak: number;
   banter: string;
+  /** how the game ended when it was not by an empty hand: a note under the title */
+  endedBy: 'empty' | 'market' | 'cap' | null;
   onReplay(): void;
   onMenu(): void;
 }
 
 export function createResultsScreen(core: Core, o: ResultsScreenOptions): Component {
   const { t } = core;
-  return createResults(core, {
+  const results = createResults(core, {
     won: o.won,
     score: o.score,
     best: o.best,
@@ -216,4 +219,14 @@ export function createResultsScreen(core: Core, o: ResultsScreenOptions): Compon
     onReplay: o.onReplay,
     onMenu: o.onMenu,
   });
+  // a game that ended on the count-up (long game or empty market) says so: nobody emptied a hand
+  if (o.endedBy === 'cap' || o.endedBy === 'market') {
+    const note = h('p', {
+      class: 'ng-muted wh-endnote',
+      role: 'note',
+      text: t(`results.endedBy.${o.endedBy}`),
+    });
+    results.el.querySelector('.ng-results__stats')?.before(note);
+  }
+  return results;
 }

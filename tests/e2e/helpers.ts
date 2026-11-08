@@ -38,6 +38,37 @@ export const counters = (
 export const eventTypes = (page: Page): Promise<string[]> =>
   page.evaluate(() => window.__naijaTest!.events().map((e) => e.type));
 
+/**
+ * The `start` events the portal received. They must never carry the game seed: the seed fixes
+ * every shuffle and roll, so anyone who sees it can recompute the hidden cards.
+ */
+export const startPayloads = (page: Page): Promise<unknown[]> =>
+  page.evaluate(() =>
+    window
+      .__naijaTest!.events()
+      .filter((e) => e.type === 'start')
+      .map((e) => e.data),
+  );
+
+export async function expectNoSeedInStart(page: Page): Promise<void> {
+  const starts = await startPayloads(page);
+  expect(starts.length).toBeGreaterThan(0);
+  for (const data of starts) {
+    expect(JSON.stringify(data ?? {}).toLowerCase()).not.toContain('seed');
+  }
+}
+
+/** Wait for every finite animation (deal, entrance) to end: geometry is then the resting layout. */
+export const settled = (page: Page): Promise<unknown> =>
+  page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
+
 const touchPages = new WeakMap<Page, boolean>();
 
 /** Touch tap on touch projects, mouse click on the desktop project. */

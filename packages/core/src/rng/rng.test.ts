@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { createRng, seedFromString } from './index';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { createRng, randomSeed, seedFromString } from './index';
 
 describe('rng', () => {
   it('same seed gives the same sequence; different seeds differ', () => {
@@ -53,5 +53,39 @@ describe('rng', () => {
   it('seedFromString is stable', () => {
     expect(seedFromString('2026-11-07')).toBe(seedFromString('2026-11-07'));
     expect(seedFromString('a')).not.toBe(seedFromString('b'));
+  });
+});
+
+describe('randomSeed', () => {
+  afterEach(() => vi.unstubAllGlobals());
+  it('is a 31-bit integer that does not follow the clock', () => {
+    const seeds = new Set(Array.from({ length: 50 }, () => randomSeed()));
+    expect(seeds.size).toBeGreaterThan(45);
+    for (const s of seeds) {
+      expect(Number.isInteger(s)).toBe(true);
+      expect(s).toBeGreaterThanOrEqual(0);
+      expect(s).toBeLessThanOrEqual(0x7fffffff);
+    }
+    vi.useFakeTimers();
+    vi.setSystemTime(1_700_000_000_000);
+    const a = randomSeed();
+    const b = randomSeed();
+    vi.useRealTimers();
+    expect(a).not.toBe(b);
+  });
+  it('reads crypto.getRandomValues when it exists', () => {
+    const getRandomValues = vi.fn((a: Uint32Array) => {
+      a[0] = 0xffffffff;
+      return a;
+    });
+    vi.stubGlobal('crypto', { getRandomValues });
+    expect(randomSeed()).toBe(0x7fffffff);
+    expect(getRandomValues).toHaveBeenCalledTimes(1);
+  });
+  it('falls back to Math.random without Web Crypto', () => {
+    vi.stubGlobal('crypto', undefined);
+    vi.spyOn(Math, 'random').mockReturnValue(0.5);
+    expect(randomSeed()).toBe(0x40000000);
+    vi.restoreAllMocks();
   });
 });

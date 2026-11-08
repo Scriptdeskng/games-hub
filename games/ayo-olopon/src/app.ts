@@ -1,4 +1,5 @@
 import type { Core } from '@naija/core/boot';
+import { randomSeed } from '@naija/core/rng';
 import {
   createScreenHost,
   DIFFICULTIES,
@@ -61,7 +62,7 @@ export function createApp(core: Core, initial: Progress): App {
     progress = next;
     void core.portal.saveProgress(progress);
   };
-  const nextSeed = (): number => seedOverride ?? Date.now() & 0x7fffffff;
+  const nextSeed = (): number => seedOverride ?? randomSeed();
   const show = (id: string, c: Component, again: (() => void) | null): void => {
     rerender = again;
     host.show(id, c);
@@ -131,7 +132,7 @@ export function createApp(core: Core, initial: Progress): App {
     roundOpen = true;
     save({ ...progress, games: progress.games + 1 });
     core.audio.playMusic(playMusic);
-    core.portal.emit('start', { level: d, seed: built.seed });
+    core.portal.emit('start', { level: d });
     // the play screen keeps its own state; re-rendering mid-game would lose it
     show('play', play, null);
     play.start();

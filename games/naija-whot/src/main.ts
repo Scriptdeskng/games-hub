@@ -2,6 +2,7 @@ import '@naija/core/ui-kit';
 import '@naija/core/board-kit';
 import '@naija/core/ai-kit';
 import '../assets/whot-art.css';
+import './screens.css';
 import './style.css';
 import { boot } from '@naija/core/boot';
 import { runLoader } from '@naija/core/loader';

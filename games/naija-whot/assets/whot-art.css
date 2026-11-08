@@ -47,7 +47,7 @@
   transform: translateY(-22px) scale(1.06);
   z-index: 3;
 }
-/* fan: children overlap by --whot-step, so only the corner index shows. 7 cards x 46 px + 64 px = 340 px. */
+/* fan: children overlap by --whot-step, so only the corner index shows. 7 cards x 46 px + 64 px = 340 px (44 px steps below 380 px wide: see style.css). */
 .whot-fan {
   --whot-step: 46px;
   display: flex;

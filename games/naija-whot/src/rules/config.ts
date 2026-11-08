@@ -23,6 +23,13 @@ export interface Rules {
   semiLast: boolean;
   /** Count-up variant: the game ends when the market (draw pile) runs out; the lowest hand wins. */
   marketEnds: boolean;
+  /**
+   * Calm late game (default on): a very long game cannot go on for ever, so once `CALM_TURN`
+   * turns have been played, a 2, 5 or 14 played on an ordinary card is just a card (no new
+   * penalty, no General Market). A penalty already running still plays out. 1, 8 and Whot are
+   * unchanged. Turn it off for the classic, never-calming game (the 600-turn safety net remains).
+   */
+  calmLate: boolean;
 }
 
 export const DEFAULT_RULES: Readonly<Rules> = {
@@ -34,6 +41,7 @@ export const DEFAULT_RULES: Readonly<Rules> = {
   lastCard: true,
   semiLast: false,
   marketEnds: false,
+  calmLate: true,
 };
 
 export const RULE_KEYS = Object.keys(DEFAULT_RULES) as (keyof Rules)[];
@@ -56,3 +64,5 @@ export const CPU_COUNTS: readonly number[] = [1, 2, 3];
 export const MAX_CPUS = 3;
 /** Safety net: a game that is still going after this many turns ends by count-up. */
 export const MAX_TURNS = 600;
+/** With the `calmLate` rule, power cards 2, 5 and 14 stop hurting after this many turns. */
+export const CALM_TURN = 240;

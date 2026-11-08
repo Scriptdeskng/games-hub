@@ -25,7 +25,10 @@ export interface Planner {
   /** Spend the re-roll on this roll? */
   shouldReroll(pos: number, turnIndex: number, roll: number): boolean;
   readonly period: number;
-  /** Value-iteration sweeps the solve needed (a deterministic cost measure, for tests). */
+  /**
+   * TEST-ONLY instrumentation: value-iteration sweeps the solve needed (a deterministic cost
+   * measure). Nothing in the game reads it; it only lets ai.test.ts bound the solve's cost.
+   */
   readonly sweeps: number;
 }
 

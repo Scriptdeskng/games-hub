@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import {
   counters,
   eventTypes,
+  expectNoSeedInStart,
   expectScreen,
   inViewport,
   layoutProblems,
@@ -99,6 +100,7 @@ test.describe('snakes-ladders: full playthrough', () => {
     const types = await eventTypes(page);
     expect(types[0]).toBe('ready');
     expect(types[1]).toBe('start');
+    await expectNoSeedInStart(page);
     let open = false;
     types.slice(1).forEach((type, i) => {
       if (type === 'start') {

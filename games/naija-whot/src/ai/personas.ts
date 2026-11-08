@@ -6,12 +6,14 @@ import tari from '@naija/core/assets/avatars/tari.svg?url';
 /**
  * The CPU characters of this game (asset brief section 8). A persona gives a CPU its name, its
  * think delay, its banter and its play STYLE. The player chooses the difficulty and it applies to
- * every CPU; the style only tilts how a CPU of that difficulty plays.
+ * every CPU; the style tilts how a CPU of that difficulty plays, at Easy, Medium and Hard alike
+ * (the traits live in `styles.ts`, and ai.test.ts measures the difference):
  *
- * - Mama Nkechi (Igbo, Enugu): cautious. Plays safe cards first, avoids leading with 2, 5 and 14,
- *   keeps a Whot in reserve. Think 0.8 s. Default seat 1 (Easy character).
- * - Tari (Ijaw, Port Harcourt): aggressive. Attacks with 2, 5, 14 and 8 early. Think 0.4 s.
- * - Aisha (Hausa, Kaduna): hoards Whot until three cards or fewer, counts cards. Think 0.7 s.
+ * - Mama Nkechi (Igbo, Enugu): cautious. Rarely leads with 2, 5 or 14, keeps a Whot back while her
+ *   hand is bigger than two cards. Think 0.8 s. Default seat 1.
+ * - Tari (Ijaw, Port Harcourt): aggressive. Leads with 2, 5, 14 and 8 while the hand is big, and
+ *   names the shape the other player just played. Think 0.4 s.
+ * - Aisha (Hausa, Kaduna): hoards Whot until she has three cards or fewer. Think 0.7 s.
  *
  * Banter keys are `whot.banter.<persona>.<event>`; events: play, pickTwo, gotPickTwo, market,
  * suspension, holdOn, whotCall, lastCard, win, lose.

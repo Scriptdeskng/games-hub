@@ -3,9 +3,11 @@ import {
   contrastOf,
   counters,
   eventTypes,
+  expectNoSeedInStart,
   expectScreen,
   inViewport,
   layoutProblems,
+  settled,
   openGame,
   press,
   stickyOverlaps,
@@ -35,7 +37,7 @@ const state = (
   };
 }> => page.evaluate(() => window.__naijaTest!.getState() as never);
 const switches = (page: Page): ReturnType<Page['getByRole']> => page.getByRole('switch');
-const RULE_SWITCH = { autoDraw: 8, lastCard: 5 } as const;
+const RULE_SWITCH = { autoDraw: 9, lastCard: 5, marketEnds: 7 } as const;
 
 test.setTimeout(120_000);
 
@@ -58,7 +60,9 @@ test.describe('naija-whot: full playthrough', () => {
     // every house rule is a switch with the Lagos defaults
     await press(page.locator('#menu-rules'));
     await expectScreen(page, 'rules');
-    await expect(switches(page)).toHaveCount(10);
+    await expect(switches(page)).toHaveCount(11);
+    // stackTwo, defendFive, whotOnPending, finishOnSpecial, marketAgain, lastCard, semiLast,
+    // marketEnds, calmLate, autoDraw, fastPlay
     const defaults = [
       'true',
       'true',
@@ -68,6 +72,7 @@ test.describe('naija-whot: full playthrough', () => {
       'true',
       'false',
       'false',
+      'true',
       'true',
       'false',
     ];
@@ -121,6 +126,7 @@ test.describe('naija-whot: full playthrough', () => {
     const types = await eventTypes(page);
     expect(types[0]).toBe('ready');
     expect(types[1]).toBe('start');
+    await expectNoSeedInStart(page);
     let open = false;
     types.slice(1).forEach((type, i) => {
       if (type === 'start') {
@@ -147,6 +153,8 @@ test.describe('naija-whot: full playthrough', () => {
       const watch = watchErrors(page);
       await openGame(page, SLUG, FAST);
       await chooseMenu(page, { difficulty: 'Hard', cpus });
+      // a fixed deal (seeds are random per game otherwise): this one is still running after 4 turns
+      await page.evaluate(() => window.__naijaTest!.setSeed(11));
       await press(page.locator('#menu-play'));
       await expectScreen(page, 'play');
       await expect(page.locator('.wh-seat')).toHaveCount(cpus);
@@ -296,6 +304,7 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
     await openGame(page, SLUG, FAST);
     await press(page.locator('#menu-play'));
     await expectScreen(page, 'play');
+    await settled(page); // measure the resting fan, not a card mid-way through the deal animation
     const cards = await page.locator('.wh-fan .whot-card').all();
     expect(cards.length).toBe(5);
     const boxes = await Promise.all(cards.map((c) => c.boundingBox()));
@@ -308,6 +317,87 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
       expect(box.width, sel).toBeGreaterThanOrEqual(43.5);
       expect(box.height, sel).toBeGreaterThanOrEqual(43.5);
     }
+  });
+
+  test('a 7-card fan fits the lane without clipping, every card keeping a 44 px strip', async ({
+    page,
+  }) => {
+    await openGame(page, SLUG, FAST);
+    await press(page.locator('#menu-play'));
+    await expectScreen(page, 'play');
+    await waitForHuman(page);
+    await settled(page);
+    // The deal is 5 cards; a 7-card hand (after a penalty) lays out the same way, so grow the real
+    // fan to 7 real card buttons by cloning, then measure the real CSS (nothing else touches it).
+    await page.evaluate(() => {
+      const fan = document.querySelector('.wh-fan') as HTMLElement;
+      const have = fan.querySelectorAll('.whot-card').length;
+      const src = fan.querySelector('.whot-card') as HTMLElement;
+      for (let i = have; i < 7; i++) fan.append(src.cloneNode(true));
+    });
+    const fan = page.locator('.wh-fan');
+    const cards = await page.locator('.wh-fan .whot-card').all();
+    expect(cards.length).toBe(7);
+    const box = (await fan.boundingBox())!;
+    const fit = await fan.evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+    expect(fit.scroll, 'no horizontal scroll for 7 cards').toBeLessThanOrEqual(fit.client);
+    const boxes = await Promise.all(cards.map((c) => c.boundingBox()));
+    for (let i = 0; i < boxes.length - 1; i++) {
+      expect(boxes[i + 1]!.x - boxes[i]!.x, `strip ${i}`).toBeGreaterThanOrEqual(44);
+    }
+    const first = boxes[0]!;
+    const last = boxes[boxes.length - 1]!;
+    expect(first.x, 'first card inside the lane').toBeGreaterThanOrEqual(box.x - 0.5);
+    expect(last.x + last.width, 'last card fully inside the lane').toBeLessThanOrEqual(
+      box.x + box.width + 0.5,
+    );
+    // the strip of every card is what a thumb hits: the element under it is that card
+    const hits = await page.evaluate(() => {
+      const list = [...document.querySelectorAll<HTMLElement>('.wh-fan .whot-card')];
+      return list.map((c, i) => {
+        const r = c.getBoundingClientRect();
+        const next = list[i + 1]?.getBoundingClientRect();
+        const x = next ? (r.left + next.left) / 2 : r.left + r.width / 2;
+        const el = document.elementFromPoint(x, r.top + r.height / 2);
+        return el?.closest('.whot-card') === c;
+      });
+    });
+    expect(hits).toEqual(Array(7).fill(true));
+  });
+
+  test('a game that ends on the count-up says why on the results screen', async ({ page }) => {
+    await openGame(page, SLUG, FAST);
+    await press(page.locator('#menu-rules'));
+    await press(switches(page).nth(RULE_SWITCH.marketEnds));
+    await expect(switches(page).nth(RULE_SWITCH.marketEnds)).toHaveAttribute(
+      'aria-checked',
+      'true',
+    );
+    await press(page.getByRole('button', { name: 'Got it' }));
+    await expectScreen(page, 'menu');
+    let seenMarket = false;
+    let seenEmpty = false;
+    for (let i = 0; i < 12 && !(seenMarket && seenEmpty); i++) {
+      // fixed seeds: the same games every run (no flake on which way a random game ends)
+      const s = (await page.evaluate(
+        ([seed, win]) => {
+          window.__naijaTest!.setSeed(seed as number);
+          return window.__naijaTest!.autoplay({ cpus: 3, difficulty: 'easy', win: win as boolean });
+        },
+        [1000 + i * 97, i % 2 === 0],
+      )) as { endedBy: string };
+      await expectScreen(page, 'results');
+      const note = page.locator('.wh-endnote');
+      if (s.endedBy === 'market') {
+        seenMarket = true;
+        await expect(note).toHaveText('The market ran out, so the lowest hand total won.');
+      } else if (s.endedBy === 'empty') {
+        seenEmpty = true;
+        await expect(note).toHaveCount(0);
+      }
+    }
+    expect(seenMarket, 'a count-up game was found').toBe(true);
+    expect(seenEmpty, 'an empty-hand game was found').toBe(true);
   });
 
   test('flick a card up to play it', async ({ page }) => {

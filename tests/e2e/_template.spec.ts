@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import {
   counters,
   eventTypes,
+  expectNoSeedInStart,
   expectScreen,
   inViewport,
   layoutProblems,
@@ -83,6 +84,7 @@ test.describe('_template: full playthrough', () => {
     // before the end of a won round); the abandoned rounds end with quit
     const types = await eventTypes(page);
     expect(types.slice(0, 3)).toEqual(['ready', 'start', 'score']);
+    await expectNoSeedInStart(page);
     let open = false;
     types.slice(1).forEach((type, i) => {
       if (type === 'start') {

@@ -3,7 +3,7 @@
 //        npm run e2e:perf -- [slug...]   (4x CPU + Fast 3G: time to menu, fps, heap)
 //        npm run e2e:soak -- [slug...]   (SOAK_MINUTES, default 10; SOAK_SAMPLE_S, default 30)
 // Builds the requested games in test mode (dist-e2e/) first, then runs Playwright.
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { listGames, ROOT } from './lib.mjs';
@@ -31,6 +31,20 @@ for (const s of slugs) {
   }
 }
 const targets = slugs.length ? slugs : all;
+
+// A laptop that idles into macOS "Maintenance Sleep" suspends every process for about 15 minutes
+// (pmset log: `Sleep ... 933 secs`). That froze a 10-minute soak for 15.7 minutes and made timing
+// tests fail with no defect in the game, so hold the machine awake for as long as this run lives.
+if (process.platform === 'darwin') {
+  try {
+    spawn('caffeinate', ['-i', '-m', '-s', '-w', String(process.pid)], {
+      stdio: 'ignore',
+      detached: true,
+    }).unref();
+  } catch {
+    /* no caffeinate: nothing to hold */
+  }
+}
 const run = (cmd, a, env = {}) =>
   spawnSync(cmd, a, { cwd: ROOT, stdio: 'inherit', env: { ...process.env, ...env } });
 

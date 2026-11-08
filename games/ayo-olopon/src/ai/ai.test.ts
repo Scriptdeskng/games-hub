@@ -205,7 +205,7 @@ describe('Hard search', () => {
     expect(mean).toBeGreaterThanOrEqual(6);
     expect(Math.max(...depths)).toBeLessThanOrEqual(8);
     expect(worst).toBeLessThanOrEqual(HARD_SEARCH.maxNodes);
-  });
+  }, 60000);
   it('is cheap enough for a 4x throttled phone: one decision is a few milliseconds', () => {
     const s = createGame({
       seed: 5,
@@ -220,12 +220,15 @@ describe('Hard search', () => {
       times.push(performance.now() - t);
     }
     times.sort((a, b) => a - b);
-    // Smoke check only: measured 2-4 ms on a laptop; the 120 ms bound is loose on purpose because
-    // coverage instrumentation and busy CI make this loop many times slower, so it cannot catch a
-    // 5-10x regression. The real guard on decision cost is the node-budget test above/below
-    // (a deterministic node count, not a clock). No browser long task is measured in e2e.
-    expect(times[Math.floor(times.length * 0.9)]).toBeLessThan(120);
-  });
+    // Measured 2-4 ms natively; the 120 ms p90 bound (kept as it was) has 30x slack for a busy
+    // machine. Under v8 coverage (NAIJA_COVERAGE=1, set by vitest.config.ts) instrumented code
+    // measured 156 ms p90 with parallel workers, so only that wall-clock bound is skipped there;
+    // the deterministic guard on decision cost is the node-budget test above (a node count).
+    if (process.env.NAIJA_COVERAGE !== '1') {
+      expect(times[Math.floor(times.length * 0.9)]).toBeLessThan(120);
+    }
+    expect(times).toHaveLength(25);
+  }, 60_000);
   it('stops deepening when the node budget runs out, and still answers', () => {
     const s = createGame({
       seed: 5,

@@ -52,3 +52,16 @@ export function seedFromString(s: string): number {
   for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
   return h >>> 0;
 }
+
+/**
+ * A fresh, unpredictable 31-bit seed for a new game (`crypto.getRandomValues`). Never use the clock:
+ * a timestamp seed lets anybody who knows roughly when a game started rebuild every hidden card.
+ * Falls back to `Math.random` only where the Web Crypto API is missing.
+ */
+export function randomSeed(): number {
+  const c = (globalThis as { crypto?: Crypto }).crypto;
+  if (c && typeof c.getRandomValues === 'function') {
+    return c.getRandomValues(new Uint32Array(1))[0]! & 0x7fffffff;
+  }
+  return Math.floor(Math.random() * 0x80000000);
+}

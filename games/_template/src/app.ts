@@ -1,5 +1,5 @@
 import type { Core } from '@naija/core/boot';
-import { createRng } from '@naija/core/rng';
+import { createRng, randomSeed } from '@naija/core/rng';
 import {
   createDifficultyPicker,
   createHowToPlay,
@@ -58,7 +58,7 @@ export function createApp(core: Core, initial: Progress): App {
   let waiters: ((s: GameState) => void)[] = [];
   const { t } = core;
 
-  const nextSeed = (): number => seedOverride ?? Date.now() & 0x7fffffff;
+  const nextSeed = (): number => seedOverride ?? randomSeed();
   const show = (id: string, c: Component, again: () => void): void => {
     rerender = again;
     host.show(id, c);
@@ -125,7 +125,7 @@ export function createApp(core: Core, initial: Progress): App {
       onRestart: () => startRound(difficulty),
       onQuit: showMenu,
     });
-    core.portal.emit('start', { level: d, seed });
+    core.portal.emit('start', { level: d });
     // The play screen keeps its own state; re-rendering mid-round would lose it.
     show('play', play, () => undefined);
     play.start();

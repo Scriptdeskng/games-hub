@@ -1,4 +1,5 @@
 import type { Core } from '@naija/core/boot';
+import { randomSeed } from '@naija/core/rng';
 import {
   createScreenHost,
   type Component,
@@ -75,7 +76,7 @@ export function createApp(core: Core, initial: Progress): App {
     progress = next;
     void core.portal.saveProgress(progress);
   };
-  const nextSeed = (): number => seedOverride ?? Date.now() & 0x7fffffff;
+  const nextSeed = (): number => seedOverride ?? randomSeed();
   const show = (id: string, c: Component, again: (() => void) | null): void => {
     rerender = again;
     host.show(id, c);
@@ -164,7 +165,6 @@ export function createApp(core: Core, initial: Progress): App {
       level: d,
       cpus: x.cpus ?? progress.cpuCount,
       quick: x.quick ?? progress.rules.quick,
-      seed: built.seed,
     });
     // the play screen keeps its own state; re-rendering mid-game would lose it
     show('play', play, null);

@@ -3,8 +3,11 @@ import path from 'node:path';
 import { createRng } from '@naija/core/rng';
 import { DIFFICULTIES, type Difficulty } from '@naija/core/ui-kit';
 import { describe, expect, it } from 'vitest';
+import { cardOf } from '../rules/cards';
 import { CPU_COUNTS, RULE_KEYS, DEFAULT_RULES } from '../rules/config';
 import { apply, createGame, isOver, type GameState } from '../rules/engine';
+import { legalActions } from '../rules/legal';
+import type { PublicView } from '../rules/view';
 import { SEATS } from '../rules/testkit';
 import { viewFor } from '../rules/view';
 import {
@@ -16,7 +19,9 @@ import {
   personaById,
 } from './index';
 import { knowledge, pAnyOf } from './knowledge';
+import { lastPlayedShape } from './styles';
 import { headToHead, simulate, wilson } from './sim';
+import type { Style } from './personas';
 
 const GAMES = 1000;
 const lowerBound = (a: Difficulty, rest: Difficulty[], o = {}): number =>
@@ -27,16 +32,22 @@ const SIM = { timeout: 120_000 };
 
 describe('difficulty: Hard beats Medium beats Easy (seeded simulations)', SIM, () => {
   it(`Hard beats Easy at least 80% (Wilson lower bound) over ${GAMES} games, every persona style`, () => {
+    // Hard in each style against a plain Easy, and against an Easy of the same style (the real table)
     for (const styles of [
       undefined,
       ['cautious', 'balanced'],
       ['aggressive', 'balanced'],
       ['hoarder', 'balanced'],
+      ['cautious', 'cautious'],
+      ['aggressive', 'aggressive'],
+      ['hoarder', 'hoarder'],
     ] as const) {
       const m = headToHead('hard', ['easy'], GAMES, { styles });
-      expect(m.lo, `hard (${styles?.[0] ?? 'balanced'}) vs easy: ${m.rate}`).toBeGreaterThanOrEqual(
-        0.8,
-      );
+      expect(m.games).toBeGreaterThanOrEqual(1000);
+      expect(
+        m.lo,
+        `hard (${styles?.join(' vs ') ?? 'balanced'}) vs easy: ${m.rate}`,
+      ).toBeGreaterThanOrEqual(0.8);
       expect(m.illegal).toBe(0);
     }
   });
@@ -154,6 +165,169 @@ describe('the AI only uses public information', () => {
     expect(pAnyOf(10, 10, 3)).toBe(1);
     expect(pAnyOf(40, 5, 5)).toBeGreaterThan(0.3);
     expect(pAnyOf(40, 5, 5)).toBeLessThan(0.6);
+  });
+});
+
+describe('no game ends on the 600-turn cap (W-01)', SIM, () => {
+  // 500 seeded games per table size and difficulty; the calm late game ends long games well before 600
+  for (const cpus of CPU_COUNTS) {
+    for (const d of DIFFICULTIES) {
+      it(`${cpus} CPU(s), everybody ${d}: the cap fires in at most 1% of games`, () => {
+        let cap = 0;
+        const games = 500;
+        for (let i = 0; i < games; i++) {
+          const r = simulate({
+            seed: 5000 + i,
+            seats: Array<Difficulty>(cpus + 1).fill(d),
+            first: i % (cpus + 1),
+          });
+          if (r.state.endedBy === 'cap') cap++;
+        }
+        expect(cap / games).toBeLessThanOrEqual(0.01);
+      });
+    }
+  }
+  it('with the calm rule off, 3-CPU Hard games still hit the cap (the rule is what fixes it)', () => {
+    let cap = 0;
+    for (let i = 0; i < 200; i++) {
+      const r = simulate({
+        seed: 5000 + i,
+        seats: ['hard', 'hard', 'hard', 'hard'],
+        rules: { calmLate: false },
+        first: i % 4,
+      });
+      if (r.state.endedBy === 'cap') cap++;
+    }
+    expect(cap).toBeGreaterThan(8); // measured: 14% of games
+  });
+});
+
+/** Every decision of 150 seeded Medium games (3 seats): the same states for every style and level. */
+function sampleViews(): PublicView[] {
+  const views: PublicView[] = [];
+  for (let i = 0; i < 150; i++) {
+    let s = createGame({ seed: 900 + i, human: { id: 'a', name: 'A' }, cpus: SEATS(2) });
+    const b = brainsFor('balanced').medium;
+    const r = createRng(i + 1);
+    while (!isOver(s)) {
+      const v = viewFor(s, s.turns.index);
+      views.push(v);
+      s = apply(s, b.decide(v, r));
+    }
+  }
+  return views;
+}
+
+describe('persona styles are real inputs at every difficulty (W-03)', SIM, () => {
+  const views = sampleViews();
+  const isPower = (v: PublicView, card: number): boolean =>
+    !v.pending && [2, 5, 14].includes(cardOf(card).n);
+  /** share of states where a power card AND a plain card fit and the CPU led with the power card */
+  const leadRate = (d: Difficulty, style: Style): number => {
+    const rng = createRng(7);
+    let n = 0;
+    let lead = 0;
+    for (const v of views) {
+      const plays = legalActions(v, v.hand).flatMap((a) => (a.type === 'play' ? [a] : []));
+      const power = plays.some((a) => isPower(v, a.card));
+      const plain = plays.some((a) => !isPower(v, a.card) && cardOf(a.card).shape !== 'whot');
+      if (!power || !plain) continue;
+      n++;
+      const a = brainsFor(style)[d].decide(v, rng);
+      if (a.type === 'play' && isPower(v, a.card)) lead++;
+    }
+    expect(n).toBeGreaterThan(1500);
+    return lead / n;
+  };
+  /** share of states (hand > 3, no pick pending) where a Whot and another card fit and Whot was played */
+  const whotRate = (d: Difficulty, style: Style): number => {
+    const rng = createRng(7);
+    let n = 0;
+    let whot = 0;
+    for (const v of views) {
+      if (v.pending || v.hand.length <= 3) continue;
+      const plays = legalActions(v, v.hand).flatMap((a) => (a.type === 'play' ? [a] : []));
+      const hasWhot = plays.some((a) => cardOf(a.card).shape === 'whot');
+      if (!hasWhot || !plays.some((a) => cardOf(a.card).shape !== 'whot')) continue;
+      n++;
+      const a = brainsFor(style)[d].decide(v, rng);
+      if (a.type === 'play' && cardOf(a.card).shape === 'whot') whot++;
+    }
+    expect(n).toBeGreaterThan(1000);
+    return whot / n;
+  };
+
+  it.each(DIFFICULTIES)('%s: Mama Nkechi leads with 2, 5 and 14 far less than Tari', (d) => {
+    const cautious = leadRate(d, 'cautious');
+    const balanced = leadRate(d, 'balanced');
+    const aggressive = leadRate(d, 'aggressive');
+    expect(cautious, `cautious ${cautious} balanced ${balanced}`).toBeLessThan(balanced - 0.15);
+    expect(aggressive, `aggressive ${aggressive} balanced ${balanced}`).toBeGreaterThan(
+      balanced + 0.07,
+    );
+  });
+  it.each(['easy', 'hard'] as const)(
+    '%s: Aisha hoards her Whot while she has more than 3 cards',
+    (d) => {
+      const hoarder = whotRate(d, 'hoarder');
+      const balanced = whotRate(d, 'balanced');
+      expect(hoarder, `hoarder ${hoarder} balanced ${balanced}`).toBeLessThan(
+        d === 'hard' ? 0.005 : balanced * 0.5,
+      );
+      expect(whotRate(d, 'cautious')).toBeLessThan(balanced);
+    },
+  );
+  it('Aisha at Hard plays her Whot again once she is down to three cards', () => {
+    const rng = createRng(3);
+    let n = 0;
+    let whot = 0;
+    for (const v of views) {
+      if (v.pending || v.hand.length !== 3) continue;
+      const plays = legalActions(v, v.hand).flatMap((a) => (a.type === 'play' ? [a] : []));
+      if (!plays.some((a) => cardOf(a.card).shape === 'whot')) continue;
+      n++;
+      const a = brainsFor('hoarder').hard.decide(v, rng);
+      if (a.type === 'play' && cardOf(a.card).shape === 'whot') whot++;
+    }
+    expect(n).toBeGreaterThan(50);
+    expect(whot / n).toBeGreaterThan(0.3);
+  });
+  it.each(['easy', 'medium', 'hard'] as const)(
+    '%s: Tari names the shape the other player just played (others do not)',
+    (d) => {
+      const rate = (style: Style): number => {
+        const rng = createRng(11);
+        let n = 0;
+        let same = 0;
+        for (const v of views) {
+          const want = lastPlayedShape(v);
+          if (!want || v.pending) continue;
+          const plays = legalActions(v, v.hand).flatMap((a) => (a.type === 'play' ? [a] : []));
+          if (!plays.some((a) => cardOf(a.card).shape === 'whot')) continue;
+          const a = brainsFor(style)[d].decide(v, rng);
+          if (a.type !== 'play' || cardOf(a.card).shape !== 'whot') continue;
+          n++;
+          if (a.call === want) same++;
+        }
+        expect(n).toBeGreaterThan(40);
+        return same / n;
+      };
+      const tari = rate('aggressive');
+      const other = rate('balanced');
+      // Hard weighs the call against card counting, so it only leans; Easy and Medium follow it
+      expect(tari, `tari ${tari} balanced ${other}`).toBeGreaterThan(
+        other + (d === 'hard' ? 0.05 : 0.2),
+      );
+    },
+  );
+  it('the style is a real input: all four styles decide differently on the same states', () => {
+    for (const d of DIFFICULTIES) {
+      const out = (['balanced', 'cautious', 'aggressive', 'hoarder'] as const).map((s) => {
+        const rng = createRng(5);
+        return views.map((v) => JSON.stringify(brainsFor(s)[d].decide(v, rng))).join('|');
+      });
+      expect(new Set(out).size).toBe(4);
+    }
   });
 });
 

@@ -31,6 +31,10 @@ test(`soak ${MINUTES} min at 4x CPU: heap trend and counters stay flat`, async (
   await unthrottleNetwork(cdp);
 
   const start = Date.now();
+  // Host sleep detector: wall clock minus a monotonic clock that stops while the machine sleeps.
+  const mono0 = process.hrtime.bigint();
+  const hostSleptMs = (): number =>
+    Math.max(0, Date.now() - start - Number(process.hrtime.bigint() - mono0) / 1e6);
   const samples: { min: number; mb: number }[] = [];
   let nextSample = start;
   let rounds = 0;
@@ -58,6 +62,15 @@ test(`soak ${MINUTES} min at 4x CPU: heap trend and counters stay flat`, async (
   }
   samples.push({ min: (Date.now() - start) / 60_000, mb: (await heapAfterGc(cdp)) / 1048576 });
 
+  // what the app's autoplay guard saw: every round's wall time, and any round that had to be rescued
+  const auto = await page.evaluate(
+    () =>
+      (window.__naijaTest!.getState() as { autoplay?: unknown }).autoplay as {
+        rounds: number;
+        maxMs: number;
+        rescues: unknown[];
+      },
+  );
   const total = samples[samples.length - 1]!.min;
   const warm = Math.min(2, total * 0.2);
   const steady = samples.filter((s) => s.min >= warm);
@@ -69,6 +82,9 @@ test(`soak ${MINUTES} min at 4x CPU: heap trend and counters stay flat`, async (
     slug: SLUG,
     minutes: +total.toFixed(2),
     rounds,
+    slowestRoundMs: auto?.maxMs,
+    rescuedRounds: auto?.rescues ?? [],
+    hostSleptMin: +(hostSleptMs() / 60_000).toFixed(2),
     samples: samples.map((s) => `${s.min.toFixed(1)}m=${s.mb.toFixed(2)}MB`),
     steadySamples: steady.length,
     slopeKBperMin: +kbPerMin.toFixed(1),
@@ -83,5 +99,7 @@ test(`soak ${MINUTES} min at 4x CPU: heap trend and counters stay flat`, async (
   expect(steady.length, 'need at least 3 steady-state heap samples').toBeGreaterThanOrEqual(3);
   expect(kbPerMin, `heap slope ${kbPerMin.toFixed(1)} KB/min`).toBeLessThan(MAX_SLOPE_KB_PER_MIN);
   expect(mismatches).toEqual([]);
+  // a round must end by itself: a rescue means the flow was held somewhere (see its `flow` dump)
+  expect(auto?.rescues ?? [], 'autoplay rounds that stalled and were rescued').toEqual([]);
   expect(errors).toEqual([]);
 });

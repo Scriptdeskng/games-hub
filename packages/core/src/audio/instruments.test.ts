@@ -195,7 +195,7 @@ describe('Nigerian instrument family', () => {
     }
     // eslint-disable-next-line no-console
     if (process.env.SFX_REPORT) console.log(rows.join('\n'));
-  });
+  }, 60000);
 
   it('pitch shifts (seed runs, rising combos) stay within headroom', () => {
     for (const pitch of [0.6, 1.5, 2])

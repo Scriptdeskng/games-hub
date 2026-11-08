@@ -23,6 +23,8 @@ import {
 } from '../rules/engine';
 import { canDraw, legalActions, type Action } from '../rules/legal';
 import { viewFor } from '../rules/view';
+import { dealIn } from './deal';
+import { createKeyMap } from './keys';
 import { createPresenter } from './present';
 import { createPlayUi } from './table';
 
@@ -57,6 +59,21 @@ export interface Play extends Component {
   stats(): PlayStats;
   /** test builds only */
   fastForward?: () => GameState;
+  /** test builds only: what the flow is doing right now (for the soak's stall report) */
+  diag?: () => PlayDiag;
+}
+
+export interface PlayDiag {
+  /** the pause dialog is open (the flow is held at its gate) */
+  paused: boolean;
+  dead: boolean;
+  over: boolean;
+  waitingForHuman: boolean;
+  botOn: boolean;
+  hidden: boolean;
+  turn: number;
+  seat: number;
+  pending: boolean;
 }
 
 export const HUMAN_ID = 'you';
@@ -226,49 +243,15 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     commit(catchPlayer(state, HUMAN_SEAT, seat));
   }
 
-  // keys: 1-9 pick/play the nth card, arrows move, Enter/Space plays, D draw, L last card, P/Esc pause
-  const live =
-    (fn: (e: KeyboardEvent) => void) =>
-    (e: KeyboardEvent): void => {
-      if (!flow.modalOpen && !over && !ui.pickerOpen) fn(e);
-    };
-  const step = (dir: number) =>
-    live((e) => {
-      if (!awaiting) return;
-      e.preventDefault();
-      const ids = ui.hand.ids;
-      const at = ids.indexOf(ui.hand.selected ?? -1);
-      const to = ids[(at + dir + ids.length) % ids.length];
-      if (to !== undefined) {
-        ui.hand.select(to);
-        (ui.hand.cardEl(to) as HTMLElement | undefined)?.focus({ preventScroll: true });
-      }
-    });
-  const primary = live((e) => {
-    if ((e.target as HTMLElement | null)?.closest?.('button')) return; // native click handles it
-    const sel = ui.hand.selected;
-    if (!awaiting || sel === null) return;
-    e.preventDefault();
-    onTapCard(sel);
+  const keys = createKeyMap({
+    ui,
+    flow,
+    over: () => over,
+    waiting: () => awaiting !== null,
+    tapCard: onTapCard,
+    draw: onDrawTap,
+    last: onLast,
   });
-  const keys: Record<string, (e: KeyboardEvent) => void> = {
-    ArrowRight: step(1),
-    ArrowDown: step(1),
-    ArrowLeft: step(-1),
-    ArrowUp: step(-1),
-    Enter: primary,
-    ' ': primary,
-    d: live(() => onDrawTap()),
-    l: live(() => onLast()),
-    p: () => !ui.pickerOpen && flow.toggle(),
-    Escape: () => !ui.pickerOpen && flow.toggle(),
-  };
-  for (let n = 1; n <= 9; n++) {
-    keys[String(n)] = live(() => {
-      const id = ui.hand.ids[n - 1];
-      if (id !== undefined) onTapCard(id);
-    });
-  }
   const input = createInput(ui.el, { keys });
 
   // ---- turns ----
@@ -327,22 +310,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     core.audio.playSfx('shuffle');
     presenter.render(null);
     flags();
-    ui.hand.el.querySelectorAll('.whot-card').forEach((c, i) => {
-      if (!reduced()) {
-        const el = c as HTMLElement;
-        el.style.animationDelay = `${Math.round(i * 60 * tempo)}ms`;
-        el.style.animationDuration = `${Math.round(320 * tempo) || 1}ms`;
-        el.classList.add('is-draw');
-        core.audio.playSfx('deal', { pitch: 1 + i * 0.02 });
-        scope.timeout(
-          () => {
-            el.classList.remove('is-draw');
-            el.style.animationDelay = '';
-          },
-          Math.round((i * 60 + 340) * tempo),
-        );
-      }
-    });
+    if (!reduced()) dealIn({ core, scope, fan: ui.hand.el, tempo });
     await sleep(450);
     let steps = 0;
     while (!flow.dead && !isOver(state)) {
@@ -390,11 +358,23 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     return state;
   };
 
+  const diag = (): PlayDiag => ({
+    paused: flow.modalOpen,
+    dead: flow.dead,
+    over,
+    waitingForHuman: awaiting !== null,
+    botOn,
+    hidden: document.hidden,
+    turn: state.turns.turn,
+    seat: state.turns.index,
+    pending: state.pending !== null,
+  });
+
   return {
     el: ui.el,
     snapshot: () => state,
     stats: () => stats,
-    ...(__NAIJA_TEST__ ? { fastForward } : {}),
+    ...(__NAIJA_TEST__ ? { fastForward, diag } : {}),
     start() {
       void run();
     },

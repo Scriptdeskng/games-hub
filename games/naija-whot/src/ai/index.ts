@@ -1,5 +1,4 @@
 import { createCpu, type CpuOpponent } from '@naija/core/ai-kit';
-import { createRng } from '@naija/core/rng';
 import type { Difficulty } from '@naija/core/ui-kit';
 import type { Action } from '../rules/legal';
 import type { PublicView } from '../rules/view';
@@ -33,5 +32,3 @@ export function createOpponents(o: {
     });
   });
 }
-
-export { createRng };

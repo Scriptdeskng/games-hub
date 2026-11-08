@@ -17,7 +17,7 @@
     "_review": true
   },
   "game.howto.4": {
-    "text": "2 Pick Two and 5 Pick Three: di next person must pick 2 or 3 cards, except e answer with another 2 or 5 (you fit change dis one for Rules).",
+    "text": "2 Pick Two and 5 Pick Three: di next person must pick 2 or 3 cards, except say dem answer 2 with another 2, or 5 with another 5 (you fit change dis one for Rules).",
     "_review": true
   },
   "game.howto.5": {
@@ -114,6 +114,14 @@
     "text": "When market finish, di game go end and di person wey im cards add small pass go win (Whot na 20).",
     "_review": true
   },
+  "rules.calmLate": {
+    "text": "Calm for long game",
+    "_review": true
+  },
+  "rules.calmLate.help": {
+    "text": "Wen game don long pass (after 240 turns), 2, 5 or 14 no go hurt again: na ordinary card, so hand go fit finish. Off: di old game wey no get limit.",
+    "_review": true
+  },
   "rules.autoDraw": {
     "text": "Pick card for me when nothing fit",
     "_review": true
@@ -135,11 +143,19 @@
     "_review": true
   },
   "results.catches": {
-    "text": "Dem catch",
+    "text": "CPU wey you catch",
     "_review": true
   },
   "results.wins": "Wins",
   "results.streak": "Streak",
+  "results.endedBy.cap": {
+    "text": "Di game long too much, so di person wey im cards add small win.",
+    "_review": true
+  },
+  "results.endedBy.market": {
+    "text": "Market don finish, so di person wey im cards add small win.",
+    "_review": true
+  },
   "persona.mama-nkechi.name": "Mama Nkechi",
   "persona.tari.name": "Tari",
   "persona.aisha.name": "Aisha",
@@ -230,6 +246,10 @@
     "text": "Market don finish. Dem dey shuffle di pile!",
     "_review": true
   },
+  "whot.calm": {
+    "text": "Di game don long! From now 2, 5 and 14 na ordinary card.",
+    "_review": true
+  },
   "whot.caught": {
     "text": "Dem catch am!",
     "_review": true
@@ -317,7 +337,10 @@
     "text": "Market don open! Everybody pick!",
     "_review": true
   },
-  "whot.banter.tari.suspension": "Suspension! Sorry, relax small.",
+  "whot.banter.tari.suspension": {
+    "text": "Suspension! Sorry, relax small.",
+    "_review": true
+  },
   "whot.banter.tari.holdOn": "Hold on, one more from me!",
   "whot.banter.tari.whotCall": {
     "text": "Na triangle I need, abeg!",

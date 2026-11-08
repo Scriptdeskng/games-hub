@@ -1,5 +1,4 @@
-import { DECK, SHAPES, cardOf, type Shape } from '../rules/cards';
-import { topId } from '../rules/legal';
+import { DECK, cardOf, type Shape } from '../rules/cards';
 import type { PublicView } from '../rules/view';
 
 /**
@@ -90,6 +89,3 @@ export function cover(k: Knowledge, id: number): number {
   const m = matchingUnseen(k, c.shape, c.n);
   return m / k.unseen.length;
 }
-
-export const topCardOf = (v: PublicView): number => topId(v);
-export { SHAPES };

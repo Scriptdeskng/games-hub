@@ -104,13 +104,26 @@ describe('planner (exact expected turns)', () => {
     cache.warm(DEFAULT_LAYOUT, rules);
     expect(cache.get(DEFAULT_LAYOUT, rules)).toBe(a);
     expect(cache.size).toBe(2);
-    // Deterministic cost guard (a wall clock is useless here: v8 coverage instrumentation made
-    // this solve ~20x slower, and coverage cannot be detected cleanly). The solve costs
-    // sweeps * squares * choice-period operations, so bounding the sweeps catches a convergence
-    // regression the same on every machine. Measured natively: a few ms.
+    // Main-thread budget: the solve takes a few ms natively; the bound is the original one
+    // (`solve * 4 < 400`, i.e. under 100 ms, a 4x CPU slowdown against 400 ms). v8 coverage instrumentation makes
+    // the solve ~20x slower, so that one wall-clock check is skipped when `npm run test:cov` runs
+    // (vitest.config.ts sets NAIJA_COVERAGE=1 then). Everywhere else it applies.
+    // Best of 5 fresh solves: a busy machine (parallel test workers) delays single runs at random,
+    // while a real slowdown of the solver delays every run.
+    if (process.env.NAIJA_COVERAGE !== '1') {
+      let best = solve;
+      for (let i = 0; i < 4; i++) {
+        const t2 = performance.now();
+        createPlannerCache().get(DEFAULT_LAYOUT, rules);
+        best = Math.min(best, performance.now() - t2);
+      }
+      expect(best * 4).toBeLessThan(400);
+    }
+    // Deterministic cost guard, on in every mode: the solve costs sweeps * squares * choice-period
+    // operations, so bounding the sweeps catches a convergence regression the same on every machine.
     expect(a.sweeps).toBeGreaterThan(0);
     expect(a.sweeps).toBeLessThan(400); // measured: 221
-    // Loose sanity ceiling only (~10x the coverage-run measurement); never the real guard.
+    // Loose sanity ceiling in every mode (about 10x the coverage-run measurement).
     expect(solve).toBeLessThan(10000);
   });
 
@@ -127,7 +140,7 @@ describe('planner (exact expected turns)', () => {
     const cache = createPlannerCache();
     for (let n = 2; n < 22; n++) cache.warm(DEFAULT_LAYOUT, { ...DEFAULT_RULES, choiceEvery: n });
     expect(cache.size).toBeLessThanOrEqual(16);
-  });
+  }, 60000);
 
   it('works for the other toggles too', () => {
     for (const exactFinish of [true, false]) {

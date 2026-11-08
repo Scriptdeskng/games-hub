@@ -49,6 +49,9 @@ Cross 1,2,3,5,7,10,11,13,14 · Square 1,2,3,5,7,10,11,13,14 · Star 1,2,3,4,5,7,
 - Players must announce "Last card" (and optionally "Semi-last card"). Forgetting costs a
   2-card penalty when caught (toggle).
 - **Win:** first to empty their hand. Count-up scoring variant optional when the market runs out.
+- **Calm late game (toggle, default on):** a game still going after 240 turns stops its 2, 5 and 14
+  from hurting (they play as plain cards; a pick already running plays out), so hands can empty. The
+  600-turn count-up end stays as a safety net and the results screen says when it ends a game.
 
 **Modes:** the player vs 1, 2 or 3 CPU opponents, each with a name and a personality (e.g.
 cautious, aggressive, hoards Whot cards). CPU hands are always face-down.

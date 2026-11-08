@@ -21,7 +21,7 @@ Deck (docs/GAMES.md): circle 1 2 3 4 5 7 8 10 11 12 13 14 (12), triangle same (1
 | star | Plantain gold `#F2B21A` | 51% |
 
 - **Shape plus number always.** The number is ink `#1D1D20` on cream `#FFF3DA` (15.3:1), the shape has a 1.7-unit ink outline, and shapes are different silhouettes (checker: worst pairwise silhouette IoU < 0.85 at 16 and 24 px, circle and square being the closest pair). Colour is a third cue, never the only one.
-- **Corner index** (top-left, repeated rotated 180 degrees bottom-right): number about 25 units tall on a 140-unit card (16 px tall on a 64 px card) with a small shape under it. In a **fan of 7 cards at 360 px** (card 64 px wide, step 46 px) the left strip of each card shows number and shape completely. The checker renders `whot-360.png` and a greyscale twin to confirm.
+- **Corner index** (top-left, repeated rotated 180 degrees bottom-right): number about 25 units tall on a 140-unit card (16 px tall on a 64 px card) with a small shape under it. In a **fan of 7 cards at 360 px** (card 64 px wide, step 46 px; 44 px below 380 px wide so seven cards plus padding fit the 344 px lane, strips never below 44 px) the left strip of each card shows number and shape completely. The checker renders `whot-360.png` and a greyscale twin to confirm.
 - **Special markers** (a gold ribbon in the card centre, icons and counts only, no words, so they work in `en` and `pcm`): 1 Hold On = loop arrow; 2 = two mini card backs and "+2"; 5 = three mini backs and "+3"; 8 Suspension = pause ring with slash; 14 General Market = a stall awning and "+1"; 20 = a gold rosette with a "W" and all five shapes in the ribbon.
 - **Whot 20**: gold 12-point rosette on a wine disc with a "W" drawn from strokes. The "W" is a letter shape, not a brand mark.
 - **Back**: aso-oke strips, akwete diamond band, gold frame, a small rosette. No letters, no logo.
@@ -117,11 +117,13 @@ Shared lines already exist in `VOICE_SCRIPT.md` (`last-card`, `semi-last-card`, 
 
 ## 8. Personas for the 3-CPU table
 Single-player: the human plays 1 to 3 CPUs. Shared avatars exist in `packages/core/assets/avatars` (`mama-nkechi`, `tari`, `aisha`). Personalities are play styles, never ethnic traits.
-| Seat | Persona | Region | Play style (for the developer's `src/ai`) | Difficulty |
+| Seat | Persona | Region | Play style (for the developer's `src/ai`) | Difficulty (see note) |
 |---|---|---|---|---|
-| 1 | **Mama Nkechi** (scaffold default) | Igbo, Enugu | **Cautious.** Plays safe numbers first, avoids leading with 2, 5, 14, keeps one Whot 20 in reserve, coaches kindly. Think delay 0.8 s | Easy |
-| 2 | **Tari** | Ijaw, Port Harcourt | **Aggressive.** Attacks with 2, 5, 14 and 8 as early as possible, calls the shape the player just played, plays fast. Think delay 0.4 s | Medium |
-| 3 | **Aisha** | Hausa, Kaduna | **Hoards Whot.** Keeps every Whot 20 until she has 3 or fewer cards, counts cards played, calls the shape the player has least. Think delay 0.7 s | Hard |
+| 1 | **Mama Nkechi** (scaffold default) | Igbo, Enugu | **Cautious.** Plays safe numbers first, avoids leading with 2, 5, 14, keeps one Whot 20 in reserve, coaches kindly. Think delay 0.8 s | player's choice |
+| 2 | **Tari** | Ijaw, Port Harcourt | **Aggressive.** Attacks with 2, 5, 14 and 8 as early as possible, calls the shape the player just played, plays fast. Think delay 0.4 s | player's choice |
+| 3 | **Aisha** | Hausa, Kaduna | **Hoards Whot.** Keeps every Whot 20 until she has 3 or fewer cards, counts cards played, calls the shape the player has least. Think delay 0.7 s | player's choice |
+**Difficulty (decided, W-11):** the difficulty the player picks in the menu (Easy, Medium or Hard) applies to every CPU at the table. A persona never fixes a level: it gives a CPU its name, think delay, banter and play *style*, and the style is applied at all three difficulties (Mama Nkechi avoids leading with 2, 5 and 14 and keeps a Whot back; Tari leads with 2, 5, 14 and 8 early and names the shape the other player just played; Aisha keeps her Whot until she has three cards or fewer). So Mama Nkechi at Hard is a careful Hard player, not an Easy one.
+
 With one CPU use Mama Nkechi; with two, Mama Nkechi and Tari; with three, all. (Aisha lists Sabi Quiz, Draughts and Sabi Words in `PERSONAS.md`; Whot is added by this brief.)
 
 Banter keys `whot.banter.<persona>.<event>`; events: `play`, `pickTwo` (they play 2), `gotPickTwo`, `market` (they play 14), `suspension`, `holdOn`, `whotCall`, `lastCard`, `win`, `lose`. `_review` marks Pidgin or foreign words needing a native check; Igbo, Yoruba and Hausa words always do. No money, bargaining or gambling words.

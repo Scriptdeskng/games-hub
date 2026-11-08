@@ -8,6 +8,7 @@ import {
 import { createRng, type Rng } from '@naija/core/rng';
 import { DECK, cardOf, handValue, isSpecial, type Shape, type ShapeName } from './cards';
 import {
+  CALM_TURN,
   CATCH_PENALTY,
   CPU_COUNTS,
   DEFAULT_RULES,
@@ -41,6 +42,7 @@ export type GameEvent =
   | { type: 'effect'; kind: EffectKind; seat: number; victim: number | null }
   | { type: 'draw'; seat: number; cards: number[]; reason: DrawReason }
   | { type: 'reshuffle' }
+  | { type: 'calm' }
   | { type: 'announce'; seat: number; level: CallLevel }
   | { type: 'catch'; by: number; target: number }
   | { type: 'end'; reason: EndReason; winner: number };
@@ -259,6 +261,10 @@ function setAnnounce(d: Draft, seat: number): void {
 
 // ---- the three turn actions ----
 
+/** Has the calm late game begun? (the `calmLate` rule, from turn `CALM_TURN` on) */
+const isCalm = (s: Pick<GameState, 'rules' | 'turns'>): boolean =>
+  s.rules.calmLate && s.turns.turn >= CALM_TURN;
+
 function doPlay(d: Draft, a: Extract<Action, { type: 'play' }>): void {
   const seat = d.turns.index;
   const hand = d.hands[seat] as number[];
@@ -284,10 +290,14 @@ function doPlay(d: Draft, a: Extract<Action, { type: 'play' }>): void {
   const next = (seat + 1) % seats;
   let again = false;
   let skip: Set<string> | undefined;
+  // calm late game: with no penalty running, a 2, 5 or 14 is just a card
+  const plain = isCalm(d) && !wasPending;
   if (card.shape === 'whot') {
     d.pending = null;
     d.events.push({ type: 'effect', kind: 'whot', seat, victim: null });
     if (wasPending) d.events.push({ type: 'effect', kind: 'defend', seat, victim: null });
+  } else if (plain && (card.n === 2 || card.n === 5 || card.n === 14)) {
+    // no power
   } else if (card.n === 2 || card.n === 5) {
     const kind = card.n === 2 ? 'two' : 'three';
     const add = card.n === 2 ? 2 : 3;
@@ -341,6 +351,7 @@ export function apply(s: GameState, a: Action): GameState {
   if (a.type === 'play') doPlay(d, a);
   else if (a.type === 'draw') doDraw(d);
   else doCatch(d, d.turns.index, a.target);
+  if (d.phase === 'play' && !isCalm(s) && isCalm(d)) d.events.push({ type: 'calm' });
   if (d.phase === 'play' && d.turns.turn >= MAX_TURNS) endByCount(d, 'cap');
   return seal(d);
 }
