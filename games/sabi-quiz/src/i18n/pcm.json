@@ -1,40 +1,300 @@
 {
   "game.title": "Sabi Quiz",
-  "game.tagline": "Hit di bells before dem vanish!",
-  "game.arenaLabel": "Where we dey play",
-  "game.bell": "Agogo bell",
-  "game.hint": "Target: {goal} bells inside {time} seconds",
+  "game.tagline": {
+    "text": "Quiz night, correct Naija style!",
+    "_review": true
+  },
+  "menu.duel": "Quiz Duel",
+  "menu.daily": {
+    "text": "Today Challenge",
+    "_review": true
+  },
+  "menu.stats": {
+    "text": "My scores",
+    "_review": true
+  },
+  "menu.topic": "Topic: {name}",
+  "menu.topicTitle": {
+    "text": "Pick topic",
+    "_review": true
+  },
+  "menu.hintClassic": {
+    "text": "10 question, {time} s each. Duel vs {name}.",
+    "_review": true
+  },
+  "menu.howto": "How to play",
+  "menu.dailyNew": "New questions every day.",
+  "menu.dailyDone": {
+    "text": "Today score: {score}. If you play again, na practice.",
+    "_review": true
+  },
+  "menu.packLoading": {
+    "text": "Questions dey ready...",
+    "_review": true
+  },
+  "topic.all": "All topics",
+  "cat.nollywood": "Nollywood",
+  "cat.afrobeats": "Afrobeats",
+  "cat.football": "Football",
+  "cat.history": "History",
+  "cat.food": {
+    "text": "Chop",
+    "_review": true
+  },
+  "cat.general": "General",
+  "cat.pidgin": "Pidgin",
+  "cat.geography": "Geography",
   "game.howto.1": {
-    "text": "Golden agogo bells dey pop up for screen. Tap or click each one before e vanish.",
+    "text": "Ten questions, one by one. Tap one plate, or press A to D (or 1 to 4). Answer before the clock finish.",
     "_review": true
   },
   "game.howto.2": {
-    "text": "Hit plenty bells before time finish and you go win. Di target dey for top.",
+    "text": "The faster you answer correct, the more points you go get. Wrong answer or time up, no point.",
     "_review": true
   },
-  "game.howto.3": "Hit bells one after di other to build combo and get more points. If you miss, combo go break.",
+  "game.howto.3": {
+    "text": "Answer correct plenty times for row to build streak: x2 for 3 in a row, x3 for 5, x5 for 8. If you miss, e break.",
+    "_review": true
+  },
   "game.howto.4": {
-    "text": "If you dey use keyboard, press Space to hit di oldest bell, and press P if you wan pause.",
+    "text": "Three lifeline, one time each for one round: 50/50 comot two wrong answer, Skip change the question, Ask your padi show wetin people vote (padi fit wrong o!). Keys: F, S, H, or L for the next one.",
     "_review": true
   },
+  "game.howto.5": {
+    "text": "Quiz Duel: you go race one CPU contestant. Una two go answer the same question, and who answer correct first go score more. Daily Challenge: same ten questions for everybody today, one scored try for one day. P or Esc na pause.",
+    "_review": true
+  },
+  "hud.q": "Question",
   "hud.score": "Score",
-  "hud.time": "Time",
-  "hud.goal": "Bells",
-  "hud.combo": "Combo",
-  "results.accuracy": "How you hit am",
-  "results.combo": "Best combo",
-  "results.level": "Level",
-  "persona.name": "Mama Nkechi",
-  "banter.win.0": {
-    "text": "Well done! Your hand quick pass danfo conductor.",
+  "hud.streak": "Streak",
+  "hud.practice": "Practice",
+  "play.qOf": "{n}/{total}",
+  "play.question": "Question {n} of {total}: {q}",
+  "play.timeLeft": {
+    "text": "Time wey remain: {s} seconds",
     "_review": true
   },
-  "banter.win.1": "Na so! Come siddon, di jollof don ready.",
-  "banter.win.2": "Sharp sharp! Di bells dey fear you.",
-  "banter.lose.0": "No wahala, try again. Even NEPA dey bring light back.",
-  "banter.lose.1": "Small small, you go get am.",
-  "banter.lose.2": {
-    "text": "Calm down. Di bells no go run anywhere.",
+  "play.plate": "{letter}: {text}",
+  "play.state.correct": "correct answer",
+  "play.state.wrong": "wrong",
+  "play.state.eliminated": {
+    "text": "dem don comot am",
+    "_review": true
+  },
+  "play.state.picked": "your pick",
+  "play.sr.correct": "Correct! {points} points.",
+  "play.sr.wrong": {
+    "text": "E no be so. The answer na {letter}: {text}.",
+    "_review": true
+  },
+  "play.sr.timeout": {
+    "text": "Time don up. The answer na {letter}: {text}.",
+    "_review": true
+  },
+  "play.sr.poll": {
+    "text": "Wetin your padi dem talk: {list}",
+    "_review": true
+  },
+  "play.sr.skipped": {
+    "text": "Question don change. New one don ready.",
+    "_review": true
+  },
+  "play.sr.fifty": {
+    "text": "Dem don comot two wrong answer.",
+    "_review": true
+  },
+  "ll.fifty": "50/50",
+  "ll.skip": "Skip",
+  "ll.padi": "Ask your padi",
+  "ll.padiShort": "Padi",
+  "ll.used": {
+    "text": "{name}: you don use am",
+    "_review": true
+  },
+  "poll.title": {
+    "text": "Wetin your padi dem talk",
+    "_review": true
+  },
+  "poll.close": {
+    "text": "Go back to question",
+    "_review": true
+  },
+  "duel.title": "Quiz Duel",
+  "duel.sub": {
+    "text": "Race {name} for the answer. Una two go get the same question, and who answer correct fast go score more.",
+    "_review": true
+  },
+  "duel.start": "Start the duel",
+  "duel.you": "You",
+  "duel.thinking": "{name} dey think...",
+  "duel.buzzed": "{name} don answer",
+  "duel.waiting": {
+    "text": "You don lock am. Wait for {name}...",
+    "_review": true
+  },
+  "duel.cpuPicked": "{name} pick {letter}",
+  "duel.lead": {
+    "text": "{name} dey lead",
+    "_review": true
+  },
+  "results.draw": {
+    "text": "Una draw!",
+    "_review": true
+  },
+  "results.correct": "Correct",
+  "results.accuracy": "Accuracy",
+  "results.streak": "Best streak",
+  "results.duel": "You vs {name}",
+  "results.mode": "Mode",
+  "results.practice": {
+    "text": "Practice replay. Today score don save already.",
+    "_review": true
+  },
+  "results.dailySaved": {
+    "text": "Today score don save.",
+    "_review": true
+  },
+  "mode.classic": "Classic",
+  "mode.duel": "Duel",
+  "mode.daily": "Daily",
+  "stats.title": {
+    "text": "My scores",
+    "_review": true
+  },
+  "stats.rounds": {
+    "text": "Rounds wey you play",
+    "_review": true
+  },
+  "stats.wins": {
+    "text": "Rounds wey you win",
+    "_review": true
+  },
+  "stats.streak": "Best streak ever",
+  "stats.best": "Best scores",
+  "stats.accuracy": {
+    "text": "Accuracy for each topic",
+    "_review": true
+  },
+  "stats.duelRecord": {
+    "text": "Duel record: {won} win, {lost} lose, {drawn} draw",
+    "_review": true
+  },
+  "stats.none": "never yet",
+  "error.pack.title": {
+    "text": "The questions no load",
+    "_review": true
+  },
+  "error.pack.body": {
+    "text": "Check your data or network, then try again.",
+    "_review": true
+  },
+  "error.retry": "Try again",
+  "persona.etim.name": "Uncle Etim",
+  "persona.dung.name": "Dung",
+  "persona.aisha.name": "Aisha",
+  "persona.chidi.name": "Chidi",
+  "sq.host.lose": {
+    "text": "Good try! Next round na your own.",
+    "_review": true
+  },
+  "persona.etim.1": {
+    "text": "Good evening o, quiz lovers! Make we start.",
+    "_review": true
+  },
+  "persona.etim.2": {
+    "text": "Ten questions, fifteen seconds each. Finger don ready?",
+    "_review": true
+  },
+  "persona.etim.3": "Correct! Clap for yourself small.",
+  "persona.etim.4": {
+    "text": "Ah ah, e nearly be! Wait for the next one.",
+    "_review": true
+  },
+  "persona.etim.5": {
+    "text": "Three in a row! Fire don catch!",
+    "_review": true
+  },
+  "persona.etim.6": "You wan ask your padi? Why not!",
+  "persona.etim.7": "Time dey run o. Tick-tock!",
+  "persona.etim.8": {
+    "text": "Correct sabi person! Well done.",
+    "_review": true
+  },
+  "persona.dung.1": {
+    "text": "Make I look am well first.",
+    "_review": true
+  },
+  "persona.dung.2": {
+    "text": "Patience. Correct time go come.",
+    "_review": true
+  },
+  "persona.dung.3": "Click! I don get am.",
+  "persona.dung.4": "Correct one. You fast.",
+  "persona.dung.5": {
+    "text": "Hmm, I late by one second.",
+    "_review": true
+  },
+  "persona.dung.6": {
+    "text": "Jos cold dey help me think.",
+    "_review": true
+  },
+  "persona.dung.7": {
+    "text": "Look well well. Answer dey inside the small small details.",
+    "_review": true
+  },
+  "persona.dung.8": "Good game. Make we run am again.",
+  "persona.aisha.1": "You ready for challenge? I don read the whole book.",
+  "persona.aisha.2": "Correct! That one dey chapter three.",
+  "persona.aisha.3": {
+    "text": "Hmm, e no be so. Make I explain.",
+    "_review": true
+  },
+  "persona.aisha.4": "Fast hand, good brain. I like am.",
+  "persona.aisha.5": {
+    "text": "Haba! You catch me there.",
+    "_review": true
+  },
+  "persona.aisha.6": {
+    "text": "Sabi na power, but speed na points.",
+    "_review": true
+  },
+  "persona.aisha.7": "No worry. Everybody dey fail first time.",
+  "persona.aisha.8": "Na your final answer? You sure?",
+  "persona.aisha.9": {
+    "text": "Dat one dey page 212, if you wan check.",
+    "_review": true
+  },
+  "persona.aisha.10": {
+    "text": "Buzzer first, then think? No be me, I dey think first.",
+    "_review": true
+  },
+  "persona.aisha.11": {
+    "text": "Correct answer. Next round I no go gentle.",
+    "_review": true
+  },
+  "persona.aisha.12": {
+    "text": "Hard one! Even me, I think am twice.",
+    "_review": true
+  },
+  "sq.banter.chidi.1": {
+    "text": "Football question? Easy, I be goalkeeper for facts!",
+    "_review": true
+  },
+  "sq.banter.chidi.2": {
+    "text": "My hand quick for buzzer o!",
+    "_review": true
+  },
+  "sq.banter.chidi.3": "Ah! That one pass my gloves.",
+  "sq.banter.chidi.4": {
+    "text": "Correct! Na top save!",
+    "_review": true
+  },
+  "sq.banter.chidi.5": {
+    "text": "Ndo o, next question na your own.",
+    "_review": true
+  },
+  "sq.banter.chidi.6": {
+    "text": "No worry, for second half I go wake.",
     "_review": true
   }
 }

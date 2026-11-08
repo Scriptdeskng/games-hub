@@ -1,169 +1,418 @@
+import { createBanter, createBubbleView, type Banter, type Persona } from '@naija/core/ai-kit';
 import type { Core } from '@naija/core/boot';
-import { createInput } from '@naija/core/input';
 import { createScope } from '@naija/core/lifecycle';
 import { createLoop } from '@naija/core/loop';
-import { button, createHud, createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
+import { createRng } from '@naija/core/rng';
+import { createModal, createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
+import { createContestant, HOST, type Buzz, type Contestant } from '../ai';
+import { tenseMusic, playMusic } from '../audio/music';
 import {
-  PROFILES,
-  createGame,
-  hit,
-  missTap,
-  oldestTarget,
+  REVEAL_MS,
+  answer,
+  answerCpu,
+  canUse,
+  createRound,
+  current,
+  multiplierFor,
+  next,
   tick,
+  useFifty,
+  usePadi,
+  useSkip,
+  total,
   type Difficulty,
   type GameState,
+  type LifelineId,
+  type Mode,
+  type QuizQuestion,
 } from '../rules';
-import { createArena } from './arena';
+import { letterOf } from './dom';
+import {
+  createCard,
+  createDuelBar,
+  createLifelines,
+  createPlates,
+  createPollBody,
+  createTopBar,
+} from './playui';
 
 export interface PlayOptions {
+  pool: readonly QuizQuestion[];
+  mode: Mode;
   difficulty: Difficulty;
+  categories?: readonly string[];
   seed: number;
-  onScore(state: GameState): void;
-  onEnd(state: GameState): void;
+  /** a replay of the Daily after the scored attempt: shown as "Practice" */
+  practice?: boolean;
+  onScore(s: GameState): void;
+  onEnd(s: GameState): void;
   onRestart(): void;
   onQuit(): void;
+  /** test builds only */
+  test?: { tempo?: number; bot?: { win: boolean; delayMs: number } };
 }
 
 export interface Play extends Component {
-  getState(): GameState;
-  /** Replace the state (autoplay fast-forward). Ends the round if the state is final. */
-  setState(s: GameState): void;
+  snapshot(): GameState;
   start(): void;
-  /** Test hook: hit the oldest bell every ~200 ms in real time (drives the real render loop). */
-  setBot?: (on: boolean) => void;
+  /** test builds only: play the rest of the round instantly (no timers) and finish */
+  fastForward?: (win: boolean) => GameState;
 }
 
+/** The play screen: one round of Classic, Daily or Duel. Everything it waits on is a game-clock step. */
 export function createPlay(core: Core, o: PlayOptions): Play {
   const scope = createScope();
-  const profile = PROFILES[o.difficulty];
-  let state = createGame(o.difficulty, o.seed);
-  let modal: Modal | null = null;
+  const { t } = core;
+  const tempo = o.test?.tempo && o.test.tempo > 0 ? o.test.tempo : 1;
+  const duel = o.mode === 'duel';
+  let s = createRound({
+    pool: o.pool,
+    mode: o.mode,
+    difficulty: o.difficulty,
+    seed: o.seed,
+    categories: o.categories,
+  });
+  const cpu: Contestant | null = duel
+    ? createContestant({ seed: o.seed, difficulty: o.difficulty })
+    : null;
+  const persona: Persona = cpu ? cpu.persona : HOST;
+  let plan: Buzz | null = null;
+  let revealLeft = 0;
+  let lastSec = -1;
   let over = false;
-  let lastSecond = -1;
-  let bot = false;
-  let botTicks = 0;
+  let modal: Modal | null = null;
+  let modalKind: 'pause' | 'poll' | null = null;
+  let botAt = o.test?.bot?.delayMs ?? 0;
 
-  const hud = createHud([
-    { id: 'score', label: core.t('hud.score'), value: '0' },
-    { id: 'time', label: core.t('hud.time'), value: String(Math.ceil(profile.durationMs / 1000)) },
-    { id: 'goal', label: core.t('hud.goal'), value: `0/${profile.goal}` },
-    { id: 'combo', label: core.t('hud.combo'), value: '0' },
-  ]);
-  const pauseBtn = button(core, scope, {
-    label: core.t('ui.pause'),
-    icon: 'pause',
-    ariaLabel: core.t('ui.pause'),
-    variant: 'icon',
-    onClick: () => pause(),
-  });
-  hud.addControl(pauseBtn);
-
-  const arena = createArena(core, {
-    sizePx: profile.sizePx,
-    lifetimeMs: profile.lifetimeMs,
-    maxTargets: profile.maxTargets,
-    src: './assets/agogo.svg',
-  });
-
-  const paint = (): void => {
-    hud.set('score', state.score);
-    const sec = Math.ceil(state.timeLeftMs / 1000);
-    hud.set('time', sec);
-    hud.set('goal', `${state.hits}/${profile.goal}`);
-    hud.set('combo', state.combo);
-    arena.sync(state.targets);
-    if (sec !== lastSecond) {
-      lastSecond = sec;
-      if (sec > 0 && sec <= 5 && state.status === 'playing') core.audio.playSfx('tick');
-    }
-  };
-
-  const apply = (next: GameState): void => {
-    const prev = state;
-    state = next;
-    if (next.hits > prev.hits) {
-      core.audio.playSfx('coin', { pitch: 1 + Math.min(next.combo, 8) * 0.06, key: 'hit' });
-      o.onScore(next);
-    } else if (next.misses > prev.misses && next.combo === 0 && prev.combo > 0) {
-      core.audio.playSfx('fail', { gain: 0.6, key: 'miss' });
-    }
-    paint();
-    if (next.status !== 'playing' && !over) {
-      over = true;
-      loop.stop();
-      o.onEnd(next);
-    }
-  };
-
-  const loop = createLoop({
-    update: (dt) => {
-      apply(tick(state, dt * 1000));
-      if (__NAIJA_TEST__ && bot && !over && ++botTicks % 12 === 0) {
-        const id = oldestTarget(state);
-        if (id !== null) apply(hit(state, id));
-      }
+  // ---- view parts
+  const bubble = createBubbleView(scope, { name: (p) => t(p.nameKey), ms: 3200 });
+  const banter: Banter = createBanter({
+    t,
+    rng: createRng((o.seed ^ 0x5eed) >>> 0),
+    show: (line) => {
+      bubble.show(line);
+      core.audio.playSfx('hostIn');
     },
-    perf: core.perf,
-    onHidden: () => pause(),
+    chance: {
+      correct: 0.5,
+      wrong: 0.6,
+      low: 0.5,
+      buzz: 0.6,
+      good: 0.5,
+      bad: 0.6,
+      humanGood: 0.5,
+      humanBad: 0.5,
+      idle: 0.2,
+    },
   });
+  const bar = createTopBar(core, scope, {
+    practice: o.practice === true,
+    showStreak: !duel,
+    onPause: () => pause(),
+  });
+  const card = createCard(core);
+  const plates = createPlates(core, scope, (i) => pick(i));
+  const lifelines = duel ? null : createLifelines(core, scope, (id) => useLifeline(id));
+  const duelBar = cpu ? createDuelBar(core, cpu.persona) : null;
+  const live = h('p', { class: 'ng-sr', role: 'status', 'aria-live': 'polite' });
+  const el = h('section', { class: 'ng-screen ng-play sq-play', 'aria-label': t('game.title') }, [
+    h('div', { class: 'sq-stage' }),
+    bar.el,
+    card.el,
+    h('div', { class: 'sq-banter' }, [bar.streakEl, bubble.el]),
+    plates.el,
+    lifelines?.el ?? duelBar?.el ?? null,
+    live,
+  ]);
+  el.dataset.mode = o.mode;
 
-  const resume = (): void => {
-    modal = null;
-    if (!over) loop.resume();
+  const say = (event: string, force = false, p: Persona = persona): void =>
+    void banter.say(p, event, { force });
+  const fx = (kind: string): void => {
+    const node = h('div', { class: `sq-fx sq-fx--${kind}`, 'aria-hidden': 'true' });
+    const off = scope.on(node, 'animationend', () => {
+      off();
+      node.remove();
+    });
+    el.append(node);
   };
+  const elapsed = (): number => s.limitMs - s.timeLeftMs;
+
+  // ---- one place where the state changes
+  function commit(nextState: GameState): void {
+    const prev = s;
+    s = nextState;
+    if (prev.phase === 'asking' && s.phase === 'reveal') closed(prev);
+  }
+
+  function paintStatus(): void {
+    if (!duelBar || !cpu || !s.cpu) return;
+    const name = t(cpu.persona.nameKey);
+    let status = t('duel.thinking', { name });
+    if (s.phase === 'reveal') {
+      status =
+        s.cpu.picked === null ? '' : t('duel.cpuPicked', { name, letter: letterOf(s.cpu.picked) });
+    } else if (s.picked !== null) status = t('duel.waiting', { name });
+    else if (s.cpu.picked !== null) status = t('duel.buzzed', { name });
+    duelBar.set({ me: s.score, cpu: s.cpu.score, status });
+  }
+
+  function showQuestion(): void {
+    const q = current(s);
+    card.show(q, s.index + 1);
+    plates.show(q);
+    s.eliminated.forEach((i) => plates.state(i, 'eliminated'));
+    plates.lock(false);
+    bar.setQuestion(s.index + 1, total(s));
+    bar.setScore(s.score);
+    bar.setStreak(s.streak);
+    bar.ring.reset(s.limitMs);
+    lifelines?.sync(s);
+    lastSec = -1;
+    plan = cpu ? cpu.decide({ q, limitMs: s.limitMs }) : null;
+    if (plan && o.test?.bot?.win === false) plan = { ...plan, choice: q.answer };
+    botAt = o.test?.bot?.delayMs ?? 0;
+    live.textContent = t('play.question', { n: s.index + 1, total: total(s), q: q.q });
+    core.audio.playSfx('questionIn');
+    paintStatus();
+  }
+
+  function closed(prev: GameState): void {
+    const q = current(s);
+    const mine = s.history[s.history.length - 1];
+    plates.lock(true);
+    plates.state(q.answer, 'correct');
+    if (s.picked !== null && s.picked !== q.answer) plates.state(s.picked, 'wrong');
+    plates.tagCpu(s.cpu?.picked ?? null, cpu ? t(cpu.persona.nameKey) : '');
+    bar.ring.stop(s.timeLeftMs > 0 ? Math.ceil(s.timeLeftMs / 1000) : 0);
+    bar.setScore(s.score);
+    bar.setStreak(s.streak);
+    lifelines?.sync(s);
+    const where = { letter: letterOf(q.answer), text: q.options[q.answer] ?? '' };
+    if (s.lastResult === 'correct') {
+      core.audio.playSfx('correct');
+      fx('correct');
+      live.textContent = t('play.sr.correct', { points: s.lastPoints });
+      const m = multiplierFor(s.streak);
+      if (!duel && m > multiplierFor(prev.streak)) {
+        core.audio.playSfx(m >= 5 ? 'streakBig' : m === 3 ? 'streak3' : 'streak2');
+        fx('streak');
+        say('streak', true);
+      } else say(duel ? 'humanGood' : 'correct');
+    } else {
+      core.audio.playSfx(s.lastResult === 'timeout' ? 'timeUp' : 'wrong');
+      fx(s.lastResult === 'timeout' ? 'timeup' : 'wrong');
+      live.textContent = t(s.lastResult === 'timeout' ? 'play.sr.timeout' : 'play.sr.wrong', where);
+      if (prev.streak >= 3) core.audio.playSfx('streakBreak', { gain: 0.8 });
+      say(duel ? 'humanBad' : 'wrong');
+    }
+    if (duel && s.cpu) {
+      if (s.cpu.lastPoints > 0) say('good');
+      else if (s.cpu.picked !== null) say('bad');
+      if (s.score > s.cpu.score && prev.score <= (prev.cpu?.score ?? 0))
+        core.audio.playSfx('duelLead');
+    }
+    if (mine && mine.result === 'correct') core.audio.playSfx('scoreTick', { gain: 0.6 });
+    paintStatus();
+    revealLeft = REVEAL_MS;
+    core.audio.playMusic(playMusic);
+    o.onScore(s);
+  }
+
+  function advance(): void {
+    commit(next(s));
+    if (s.phase === 'done') return finish();
+    showQuestion();
+  }
+
+  function finish(): void {
+    if (over) return;
+    over = true;
+    loop.stop();
+    o.onEnd(s);
+  }
+
+  // ---- player actions
+  function pick(i: number): void {
+    if (modal || over || s.phase !== 'asking' || s.picked !== null || s.eliminated.includes(i))
+      return;
+    core.audio.playSfx('select');
+    const before = s;
+    commit(answer(s, i));
+    if (s === before) return;
+    core.audio.playSfx(duel ? 'duelBuzz' : 'lock');
+    if (s.phase === 'asking') {
+      plates.state(i, 'picked');
+      plates.lock(true);
+      paintStatus();
+    }
+  }
+
+  function useLifeline(id: LifelineId): void {
+    if (modal || over) return;
+    if (!canUse(s, id)) {
+      if (s.used[id]) core.audio.playSfx('lifelineUsed');
+      return;
+    }
+    s = id === 'fifty' ? useFifty(s) : id === 'skip' ? useSkip(s) : usePadi(s);
+    fx('lifeline');
+    if (id === 'fifty') {
+      core.audio.playSfx('lifeline5050');
+      s.eliminated.forEach((i) => plates.state(i, 'eliminated'));
+      plates.lock(false);
+      live.textContent = t('play.sr.fifty');
+    } else if (id === 'skip') {
+      core.audio.playSfx('lifelineSkip');
+      showQuestion();
+      live.textContent = `${t('play.sr.skipped')} ${live.textContent}`;
+    } else {
+      core.audio.playSfx('lifelinePadi');
+      say('padi', true);
+      openPoll();
+    }
+    lifelines?.sync(s);
+  }
+
+  function openPoll(): void {
+    const poll = s.poll;
+    if (!poll) return;
+    freeze('poll');
+    const body = createPollBody(core, scope, poll, (i) =>
+      core.audio.playSfx('padiBar', { pitch: 1 + 0.06 * i }),
+    );
+    modal = createModal(core, {
+      title: t('poll.title'),
+      body,
+      mount: core.root,
+      className: 'sq-pollmodal',
+      actions: [{ label: t('poll.close'), onClick: () => thaw() }],
+      onDismiss: () => thaw(),
+    });
+  }
+
+  // ---- pause (the game clock only runs while the loop does)
+  function freeze(kind: 'pause' | 'poll'): void {
+    modalKind = kind;
+    loop.pause();
+    bar.ring.freeze(s.timeLeftMs / s.limitMs);
+  }
+  function thaw(): void {
+    modal = null;
+    modalKind = null;
+    bar.ring.thaw();
+    if (!over) loop.resume();
+  }
   function pause(): void {
     if (over || modal) return;
-    loop.pause();
+    freeze('pause');
     modal = createPause(core, {
       mount: core.root,
-      onResume: resume,
+      onResume: thaw,
       onRestart: o.onRestart,
       onQuit: o.onQuit,
     });
   }
 
-  const hitOldest = (e: KeyboardEvent): void => {
-    e.preventDefault(); // Space must not also click a focused button
-    if (modal || over) return;
-    const id = oldestTarget(state);
-    if (id !== null) apply(hit(state, id));
-  };
-  const togglePause = (): void => {
-    if (modal) {
-      modal.close();
-      resume();
-    } else pause();
-  };
-  const input = createInput(arena.el, {
-    keys: { ' ': hitOldest, ArrowDown: hitOldest, p: togglePause, Escape: togglePause },
-  });
-  arena.onHit((id) => {
-    if (!modal && !over) apply(hit(state, id));
-  });
-  arena.onEmptyTap(() => {
-    if (!modal && !over) apply(missTap(state));
+  scope.on(window, 'keydown', (e: KeyboardEvent) => {
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || over) return;
+    const k = e.key.toLowerCase();
+    if (k === 'p' || k === 'escape') {
+      if (modalKind === 'pause') {
+        modal?.close();
+        thaw();
+      } else if (!modal) pause();
+      return;
+    }
+    if (modal) return;
+    const at = 'abcd'.indexOf(k) >= 0 && k.length === 1 ? 'abcd'.indexOf(k) : '1234'.indexOf(k);
+    if (at >= 0 && k.length === 1) return void pick(at);
+    const ll: Record<string, LifelineId> = { f: 'fifty', s: 'skip', h: 'padi' };
+    if (ll[k]) return void useLifeline(ll[k] as LifelineId);
+    if (k === 'l') {
+      const first = (['fifty', 'padi', 'skip'] as const).find((id) => canUse(s, id));
+      if (first) useLifeline(first);
+      else core.audio.playSfx('lifelineUsed');
+    }
   });
 
-  const el = h('section', { class: 'ng-screen ng-play', 'aria-label': core.t('game.title') }, [
-    hud.el,
-    arena.el,
-  ]);
-  paint();
+  // ---- the clock
+  const loop = createLoop({
+    update: (dt) => step((dt * 1000) / tempo),
+    perf: core.perf,
+    onHidden: () => pause(),
+  });
+
+  function step(dtMs: number): void {
+    if (over) return;
+    if (s.phase === 'reveal') {
+      revealLeft -= dtMs;
+      if (revealLeft <= 0) advance();
+      return;
+    }
+    if (s.phase !== 'asking') return;
+    commit(tick(s, dtMs));
+    if (s.phase !== 'asking') return;
+    const sec = Math.ceil(s.timeLeftMs / 1000);
+    if (sec !== lastSec) {
+      lastSec = sec;
+      bar.ring.second(sec, Math.round(s.limitMs / 1000));
+      if (sec <= 5) {
+        core.audio.playSfx(sec === 1 ? 'timerLast' : 'timerLow');
+        if (sec === 5) {
+          core.audio.playMusic(tenseMusic);
+          say('low');
+        }
+      } else if (sec < Math.round(s.limitMs / 1000)) core.audio.playSfx('secondTick');
+    }
+    if (plan && s.cpu && s.cpu.picked === null && elapsed() >= plan.atMs) {
+      core.audio.playSfx('duelCpuBuzz');
+      commit(answerCpu(s, plan.choice));
+      say('buzz');
+      if (s.phase === 'asking') paintStatus();
+    }
+    if (__NAIJA_TEST__ && o.test?.bot && s.phase === 'asking' && elapsed() >= botAt) {
+      const q = current(s);
+      botAt = Infinity;
+      pick(o.test.bot.win ? q.answer : (q.answer + 1) % 4);
+    }
+  }
+
+  /** Test builds only: finish the round without timers, the way a bot would, then end it. */
+  const fastForward = (win: boolean): GameState => {
+    while (s.phase !== 'done') {
+      const q = current(s);
+      const choice = win ? q.answer : (q.answer + 1) % 4;
+      let n = answer(tick(s, 800), choice);
+      if (duel && cpu && n.phase === 'asking') {
+        const p = cpu.decide({ q, limitMs: n.limitMs });
+        n = tick(n, Math.max(1, p.atMs - (n.limitMs - n.timeLeftMs)));
+        n = answerCpu(n, win ? p.choice : q.answer);
+      }
+      s = n;
+      o.onScore(s);
+      s = next(s.phase === 'asking' ? tick(s, s.timeLeftMs) : s);
+    }
+    finish();
+    return s;
+  };
+
+  showQuestion();
+  // the host's second greeting names a 15 s clock, so it is only used when the clock is 15 s
+  const second = !duel && s.limitMs === 15000 && createRng(o.seed ^ 0xabc).chance(0.5);
+  say(second ? 'ready' : 'start', true);
 
   return {
     el,
-    getState: () => state,
-    setState: apply,
-    ...(__NAIJA_TEST__ ? { setBot: (on: boolean) => void (bot = on) } : {}),
+    snapshot: () => s,
+    ...(__NAIJA_TEST__ ? { fastForward } : {}),
     start() {
-      core.audio.playSfx('start');
+      core.audio.playSfx('roundStart');
+      core.audio.playMusic(playMusic);
       loop.start();
     },
     destroy() {
       modal?.close();
       loop.destroy();
-      input.destroy();
-      arena.destroy();
       scope.destroy();
     },
   };

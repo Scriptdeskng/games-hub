@@ -1,108 +1,8 @@
-.ng-play {
-  gap: var(--ng-s-3);
-}
-.arena {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 240px;
-  border-radius: var(--ng-r-lg);
-  background: rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-}
-.arena:focus-visible {
-  outline: 3px solid var(--ng-focus);
-  outline-offset: 2px;
-}
-.target {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--size);
-  height: var(--size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.target.is-on {
-  opacity: 1;
-  pointer-events: auto;
-}
-.target.is-hit,
-.target.is-gone {
-  pointer-events: none;
-}
-.target__in {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-.target img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.target__ring {
-  position: absolute;
-  inset: -4px;
-  border: 3px solid var(--ng-accent);
-  border-radius: 50%;
-  opacity: 0.9;
-}
-.target.is-on .target__in {
-  animation: bell-in 180ms var(--ng-ease-spring) both;
-}
-.target.is-on .target__ring {
-  animation: bell-ring var(--life) linear both;
-}
-.target.is-hit .target__in {
-  animation: bell-hit 200ms var(--ng-ease) both;
-}
-.target.is-gone .target__in {
-  animation: bell-gone 180ms linear both;
-}
-.target.is-hit .target__ring,
-.target.is-gone .target__ring {
-  animation: none;
-  opacity: 0;
-}
-@keyframes bell-in {
-  from {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-}
-@keyframes bell-ring {
-  from {
-    transform: scale(1.25);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.85);
-    opacity: 0.3;
-  }
-}
-@keyframes bell-hit {
-  to {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes bell-gone {
-  to {
-    transform: scale(0.6);
-    opacity: 0;
-  }
+/* Sabi Quiz layout. Art classes (.sq-*) come from assets/quiz-art.css; this file places them.
+   Animation: transform and opacity only (the timer arc's stroke-dashoffset is the one exception). */
+.ng-app {
+  /* the fixed .sq-stage backdrop sits behind the content but above the app background */
+  isolation: isolate;
 }
 .menu-art {
   width: min(40vw, 150px);
@@ -114,18 +14,547 @@
   text-align: center;
   font-weight: 700;
 }
-@media (prefers-reduced-motion: reduce) {
-  .target.is-on .target__ring {
-    animation: none;
+.ng-menu__footer {
+  margin-top: 0;
+  padding-top: 0;
+  display: grid;
+  gap: var(--ng-s-2);
+  width: 100%;
+  justify-items: stretch;
+}
+.sq-menu-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ng-s-2);
+  width: 100%;
+}
+.sq-menu-row .ng-btn {
+  min-width: 0;
+}
+#menu-topic {
+  font-size: var(--ng-fs-sm);
+}
+.ng-menu .hint {
+  font-size: 0.8125rem;
+}
+@media (max-height: 700px) {
+  .ng-settings {
+    gap: 6px;
+  }
+  .ng-settings .ng-btn {
+    padding: 6px 8px;
+    font-size: 0.8125rem;
   }
 }
-@media (max-height: 500px) and (orientation: landscape) {
+
+/* topic picker */
+.sq-topics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ng-s-2);
+}
+.sq-topic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 64px;
+  padding: var(--ng-s-1);
+  border: 2px solid var(--ng-ink-s-2);
+  border-radius: var(--ng-r-md);
+  background: var(--ng-surface-2);
+  color: var(--ng-ink-s);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 800;
+  touch-action: manipulation;
+}
+.sq-topic span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.sq-topic[aria-checked='true'] {
+  border-color: var(--ng-ink-s);
+  background: var(--ng-primary);
+  color: var(--ng-on-primary);
+}
+.sq-topic:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+
+/* play screen: portrait grid */
+.sq-play {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'hud' 'card' 'banter' 'plates' 'tools';
+  grid-template-rows: auto auto auto auto auto;
+  align-content: start;
+  gap: var(--ng-s-2);
+  padding-top: max(var(--ng-s-2), env(safe-area-inset-top));
+  padding-bottom: max(var(--ng-s-2), env(safe-area-inset-bottom));
+}
+.sq-hud {
+  grid-area: hud;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-2);
+  padding: 2px var(--ng-s-2);
+  border-radius: var(--ng-r-pill);
+  background: rgb(0 0 0 / 0.5);
+}
+.sq-hud .ng-hud__item {
+  min-width: 0;
+  text-align: center;
+}
+.sq-hud .ng-hud__label,
+.sq-hud .ng-hud__value {
+  display: block;
+  color: var(--ng-ink);
+}
+.sq-hud .ng-hud__value {
+  font-weight: 900;
+  font-size: var(--ng-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+.sq-practice {
+  padding: 2px 10px;
+  border: 2px dashed var(--ng-accent);
+  border-radius: var(--ng-r-pill);
+  color: var(--ng-ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+.sq-card {
+  grid-area: card;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 128px;
+  padding: 40px 22px 28px;
+}
+.sq-card__q {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.sq-card[data-len='l'] {
+  font-size: 1rem;
+}
+.sq-card[data-len='xl'] {
+  font-size: 0.9375rem;
+  line-height: 1.25;
+}
+.sq-card__n {
+  /* centred on the medallion drawn in the (stretched) card art: (30, 22) of 340 x 190 */
+  left: calc(30 / 340 * 100% - 19px);
+  top: calc(22 / 190 * 100% - 19px);
+}
+.sq-card__cat {
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 62%;
+  padding: 2px 8px 2px 4px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-bg);
+  box-shadow: 0 0 0 2px var(--ng-primary);
+  color: var(--ng-ink);
+  font-size: 0.75rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.sq-card__cat .sq-cat {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.sq-banter {
+  grid-area: banter;
+  display: flex;
+  align-items: center;
+  gap: var(--ng-s-2);
+  min-height: 44px;
+  min-width: 0;
+}
+.sq-banter .ng-bubble {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  align-items: center;
+}
+.sq-banter .ng-banter {
+  font-size: 0.8125rem;
+}
+.sq-plates {
+  grid-area: plates;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+}
+.sq-plate {
+  display: flex;
+  align-items: center;
+  width: min(100%, max(300px, 40dvh));
+}
+.sq-plate__t {
+  font-size: 0.9375rem;
+}
+.sq-plate[data-long='1'] .sq-plate__t {
+  font-size: 0.8125rem;
+}
+.sq-plate:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+.sq-plate[data-cpu]::before {
+  content: attr(data-cpu);
+  position: absolute;
+  top: -5px;
+  right: 46px;
+  z-index: 1;
+  padding: 1px 8px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-bg);
+  color: var(--ng-ink);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+.sq-plate:disabled:not([data-state]) {
+  opacity: 0.85;
+}
+.sq-llbar,
+.sq-duelbar {
+  grid-area: tools;
+}
+.sq-llbar {
+  display: flex;
+  justify-content: center;
+  gap: var(--ng-s-5);
+}
+.sq-llwrap {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+}
+.sq-llcap {
+  color: var(--ng-ink);
+  font-size: 0.6875rem;
+  font-weight: 800;
+}
+.sq-ll:disabled:not(.is-used) {
+  opacity: 0.45;
+}
+.sq-ll:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+.sq-streak {
+  flex: none;
+  min-width: 56px;
+  opacity: 0.6;
+  color: var(--ng-ink);
+}
+.sq-streak.is-hot {
+  opacity: 1;
+}
+.sq-streak__n {
+  min-width: 1ch;
+  font-size: var(--ng-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+.sq-streak__badge {
+  display: none;
+}
+.sq-streak__badge--2,
+.sq-streak__badge--3,
+.sq-streak__badge--5 {
+  display: block;
+}
+.sq-duelbar {
+  display: grid;
+  gap: var(--ng-s-1);
+}
+.sq-duelrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-2);
+}
+.sq-duelchip {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-s-2);
+  min-width: 0;
+  padding: 4px 12px 4px 6px;
+  border-radius: var(--ng-r-pill);
+  background: rgb(0 0 0 / 0.4);
+  color: var(--ng-ink);
+}
+.sq-duelchip .ng-avatar {
+  width: 36px;
+  height: 36px;
+}
+.sq-duelchip__who {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 800;
+  font-size: 0.8125rem;
+}
+.sq-duelchip__n {
+  font-size: var(--ng-fs-lg);
+  font-variant-numeric: tabular-nums;
+}
+.sq-duelchip:first-child {
+  padding-left: 12px;
+}
+.sq-duelstatus {
+  margin: 0;
+  min-height: 1.25em;
+  color: var(--ng-ink);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-align: center;
+}
+.sq-fx {
+  z-index: 3;
+}
+.sq-ring.is-paused .sq-arc {
+  transition: none;
+}
+
+/* ask your padi */
+.sq-pollwrap {
+  display: grid;
+  place-items: center;
+  padding: var(--ng-s-2) 0;
+}
+.sq-poll__pct {
+  position: absolute;
+  top: calc(20 / 214 * 100%);
+  left: calc((18 + 68 * var(--i)) / 300 * 100%);
+  width: calc(48 / 300 * 100%);
+  color: #fff3da;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-align: center;
+  transition: opacity 200ms ease-out;
+}
+
+/* duel intro */
+.sq-duelintro,
+.sq-error,
+.sq-stats {
+  gap: var(--ng-s-3);
+}
+.sq-duelintro .hint {
+  max-width: 34ch;
+}
+.sq-duelintro .ng-h {
+  margin-bottom: var(--ng-s-3);
+}
+.sq-duelintro__who {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-s-3);
+  margin: 0;
+  color: var(--ng-ink);
+}
+.sq-podium {
+  flex: none;
+  width: min(100%, 300px);
+}
+.sq-podium__you,
+.sq-podium__cpu {
+  position: absolute;
+  top: 22%;
+  transform: translate(-50%, -50%);
+}
+.sq-podium__you {
+  left: 21%;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  color: var(--ng-ink);
+  font-weight: 900;
+  font-size: 0.8125rem;
+}
+.sq-podium__cpu {
+  left: 79%;
+  width: 52px;
+  height: 52px;
+}
+
+/* stats */
+.sq-stats {
+  align-items: stretch;
+}
+.sq-stats__h {
+  margin: var(--ng-s-2) 0 0;
+  color: var(--ng-ink);
+  font-size: var(--ng-fs-md);
+}
+.sq-statlist,
+.sq-acclist {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sq-stat,
+.sq-acc {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-2);
+  padding: 6px var(--ng-s-3);
+  border-radius: var(--ng-r-md);
+  background: var(--ng-surface);
+  color: var(--ng-ink-s);
+  font-size: var(--ng-fs-sm);
+}
+.sq-stat span,
+.sq-acc__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.sq-acc .sq-cat {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+.sq-acc__name {
+  flex: 1;
+}
+.sq-acc__bar {
+  flex: none;
+  width: 72px;
+  height: 8px;
+  border-radius: 4px;
+  background:
+    linear-gradient(var(--ng-primary), var(--ng-primary)) left / calc(var(--v, 0) * 100%) 100%
+      no-repeat,
+    rgb(0 0 0 / 0.18);
+}
+.sq-acc b {
+  min-width: 3ch;
+  text-align: right;
+}
+.sq-error {
+  justify-content: center;
+  text-align: center;
+}
+.sq-error .ng-h,
+.sq-duelintro .ng-h,
+.sq-stats .ng-h {
+  color: var(--ng-ink);
+}
+
+/* compact screens: the menu always fits without scrolling (360x640 up to a 1280x800 laptop) */
+@media (max-height: 900px) {
+  .menu-art {
+    width: 80px;
+  }
+  .ng-menu__tag {
+    display: none;
+  }
+  .ng-menu {
+    gap: var(--ng-s-3);
+  }
+}
+@media (max-height: 700px) {
   .menu-art {
     display: none;
   }
+  .ng-menu {
+    gap: var(--ng-s-2);
+  }
 }
+/* compact portrait phones (360x640): the play screen */
 @media (max-height: 700px) and (orientation: portrait) {
-  .menu-art {
-    width: 72px;
+  .sq-play {
+    gap: 6px;
+  }
+  .sq-card {
+    min-height: 120px;
+    padding-top: 36px;
+    padding-bottom: 24px;
+  }
+}
+
+/* short landscape phones: question left, plates right */
+@media (max-height: 520px) and (orientation: landscape) {
+  /* menu in two columns: title, difficulty and topic on the left, the buttons on the right */
+  .ng-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    align-content: center;
+    align-items: center;
+    column-gap: var(--ng-s-5);
+    row-gap: var(--ng-s-2);
+    max-width: 820px;
+  }
+  .ng-menu > h1 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .ng-menu > .ng-field {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ng-menu > .hint {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .ng-menu > #menu-topic {
+    grid-column: 1;
+    grid-row: 4;
+  }
+  .ng-menu > .ng-menu__list {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+  .ng-menu > .ng-menu__footer {
+    grid-column: 2;
+    grid-row: 4 / span 2;
+    align-self: start;
+  }
+  .sq-play {
+    max-width: 900px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 330px);
+    grid-template-areas: 'hud plates' 'card plates' 'banter plates' 'tools plates';
+    grid-template-rows: auto auto auto 1fr;
+    align-content: center;
+    column-gap: var(--ng-s-4);
+    min-height: 0;
+  }
+  .sq-plates {
+    align-self: center;
+  }
+  .sq-card {
+    min-height: 100px;
+    padding-top: 36px;
+    padding-bottom: 22px;
+  }
+  .sq-llbar {
+    align-self: end;
+  }
+  .sq-plate {
+    width: min(100%, 300px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sq-poll__pct {
+    transition: none;
   }
 }

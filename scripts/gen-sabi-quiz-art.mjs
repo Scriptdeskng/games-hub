@@ -159,6 +159,8 @@ const questionCard = () =>
   svg(
     '0 0 340 190',
     `<rect x="4" y="8" width="332" height="178" rx="22" fill="#00000040"/><rect x="2" y="2" width="332" height="178" rx="22" fill="${CREAM}" stroke="${GOLD}" stroke-width="4"/><path d="M24 2h288a20 20 0 0 1 20 20v2H4v-2A20 20 0 0 1 24 2z" fill="${WINE}"/>${asoStripe(4, 16, 328, 10)}<g opacity=".9">${diamonds(24, 160, 20, 12, CREAM2, WINE2)}</g><g fill="${WINE2}" opacity=".55"><circle cx="18" cy="48" r="3"/><circle cx="18" cy="62" r="2"/><circle cx="318" cy="48" r="3"/><circle cx="318" cy="62" r="2"/></g><circle cx="30" cy="22" r="19" fill="${WINE}" stroke="${GOLD}" stroke-width="3"/><circle cx="30" cy="22" r="14" fill="none" stroke="${BRIGHT}" stroke-width="1.5" stroke-dasharray="2 4"/>`,
+    // the card is a 100% x 100% CSS background: without "none" the art letterboxes on a wide, short card
+    ' preserveAspectRatio="none"',
   );
 
 // ---------- 3. answer plates ----------
