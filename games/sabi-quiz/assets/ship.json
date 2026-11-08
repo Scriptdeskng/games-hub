@@ -1,0 +1,30 @@
+{
+  "include": [
+    "agogo.svg",
+    "bg/stage-portrait.svg",
+    "bg/stage-landscape.svg",
+    "ui/question-card.svg",
+    "plates/*.svg",
+    "timer/*.svg",
+    "lifelines/*.svg",
+    "streak/*.svg",
+    "poll/*.svg",
+    "duel/*.svg",
+    "icons/categories.svg",
+    "fx/*.svg",
+    "avatars/*.svg",
+    "icon/menu-mark.svg",
+    "packs/*.json"
+  ],
+  "dynamic": [
+    "plates/plate-*.svg",
+    "plates/state-*.svg",
+    "timer/arc*.svg",
+    "lifelines/ll-*.svg",
+    "streak/badge-*.svg",
+    "fx/*.svg",
+    "avatars/*.svg",
+    "packs/*.json"
+  ],
+  "keep": []
+}

@@ -1,0 +1,3088 @@
+{
+  "version": 1,
+  "id": "sabi-core-en",
+  "title": "Sabi Quiz core pack (English)",
+  "lang": "en",
+  "questions": [
+    {
+      "id": "sq-nol-001",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Nigeria's film industry is nicknamed what?",
+      "options": ["Hollywood", "Nollywood", "Bollywood", "Nigerwood"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Nollywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-002",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Which city is the main centre of Nollywood film production?",
+      "options": ["Port Harcourt", "Kaduna", "Jos", "Lagos"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Nollywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-003",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Kannywood makes films mostly in which language?",
+      "options": ["Yoruba", "Igbo", "Hausa", "Efik"],
+      "answer": 2,
+      "source": "Wikipedia: Kannywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-004",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Which northern city is the home of Kannywood?",
+      "options": ["Kano", "Lagos", "Owerri", "Calabar"],
+      "answer": 0,
+      "source": "Wikipedia: Kannywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-005",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Who cuts and arranges filmed scenes into the final movie?",
+      "options": ["Film editor", "Costume designer", "Sound recordist", "Location manager"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: motion picture: Editing",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-006",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "A film's written story with all the dialogue is called a:",
+      "options": ["Soundtrack", "Trailer", "Screenplay", "Poster"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: screenplay",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-007",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "A short clip that advertises an upcoming film is a:",
+      "options": ["Credit", "Sequel", "Remake", "Trailer"],
+      "answer": 3,
+      "source": "Wikipedia: Film trailer",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-008",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "A film that continues the story of an earlier film is a:",
+      "options": ["Prequel", "Sequel", "Remake", "Trailer"],
+      "answer": 1,
+      "source": "Wikipedia: Sequel",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-009",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "Who performs dangerous scenes in place of an actor?",
+      "options": ["Narrator", "Stunt double", "Film editor", "Costume designer"],
+      "answer": 1,
+      "source": "Wikipedia: Stunt double",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-010",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "All the actors in a film are together called the:",
+      "options": ["Crew", "Script", "Set", "Cast"],
+      "answer": 3,
+      "source": "Wikipedia: Cast (entertainment)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-011",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "When a film director shouts \"Cut!\", what happens?",
+      "options": ["Filming starts", "The actors dance", "Filming stops", "The lights come on"],
+      "answer": 2,
+      "source": "Wikipedia: Film director",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-012",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "People who fill the background of crowd scenes are called:",
+      "options": ["Extras", "Directors", "Producers", "Narrators"],
+      "answer": 0,
+      "source": "Wikipedia: Extra (acting)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-013",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "NTA, a well-known Nigerian TV network, stands for Nigerian Television:",
+      "options": ["Authority", "Association", "Agency", "Alliance"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Television Authority",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-014",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "A film shown to an audience for the very first time is a:",
+      "options": ["Sequel", "Trailer", "Remake", "Premiere"],
+      "answer": 3,
+      "source": "Wikipedia: Film premiere",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-015",
+      "category": "nollywood",
+      "difficulty": "easy",
+      "q": "A \"remake\" of a film is:",
+      "options": [
+        "The film's music",
+        "A new version of an old film",
+        "A behind-the-scenes talk",
+        "A film poster"
+      ],
+      "answer": 1,
+      "source": "Wikipedia: Remake",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-016",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Hubert Ogunde is best known as a pioneer of Nigerian:",
+      "options": ["Cartoons", "Radio news", "Theatre", "Opera"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Hubert Ogunde",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-017",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "\"Living in Bondage\" (1992) is often credited with starting the boom in Nigerian:",
+      "options": ["Silent films", "Home-video films", "Cartoon series", "Stage operas"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Nollywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-018",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Which of these films did director Kunle Afolayan make?",
+      "options": ["The Mirror Boy", "Half of a Yellow Sun", "Saworoide", "The Figurine"],
+      "answer": 3,
+      "source": "Wikipedia: The Figurine",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-019",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Tunde Kelani's 1999 film \"Saworoide\" is mainly in which language?",
+      "options": ["Yoruba", "Hausa", "Igbo", "Efik"],
+      "answer": 0,
+      "source": "Wikipedia: Saworoide",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-020",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "The 2014 film \"October 1\" is set in which year?",
+      "options": ["1960", "1914", "1975", "1999"],
+      "answer": 0,
+      "source": "Wikipedia: October 1 (film)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-021",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "\"Basi and Company\", a 1980s Nigerian TV comedy-drama, was created by:",
+      "options": ["Chinua Achebe", "Cyprian Ekwensi", "Wole Soyinka", "Ken Saro-Wiwa"],
+      "answer": 3,
+      "source": "Wikipedia: Basi & Company",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-022",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Which stage name did comedian Moses Olaiya use?",
+      "options": ["Baba Suwe", "Baba Sala", "Papa Ajasco", "Mama Put"],
+      "answer": 1,
+      "source": "Wikipedia: Moses Olaiya",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-023",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "\"The Village Headmaster\" was a long-running Nigerian drama on:",
+      "options": ["Radio only", "Stage only", "Television", "Newspaper pages"],
+      "answer": 2,
+      "source": "Wikipedia: The Village Headmaster",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-024",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Which 1990s Nigerian TV drama series was made by Amaka Igwe?",
+      "options": ["Basi and Company", "The Village Headmaster", "Tales by Moonlight", "Checkmate"],
+      "answer": 3,
+      "source": "Wikipedia: Amaka Igwe",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-025",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Who directed the 2018 film \"Lionheart\"?",
+      "options": ["Kunle Afolayan", "Tunde Kelani", "Genevieve Nnaji", "Biyi Bandele"],
+      "answer": 2,
+      "source": "Wikipedia: Lionheart (2018 film)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-026",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "What does a film's cinematographer mainly control?",
+      "options": [
+        "Casting of actors",
+        "Camera work and lighting",
+        "Ticket sales",
+        "Costume sewing"
+      ],
+      "answer": 1,
+      "source": "Wikipedia: Cinematographer",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-027",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "An \"ensemble cast\" means a film where:",
+      "options": [
+        "Many actors share the main roles",
+        "Only one actor appears",
+        "All actors are animals",
+        "No one speaks"
+      ],
+      "answer": 0,
+      "source": "Wikipedia: Ensemble cast",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-028",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "A film \"close-up\" shot shows:",
+      "options": [
+        "A face or object filling the frame",
+        "A faraway landscape",
+        "The film credits",
+        "A blank screen"
+      ],
+      "answer": 0,
+      "source": "Wikipedia: Close-up",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-029",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "A film \"montage\" is:",
+      "options": [
+        "A single very long shot",
+        "A film's poster",
+        "Short shots edited together to show time passing",
+        "The cinema ticket"
+      ],
+      "answer": 2,
+      "source": "Wikipedia: Montage (filmmaking)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-030",
+      "category": "nollywood",
+      "difficulty": "medium",
+      "q": "Who directed the 2013 film \"Half of a Yellow Sun\"?",
+      "options": ["Tunde Kelani", "Biyi Bandele", "Kunle Afolayan", "Amaka Igwe"],
+      "answer": 1,
+      "source": "Wikipedia: Half of a Yellow Sun (film)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-031",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "The term \"Nollywood\" is often traced to a 2002 article in which newspaper?",
+      "options": ["The New York Times", "The Guardian (UK)", "Daily Times (Nigeria)", "Le Monde"],
+      "answer": 0,
+      "source": "Wikipedia: Nollywood",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-032",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "Hubert Ogunde died in which year?",
+      "options": ["1975", "1990", "1982", "2001"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Hubert Ogunde",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-033",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "Who produced \"Living in Bondage\"?",
+      "options": ["Amaka Igwe", "Tunde Kelani", "Zeb Ejiro", "Kenneth Nnebue"],
+      "answer": 3,
+      "source": "Wikipedia: Living in Bondage (1992 film)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-034",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "On a film set, the \"gaffer\" is the head of the:",
+      "options": ["Costume team", "Catering team", "Electrical and lighting crew", "Stunt team"],
+      "answer": 2,
+      "source": "Wikipedia: Gaffer (filmmaking)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-035",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "On a film set, a \"boom operator\" mainly:",
+      "options": [
+        "Drives the camera truck",
+        "Holds the microphone on a pole",
+        "Paints the sets",
+        "Writes the script"
+      ],
+      "answer": 1,
+      "source": "Wikipedia: Boom operator",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-036",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "In film sound, \"diegetic\" sound is sound that:",
+      "options": [
+        "Comes from inside the story world",
+        "Is added only as film music",
+        "Is recorded in silence",
+        "Only the director hears"
+      ],
+      "answer": 0,
+      "source": "Wikipedia: Diegetic sound",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-037",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "A \"continuity error\" in a film is:",
+      "options": [
+        "A film running too long",
+        "A missing film title",
+        "A cast change in the credits",
+        "A mismatch between shots, like a prop that moves"
+      ],
+      "answer": 3,
+      "source": "Wikipedia: Continuity (fiction)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-nol-038",
+      "category": "nollywood",
+      "difficulty": "hard",
+      "q": "Which Nigerian director made the 1976 film \"Ajani Ogun\"?",
+      "options": ["Tunde Kelani", "Kunle Afolayan", "Ola Balogun", "Eddie Ugbomah"],
+      "answer": 2,
+      "source": "Wikipedia: Ajani Ogun",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-001",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Which drum is famous for \"talking\" by changing pitch?",
+      "options": ["Bass drum", "Snare drum", "Tambourine", "Talking drum"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: talking drum",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-002",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "A shekere is a gourd rattle covered with:",
+      "options": ["Beads", "Feathers", "Leaves", "Wire"],
+      "answer": 0,
+      "source": "Wikipedia: Shekere",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-003",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "An agogo is a kind of:",
+      "options": ["Flute", "Fiddle", "Iron bell", "Drum"],
+      "answer": 2,
+      "source": "Wikipedia: Agogô",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-004",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Fela Kuti created which music style?",
+      "options": ["Highlife", "Afrobeat", "Fújì", "Apala"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Fela Kuti",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-005",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Which Nigerian city is a major hub of the Afrobeats scene?",
+      "options": ["Sokoto", "Yola", "Lagos", "Jalingo"],
+      "answer": 2,
+      "source": "Wikipedia: Afrobeats",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-006",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "How many strings does a standard guitar have?",
+      "options": ["Six", "Three", "Four", "Eight"],
+      "answer": 0,
+      "source": "Wikipedia: Guitar",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-007",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Drums belong to which family of instruments?",
+      "options": ["Strings", "Percussion", "Brass", "Woodwind"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: percussion instrument",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-008",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Which of these is a wind instrument?",
+      "options": ["Drum", "Guitar", "Piano", "Flute"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: wind instrument",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-009",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Which of these is a string instrument?",
+      "options": ["Guitar", "Drum", "Flute", "Trumpet"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: stringed instrument",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-010",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "The Igbo clay pot drum is called the:",
+      "options": ["Gangan", "Udu", "Shekere", "Goje"],
+      "answer": 1,
+      "source": "Wikipedia: Udu (instrument)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-011",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "The speed of a piece of music is called its:",
+      "options": ["Verse", "Chorus", "Tempo", "Lyrics"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: tempo",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-012",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "A group of people singing together is a:",
+      "options": ["Orchestra", "Audience", "Studio", "Choir"],
+      "answer": 3,
+      "source": "Wikipedia: Choir",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-013",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "The part of a song that repeats is the:",
+      "options": ["Intro", "Chorus", "Title", "Album"],
+      "answer": 1,
+      "source": "Wikipedia: Chorus (music)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-014",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "A song with no singing is called:",
+      "options": ["Acoustic", "Remix", "Single", "Instrumental"],
+      "answer": 3,
+      "source": "Wikipedia: Instrumental",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-015",
+      "category": "afrobeats",
+      "difficulty": "easy",
+      "q": "Which of these is a Nigerian music style?",
+      "options": ["Fújì", "Reggae", "Calypso", "Flamenco"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria: Music",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-016",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "King Sunny Adé is a star of which Nigerian style?",
+      "options": ["Apala", "Jùjú", "Fújì", "Highlife"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: King Sunny Adé",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-017",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Sikiru Ayinde Barrister is credited as a pioneer of:",
+      "options": ["Jùjú", "Highlife", "Fújì", "Afrobeat"],
+      "answer": 2,
+      "source": "Wikipedia: Fuji music",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-018",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Victor Olaiya, a highlife legend, played which instrument?",
+      "options": ["Talking drum", "Goje", "Flute", "Trumpet"],
+      "answer": 3,
+      "source": "Wikipedia: Victor Olaiya",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-019",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Stephen Osita Osadebe was a leading star of:",
+      "options": ["Highlife", "Fújì", "Apala", "Jùjú"],
+      "answer": 0,
+      "source": "Wikipedia: Osita Osadebe",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-020",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Haruna Ishola was a pioneer of which style?",
+      "options": ["Highlife", "Afrobeat", "Fújì", "Apala"],
+      "answer": 3,
+      "source": "Wikipedia: Haruna Ishola",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-021",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Hausa praise singer Mamman Shata was from which state?",
+      "options": ["Katsina", "Lagos", "Enugu", "Delta"],
+      "answer": 0,
+      "source": "Wikipedia: Mamman Shata",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-022",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Fela Kuti's 1970s band was Africa 70. Its later name was:",
+      "options": ["Rome 90", "Egypt 80", "Lagos 60", "Kano 50"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Fela Kuti",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-023",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Which of these is a classic Fela Kuti song?",
+      "options": ["Joromi", "Osondi Owendi", "Zombie", "Synchro System"],
+      "answer": 2,
+      "source": "Wikipedia: Zombie (Fela Kuti album)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-024",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Sir Victor Uwaifo, famous for \"Joromi\", was from which state?",
+      "options": ["Kano", "Imo", "Oyo", "Edo"],
+      "answer": 3,
+      "source": "Wikipedia: Victor Uwaifo",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-025",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "The bata is a double-headed drum of which people?",
+      "options": ["Tiv", "Yoruba", "Kanuri", "Ijaw"],
+      "answer": 1,
+      "source": "Wikipedia: Bata drum",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-026",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "The kalangu talking drum is played by which people?",
+      "options": ["Igbo", "Urhobo", "Efik", "Hausa"],
+      "answer": 3,
+      "source": "Wikipedia: Kalangu",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-027",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "The ogene, an iron gong, is most linked to which people?",
+      "options": ["Hausa", "Nupe", "Igbo", "Kanuri"],
+      "answer": 2,
+      "source": "Wikipedia: Ogene (instrument)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-028",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Which drummer helped Fela Kuti create Afrobeat?",
+      "options": ["King Sunny Adé", "Tony Allen", "Osita Osadebe", "Haruna Ishola"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Tony Allen",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-029",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "In \"call and response\" singing, a leader:",
+      "options": [
+        "Sings alone all the time",
+        "Stays silent",
+        "Only plays drums",
+        "Sings a line and the group answers"
+      ],
+      "answer": 3,
+      "source": "Wikipedia: Call and response (music)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-030",
+      "category": "afrobeats",
+      "difficulty": "medium",
+      "q": "Singing \"a cappella\" means singing:",
+      "options": ["Without instruments", "Very loudly", "Only at night", "In a studio"],
+      "answer": 0,
+      "source": "Wikipedia: A cappella",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-031",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "In a dùndún ensemble the lead drum is the \"iyá ilù\". What does iyá mean?",
+      "options": ["Father", "Child", "River", "Mother"],
+      "answer": 3,
+      "source": "Wikipedia: Dundun",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-afb-032",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "Fela Kuti's mother, a women's-rights campaigner, was Funmilayo:",
+      "options": ["Olaiya", "Ransome-Kuti", "Obey", "Osadebe"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Funmilayo Ransome-Kuti",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-033",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "In which city did Fela Kuti study music as a young man?",
+      "options": ["Accra", "Paris", "London", "Cairo"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Fela Kuti",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-034",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "Which Nigerian composer wrote the \"African Suite\" for strings?",
+      "options": ["Fela Sowande", "Fela Kuti", "Ayo Bankole", "Sunny Adé"],
+      "answer": 0,
+      "source": "Wikipedia: Fela Sowande",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-035",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "Yusuf Olatunji was a leading figure of which Yoruba style?",
+      "options": ["Fújì", "Highlife", "Sakara", "Afrobeat"],
+      "answer": 2,
+      "source": "Wikipedia: Yusuf Olatunji",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-036",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "The long kakaki trumpet is traditionally linked to the courts of:",
+      "options": ["Fishermen", "Emirs", "Hunters", "Weavers"],
+      "answer": 1,
+      "source": "Wikipedia: Kakaki",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-037",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "In which year was Fela Kuti born?",
+      "options": ["1928", "1948", "1958", "1938"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Fela Kuti",
+      "reviewed": false
+    },
+    {
+      "id": "sq-afb-038",
+      "category": "afrobeats",
+      "difficulty": "hard",
+      "q": "King Sunny Adé's band is called the:",
+      "options": ["African Beats", "Egypt 80", "Super Stars", "Lagos Sound"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: King Sunny Adé",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-001",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "What is the nickname of the Nigerian men's national team?",
+      "options": ["Black Stars", "Indomitable Lions", "Super Eagles", "Elephants"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nigeria national football team",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-002",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "What is the nickname of Nigeria's women's national team?",
+      "options": ["Super Eagles", "Black Queens", "Lionesses", "Super Falcons"],
+      "answer": 3,
+      "source": "Wikipedia: Nigeria women's national football team",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-003",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "How many players per team are on the pitch, including the goalkeeper?",
+      "options": ["9", "11", "12", "15"],
+      "answer": 1,
+      "source": "Wikipedia: Association football",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-004",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "How many minutes does a normal football match last?",
+      "options": ["90", "60", "80", "120"],
+      "answer": 0,
+      "source": "Wikipedia: Association football",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-005",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "What does a red card mean?",
+      "options": ["The player is sent off", "A free kick", "A corner kick", "Time added"],
+      "answer": 0,
+      "source": "Wikipedia: Penalty card",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-006",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "Who is the only player allowed to use hands in the penalty box?",
+      "options": ["The captain", "The goalkeeper", "The striker", "The referee"],
+      "answer": 1,
+      "source": "Wikipedia: Goalkeeper (association football)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-007",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "A foul by a defender inside the box gives the other team a:",
+      "options": ["Throw-in", "Goal kick", "Penalty kick", "Corner kick"],
+      "answer": 2,
+      "source": "Wikipedia: Penalty kick (association football)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-008",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "How many goals by one player make a hat-trick?",
+      "options": ["Two", "Four", "Five", "Three"],
+      "answer": 3,
+      "source": "Wikipedia: Hat-trick",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-009",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "AFCON is the national-team championship of which continent?",
+      "options": ["Africa", "Asia", "Europe", "South America"],
+      "answer": 0,
+      "source": "Wikipedia: Africa Cup of Nations",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-010",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "Which body runs world football?",
+      "options": ["CAF", "UEFA", "FIFA", "IOC"],
+      "answer": 2,
+      "source": "Wikipedia: FIFA",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-011",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "How often is the men's World Cup held?",
+      "options": ["Every year", "Every two years", "Every ten years", "Every four years"],
+      "answer": 3,
+      "source": "Wikipedia: FIFA World Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-012",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "Which country hosted the 2010 World Cup, the first in Africa?",
+      "options": ["Nigeria", "South Africa", "Egypt", "Morocco"],
+      "answer": 1,
+      "source": "Wikipedia: 2010 FIFA World Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-013",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "Outfield players may not touch the ball with their:",
+      "options": ["Hands", "Feet", "Knees", "Head"],
+      "answer": 0,
+      "source": "Wikipedia: Laws of the Game (association football)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-014",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "A corner kick is taken from:",
+      "options": [
+        "The centre circle",
+        "The penalty spot",
+        "The touchline middle",
+        "The corner of the pitch"
+      ],
+      "answer": 3,
+      "source": "Wikipedia: Corner kick",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-015",
+      "category": "football",
+      "difficulty": "easy",
+      "q": "The shape of a football pitch is a:",
+      "options": ["Circle", "Triangle", "Rectangle", "Star"],
+      "answer": 2,
+      "source": "Wikipedia: Football pitch",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-016",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "In which year did Nigeria first play at the men's World Cup?",
+      "options": ["1990", "1994", "1998", "2002"],
+      "answer": 1,
+      "source": "Wikipedia: Nigeria at the FIFA World Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-017",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Which team did Nigeria beat in the 1996 Olympic men's football final?",
+      "options": ["Brazil", "Ghana", "Argentina", "Spain"],
+      "answer": 2,
+      "source": "Wikipedia: Football at the 1996 Summer Olympics",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-018",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Nigeria won Olympic men's football gold in 1996 in which city?",
+      "options": ["Sydney", "Barcelona", "Athens", "Atlanta"],
+      "answer": 3,
+      "source": "Wikipedia: Football at the 1996 Summer Olympics",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-019",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Who scored Nigeria's first goal at a World Cup, in 1994?",
+      "options": ["Rashidi Yekini", "Daniel Amokachi", "Sunday Oliseh", "Finidi George"],
+      "answer": 0,
+      "source": "Wikipedia: Rashidi Yekini",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-020",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "The National Stadium in Surulere is in which city?",
+      "options": ["Abuja", "Kano", "Lagos", "Enugu"],
+      "answer": 2,
+      "source": "Wikipedia: Teslim Balogun Stadium",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-021",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "In which year did Nigeria first win the Africa Cup of Nations?",
+      "options": ["1976", "1980", "1988", "1994"],
+      "answer": 1,
+      "source": "Wikipedia: 1980 African Cup of Nations",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-022",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Nigeria won AFCON 1994 in which country?",
+      "options": ["Tunisia", "Egypt", "Ghana", "Morocco"],
+      "answer": 0,
+      "source": "Wikipedia: 1994 African Cup of Nations",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-023",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Enyimba won the CAF Champions League in 2003 and in:",
+      "options": ["2005", "2002", "2007", "2004"],
+      "answer": 3,
+      "source": "Wikipedia: Enyimba F.C.",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-024",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Who captained Nigeria to AFCON 1994 and coached them to the 2013 title?",
+      "options": ["Rashidi Yekini", "Jay-Jay Okocha", "Stephen Keshi", "Christian Chukwu"],
+      "answer": 2,
+      "source": "Wikipedia: Stephen Keshi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-025",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Enyimba FC is based in which city?",
+      "options": ["Kano", "Ibadan", "Warri", "Aba"],
+      "answer": 3,
+      "source": "Wikipedia: Enyimba F.C.",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-026",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "The Super Falcons won the first African women's title in 1991, held in:",
+      "options": ["Egypt", "Nigeria", "Senegal", "Zambia"],
+      "answer": 1,
+      "source": "Wikipedia: 1991 African Women's Championship",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-027",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "What happens if a player gets two yellow cards in one match?",
+      "options": [
+        "They are sent off",
+        "They get a penalty",
+        "They score a goal",
+        "They swap teams"
+      ],
+      "answer": 0,
+      "source": "Wikipedia: Penalty card",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-028",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "How far is the penalty spot from the goal line?",
+      "options": ["6 yards (5.5 m)", "18 yards (16.5 m)", "12 yards (11 m)", "20 yards (18 m)"],
+      "answer": 2,
+      "source": "Wikipedia: Penalty area",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-029",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "Which country won the first World Cup in 1930?",
+      "options": ["Brazil", "Italy", "Argentina", "Uruguay"],
+      "answer": 3,
+      "source": "Wikipedia: 1930 FIFA World Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-030",
+      "category": "football",
+      "difficulty": "medium",
+      "q": "What is the nickname of Nigeria's Under-17 team?",
+      "options": ["Flying Eagles", "Golden Eaglets", "Dream Team", "Super Falcons"],
+      "answer": 1,
+      "source": "Wikipedia: Nigeria national under-17 football team",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-031",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Who captained Nigeria to its first AFCON title in 1980?",
+      "options": ["Segun Odegbami", "Stephen Keshi", "Christian Chukwu", "Emmanuel Okala"],
+      "answer": 2,
+      "source": "Wikipedia: 1980 African Cup of Nations",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-032",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "In which year did Nigeria win its first Under-17 World Cup?",
+      "options": ["1987", "1991", "1993", "1985"],
+      "answer": 3,
+      "source": "Wikipedia: FIFA U-17 World Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-033",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Which Ibadan club won the 1976 African Cup Winners' Cup?",
+      "options": ["Shooting Stars", "Rangers International", "Enyimba", "Kano Pillars"],
+      "answer": 0,
+      "source": "Wikipedia: 1976 African Cup Winners' Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-034",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Which Enugu club won the 1977 African Cup Winners' Cup?",
+      "options": ["Shooting Stars", "Rangers International", "Enyimba", "Heartland"],
+      "answer": 1,
+      "source": "Wikipedia: 1977 African Cup Winners' Cup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-035",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Nigeria beat which team in the AFCON 1994 final?",
+      "options": ["Ivory Coast", "Zambia", "Mali", "Tunisia"],
+      "answer": 1,
+      "source": "Wikipedia: 1994 African Cup of Nations",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-036",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Which team did Nigeria face in its first-ever World Cup match, in 1994?",
+      "options": ["Bulgaria", "Argentina", "Greece", "Italy"],
+      "answer": 0,
+      "source": "Wikipedia: 1994 FIFA World Cup Group D",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-037",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "The nickname \"Flying Eagles\" belongs to Nigeria's team at which level?",
+      "options": ["Under-17", "Olympic", "Under-20", "Women's senior"],
+      "answer": 2,
+      "source": "Wikipedia: Nigeria national under-20 football team",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fbl-038",
+      "category": "football",
+      "difficulty": "hard",
+      "q": "Who scored the golden goal in the 1996 Olympic semi-final against Brazil?",
+      "options": ["Daniel Amokachi", "Jay-Jay Okocha", "Victor Ikpeba", "Kanu Nwankwo"],
+      "answer": 3,
+      "source": "Wikipedia: Football at the 1996 Summer Olympics",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-001",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "On which date is Nigeria's Independence Day?",
+      "options": ["1 January", "25 December", "14 February", "1 October"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Nigeria: History",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-002",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "In which year did Nigeria become independent?",
+      "options": ["1914", "1947", "1960", "1979"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nigeria: History",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-003",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "In 1991 Nigeria's capital officially moved from Lagos to:",
+      "options": ["Kaduna", "Abuja", "Ibadan", "Enugu"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Abuja",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-004",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which country ruled Nigeria as a colony before 1960?",
+      "options": ["Britain", "France", "Portugal", "Germany"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria: History",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-005",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "The name \"Nigeria\" comes from which river?",
+      "options": ["Niger", "Benue", "Congo", "Nile"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria: Name",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-006",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which ancient culture is famous for terracotta heads and figures?",
+      "options": ["Zulu", "Maya", "Nok", "Viking"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nok culture",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-007",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which city was the capital of the old Kingdom of Benin?",
+      "options": ["Kano", "Calabar", "Jos", "Benin City"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Benin kingdom",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-008",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "A traditional ruler of a northern Hausa-Fulani emirate is an:",
+      "options": ["Oba", "Emir", "Eze", "Alake"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: emir",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-009",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which two colours are on the Nigerian flag?",
+      "options": ["Red and blue", "Yellow and black", "Purple and gold", "Green and white"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: flag of Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-010",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "In 1914 the Northern Protectorate and which other were joined?",
+      "options": ["Eastern Region", "Lagos Colony only", "Southern Protectorate", "Cameroons"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nigeria: History",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-011",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which Yoruba city is famous for ancient bronze and terracotta heads?",
+      "options": ["Ile-Ife", "Kano", "Sokoto", "Maiduguri"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Ife",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-012",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which city was Nigeria's capital at independence in 1960?",
+      "options": ["Abuja", "Lagos", "Kano", "Port Harcourt"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Lagos",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-013",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "Which old walled northern city is famous for its dye pits?",
+      "options": ["Lagos", "Calabar", "Owerri", "Kano"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Kano",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-014",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "The study of old objects dug up from the ground is called:",
+      "options": ["Astronomy", "Geology", "Archaeology", "Zoology"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: archaeology",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-015",
+      "category": "history",
+      "difficulty": "easy",
+      "q": "A museum is a place that:",
+      "options": [
+        "Sells fresh food",
+        "Keeps and shows old and important objects",
+        "Repairs cars",
+        "Trains footballers"
+      ],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: museum",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-016",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "The naira replaced the pound in which year?",
+      "options": ["1960", "1985", "1999", "1973"],
+      "answer": 3,
+      "source": "Wikipedia: Nigerian naira",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-017",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Before the naira, Nigeria used the Nigerian:",
+      "options": ["Dollar", "Pound", "Franc", "Rand"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian pound",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-018",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Nigeria became a republic in which year?",
+      "options": ["1963", "1960", "1966", "1970"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria: History",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-019",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Herbert Macaulay is often called the father of Nigerian:",
+      "options": ["Football", "Cinema", "Nationalism", "Farming"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Herbert Macaulay",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-020",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Who was Nigeria's first Prime Minister?",
+      "options": ["Herbert Macaulay", "Abubakar Tafawa Balewa", "Obafemi Awolowo", "Ahmadu Bello"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Abubakar Tafawa Balewa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-021",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Which northern city was the centre of a large 19th-century caliphate?",
+      "options": ["Sokoto", "Lagos", "Benin City", "Calabar"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Sokoto caliphate",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-022",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "The Oyo Empire was a powerful kingdom of which people?",
+      "options": ["Igbo", "Hausa", "Yoruba", "Ijaw"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Oyo empire",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-023",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "What is the old Yoruba name for Lagos?",
+      "options": ["Oyo", "Ife", "Ilorin", "Eko"],
+      "answer": 3,
+      "source": "Wikipedia: Lagos",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-024",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Which animals support the shield on Nigeria's coat of arms?",
+      "options": ["Lions", "Elephants", "Leopards", "Horses"],
+      "answer": 3,
+      "source": "Wikipedia: Coat of arms of Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-025",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "The first Nigerian railway line linked Lagos with which city by 1901?",
+      "options": ["Ibadan", "Kano", "Enugu", "Jos"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Railway Corporation",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-026",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "In which year was the University of Ibadan founded?",
+      "options": ["1960", "1930", "1948", "1975"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: University of Ibadan",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-027",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "FESTAC '77, a large arts festival, was held in which city?",
+      "options": ["Kano", "Lagos", "Enugu", "Calabar"],
+      "answer": 1,
+      "source": "Wikipedia: Second World Black and African Festival of Arts and Culture",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-028",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "Who led the 1914 joining of Northern and Southern Nigeria?",
+      "options": ["Mungo Park", "Herbert Macaulay", "Lord Lugard", "Queen Amina"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Frederick Lugard",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-029",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "In 1972 Nigeria changed from driving on the left to driving on the:",
+      "options": ["Pavement", "Middle", "Water", "Right"],
+      "answer": 3,
+      "source": "Wikipedia: Left- and right-hand traffic",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-030",
+      "category": "history",
+      "difficulty": "medium",
+      "q": "In which year did Abuja officially become the capital?",
+      "options": ["1991", "1976", "1960", "2001"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Abuja",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-031",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "Who is credited with coining the name \"Nigeria\" in 1897?",
+      "options": ["Frederick Lugard", "Mary Slessor", "Mungo Park", "Flora Shaw"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Nigeria: Name",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-032",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "The Nok culture flourished from about 1000 BCE to roughly:",
+      "options": ["1500 CE", "1800 CE", "300 CE", "2000 BCE"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nok culture",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-033",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "The famous Igbo-Ukwu bronzes date from about which century?",
+      "options": ["9th century", "3rd century", "15th century", "19th century"],
+      "answer": 0,
+      "source": "Wikipedia: Igbo-Ukwu",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-034",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "Queen Amina of Zazzau is traditionally remembered as a:",
+      "options": ["Poet", "Warrior queen", "Explorer", "Navigator"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Amina",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-035",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "The medieval empire of Kanem-Bornu was centred near which lake?",
+      "options": ["Lake Victoria", "Lake Chad", "Kainji Lake", "Lake Volta"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Kanem-Bornu empire",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-036",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "In which year did Nigeria first compete at the Olympic Games?",
+      "options": ["1952", "1936", "1960", "1968"],
+      "answer": 0,
+      "source": "Wikipedia: Nigeria at the Olympics",
+      "reviewed": false
+    },
+    {
+      "id": "sq-his-037",
+      "category": "history",
+      "difficulty": "hard",
+      "q": "In which year did Britain take Lagos through a treaty of cession?",
+      "options": ["1807", "1900", "1861", "1914"],
+      "answer": 2,
+      "source": "Wikipedia: Lagos",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-001",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Jollof rice gets its colour mainly from a base of:",
+      "options": ["Tomatoes and peppers", "Beetroot", "Red paint", "Cola nuts"],
+      "answer": 0,
+      "source": "Wikipedia: Jollof rice",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-002",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Garri is made from which root crop?",
+      "options": ["Yam", "Cocoyam", "Cassava", "Potato"],
+      "answer": 2,
+      "source": "Wikipedia: Garri",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-003",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Eba is made by mixing garri with:",
+      "options": ["Cold milk", "Hot water", "Palm oil only", "Sugar"],
+      "answer": 1,
+      "source": "Wikipedia: Eba",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-004",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Akara is fried balls made from:",
+      "options": ["Rice", "Maize", "Plantain", "Beans"],
+      "answer": 3,
+      "source": "Wikipedia: Akara",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-005",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Moin moin is a steamed pudding of ground:",
+      "options": ["Yam", "Beans", "Cassava", "Millet"],
+      "answer": 1,
+      "source": "Wikipedia: Moin moin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-006",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Puff puff is a:",
+      "options": ["Boiled egg", "Rice dish", "Deep-fried dough ball", "Cold drink"],
+      "answer": 2,
+      "source": "Wikipedia: Puff-puff",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-007",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Dodo is fried:",
+      "options": ["Ripe plantain", "Yam", "Beans", "Okra"],
+      "answer": 0,
+      "source": "Wikipedia: Dodo (food)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-008",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Egusi soup is made with ground seeds of:",
+      "options": ["Pumpkin leaf", "Cocoa", "Cashew", "Melon"],
+      "answer": 3,
+      "source": "Wikipedia: Egusi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-009",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Zobo is a drink made from the petals of:",
+      "options": ["Rose", "Hibiscus", "Sunflower", "Marigold"],
+      "answer": 1,
+      "source": "Wikipedia: Zobo",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-010",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Pounded yam is made from:",
+      "options": ["Plantain", "Beans", "Yam", "Millet"],
+      "answer": 2,
+      "source": "Wikipedia: Pounded yam",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-011",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Chin chin is a crunchy:",
+      "options": ["Fish soup", "Rice drink", "Fruit salad", "Fried dough snack"],
+      "answer": 3,
+      "source": "Wikipedia: Chin chin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-012",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Agege bread is named after a suburb of which city?",
+      "options": ["Lagos", "Kano", "Enugu", "Jos"],
+      "answer": 0,
+      "source": "Wikipedia: Agege bread",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-013",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Which of these is a \"swallow\" eaten with soup?",
+      "options": ["Jollof rice", "Pounded yam", "Puff puff", "Suya"],
+      "answer": 1,
+      "source": "Wikipedia: Swallow (food)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-014",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Kuli-kuli is a crunchy snack made from ground:",
+      "options": ["Groundnuts", "Melon", "Maize", "Cassava"],
+      "answer": 0,
+      "source": "Wikipedia: Kuli-kuli",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-015",
+      "category": "food",
+      "difficulty": "easy",
+      "q": "Which of these is a Nigerian staple tuber?",
+      "options": ["Apple", "Grape", "Yam", "Kiwi"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: yam",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-016",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Suya is often sprinkled with a spicy peanut powder called:",
+      "options": ["Ogiri", "Iru", "Ugba", "Yaji"],
+      "answer": 3,
+      "source": "Wikipedia: Suya",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-017",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Amala is traditionally made from:",
+      "options": ["Rice flour", "Yam flour", "Wheat flour", "Corn starch"],
+      "answer": 1,
+      "source": "Wikipedia: Amala",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-018",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Ewedu soup is made from the leaves of:",
+      "options": ["Cocoa", "Cassava", "Jute (ewedu)", "Banana"],
+      "answer": 2,
+      "source": "Wikipedia: Ewedu",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-019",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Ogbono soup is thickened with ground seeds of:",
+      "options": ["Melon", "Groundnut", "Wild mango", "Sesame"],
+      "answer": 2,
+      "source": "Wikipedia: Ogbono soup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-020",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Tuwo shinkafa, a northern swallow, is made from:",
+      "options": ["Yam", "Cassava", "Rice", "Plantain"],
+      "answer": 2,
+      "source": "Wikipedia: Tuwo shinkafa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-021",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Fura da nono is made of millet balls and:",
+      "options": ["Palm oil", "Fish stock", "Honey", "Fermented milk"],
+      "answer": 3,
+      "source": "Wikipedia: Fura da nono",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-022",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Kunu is a northern drink usually made from:",
+      "options": ["Plantain", "Millet or sorghum", "Cassava peel", "Palm kernel"],
+      "answer": 1,
+      "source": "Wikipedia: Kunu",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-023",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Banga soup is made from the fruit of the:",
+      "options": ["Oil palm", "Mango tree", "Cocoa tree", "Kola tree"],
+      "answer": 0,
+      "source": "Wikipedia: Banga soup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-024",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Afang soup is a famous dish of which people?",
+      "options": ["Efik and Ibibio", "Hausa and Fulani", "Tiv and Idoma", "Kanuri and Shuwa"],
+      "answer": 0,
+      "source": "Wikipedia: Afang soup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-025",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Abacha, the Igbo \"African salad\", is made from shredded:",
+      "options": ["Yam", "Cassava", "Cabbage", "Rice"],
+      "answer": 1,
+      "source": "Wikipedia: Abacha (food)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-026",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Ofada rice is named after a town in which state?",
+      "options": ["Kano", "Imo", "Edo", "Ogun"],
+      "answer": 3,
+      "source": "Wikipedia: Ofada rice",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-027",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Bole, popular in Port Harcourt, is roasted:",
+      "options": ["Yam", "Cassava", "Plantain", "Corn"],
+      "answer": 2,
+      "source": "Wikipedia: Boli (food)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-028",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Miyan kuka is a northern soup made from the leaves of the:",
+      "options": ["Baobab", "Pumpkin", "Cocoa", "Cassava"],
+      "answer": 0,
+      "source": "Wikipedia: Miyan kuka",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-029",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Ukwa, an Igbo dish, is made from the seeds of which tree?",
+      "options": ["Mango", "Breadfruit", "Orange", "Cashew"],
+      "answer": 1,
+      "source": "Wikipedia: Ukwa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-030",
+      "category": "food",
+      "difficulty": "medium",
+      "q": "Efo riro is a Yoruba soup made mainly with:",
+      "options": ["Dried fish only", "Rice", "Leafy vegetables", "Corn"],
+      "answer": 2,
+      "source": "Wikipedia: Efo riro",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-031",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Ikokore, an Ijebu dish, is a porridge made from:",
+      "options": ["White beans", "Plantain", "Maize", "Water yam"],
+      "answer": 3,
+      "source": "Wikipedia: Ikokore",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-032",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Edikang ikong soup is rich in ugu and which other leaf?",
+      "options": ["Bitterleaf", "Waterleaf", "Basil", "Spinach"],
+      "answer": 1,
+      "source": "Wikipedia: Edikang ikong",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-033",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Iru, or dawadawa, is a seasoning made from fermented:",
+      "options": ["Locust beans", "Groundnuts", "Melon seeds", "Tomatoes"],
+      "answer": 0,
+      "source": "Wikipedia: Iru (food)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-034",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Kilishi is a northern snack of thin, spiced and dried:",
+      "options": ["Fish", "Plantain", "Beef", "Cassava"],
+      "answer": 2,
+      "source": "Wikipedia: Kilishi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-035",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Tuwo masara, a northern swallow, is made from:",
+      "options": ["Rice", "Maize", "Yam", "Beans"],
+      "answer": 1,
+      "source": "Wikipedia: Tuwo masara",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-036",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "In the Niger Delta, banga soup is often eaten with a swallow called:",
+      "options": ["Semo", "Amala", "Starch", "Fufu"],
+      "answer": 2,
+      "source": "Wikipedia: Banga soup",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-037",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Oha soup is an Igbo soup made with the leaves of the:",
+      "options": ["Cocoa tree", "Moringa", "Plantain", "Oha tree"],
+      "answer": 3,
+      "source": "Wikipedia: Ofe oha",
+      "reviewed": false
+    },
+    {
+      "id": "sq-fod-038",
+      "category": "food",
+      "difficulty": "hard",
+      "q": "Gbegiri is a Yoruba soup made from:",
+      "options": ["Peeled beans", "Egusi", "Okra", "Corn"],
+      "answer": 0,
+      "source": "Wikipedia: Gbegiri",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-001",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "What is the capital of Nigeria?",
+      "options": ["Lagos", "Kano", "Abuja", "Ibadan"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-002",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "What is the currency of Nigeria?",
+      "options": ["Cedi", "Rand", "Shilling", "Naira"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-003",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "What is the official language of Nigeria?",
+      "options": ["Hausa", "English", "French", "Arabic"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-004",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "How many states does Nigeria have, not counting the FCT?",
+      "options": ["36", "24", "30", "42"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-005",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which is the largest ocean?",
+      "options": ["Atlantic", "Indian", "Arctic", "Pacific"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: ocean",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-006",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "How many continents are there?",
+      "options": ["Seven", "Five", "Six", "Nine"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: continent",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-007",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which planet is closest to the Sun?",
+      "options": ["Venus", "Mercury", "Earth", "Mars"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Mercury (planet)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-008",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which gas do plants take in from the air?",
+      "options": ["Oxygen", "Nitrogen", "Carbon dioxide", "Helium"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: photosynthesis",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-009",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which is the largest land animal?",
+      "options": ["Lion", "Giraffe", "Hippo", "Elephant"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: elephant",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-010",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Who wrote the novel \"Things Fall Apart\"?",
+      "options": ["Wole Soyinka", "Ben Okri", "Chinua Achebe", "Buchi Emecheta"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Things Fall Apart",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-011",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "How many colours are in a rainbow?",
+      "options": ["Seven", "Five", "Nine", "Twelve"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: rainbow",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-012",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "At what temperature does water freeze, in degrees Celsius?",
+      "options": ["10", "0", "32", "100"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: freezing point",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-013",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which is the largest city in Nigeria?",
+      "options": ["Abuja", "Enugu", "Lagos", "Kaduna"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Lagos",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-014",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "What is 7 times 8?",
+      "options": ["54", "56", "63", "49"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: multiplication",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-015",
+      "category": "general",
+      "difficulty": "easy",
+      "q": "Which part of a plant takes in water from the soil?",
+      "options": ["Leaves", "Flowers", "Fruit", "Roots"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: root",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-016",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Who won the Nobel Prize in Literature in 1986, the first African to do so?",
+      "options": ["Chinua Achebe", "Ben Okri", "Wole Soyinka", "Cyprian Ekwensi"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Wole Soyinka",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-017",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Who wrote the novel \"Americanah\"?",
+      "options": ["Chimamanda Ngozi Adichie", "Buchi Emecheta", "Flora Nwapa", "Zaynab Alkali"],
+      "answer": 0,
+      "source": "Wikipedia: Americanah",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-018",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which Nigerian author won the 1991 Booker Prize for \"The Famished Road\"?",
+      "options": ["Chinua Achebe", "Ben Okri", "Wole Soyinka", "Elechi Amadi"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Ben Okri",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-019",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Who wrote \"The Palm-Wine Drinkard\" (1952)?",
+      "options": ["Cyprian Ekwensi", "Gabriel Okara", "Elechi Amadi", "Amos Tutuola"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Amos Tutuola",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-020",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Whose 1966 novel \"Efuru\" was a first for Nigerian women writers?",
+      "options": ["Buchi Emecheta", "Flora Nwapa", "Adaobi Nwaubani", "Sefi Atta"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Flora Nwapa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-021",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which planet is known as the Red Planet?",
+      "options": ["Venus", "Jupiter", "Mars", "Saturn"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Mars (planet)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-022",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "What is the capital of Ghana?",
+      "options": ["Accra", "Kumasi", "Lomé", "Abidjan"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Accra",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-023",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which is the largest country in Africa by area?",
+      "options": ["Nigeria", "Egypt", "South Africa", "Algeria"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Africa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-024",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which is the highest mountain on Earth above sea level?",
+      "options": ["Mount Kenya", "Mount Everest", "Kilimanjaro", "Mont Blanc"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Mount Everest",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-025",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which is the largest organ of the human body?",
+      "options": ["Liver", "Heart", "Skin", "Brain"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: skin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-026",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "Which is the hardest natural substance?",
+      "options": ["Gold", "Iron", "Granite", "Diamond"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: diamond",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-027",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "What is the square root of 144?",
+      "options": ["12", "14", "16", "24"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: square root",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-028",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "ECOWAS stands for Economic Community of West African:",
+      "options": ["States", "Schools", "Sports", "Songs"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Economic Community of West African States",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-029",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "What is the world's largest hot desert?",
+      "options": ["Kalahari", "Sahara", "Gobi", "Namib"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Sahara",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-030",
+      "category": "general",
+      "difficulty": "medium",
+      "q": "What is the capital of Kenya?",
+      "options": ["Mombasa", "Kampala", "Dodoma", "Nairobi"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Nairobi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-031",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "Who wrote the novel \"The Joys of Motherhood\"?",
+      "options": ["Flora Nwapa", "Chimamanda Ngozi Adichie", "Sefi Atta", "Buchi Emecheta"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Buchi Emecheta",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-032",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "Who wrote the 1961 novel \"Jagua Nana\"?",
+      "options": ["Cyprian Ekwensi", "Chinua Achebe", "Elechi Amadi", "Ben Okri"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Cyprian Ekwensi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-033",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "Who wrote the 1966 novel \"The Concubine\"?",
+      "options": ["Cyprian Ekwensi", "Elechi Amadi", "Gabriel Okara", "T. M. Aluko"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Elechi Amadi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-034",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "Who wrote the 1964 novel \"The Voice\"?",
+      "options": ["Elechi Amadi", "Amos Tutuola", "Gabriel Okara", "Wole Soyinka"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Gabriel Okara",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-035",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "What is the chemical symbol for sodium?",
+      "options": ["So", "Sd", "Na", "S"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: sodium",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-036",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "How many bones does an adult human body have?",
+      "options": ["206", "150", "300", "412"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: human skeleton",
+      "reviewed": false
+    },
+    {
+      "id": "sq-gen-037",
+      "category": "general",
+      "difficulty": "hard",
+      "q": "Light travels at about how many kilometres per second?",
+      "options": ["3,000", "30,000", "3,000,000", "300,000"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: speed of light",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-001",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"abeg\" means:",
+      "options": ["Please", "Thank you", "Goodbye", "Hello"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-002",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"wahala\" means:",
+      "options": ["Money", "Trouble", "Food", "Music"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-003",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "Wetin \"chop\" mean for Pidgin?",
+      "options": ["To run", "To sleep", "To eat", "To sing"],
+      "answer": 2,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false,
+      "tags": ["pidgin", "native-review"]
+    },
+    {
+      "id": "sq-pcm-004",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "Wetin be \"pikin\" for Pidgin?",
+      "options": ["Market", "Friend", "Teacher", "Child"],
+      "answer": 3,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false,
+      "tags": ["pidgin", "native-review"]
+    },
+    {
+      "id": "sq-pcm-005",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"sabi\" means:",
+      "options": ["To sell", "To know", "To cook", "To cry"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-006",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"wetin\" means:",
+      "options": ["Where", "Who", "What", "When"],
+      "answer": 2,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-007",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"comot\" means:",
+      "options": ["Sit down", "Come in", "Stand up", "Come out or leave"],
+      "answer": 3,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-008",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"oga\" means:",
+      "options": ["Boss", "Child", "Neighbour", "Driver"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-009",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "Greeting \"How far?\" in Pidgin means:",
+      "options": [
+        "How far is it?",
+        "How much is it?",
+        "How old are you?",
+        "How are you? / What's up?"
+      ],
+      "answer": 3,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-010",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"no wahala\" means:",
+      "options": ["No problem", "No water", "No money", "No time"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-011",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "\"Naija\" is a popular short name for:",
+      "options": ["Niger", "Nairobi", "Nigeria", "Namibia"],
+      "answer": 2,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-012",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"padi\" means:",
+      "options": ["Enemy", "Friend", "Boss", "Visitor"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-013",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Pidgin, \"waka\" means:",
+      "options": ["To wake", "To walk", "To work", "To wait"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-014",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "Wetin \"gist\" mean for Pidgin?",
+      "options": ["Chat or news", "A gift", "A meal", "A price"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false,
+      "tags": ["pidgin", "native-review"]
+    },
+    {
+      "id": "sq-pcm-015",
+      "category": "pidgin",
+      "difficulty": "easy",
+      "q": "In Lagos, a \"danfo\" is a:",
+      "options": ["Fishing boat", "Local dish", "Drum", "Yellow minibus"],
+      "answer": 3,
+      "source": "Wikipedia: Danfo",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-016",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "In Pidgin, \"abi\" at the end of a question means:",
+      "options": ["Please", "Right? / Isn't it?", "Quickly", "Goodbye"],
+      "answer": 1,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-017",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "In Pidgin, \"katakata\" means:",
+      "options": ["Confusion or trouble", "Celebration", "Silence", "Hunger"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-018",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "In Lagos slang, \"owambe\" means a:",
+      "options": ["Bus stop", "Market stall", "Lavish party", "Football match"],
+      "answer": 2,
+      "source": "Wikipedia: Owambe",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-019",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Nigerian slang word \"japa\" means to:",
+      "options": ["Dance", "Cook", "Pray", "Leave or run away abroad"],
+      "answer": 3,
+      "source": "Wikipedia: Japa (Nigerian slang)",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-020",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Yoruba greeting \"Ẹ kú àárọ̀\" means:",
+      "options": ["Good night", "Welcome", "Thank you", "Good morning"],
+      "answer": 3,
+      "source": "Wikipedia: Yoruba language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-021",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Igbo question \"Kedu?\" means:",
+      "options": ["Where is it?", "Who is that?", "How are you?", "How much?"],
+      "answer": 2,
+      "source": "Wikipedia: Igbo language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-022",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Hausa phrase \"Na gode\" means:",
+      "options": ["Good morning", "Thank you", "Goodbye", "Please"],
+      "answer": 1,
+      "source": "Wikipedia: Hausa language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-023",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Yoruba phrase \"Ẹ ṣé\" means:",
+      "options": ["Thank you", "Sorry", "Please", "Welcome"],
+      "answer": 0,
+      "source": "Wikipedia: Yoruba language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-024",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Igbo word \"Daalụ\" means:",
+      "options": ["Good night", "Come here", "Sorry", "Thank you"],
+      "answer": 3,
+      "source": "Wikipedia: Igbo language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-025",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "Nigeria's three largest indigenous languages are Hausa, Yoruba and:",
+      "options": ["Efik", "Tiv", "Igbo", "Kanuri"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Nigeria: Languages",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-026",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "Kanuri is mainly spoken in which part of Nigeria?",
+      "options": ["South-west", "North-east (Borno)", "South-east", "Niger Delta"],
+      "answer": 1,
+      "source": "Wikipedia: Kanuri language",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-027",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "Efik is mainly spoken around which city?",
+      "options": ["Calabar", "Kano", "Ibadan", "Jos"],
+      "answer": 0,
+      "source": "Wikipedia: Efik language",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-028",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "The Hausa greeting \"Barka da zuwa\" means:",
+      "options": ["Goodbye", "Welcome", "Thank you", "Sorry"],
+      "answer": 1,
+      "source": "Wikipedia: Hausa language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-029",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "If person talk \"I dey come\", wetin e mean?",
+      "options": ["I will be right back", "I am lost", "I am angry", "I am hungry"],
+      "answer": 0,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false,
+      "tags": ["pidgin", "native-review"]
+    },
+    {
+      "id": "sq-pcm-030",
+      "category": "pidgin",
+      "difficulty": "medium",
+      "q": "Wetin \"shine your eye\" mean for Pidgin?",
+      "options": ["Make you wash face", "Make you sleep", "Make you dey alert", "Make you cry"],
+      "answer": 2,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false,
+      "tags": ["pidgin", "native-review"]
+    },
+    {
+      "id": "sq-pcm-031",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "The Pidgin word \"sabi\" comes from the Portuguese word for:",
+      "options": ["To sell", "To eat", "To see", "To know (saber)"],
+      "answer": 3,
+      "source": "Wikipedia: Nigerian Pidgin",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-032",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "How many tones does standard Yoruba use?",
+      "options": ["One", "Two", "Three", "Five"],
+      "answer": 2,
+      "source": "Wikipedia: Yoruba language",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-033",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "Hausa was once widely written in a script called:",
+      "options": ["Cuneiform", "Ajami", "Ge'ez", "Tifinagh"],
+      "answer": 1,
+      "source": "Wikipedia: Ajami script",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-034",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "Nigeria is home to roughly how many languages?",
+      "options": ["More than 500", "About 50", "About 120", "Only 3"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria: Languages",
+      "reviewed": false
+    },
+    {
+      "id": "sq-pcm-035",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "The Hausa phrase \"Sai gobe\" means:",
+      "options": ["Good morning", "See you tomorrow", "Thank you", "Come in"],
+      "answer": 1,
+      "source": "Wikipedia: Hausa language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-036",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "The Igbo word \"Ndo\" is used to say:",
+      "options": ["Welcome", "Goodbye", "Thank you", "Sorry (sympathy)"],
+      "answer": 3,
+      "source": "Wikipedia: Igbo language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-pcm-037",
+      "category": "pidgin",
+      "difficulty": "hard",
+      "q": "The Igbo greeting \"Nnọọ\" means:",
+      "options": ["Welcome", "Thank you", "Sorry", "Goodbye"],
+      "answer": 0,
+      "source": "Wikipedia: Igbo language",
+      "reviewed": false,
+      "tags": ["native-review"]
+    },
+    {
+      "id": "sq-geo-001",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Kano is a major city in which part of Nigeria?",
+      "options": ["South-east", "South-south", "North", "South-west"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Kano",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-002",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Rivers State?",
+      "options": ["Port Harcourt", "Yenagoa", "Uyo", "Warri"],
+      "answer": 0,
+      "source": "Wikipedia: Rivers State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-003",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Oyo State?",
+      "options": ["Ogbomosho", "Ibadan", "Osogbo", "Abeokuta"],
+      "answer": 1,
+      "source": "Wikipedia: Oyo State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-004",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Imo State?",
+      "options": ["Aba", "Umuahia", "Okigwe", "Owerri"],
+      "answer": 3,
+      "source": "Wikipedia: Imo State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-005",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Plateau State?",
+      "options": ["Jos", "Bauchi", "Lafia", "Minna"],
+      "answer": 0,
+      "source": "Wikipedia: Plateau State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-006",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Cross River State?",
+      "options": ["Uyo", "Port Harcourt", "Calabar", "Asaba"],
+      "answer": 2,
+      "source": "Wikipedia: Cross River State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-007",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "What is the capital of Edo State?",
+      "options": ["Asaba", "Akure", "Lokoja", "Benin City"],
+      "answer": 3,
+      "source": "Wikipedia: Edo State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-008",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Which country lies directly west of Nigeria?",
+      "options": ["Ghana", "Benin Republic", "Chad", "Cameroon"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-009",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Which country lies directly east of Nigeria?",
+      "options": ["Cameroon", "Niger", "Benin Republic", "Togo"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-010",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Which ocean lies to the south of Nigeria?",
+      "options": ["Indian", "Atlantic", "Pacific", "Arctic"],
+      "answer": 1,
+      "source": "Encyclopaedia Britannica: Nigeria",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-011",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Which of these is a major river in Nigeria?",
+      "options": ["Nile", "Congo", "Thames", "Niger"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Niger River",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-012",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Abuja is in which territory?",
+      "options": ["Lagos State", "Kano State", "Federal Capital Territory", "Niger State"],
+      "answer": 2,
+      "source": "Encyclopaedia Britannica: Abuja",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-013",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Which state is nicknamed the \"Centre of Excellence\"?",
+      "options": ["Kano", "Enugu", "Lagos", "Edo"],
+      "answer": 2,
+      "source": "Wikipedia: Lagos State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-014",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Zuma Rock is a huge rock near which city?",
+      "options": ["Calabar", "Ibadan", "Kano", "Abuja"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Zuma Rock",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-015",
+      "category": "geography",
+      "difficulty": "easy",
+      "q": "Lake Chad lies in which part of Nigeria?",
+      "options": ["North-east", "South-west", "South-east", "North-west"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: Lake Chad",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-016",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Lagos State?",
+      "options": ["Lagos Island", "Epe", "Badagry", "Ikeja"],
+      "answer": 3,
+      "source": "Wikipedia: Lagos State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-017",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Borno State?",
+      "options": ["Damaturu", "Yola", "Maiduguri", "Gombe"],
+      "answer": 2,
+      "source": "Wikipedia: Borno State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-018",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Anambra State?",
+      "options": ["Awka", "Onitsha", "Nnewi", "Enugu"],
+      "answer": 0,
+      "source": "Wikipedia: Anambra State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-019",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Kwara State?",
+      "options": ["Lokoja", "Minna", "Ado-Ekiti", "Ilorin"],
+      "answer": 3,
+      "source": "Wikipedia: Kwara State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-020",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "The Niger and Benue rivers meet near which city?",
+      "options": ["Kano", "Calabar", "Jos", "Lokoja"],
+      "answer": 3,
+      "source": "Encyclopaedia Britannica: Niger River",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-021",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Which state is known as the \"Food Basket of the Nation\"?",
+      "options": ["Benue", "Lagos", "Rivers", "Kano"],
+      "answer": 0,
+      "source": "Wikipedia: Benue State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-022",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Which city is nicknamed the \"Coal City\"?",
+      "options": ["Kano", "Lagos", "Enugu", "Calabar"],
+      "answer": 2,
+      "source": "Wikipedia: Enugu",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-023",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Akwa Ibom State?",
+      "options": ["Calabar", "Uyo", "Port Harcourt", "Umuahia"],
+      "answer": 1,
+      "source": "Wikipedia: Akwa Ibom State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-024",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "What is the capital of Osun State?",
+      "options": ["Ibadan", "Ife", "Akure", "Osogbo"],
+      "answer": 3,
+      "source": "Wikipedia: Osun State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-025",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Olumo Rock is a famous landmark in which state?",
+      "options": ["Kano", "Enugu", "Ogun", "Bayelsa"],
+      "answer": 2,
+      "source": "Wikipedia: Olumo Rock",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-026",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Which is Nigeria's smallest state by area?",
+      "options": ["Abia", "Lagos", "Anambra", "Kano"],
+      "answer": 1,
+      "source": "Wikipedia: List of Nigerian states by area",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-027",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Which is Nigeria's largest state by area?",
+      "options": ["Niger", "Borno", "Kano", "Lagos"],
+      "answer": 0,
+      "source": "Wikipedia: List of Nigerian states by area",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-028",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "The dry dusty harmattan wind comes from which direction?",
+      "options": ["North-east", "South-west", "South-east", "Directly overhead"],
+      "answer": 0,
+      "source": "Encyclopaedia Britannica: harmattan",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-029",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Yankari Game Reserve is in which state?",
+      "options": ["Lagos", "Bauchi", "Delta", "Anambra"],
+      "answer": 1,
+      "source": "Wikipedia: Yankari National Park",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-030",
+      "category": "geography",
+      "difficulty": "medium",
+      "q": "Yenagoa is the capital of which state?",
+      "options": ["Delta", "Rivers", "Bayelsa", "Edo"],
+      "answer": 2,
+      "source": "Wikipedia: Yenagoa",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-031",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "Which is Nigeria's highest mountain?",
+      "options": ["Chappal Waddi", "Zuma Rock", "Olumo Rock", "Idanre Hill"],
+      "answer": 0,
+      "source": "Wikipedia: Chappal Waddi",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-032",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "Nigeria's Gashaka-Gumti is a large:",
+      "options": ["University", "Seaport", "National park", "Airport"],
+      "answer": 2,
+      "source": "Wikipedia: Gashaka Gumti National Park",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-033",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "Obudu Mountain Resort is in which state?",
+      "options": ["Kebbi", "Lagos", "Abia", "Cross River"],
+      "answer": 3,
+      "source": "Wikipedia: Obudu Mountain Resort",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-034",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "The Idanre Hills are in which state?",
+      "options": ["Kogi", "Ondo", "Bauchi", "Imo"],
+      "answer": 1,
+      "source": "Wikipedia: Idanre Hills",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-035",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "The Erin-Ijesha (Olumirin) waterfall is in which state?",
+      "options": ["Osun", "Kano", "Edo", "Gombe"],
+      "answer": 0,
+      "source": "Wikipedia: Erin Ijesha Waterfalls",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-036",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "What is the capital of Jigawa State?",
+      "options": ["Kano", "Hadejia", "Dutse", "Gusau"],
+      "answer": 2,
+      "source": "Wikipedia: Jigawa State",
+      "reviewed": false
+    },
+    {
+      "id": "sq-geo-037",
+      "category": "geography",
+      "difficulty": "hard",
+      "q": "What is the capital of Ebonyi State?",
+      "options": ["Umuahia", "Abakaliki", "Awka", "Owerri"],
+      "answer": 1,
+      "source": "Wikipedia: Ebonyi State",
+      "reviewed": false
+    }
+  ]
+}

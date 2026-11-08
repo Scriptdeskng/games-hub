@@ -90,3 +90,19 @@ Files in `games/ayo-olopon/assets/audio/voice/vo-<id>.mp3` (silent placeholders)
 
 ## Game-specific lines: Naija Whot
 Files in `games/naija-whot/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Full table with directions: `docs/assets/naija-whot-brief.md` section 7. Lines: `wh-shuffle` (Make I shuffle well well.), `wh-call` (Na this shape I need!), `wh-caught` (You no talk o! Pick two!), `wh-defend` (Ehen! Pick two for you too!), `wh-market-empty` (Market don finish. Shuffle again!), `wh-safe`, `wh-close`, `wh-win`. All Pidgin lines `_review`. Shared lines also used: `last-card`, `semi-last-card`, `pick-two`, `pick-three`, `hold-on`, `suspension`, `market-don-open`, `whot`, `oya`, `your-turn`, `you-don-win`.
+
+## Game-specific lines: Sabi Quiz
+Files in `games/sabi-quiz/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Speaker: **Uncle Etim**, the quiz host (M, 40s; a warm, theatrical showman, never sarcastic; an Efik or Calabar-flavoured voice is welcome, no exaggerated accent). Same rules as above: every Pidgin line is `_review` for a native check. Shared lines also used: `oya`, `madalla`, `e-ku-ise`, `you-don-win`, `e-don-do`.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `sq-start` | Oya, make we see who sabi! `_review` | Come on, let's see who knows! | Bright, rising, TV-host opening. | M, 40s | round or duel start | `vo-sq-start.mp3` |
+| `sq-correct` | Correct! You sabi o! `_review` | Correct! You really know it! | Warm, delighted. | M, 40s | correct answer (rotate with `madalla`) | `vo-sq-correct.mp3` |
+| `sq-wrong` | Ah ah, nearly! Na so e dey go. `_review` | So close! That's how it goes. | Gentle and kind, a smile in the voice, never mocking. | M, 40s | wrong answer | `vo-sq-wrong.mp3` |
+| `sq-streak` | Fire dey burn! Na three in a row! `_review` | You're on fire! Three in a row! | Excited, a build-up. | M, 40s | streak x3 | `vo-sq-streak.mp3` |
+| `sq-padi` | Make we hear wetin your padi dem talk. `_review` | Let us hear what your friends say. | Playful, curious. | M, 40s | ask your padi | `vo-sq-padi.mp3` |
+| `sq-last5` | Time dey go o! Five seconds! `_review` | Time is running! Five seconds! | Urgent but friendly, quick. | M, 40s | last 5 s (optional) | `vo-sq-last5.mp3` |
+| `sq-daily` | Today questions don land! `_review` | Today's questions have arrived! | Announcing, upbeat. | M, 40s | daily challenge opens | `vo-sq-daily.mp3` |
+| `sq-duel` | Quiz Duel! Who go press first? `_review` | Quiz Duel! Who will buzz first? | Announcer, grinning, dramatic pause before "first". | M, 40s | duel intro | `vo-sq-duel.mp3` |
+| `sq-win` | Sabi person! You don win! `_review` | A true know-it-all! You win! | Big, proud, celebratory. | M, 40s | round or duel won | `vo-sq-win.mp3` |
+| `sq-lose` | No vex. Next round go better. `_review` | No worries. The next round will be better. | Kind and encouraging, never pitying. | M, 40s | round lost | `vo-sq-lose.mp3` |
+

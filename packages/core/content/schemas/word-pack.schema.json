@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naija-games/schemas/word-pack.schema.json",
+  "title": "WordPack",
+  "type": "object",
+  "required": ["version", "id", "title", "lang", "theme", "words"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "lang": { "enum": ["en", "pcm", "yo", "ig", "ha"] },
+    "theme": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+    "blocklist": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[\\p{L}\\p{M}]{2,20}$" }
+    },
+    "words": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["word"],
+        "additionalProperties": false,
+        "properties": {
+          "word": { "type": "string", "pattern": "^[\\p{L}\\p{M}]{2,20}$" },
+          "hint": { "type": "string", "minLength": 1 },
+          "reviewed": { "type": "boolean" },
+          "tags": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  }
+}

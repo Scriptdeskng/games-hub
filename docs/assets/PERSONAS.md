@@ -1,6 +1,6 @@
 # CPU personas
 
-The eight CPU opponents shared across the catalogue (CULTURAL_GUIDE section 2). The player is always the only human; these are the characters they play against or are coached by.
+The CPU opponents shared across the catalogue (eight originals, plus Uncle Etim and Dung added with Sabi Quiz) (CULTURAL_GUIDE section 2). The player is always the only human; these are the characters they play against or are coached by.
 
 Rules: personalities are **individual, never ethnic stereotypes** (no "stingy", "trader", "hustler" or similar tropes tied to a group). Regions below describe where a character is from or lives; they do not define their personality. Together they span regions, ages and genders. Humour is kind and everyday.
 
@@ -18,6 +18,8 @@ Banter format: each line has `en` and `pcm` (Nigerian Pidgin). `_review: true` m
 | `aisha` | Aisha | Hausa, Kaduna | 20s | `#A8744C` | Teal hijab, round glasses | Sabi Quiz, Draughts, Sabi Words, Whot |
 | `chidi` | Chidi | Igbo, Owerri | 20s | `#6B3F26` | Short twists | Penalty King |
 | `funmi` | Funmi | Yoruba, Lagos | 30s | `#94613D` | Cornrows into a bun, gold hoops | Ludo, Whot |
+| `etim` | Uncle Etim | Efik, Calabar | 40s | `#5A3520` | Short hair, ankara bow tie, hand microphone | Sabi Quiz host (never plays) |
+| `dung` | Dung | Berom, Jos (Plateau, Middle Belt) | 30s | `#6E4128` | Low cut, short beard, camera strap | Sabi Quiz duel (Medium) |
 
 Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 
@@ -173,3 +175,43 @@ Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 - Names original; no real person likeness; no brand.
 - Personalities: coach, teacher, strategist, student, singer, scholar, goalkeeper, banker: none tied to an ethnic trope. Each of Yoruba, Igbo, Hausa-Fulani, Ijaw, Urhobo is represented (South-West, South-East, North-West, North-West/Kaduna, South-South), two women and two men per age band where possible.
 - No religious dress used as a joke; the kufi and hijab are drawn as everyday, dignified clothing (both named in the guide). No sacred or masquerade regalia.
+
+
+---
+
+## Added with Sabi Quiz
+
+Avatars for the two new personas are placeholders in `games/sabi-quiz/assets/avatars/etim.svg` and `dung.svg` (128x128 viewBox, same format as core). They fill the Middle Belt and Efik gaps listed above (the "Dung" proposal is now implemented; "Ekaette" stays reserved for Sabi Words). Names, regions and the Pidgin below need native confirmation (HUMAN_ASSETS). Personalities are individual, never ethnic tropes. Developer keys `persona.<id>.<n>`.
+
+## Uncle Etim (`etim`)
+**Region:** Efik, Calabar. 40s. Quiz host, not a CPU opponent: he announces, praises and consoles. Warm, theatrical, loves a dramatic pause; always lets a wrong answer down gently and never mocks.
+**Colour world:** Aso-oke Gold with Creek & Coral accents.
+**Animation cue:** tilts the microphone; agogo ting.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Good evening, quiz lovers! Settle down, we are starting. | Good evening o, quiz lovers! Make we start. | `_review: true` |
+| 2 | Ten questions, fifteen seconds each. Fingers ready? | Ten questions, fifteen seconds each. Finger don ready? | `_review: true` |
+| 3 | Correct! Give yourself a small clap. | Correct! Clap for yourself small. | |
+| 4 | Ah ah, so close! Wait for the next one. | Ah ah, e nearly be! Wait for the next one. | `_review: true` |
+| 5 | Three in a row! The fire is catching! | Three in a row! Fire don catch! | `_review: true` |
+| 6 | Want to ask your padi? Why not! | You wan ask your padi? Why not! | |
+| 7 | Time is moving o. Tick-tock! | Time dey run o. Tick-tock! | |
+| 8 | A true sabi person! Well done. | Correct sabi person! Well done. | `_review: true` |
+
+## Dung (`dung`)
+**Region:** Berom, Jos, Plateau (Middle Belt). 30s. Calm, observant photographer.
+**Play style (Quiz Duel, Medium):** "wait and strike". Looks first, answers late in the timer, but accurately (suggested about 72 percent, buzz 8 to 12 s). Never tied to an ethnic trope.
+**Colour world:** Creek & Coral teal with Adire Indigo.
+**Animation cue:** a small camera click; a slow nod.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Let me take a good look first. | Make I look am well first. | `_review: true` |
+| 2 | Patience. The right moment will come. | Patience. Correct time go come. | `_review: true` |
+| 3 | Click! I have the answer. | Click! I don get am. | |
+| 4 | Good one. You were fast. | Correct one. You fast. | |
+| 5 | Hmm, I was one second too late. | Hmm, I late by one second. | `_review: true` |
+| 6 | The cool Jos air helps me think. | Jos cold dey help me think. | `_review: true` |
+| 7 | Look closely. The answer is in the small details. | Look well well. Answer dey inside the small small details. | `_review: true` |
+| 8 | Good game. Let us go again. | Good game. Make we run am again. | |

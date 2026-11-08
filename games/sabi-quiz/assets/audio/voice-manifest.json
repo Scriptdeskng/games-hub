@@ -1,0 +1,135 @@
+{
+  "_readme": "Sabi Quiz voice placeholders (silent mp3, ogg null until human delivery). Host = Uncle Etim. Shared lines (oya, madalla, e-ku-ise, you-don-win, e-don-do) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "sq-start",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Oya, make we see who sabi!",
+        "en": "Come on, let's see who knows!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-start.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-correct",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Correct! You sabi o!",
+        "en": "Correct! You really know it!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-correct.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-wrong",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Ah ah, nearly! Na so e dey go.",
+        "en": "So close! That's how it goes."
+      },
+      "files": {
+        "mp3": "voice/vo-sq-wrong.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-streak",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Fire dey burn! Na three in a row!",
+        "en": "You're on fire! Three in a row!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-streak.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-padi",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Make we hear wetin your padi dem talk.",
+        "en": "Let us hear what your friends say."
+      },
+      "files": {
+        "mp3": "voice/vo-sq-padi.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-last5",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Time dey go o! Five seconds!",
+        "en": "Time is running! Five seconds!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-last5.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-daily",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Today questions don land!",
+        "en": "Today's questions have arrived!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-daily.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-duel",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Quiz Duel! Who go press first?",
+        "en": "Quiz Duel! Who will buzz first?"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-duel.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-win",
+      "speaker": "etim",
+      "text": {
+        "pcm": "Sabi person! You don win!",
+        "en": "A true know-it-all! You win!"
+      },
+      "files": {
+        "mp3": "voice/vo-sq-win.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sq-lose",
+      "speaker": "etim",
+      "text": {
+        "pcm": "No vex. Next round go better.",
+        "en": "No worries. The next round will be better."
+      },
+      "files": {
+        "mp3": "voice/vo-sq-lose.mp3",
+        "ogg": null
+      },
+      "_review": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naija-games/schemas/quiz-pack.schema.json",
+  "title": "QuizPack",
+  "type": "object",
+  "required": ["version", "id", "title", "lang", "questions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+    "title": { "type": "string", "minLength": 1 },
+    "lang": { "enum": ["en", "pcm", "yo", "ig", "ha"] },
+    "questions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "category",
+          "difficulty",
+          "q",
+          "options",
+          "answer",
+          "source",
+          "reviewed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+          "category": { "type": "string", "minLength": 1 },
+          "difficulty": { "enum": ["easy", "medium", "hard"] },
+          "q": { "type": "string", "minLength": 1 },
+          "options": {
+            "type": "array",
+            "minItems": 4,
+            "maxItems": 4,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "answer": { "type": "integer", "minimum": 0, "maximum": 3 },
+          "source": { "type": "string", "minLength": 1 },
+          "reviewed": { "type": "boolean" },
+          "tags": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+        }
+      }
+    }
+  }
+}

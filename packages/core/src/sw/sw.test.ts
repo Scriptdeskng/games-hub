@@ -69,6 +69,10 @@ describe('sw-template.js', () => {
       return {
         addAll: async (files: string[]) => files.forEach((f) => m.set(f, `body:${f}`)),
         add: async (f: string) => void m.set(f, 'dir'),
+        put: async (k: string, res: { body: string }) => {
+          const u = new URL(k, 'https://x.test/demo/');
+          m.set('./' + u.pathname.replace('/demo/', ''), res.body);
+        },
         match: async (req: { url: string } | string, opts?: { ignoreSearch?: boolean }) => {
           const url = typeof req === 'string' ? req : req.url;
           const u = new URL(url, 'https://x.test/demo/');
@@ -153,5 +157,46 @@ describe('sw-template.js', () => {
     const asset = fetchEv('https://x.test/demo/nope.png');
     handlers.fetch!(asset.ev);
     await expect(asset.res()).rejects.toThrow('offline');
+  });
+
+  describe('content packs (assets/packs/*.json) are network-first', () => {
+    const pack = 'https://x.test/demo/assets/packs/q.json';
+    const res = (body: string, ok = true) => ({ ok, body, clone: () => ({ ok, body }) });
+    it('serves the fresh network copy and refreshes the cache (no code release needed)', async () => {
+      const { handlers, sandbox, stores } = boot();
+      await wait(handlers.install!);
+      stores.get('naija-demo-v2')!.set('./assets/packs/q.json', 'old');
+      sandbox.fetch.mockResolvedValue(res('fresh') as never);
+      const e = fetchEv(pack);
+      handlers.fetch!(e.ev);
+      expect(((await e.res()) as { body: string }).body).toBe('fresh');
+      expect(stores.get('naija-demo-v2')!.get('./assets/packs/q.json')).toBe('fresh');
+    });
+    it('falls back to the cached pack offline, or on a server error, and never caches a token', async () => {
+      const { handlers, sandbox, stores } = boot();
+      await wait(handlers.install!);
+      stores.get('naija-demo-v2')!.set('./assets/packs/q.json', 'cached');
+      sandbox.fetch.mockRejectedValue(new Error('offline'));
+      const off = fetchEv(pack + '?token=secret');
+      handlers.fetch!(off.ev);
+      expect(await off.res()).toBe('cached');
+      sandbox.fetch.mockResolvedValue(res('boom', false) as never);
+      const bad = fetchEv(pack);
+      handlers.fetch!(bad.ev);
+      expect(await bad.res()).toBe('cached');
+      expect([...stores.get('naija-demo-v2')!.keys()].some((k) => k.includes('token'))).toBe(false);
+    });
+    it('returns the error response when nothing is cached, and rejects when offline with no copy', async () => {
+      const { handlers, sandbox } = boot();
+      const other = 'https://x.test/demo/assets/packs/none.json';
+      sandbox.fetch.mockResolvedValue(res('404', false) as never);
+      const a = fetchEv(other);
+      handlers.fetch!(a.ev);
+      expect(((await a.res()) as { body: string }).body).toBe('404');
+      sandbox.fetch.mockRejectedValue(new Error('offline'));
+      const b = fetchEv(other);
+      handlers.fetch!(b.ev);
+      await expect(b.res()).rejects.toThrow('offline');
+    });
   });
 });

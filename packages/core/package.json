@@ -25,6 +25,8 @@
     "./ui-kit": "./src/ui-kit/index.ts",
     "./board-kit": "./src/board-kit/index.ts",
     "./ai-kit": "./src/ai-kit/index.ts",
+    "./content": "./src/content/index.ts",
+    "./content/schemas/*": "./content/schemas/*",
     "./assets/*": "./assets/*"
   }
 }

@@ -1,0 +1,344 @@
+/* Sabi Quiz art helpers (asset-designer). Import once: import '../assets/quiz-art.css'.
+   Theme: set gameConfig.theme to 'theme-aso-oke' (gold, wine, orange) so .ng-* components match the stage art.
+   Transform and opacity only (the timer arc uses stroke-dashoffset on one small SVG circle, see .sq-ring).
+   Stage:     <div class="sq-stage"> (portrait and landscape backdrops, full bleed)
+   Card:      <section class="sq-card"><span class="sq-card__n">3</span><p class="sq-card__q">...</p></section>
+   Plates:    <button class="sq-plate sq-plate--a" data-state="correct|wrong|eliminated|picked"><span class="sq-plate__t">answer</span></button>
+              the badge (shape + letter + colour) is baked into the background art; answer text sits in .sq-plate__t.
+   Timer:     <div class="sq-ring [is-low]"><svg viewBox="-4 -4 128 128"> inline timer/arc.svg circle.sq-arc </svg><b class="sq-ring__n">12</b></div>
+              set --sq-p (0..1 remaining) on .sq-ring.
+   Poll bars: .sq-bar is placed over each of the 4 tracks in poll/panel.svg; set --sq-v (0..1) per bar. */
+.sq-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #0a1233 url('./bg/stage-portrait.svg') center / cover no-repeat;
+}
+@media (orientation: landscape) {
+  .sq-stage {
+    background-image: url('./bg/stage-landscape.svg');
+  }
+}
+.sq-card {
+  position: relative;
+  min-height: 150px;
+  padding: 44px 20px 30px;
+  background: url('./ui/question-card.svg') center / 100% 100% no-repeat;
+  color: var(--ng-ink-s, #35091a);
+  font-weight: 800;
+  font-size: var(--ng-fs-lg, 18px);
+  line-height: 1.3;
+  text-align: center;
+  filter: drop-shadow(0 4px 6px rgb(0 0 0 / 0.35));
+}
+.sq-card__n {
+  position: absolute;
+  left: 11px;
+  top: 3px;
+  width: 38px;
+  line-height: 38px;
+  text-align: center;
+  color: var(--ng-ink, #fff3da);
+  font-family: var(--ng-font-display, inherit);
+  font-size: 18px;
+}
+.sq-card.is-enter {
+  animation: sq-in var(--ng-t-slow, 360ms) var(--ng-ease-spring, ease-out) both;
+}
+.sq-plate {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 56px; /* >= 44 px tap target; art is 320 x 64 */
+  aspect-ratio: 320 / 64;
+  padding: 0 52px 0 72px; /* room for the badge (left) and the state icon (right) */
+  border: 0;
+  background: transparent center / 100% 100% no-repeat;
+  color: #1d1d20;
+  font: inherit;
+  font-weight: 800;
+  font-size: var(--ng-fs-md, 16px);
+  text-align: left;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: transform var(--ng-t-fast, 120ms) var(--ng-ease, ease-out);
+}
+.sq-plate--a {
+  background-image: url('./plates/plate-a.svg');
+}
+.sq-plate--b {
+  background-image: url('./plates/plate-b.svg');
+}
+.sq-plate--c {
+  background-image: url('./plates/plate-c.svg');
+}
+.sq-plate--d {
+  background-image: url('./plates/plate-d.svg');
+}
+.sq-plate__t {
+  display: block;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.sq-plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: center / 100% 100% no-repeat;
+  pointer-events: none;
+  opacity: 0;
+}
+.sq-plate:active {
+  transform: translateY(2px) scale(0.99);
+}
+.sq-plate[data-state='picked']::after {
+  background-image: url('./plates/state-picked.svg');
+  opacity: 1;
+}
+.sq-plate[data-state='correct']::after {
+  background-image: url('./plates/state-correct.svg');
+  opacity: 1;
+}
+.sq-plate[data-state='wrong']::after {
+  background-image: url('./plates/state-wrong.svg');
+  opacity: 1;
+}
+.sq-plate[data-state='eliminated']::after {
+  background-image: url('./plates/state-eliminated.svg');
+  opacity: 1;
+}
+.sq-plate[data-state='eliminated'] {
+  pointer-events: none;
+}
+.sq-plate[data-state='correct'] {
+  animation: sq-pop var(--ng-t-slow, 360ms) var(--ng-ease-spring, ease-out);
+}
+.sq-plate[data-state='wrong'] {
+  animation: sq-shake 320ms ease-in-out;
+}
+/* timer ring: stroke-dashoffset on a 100-length path; --sq-p is the fraction of time left */
+.sq-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: url('./timer/ring.svg') center / contain no-repeat;
+}
+.sq-ring svg {
+  position: absolute;
+  inset: 0;
+}
+.sq-ring .sq-arc {
+  stroke-dashoffset: calc(100 - var(--sq-p, 1) * 100);
+  transition: stroke-dashoffset 1s linear;
+}
+.sq-ring__n {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--ng-font-display, inherit);
+  font-size: 22px;
+  color: var(--ng-ink, #fff3da);
+  font-variant-numeric: tabular-nums;
+}
+.sq-ring.is-low {
+  animation: sq-pulse 500ms ease-in-out infinite;
+}
+/* lifelines */
+.sq-ll {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  min-width: 44px;
+  padding: 0;
+  border: 0;
+  background: center / contain no-repeat;
+  touch-action: manipulation;
+}
+.sq-ll--5050 {
+  background-image: url('./lifelines/ll-5050.svg');
+}
+.sq-ll--skip {
+  background-image: url('./lifelines/ll-skip.svg');
+}
+.sq-ll--padi {
+  background-image: url('./lifelines/ll-padi.svg');
+}
+.sq-ll.is-used::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('./lifelines/ll-used.svg') center / contain no-repeat;
+}
+/* streak */
+.sq-streak {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.sq-streak__flame {
+  width: 24px;
+  height: 30px;
+  background: url('./streak/flame.svg') center / contain no-repeat;
+}
+.sq-streak__badge {
+  width: 40px;
+  height: 40px;
+  background: center / contain no-repeat;
+}
+.sq-streak__badge--2 {
+  background-image: url('./streak/badge-2.svg');
+}
+.sq-streak__badge--3 {
+  background-image: url('./streak/badge-3.svg');
+}
+.sq-streak__badge--5 {
+  background-image: url('./streak/badge-5.svg');
+}
+.sq-streak.is-up .sq-streak__badge {
+  animation: sq-pop var(--ng-t-slow, 360ms) var(--ng-ease-spring, ease-out);
+}
+/* padi poll: panel.svg is 300 x 214; the four 48 x 130 tracks sit at x = 18, 86, 154, 222 and y = 40 */
+.sq-poll {
+  position: relative;
+  width: min(100%, 300px);
+  aspect-ratio: 300 / 214;
+  background: url('./poll/panel.svg') center / 100% 100% no-repeat;
+}
+.sq-bar {
+  position: absolute;
+  top: calc(40 / 214 * 100%);
+  width: calc(48 / 300 * 100%);
+  height: calc(130 / 214 * 100%);
+  border-radius: 10px;
+  background: url('./poll/bar-fill.svg') center / 100% 100% no-repeat;
+  transform: scaleY(var(--sq-v, 0));
+  transform-origin: bottom;
+  transition: transform 700ms var(--ng-ease, ease-out);
+}
+.sq-bar:nth-child(1) {
+  left: calc(18 / 300 * 100%);
+}
+.sq-bar:nth-child(2) {
+  left: calc(86 / 300 * 100%);
+}
+.sq-bar:nth-child(3) {
+  left: calc(154 / 300 * 100%);
+}
+.sq-bar:nth-child(4) {
+  left: calc(222 / 300 * 100%);
+}
+/* duel */
+.sq-podium {
+  position: relative;
+  width: min(100%, 340px);
+  aspect-ratio: 340 / 170;
+  background: url('./duel/podium.svg') center / 100% 100% no-repeat;
+}
+.sq-vs {
+  width: 48px;
+  height: 48px;
+  background: url('./duel/vs.svg') center / contain no-repeat;
+}
+.sq-buzzer {
+  width: 72px;
+  height: 72px;
+  min-width: 44px;
+  border: 0;
+  padding: 0;
+  background: url('./duel/buzzer.svg') center / contain no-repeat;
+  touch-action: manipulation;
+}
+.sq-buzzer:active {
+  transform: translateY(3px);
+}
+.sq-lead {
+  width: 28px;
+  height: 28px;
+  background: url('./duel/lead-marker.svg') center / contain no-repeat;
+}
+/* fx: add the class to an absolutely positioned empty div, remove on animationend */
+.sq-fx {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 180px;
+  height: 180px;
+  background: center / contain no-repeat;
+  pointer-events: none;
+  animation: sq-burst 700ms var(--ng-ease, ease-out) both;
+}
+.sq-fx--correct {
+  background-image: url('./fx/correct-burst.svg');
+}
+.sq-fx--wrong {
+  background-image: url('./fx/wrong-ripple.svg');
+}
+.sq-fx--streak {
+  background-image: url('./fx/streak-burst.svg');
+}
+.sq-fx--lifeline {
+  background-image: url('./fx/lifeline-glow.svg');
+}
+.sq-fx--timeup {
+  background-image: url('./fx/time-up.svg');
+}
+/* category chips use the one sprite: <svg class="sq-cat"><use href="#cat-football"/></svg>, inline icons/categories.svg once */
+.sq-cat {
+  width: 28px;
+  height: 28px;
+  color: currentColor;
+}
+@keyframes sq-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+@keyframes sq-pop {
+  50% {
+    transform: scale(1.06);
+  }
+}
+@keyframes sq-shake {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+@keyframes sq-pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+@keyframes sq-burst {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotate(-8deg);
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.25) rotate(6deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sq-card.is-enter,
+  .sq-plate[data-state],
+  .sq-ring.is-low,
+  .sq-streak.is-up .sq-streak__badge,
+  .sq-fx {
+    animation-duration: 1ms;
+  }
+  .sq-ring .sq-arc,
+  .sq-bar {
+    transition-duration: 1ms;
+  }
+}

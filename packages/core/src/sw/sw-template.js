@@ -1,5 +1,7 @@
 /* Naija Games service worker (generated per game at build time by scripts/vite-naija-plugin.mjs).
- * Cache-first over the precached build; version-keyed cache; old versions are deleted on activate.
+ * Cache-first over the precached build, EXCEPT content packs (assets/packs/*.json) which are
+ * network-first with the cache as offline fallback, so packs update without a code
+ * release. Version-keyed cache; old versions are deleted on activate.
  * Placeholders are replaced at build time. */
 const VERSION = '__VERSION__';
 const PREFIX = 'naija-__SLUG__-';
@@ -33,6 +35,27 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+  if (/\/assets\/packs\/[^/]+\.json$/.test(url.pathname)) {
+    event.respondWith(
+      caches.open(CACHE).then(async (cache) => {
+        // Key without the query string so a ?token=... is never written to the cache.
+        const key = url.origin + url.pathname;
+        try {
+          const res = await fetch(req);
+          if (res && res.ok) {
+            await cache.put(key, res.clone());
+            return res;
+          }
+          return (await cache.match(key)) || res;
+        } catch (err) {
+          const hit = await cache.match(key);
+          if (hit) return hit;
+          throw err;
+        }
+      }),
+    );
+    return;
+  }
   event.respondWith(
     caches.open(CACHE).then(async (cache) => {
       // ignoreSearch: `?token=...&lang=...` must still hit the precached page (and is never stored).
