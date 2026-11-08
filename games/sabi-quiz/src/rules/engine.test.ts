@@ -13,7 +13,6 @@ import {
   createRound,
   current,
   duelOutcome,
-  isOver,
   next,
   pickRound,
   stars,
@@ -115,7 +114,7 @@ describe('createRound', () => {
 
   it('starts done for an empty pool and is JSON-serialisable', () => {
     const empty = createRound({ pool: [], mode: 'classic', difficulty: 'easy', seed: 1 });
-    expect(isOver(empty)).toBe(true);
+    expect(empty.phase).toBe('done');
     const s = round();
     expect(JSON.parse(JSON.stringify(s))).toEqual(s);
   });
@@ -221,7 +220,7 @@ describe('answering and scoring', () => {
       expect(next(s)).toBe(s); // not in the reveal phase yet
       s = ok(s);
     }
-    expect(isOver(s)).toBe(true);
+    expect(s.phase).toBe('done');
     expect(s.correct).toBe(10);
     expect(won(s)).toBe(true);
     expect(stars(s)).toBe(3);

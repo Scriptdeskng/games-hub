@@ -137,6 +137,10 @@
     "text": "{name} dey lead",
     "_review": true
   },
+  "duel.leadYou": {
+    "text": "You dey lead",
+    "_review": true
+  },
   "results.draw": {
     "text": "Una draw!",
     "_review": true

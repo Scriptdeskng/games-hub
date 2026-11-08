@@ -300,17 +300,17 @@ export function createDuelBar(core: Core, persona: Persona): DuelBar {
     ]),
     status,
   ]);
-  const mark = (x: { lead: HTMLElement }, on: boolean, who: string): void => {
+  const mark = (x: { lead: HTMLElement }, on: boolean, label: string): void => {
     x.lead.hidden = !on;
-    x.lead.setAttribute('aria-label', on ? core.t('duel.lead', { name: who }) : '');
+    x.lead.setAttribute('aria-label', on ? label : '');
   };
   return {
     el,
     set(o) {
       me.score.textContent = String(o.me);
       cpu.score.textContent = String(o.cpu);
-      mark(me, o.me > o.cpu, core.t('duel.you'));
-      mark(cpu, o.cpu > o.me, name);
+      mark(me, o.me > o.cpu, core.t('duel.leadYou'));
+      mark(cpu, o.cpu > o.me, core.t('duel.lead', { name }));
       if (status.textContent !== o.status) status.textContent = o.status;
     },
   };

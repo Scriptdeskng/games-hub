@@ -29,7 +29,6 @@ export const CATEGORIES = [
   'pidgin',
   'geography',
 ] as const;
-export type Category = (typeof CATEGORIES)[number];
 
 export interface DifficultyProfile {
   /** seconds per question, as ms */

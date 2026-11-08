@@ -37,6 +37,14 @@
 .ng-menu .hint {
   font-size: 0.8125rem;
 }
+/* hints that can land on the floor stripe get their own dark pill */
+.ng-menu__footer > .hint {
+  justify-self: center;
+  padding: 2px var(--ng-s-3);
+  border-radius: var(--ng-r-pill);
+  background: rgb(20 8 14 / 0.9);
+  color: var(--ng-ink);
+}
 @media (max-height: 700px) {
   .ng-settings {
     gap: 6px;
@@ -104,7 +112,7 @@
   gap: var(--ng-s-2);
   padding: 2px var(--ng-s-2);
   border-radius: var(--ng-r-pill);
-  background: rgb(0 0 0 / 0.5);
+  background: rgb(20 8 14 / 0.9);
 }
 .sq-hud .ng-hud__item {
   min-width: 0;

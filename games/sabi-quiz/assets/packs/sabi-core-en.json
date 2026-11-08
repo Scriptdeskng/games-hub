@@ -207,7 +207,8 @@
       "options": ["1960", "1914", "1975", "1999"],
       "answer": 0,
       "source": "Wikipedia: October 1 (film)",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-021",
@@ -237,7 +238,8 @@
       "options": ["Radio only", "Stage only", "Television", "Newspaper pages"],
       "answer": 2,
       "source": "Wikipedia: The Village Headmaster",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-024",
@@ -247,7 +249,8 @@
       "options": ["Basi and Company", "The Village Headmaster", "Tales by Moonlight", "Checkmate"],
       "answer": 3,
       "source": "Wikipedia: Amaka Igwe",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-025",
@@ -327,7 +330,8 @@
       "options": ["Tunde Kelani", "Biyi Bandele", "Kunle Afolayan", "Amaka Igwe"],
       "answer": 1,
       "source": "Wikipedia: Half of a Yellow Sun (film)",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-031",
@@ -337,7 +341,8 @@
       "options": ["The New York Times", "The Guardian (UK)", "Daily Times (Nigeria)", "Le Monde"],
       "answer": 0,
       "source": "Wikipedia: Nollywood",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-032",
@@ -347,7 +352,8 @@
       "options": ["1975", "1990", "1982", "2001"],
       "answer": 1,
       "source": "Encyclopaedia Britannica: Hubert Ogunde",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-nol-033",
@@ -422,7 +428,8 @@
       "options": ["Tunde Kelani", "Kunle Afolayan", "Ola Balogun", "Eddie Ugbomah"],
       "answer": 2,
       "source": "Wikipedia: Ajani Ogun",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-afb-001",
@@ -733,12 +740,12 @@
       "id": "sq-afb-031",
       "category": "afrobeats",
       "difficulty": "hard",
-      "q": "In a dùndún ensemble the lead drum is the \"iyá ilù\". What does iyá mean?",
+      "q": "In a dùndún ensemble the lead drum is the \"ìyá ìlù\". What does iyá mean?",
       "options": ["Father", "Child", "River", "Mother"],
       "answer": 3,
       "source": "Wikipedia: Dundun",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-afb-032",
@@ -758,7 +765,8 @@
       "options": ["Accra", "Paris", "London", "Cairo"],
       "answer": 2,
       "source": "Encyclopaedia Britannica: Fela Kuti",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-afb-034",
@@ -768,7 +776,8 @@
       "options": ["Fela Sowande", "Fela Kuti", "Ayo Bankole", "Sunny Adé"],
       "answer": 0,
       "source": "Wikipedia: Fela Sowande",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-afb-035",
@@ -778,7 +787,8 @@
       "options": ["Fújì", "Highlife", "Sakara", "Afrobeat"],
       "answer": 2,
       "source": "Wikipedia: Yusuf Olatunji",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-afb-036",
@@ -808,7 +818,8 @@
       "options": ["African Beats", "Egypt 80", "Super Stars", "Lagos Sound"],
       "answer": 0,
       "source": "Encyclopaedia Britannica: King Sunny Adé",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-001",
@@ -1073,7 +1084,8 @@
       "options": ["Egypt", "Nigeria", "Senegal", "Zambia"],
       "answer": 1,
       "source": "Wikipedia: 1991 African Women's Championship",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-027",
@@ -1128,7 +1140,8 @@
       "options": ["Segun Odegbami", "Stephen Keshi", "Christian Chukwu", "Emmanuel Okala"],
       "answer": 2,
       "source": "Wikipedia: 1980 African Cup of Nations",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-032",
@@ -1148,7 +1161,8 @@
       "options": ["Shooting Stars", "Rangers International", "Enyimba", "Kano Pillars"],
       "answer": 0,
       "source": "Wikipedia: 1976 African Cup Winners' Cup",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-034",
@@ -1158,7 +1172,8 @@
       "options": ["Shooting Stars", "Rangers International", "Enyimba", "Heartland"],
       "answer": 1,
       "source": "Wikipedia: 1977 African Cup Winners' Cup",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-035",
@@ -1168,7 +1183,8 @@
       "options": ["Ivory Coast", "Zambia", "Mali", "Tunisia"],
       "answer": 1,
       "source": "Wikipedia: 1994 African Cup of Nations",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fbl-036",
@@ -1198,7 +1214,8 @@
       "options": ["Daniel Amokachi", "Jay-Jay Okocha", "Victor Ikpeba", "Kanu Nwankwo"],
       "answer": 3,
       "source": "Wikipedia: Football at the 1996 Summer Olympics",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-001",
@@ -1453,7 +1470,8 @@
       "options": ["Ibadan", "Kano", "Enugu", "Jos"],
       "answer": 0,
       "source": "Wikipedia: Nigerian Railway Corporation",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-026",
@@ -1493,7 +1511,8 @@
       "options": ["Pavement", "Middle", "Water", "Right"],
       "answer": 3,
       "source": "Wikipedia: Left- and right-hand traffic",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-030",
@@ -1513,7 +1532,8 @@
       "options": ["Frederick Lugard", "Mary Slessor", "Mungo Park", "Flora Shaw"],
       "answer": 3,
       "source": "Encyclopaedia Britannica: Nigeria: Name",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-032",
@@ -1523,7 +1543,8 @@
       "options": ["1500 CE", "1800 CE", "300 CE", "2000 BCE"],
       "answer": 2,
       "source": "Encyclopaedia Britannica: Nok culture",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-033",
@@ -1533,7 +1554,8 @@
       "options": ["9th century", "3rd century", "15th century", "19th century"],
       "answer": 0,
       "source": "Wikipedia: Igbo-Ukwu",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-034",
@@ -1543,7 +1565,8 @@
       "options": ["Poet", "Warrior queen", "Explorer", "Navigator"],
       "answer": 1,
       "source": "Encyclopaedia Britannica: Amina",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-035",
@@ -1563,7 +1586,8 @@
       "options": ["1952", "1936", "1960", "1968"],
       "answer": 0,
       "source": "Wikipedia: Nigeria at the Olympics",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-his-037",
@@ -1573,7 +1597,8 @@
       "options": ["1807", "1900", "1861", "1914"],
       "answer": 2,
       "source": "Wikipedia: Lagos",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-001",
@@ -1743,7 +1768,8 @@
       "options": ["Rice flour", "Yam flour", "Wheat flour", "Corn starch"],
       "answer": 1,
       "source": "Wikipedia: Amala",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-018",
@@ -1833,7 +1859,8 @@
       "options": ["Kano", "Imo", "Edo", "Ogun"],
       "answer": 3,
       "source": "Wikipedia: Ofada rice",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-027",
@@ -1863,7 +1890,8 @@
       "options": ["Mango", "Breadfruit", "Orange", "Cashew"],
       "answer": 1,
       "source": "Wikipedia: Ukwa",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-030",
@@ -1883,7 +1911,8 @@
       "options": ["White beans", "Plantain", "Maize", "Water yam"],
       "answer": 3,
       "source": "Wikipedia: Ikokore",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-032",
@@ -1923,7 +1952,8 @@
       "options": ["Rice", "Maize", "Yam", "Beans"],
       "answer": 1,
       "source": "Wikipedia: Tuwo masara",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-036",
@@ -1933,7 +1963,8 @@
       "options": ["Semo", "Amala", "Starch", "Fufu"],
       "answer": 2,
       "source": "Wikipedia: Banga soup",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-037",
@@ -1943,7 +1974,8 @@
       "options": ["Cocoa tree", "Moringa", "Plantain", "Oha tree"],
       "answer": 3,
       "source": "Wikipedia: Ofe oha",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-fod-038",
@@ -2133,7 +2165,8 @@
       "options": ["Chinua Achebe", "Ben Okri", "Wole Soyinka", "Elechi Amadi"],
       "answer": 1,
       "source": "Encyclopaedia Britannica: Ben Okri",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-gen-019",
@@ -2153,7 +2186,8 @@
       "options": ["Buchi Emecheta", "Flora Nwapa", "Adaobi Nwaubani", "Sefi Atta"],
       "answer": 1,
       "source": "Encyclopaedia Britannica: Flora Nwapa",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-gen-021",
@@ -2283,7 +2317,8 @@
       "options": ["Cyprian Ekwensi", "Elechi Amadi", "Gabriel Okara", "T. M. Aluko"],
       "answer": 1,
       "source": "Encyclopaedia Britannica: Elechi Amadi",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-gen-034",
@@ -2293,7 +2328,8 @@
       "options": ["Elechi Amadi", "Amos Tutuola", "Gabriel Okara", "Wole Soyinka"],
       "answer": 2,
       "source": "Encyclopaedia Britannica: Gabriel Okara",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-gen-035",
@@ -2354,7 +2390,7 @@
       "answer": 2,
       "source": "Wikipedia: Nigerian Pidgin",
       "reviewed": false,
-      "tags": ["pidgin", "native-review"]
+      "tags": ["native-review", "pidgin", "uncertain"]
     },
     {
       "id": "sq-pcm-004",
@@ -2365,7 +2401,7 @@
       "answer": 3,
       "source": "Wikipedia: Nigerian Pidgin",
       "reviewed": false,
-      "tags": ["pidgin", "native-review"]
+      "tags": ["native-review", "pidgin", "uncertain"]
     },
     {
       "id": "sq-pcm-005",
@@ -2471,7 +2507,7 @@
       "answer": 0,
       "source": "Wikipedia: Nigerian Pidgin",
       "reviewed": false,
-      "tags": ["pidgin", "native-review"]
+      "tags": ["native-review", "pidgin", "uncertain"]
     },
     {
       "id": "sq-pcm-015",
@@ -2521,7 +2557,8 @@
       "options": ["Dance", "Cook", "Pray", "Leave or run away abroad"],
       "answer": 3,
       "source": "Wikipedia: Japa (Nigerian slang)",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-pcm-020",
@@ -2532,7 +2569,7 @@
       "answer": 3,
       "source": "Wikipedia: Yoruba language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-021",
@@ -2543,7 +2580,7 @@
       "answer": 2,
       "source": "Wikipedia: Igbo language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-022",
@@ -2554,7 +2591,7 @@
       "answer": 1,
       "source": "Wikipedia: Hausa language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-023",
@@ -2565,7 +2602,7 @@
       "answer": 0,
       "source": "Wikipedia: Yoruba language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-024",
@@ -2576,7 +2613,7 @@
       "answer": 3,
       "source": "Wikipedia: Igbo language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-025",
@@ -2617,7 +2654,7 @@
       "answer": 1,
       "source": "Wikipedia: Hausa language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-029",
@@ -2628,7 +2665,7 @@
       "answer": 0,
       "source": "Wikipedia: Nigerian Pidgin",
       "reviewed": false,
-      "tags": ["pidgin", "native-review"]
+      "tags": ["native-review", "pidgin", "uncertain"]
     },
     {
       "id": "sq-pcm-030",
@@ -2639,7 +2676,7 @@
       "answer": 2,
       "source": "Wikipedia: Nigerian Pidgin",
       "reviewed": false,
-      "tags": ["pidgin", "native-review"]
+      "tags": ["native-review", "pidgin", "uncertain"]
     },
     {
       "id": "sq-pcm-031",
@@ -2649,7 +2686,8 @@
       "options": ["To sell", "To eat", "To see", "To know (saber)"],
       "answer": 3,
       "source": "Wikipedia: Nigerian Pidgin",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-pcm-032",
@@ -2669,7 +2707,8 @@
       "options": ["Cuneiform", "Ajami", "Ge'ez", "Tifinagh"],
       "answer": 1,
       "source": "Wikipedia: Ajami script",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-pcm-034",
@@ -2690,7 +2729,7 @@
       "answer": 1,
       "source": "Wikipedia: Hausa language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-036",
@@ -2701,7 +2740,7 @@
       "answer": 3,
       "source": "Wikipedia: Igbo language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-pcm-037",
@@ -2712,7 +2751,7 @@
       "answer": 0,
       "source": "Wikipedia: Igbo language",
       "reviewed": false,
-      "tags": ["native-review"]
+      "tags": ["native-review", "uncertain"]
     },
     {
       "id": "sq-geo-001",
@@ -2972,7 +3011,8 @@
       "options": ["Abia", "Lagos", "Anambra", "Kano"],
       "answer": 1,
       "source": "Wikipedia: List of Nigerian states by area",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-geo-027",
@@ -2982,7 +3022,8 @@
       "options": ["Niger", "Borno", "Kano", "Lagos"],
       "answer": 0,
       "source": "Wikipedia: List of Nigerian states by area",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-geo-028",
@@ -3032,7 +3073,8 @@
       "options": ["University", "Seaport", "National park", "Airport"],
       "answer": 2,
       "source": "Wikipedia: Gashaka Gumti National Park",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-geo-033",
@@ -3062,7 +3104,8 @@
       "options": ["Osun", "Kano", "Edo", "Gombe"],
       "answer": 0,
       "source": "Wikipedia: Erin Ijesha Waterfalls",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "id": "sq-geo-036",

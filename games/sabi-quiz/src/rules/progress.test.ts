@@ -1,3 +1,4 @@
+import { createRng } from '@naija/core/rng';
 import { describe, expect, it } from 'vitest';
 import { POOL } from '../testkit';
 import {
@@ -8,7 +9,9 @@ import {
   createRound,
   current,
   dailyDone,
-  dailyQuestions,
+  pickRound,
+  finishDaily,
+  startDaily,
   dailySeedFor,
   emptyProgress,
   next,
@@ -132,6 +135,10 @@ describe('progress', () => {
   });
 });
 
+/** Today's picks, built the way the game does it: the date's seed through createRound's pick. */
+const dailyQuestions = (pool: typeof POOL, d: Date) =>
+  pickRound(pool, createRng(dailySeedFor(d)), { mix: DAILY_MIX });
+
 describe('daily challenge', () => {
   const day = (y: number, m: number, d: number): Date => new Date(y, m - 1, d, 12);
 
@@ -193,5 +200,22 @@ describe('daily challenge', () => {
     expect(
       Object.keys(sanitizeDaily({ date: '2026-11-08', uid: 'x', token: 't' })!).sort(),
     ).toEqual(['correct', 'date', 'score']);
+  });
+
+  it('the first START is the scored attempt: quit and start again is practice, saved score untouched', () => {
+    const d = day(2026, 11, 8);
+    const first = startDaily(null, d);
+    expect(first.practice).toBe(false);
+    expect(first.record).toEqual({ date: '2026-11-08', score: 0, correct: 0 });
+    const again = startDaily(first.record, d);
+    expect(again.practice).toBe(true);
+    expect(again.record).toBe(first.record);
+    expect(finishDaily(first.record, { score: 9999, correct: 10 }, true)).toBe(first.record);
+    expect(finishDaily(first.record, { score: 700, correct: 6 }, false)).toEqual({
+      date: '2026-11-08',
+      score: 700,
+      correct: 6,
+    });
+    expect(startDaily(first.record, day(2026, 11, 9)).practice).toBe(false);
   });
 });

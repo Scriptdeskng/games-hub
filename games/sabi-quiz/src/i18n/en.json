@@ -59,6 +59,7 @@
   "duel.waiting": "Locked in. Waiting for {name}...",
   "duel.cpuPicked": "{name} picked {letter}",
   "duel.lead": "{name} is in the lead",
+  "duel.leadYou": "You are in the lead",
   "results.draw": "It's a draw!",
   "results.correct": "Correct",
   "results.accuracy": "Accuracy",

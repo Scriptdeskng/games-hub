@@ -48,6 +48,8 @@ export function createMenuScreen(core: Core, o: MenuOptions): Component {
   const { t } = core;
   const scope = createScope();
   let category = o.category;
+  /** the one open topic picker, closed if the menu goes away under it */
+  let openTopic: { close(): void } | null = null;
   const hint = (d: Difficulty): string =>
     t('menu.hintClassic', {
       time: Math.round(PROFILES[d].timeMs / 1000),
@@ -116,10 +118,12 @@ export function createMenuScreen(core: Core, o: MenuOptions): Component {
       ],
       onDismiss: () => modalScope.destroy(),
     });
-    scope.add(() => {
-      modalScope.destroy();
-      modal.close();
-    });
+    openTopic = {
+      close() {
+        modal.close();
+        modalScope.destroy();
+      },
+    };
     (chips.find((c) => c.getAttribute('aria-checked') === 'true') ?? chips[0])?.focus();
   }
   const small = (label: string, id: string, onClick: () => void): HTMLElement =>
@@ -148,6 +152,7 @@ export function createMenuScreen(core: Core, o: MenuOptions): Component {
   return {
     el: menu.el,
     destroy() {
+      openTopic?.close();
       [menu, picker, bar].forEach((c) => c.destroy());
       scope.destroy();
     },

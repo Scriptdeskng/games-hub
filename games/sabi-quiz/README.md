@@ -66,3 +66,9 @@ screen with a Retry button; it is handled, never a console error.
 `window.__naijaTest` (test builds only; the production bundle has none of it): `autoplay({ mode,
 difficulty, win, realtime })`, `getState()`, `setSeed(n)`. `?tempo=0.25` runs the game clock 4x
 faster and `?pack=<url>` swaps the question pack (both test builds only).
+
+## Uncertain questions (fact-checker: look here first)
+
+58 questions carry the tag `uncertain` in `sabi-core-en.json` (the asset-designer's U: flags). The tag does nothing at run time. Ids:
+
+sq-nol-020, sq-nol-023, sq-nol-024, sq-nol-030, sq-nol-031, sq-nol-032, sq-nol-038, sq-afb-031, sq-afb-033, sq-afb-034, sq-afb-035, sq-afb-038, sq-fbl-026, sq-fbl-031, sq-fbl-033, sq-fbl-034, sq-fbl-035, sq-fbl-038, sq-his-025, sq-his-029, sq-his-031, sq-his-032, sq-his-033, sq-his-034, sq-his-036, sq-his-037, sq-fod-017, sq-fod-026, sq-fod-029, sq-fod-031, sq-fod-035, sq-fod-036, sq-fod-037, sq-gen-018, sq-gen-020, sq-gen-033, sq-gen-034, sq-pcm-003, sq-pcm-004, sq-pcm-014, sq-pcm-019, sq-pcm-020, sq-pcm-021, sq-pcm-022, sq-pcm-023, sq-pcm-024, sq-pcm-028, sq-pcm-029, sq-pcm-030, sq-pcm-031, sq-pcm-033, sq-pcm-035, sq-pcm-036, sq-pcm-037, sq-geo-026, sq-geo-027, sq-geo-032, sq-geo-035

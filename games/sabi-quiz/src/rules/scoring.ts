@@ -13,13 +13,6 @@ export function multiplierFor(streak: number): number {
   return 1;
 }
 
-/** Streak count at which the next multiplier tier starts, or null at the top tier. */
-export function nextTierAt(streak: number): number | null {
-  const tiers = [...STREAK_TIERS].reverse();
-  for (const [at] of tiers) if (streak < at) return at;
-  return null;
-}
-
 /** 0..SPEED_BONUS_MAX, linear in the time left. */
 export function speedBonus(timeLeftMs: number, limitMs: number, max = SPEED_BONUS_MAX): number {
   if (limitMs <= 0) return 0;

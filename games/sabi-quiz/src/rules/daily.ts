@@ -1,7 +1,4 @@
 import { dailySeed, localDateKey } from '@naija/core/content';
-import type { QuizQuestion } from './config';
-import { DAILY_MIX, pickRound } from './engine';
-import { createRng } from '@naija/core/rng';
 
 export const DAILY_SCOPE = 'sabi-quiz';
 
@@ -16,14 +13,6 @@ export interface DailyRecord {
 /** The seed for a given local date: identical for everybody on that date. */
 export const dailySeedFor = (d: Date = new Date()): number => dailySeed(DAILY_SCOPE, d);
 
-/** Today's ten questions (4 easy, 4 medium, 2 hard, easy first) and the spares for Skip. */
-export function dailyQuestions(
-  pool: readonly QuizQuestion[],
-  d: Date = new Date(),
-): { questions: QuizQuestion[]; spares: QuizQuestion[] } {
-  return pickRound(pool, createRng(dailySeedFor(d)), { mix: DAILY_MIX });
-}
-
 export function sanitizeDaily(raw: unknown): DailyRecord | null {
   if (!raw || typeof raw !== 'object') return null;
   const r = raw as Partial<DailyRecord>;
@@ -36,3 +25,25 @@ export function sanitizeDaily(raw: unknown): DailyRecord | null {
 /** Has today's scored attempt been used? Then a replay is practice only. */
 export const dailyDone = (rec: DailyRecord | null, d: Date = new Date()): boolean =>
   rec !== null && rec.date === localDateKey(d);
+
+/**
+ * The first START of the day is the one scored attempt: the day is marked used at once, so
+ * Restart, Quit and re-entering the Daily are Practice and cannot change the saved score.
+ * Returns whether this start is practice and the record to store (unchanged for practice).
+ */
+export function startDaily(
+  rec: DailyRecord | null,
+  d: Date = new Date(),
+): { practice: boolean; record: DailyRecord } {
+  if (rec && dailyDone(rec, d)) return { practice: true, record: rec };
+  return { practice: false, record: { date: localDateKey(d), score: 0, correct: 0 } };
+}
+
+/** Fold a finished scored attempt into the day's record (a practice replay returns it untouched). */
+export function finishDaily(
+  rec: DailyRecord,
+  r: { score: number; correct: number },
+  practice: boolean,
+): DailyRecord {
+  return practice ? rec : { ...rec, score: r.score, correct: r.correct };
+}

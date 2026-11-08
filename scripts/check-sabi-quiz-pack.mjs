@@ -3,7 +3,6 @@
 // Shape: {version, id, title, lang, questions:[{id, category, difficulty, q, options:[4], answer, source, reviewed, tags?}]}
 // Checks: counts, shape, duplicate ids and questions, option uniqueness, answer-index spread, length caps
 // (q <= 140, option <= 48 so they fit at 360x640), difficulty mix (about 40/40/20), content-safety word list,
-// daily-seed (10 questions, each identical to a core-pack question).
 // Usage: node scripts/check-sabi-quiz-pack.mjs [--release]
 //   --release also FAILS if any question still has reviewed:false (a human fact-checker must flip it first).
 import { readFileSync } from 'node:fs';
@@ -53,7 +52,6 @@ const BANNED =
 
 const load = (f) => JSON.parse(readFileSync(join(DIR, f), 'utf8'));
 const core = load('sabi-core-en.json');
-const daily = load('daily-seed.json');
 
 function shape(pack, name) {
   for (const k of ['version', 'id', 'title', 'lang', 'questions'])
@@ -103,7 +101,8 @@ function shape(pack, name) {
     e(!BANNED.test([q.q, ...q.options].join(' ')), 'banned word (content rules)');
     if (q.tags) {
       e(
-        Array.isArray(q.tags) && q.tags.every((t) => ['pidgin', 'native-review'].includes(t)),
+        Array.isArray(q.tags) &&
+          q.tags.every((t) => ['pidgin', 'native-review', 'uncertain'].includes(t)),
         'unknown tag',
       );
       e(
@@ -127,7 +126,6 @@ function shape(pack, name) {
   );
 }
 shape(core, 'core');
-shape(daily, 'daily');
 
 // counts
 const n = core.questions.length;
@@ -209,26 +207,6 @@ ok(
 const pcmQ = core.questions.filter((q) => q.tags?.includes('pidgin')).length;
 console.log(
   `     pidgin-phrased questions: ${pcmQ}; needing native speaker: ${core.questions.filter((q) => q.tags?.includes('native-review')).length}`,
-);
-
-// daily seed
-ok(daily.questions.length === 10, 'daily-seed has exactly 10 questions');
-const byId = new Map(core.questions.map((q) => [q.id, q]));
-ok(
-  daily.questions.every(
-    (q) => byId.has(q.id) && JSON.stringify(byId.get(q.id)) === JSON.stringify(q),
-  ),
-  'daily-seed questions are identical copies of core questions (one fact-check covers both)',
-);
-ok(
-  new Set(daily.questions.map((q) => q.category)).size >= 5,
-  'daily-seed spans at least 5 categories',
-);
-const dd = daily.questions.map((q) => q.difficulty);
-ok(
-  JSON.stringify(dd) ===
-    JSON.stringify([...dd].sort((a, b) => DIFFICULTIES.indexOf(a) - DIFFICULTIES.indexOf(b))),
-  'daily-seed ramps easy to hard',
 );
 
 // review state

@@ -27,6 +27,8 @@ import {
   type QuizQuestion,
 } from '../rules';
 import { letterOf } from './dom';
+import { fastForwardRound } from './fastforward';
+import { handleKey } from './keys';
 import {
   createCard,
   createDuelBar,
@@ -314,25 +316,23 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
 
   scope.on(window, 'keydown', (e: KeyboardEvent) => {
-    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || over) return;
-    const k = e.key.toLowerCase();
-    if (k === 'p' || k === 'escape') {
-      if (modalKind === 'pause') {
-        modal?.close();
-        thaw();
-      } else if (!modal) pause();
-      return;
-    }
-    if (modal) return;
-    const at = 'abcd'.indexOf(k) >= 0 && k.length === 1 ? 'abcd'.indexOf(k) : '1234'.indexOf(k);
-    if (at >= 0 && k.length === 1) return void pick(at);
-    const ll: Record<string, LifelineId> = { f: 'fifty', s: 'skip', h: 'padi' };
-    if (ll[k]) return void useLifeline(ll[k] as LifelineId);
-    if (k === 'l') {
-      const first = (['fifty', 'padi', 'skip'] as const).find((id) => canUse(s, id));
-      if (first) useLifeline(first);
-      else core.audio.playSfx('lifelineUsed');
-    }
+    if (over) return;
+    handleKey(e, {
+      togglePause() {
+        if (modalKind === 'pause') {
+          modal?.close();
+          thaw();
+        } else if (!modal) pause();
+      },
+      blocked: () => modal !== null,
+      pick,
+      lifeline: useLifeline,
+      nextLifeline() {
+        const first = (['fifty', 'padi', 'skip'] as const).find((id) => canUse(s, id));
+        if (first) useLifeline(first);
+        else core.audio.playSfx('lifelineUsed');
+      },
+    });
   });
 
   // ---- the clock
@@ -379,19 +379,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
 
   /** Test builds only: finish the round without timers, the way a bot would, then end it. */
   const fastForward = (win: boolean): GameState => {
-    while (s.phase !== 'done') {
-      const q = current(s);
-      const choice = win ? q.answer : (q.answer + 1) % 4;
-      let n = answer(tick(s, 800), choice);
-      if (duel && cpu && n.phase === 'asking') {
-        const p = cpu.decide({ q, limitMs: n.limitMs });
-        n = tick(n, Math.max(1, p.atMs - (n.limitMs - n.timeLeftMs)));
-        n = answerCpu(n, win ? p.choice : q.answer);
-      }
-      s = n;
-      o.onScore(s);
-      s = next(s.phase === 'asking' ? tick(s, s.timeLeftMs) : s);
-    }
+    s = fastForwardRound(s, win, cpu, o.onScore);
     finish();
     return s;
   };

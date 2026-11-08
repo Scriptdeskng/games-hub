@@ -95,3 +95,34 @@ export async function startClassic(page: Page): Promise<void> {
 export async function chooseDifficulty(page: Page, label: string): Promise<void> {
   await press(page.locator('.ng-seg label', { hasText: label }));
 }
+
+/**
+ * Answer whichever question is open right now (no index lock): a stalled test runner can never
+ * wait for a question that has already closed. Returns the question it answered.
+ */
+export async function answerOpen(page: Page, ok = true): Promise<RoundState> {
+  const r = await waitForQuestion(page);
+  const q = r.questions[r.index] as Q;
+  await tapPlate(page, ok ? q.answer : (q.answer + 1) % 4);
+  return r;
+}
+
+/** Keep answering the open question until the results screen shows. Returns how many were answered. */
+export async function playOut(page: Page, ok = true): Promise<number> {
+  const seen = new Set<string>();
+  const deadline = Date.now() + 150_000;
+  while (Date.now() < deadline) {
+    const screen = await page.evaluate(() => window.__naijaTest!.screen());
+    if (screen !== 'play') break;
+    const r = await round(page);
+    if (r && r.phase === 'asking' && r.picked === null) {
+      const q = r.questions[r.index] as Q;
+      if (!seen.has(q.id)) {
+        seen.add(q.id);
+        await tapPlate(page, ok ? q.answer : (q.answer + 1) % 4).catch(() => undefined);
+      }
+    }
+    await page.waitForTimeout(60);
+  }
+  return seen.size;
+}

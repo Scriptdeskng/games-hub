@@ -155,7 +155,6 @@ export function createRound(o: RoundOptions): GameState {
 }
 
 export const current = (s: GameState): QuizQuestion => s.questions[s.index] as QuizQuestion;
-export const isOver = (s: GameState): boolean => s.phase === 'done';
 export const total = (s: GameState): number => s.questions.length;
 
 /** Close the question: grade both seats, update score and streak, move to the reveal phase. */

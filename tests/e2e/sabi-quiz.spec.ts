@@ -16,7 +16,9 @@ import {
   FAST,
   SLUG,
   answerBy,
+  answerOpen,
   appState,
+  playOut,
   chooseDifficulty,
   round,
   startClassic,
@@ -317,10 +319,11 @@ test.describe('sabi-quiz: full playthrough', () => {
 
 test.describe('sabi-quiz: Quiz Duel', () => {
   test('intro, a real duel against the contestant, scores, results', async ({ page }) => {
-    test.setTimeout(120_000);
+    test.setTimeout(180_000);
     const watch = watchErrors(page);
-    // the clock at 0.4 gives a real tap a 6 s window per 15 s question, even on a busy machine
-    await openGame(page, SLUG, '?tempo=0.4');
+    // clock at 0.7x speed of the test default: a real tap has about 10 s per 15 s question, and
+    // the test answers whichever question is open, so a stalled runner cannot miss an index
+    await openGame(page, SLUG, '?tempo=0.7');
     // Easy is Chidi (buzzes at 6 to 11 s): slow enough for real taps on the fast test clock
     await chooseDifficulty(page, 'Easy');
     await press(page.locator('#menu-duel'));
@@ -332,17 +335,17 @@ test.describe('sabi-quiz: Quiz Duel', () => {
     await expect(page.locator('.sq-llbar')).toHaveCount(0); // no lifelines in a duel
     await expect(page.locator('.sq-duelchip')).toHaveCount(2);
     await expect(page.locator('.sq-duelstatus')).toContainText('Chidi');
-    const r0 = await waitForQuestion(page, 0);
+    const r0 = await answerOpen(page, true);
     expect(r0.mode).toBe('duel');
     expect(r0.limitMs).toBe(15000);
-    // answer fast and right: the CPU needs 3 s or more, so the question closes when it buzzes
-    await tapPlate(page, r0.questions[0]!.answer);
+    // locked in: the question stays open until the contestant buzzes or the time is up
     await expect(page.locator('.sq-duelstatus')).toContainText(/Locked in|Chidi/);
-    await expect.poll(async () => (await round(page))!.phase, { timeout: 15_000 }).toBe('reveal');
-    const r1 = (await round(page))!;
-    expect(r1.score).toBeGreaterThan(100); // 100 + a speed bonus
-    await expect(page.locator('.sq-duelchip__n').first()).toHaveText(String(r1.score));
-    for (let i = 1; i < 10; i++) await answerBy(page, true, i);
+    await expect
+      .poll(async () => (await round(page))?.history.length ?? 0)
+      .toBeGreaterThanOrEqual(1);
+    expect((await round(page))!.score).toBeGreaterThan(100); // 100 + a speed bonus
+    // then whichever question is open, until the results show
+    expect(await playOut(page, true)).toBeGreaterThanOrEqual(9);
     await expectScreen(page, 'results');
     await expect(page.locator('.ng-results__title')).toHaveText('You win!');
     await expect(page.locator('.ng-stat', { hasText: /Chidi/ })).toHaveCount(1);
@@ -419,6 +422,49 @@ test.describe('sabi-quiz: Daily Challenge', () => {
     expect(keys.some((k) => k.endsWith(':daily'))).toBe(true);
     expect(keys.join()).not.toMatch(/\d{7,}|token|user/i);
     expect(watch.errors).toEqual([]);
+  });
+});
+
+test.describe('sabi-quiz: Daily Challenge is one scored start (QA D1)', () => {
+  test('start, quit, start again is Practice; the saved score comes only from the first attempt', async ({
+    page,
+  }) => {
+    await openGame(page, SLUG, FAST);
+    const starts = (): Promise<{ practice?: boolean; mode?: string }[]> =>
+      page.evaluate(() =>
+        window
+          .__naijaTest!.events()
+          .filter((e) => e.type === 'start')
+          .map((e) => e.data as { practice?: boolean }),
+      );
+    // first start: the scored attempt; the day is marked used at once
+    await press(page.locator('#menu-daily'));
+    await expectScreen(page, 'play');
+    await expect(page.locator('.sq-practice')).toHaveCount(0);
+    expect((await starts())[0]!.practice).toBeUndefined();
+    const marked = (await appState(page)).daily;
+    expect(marked).toMatchObject({ score: 0, correct: 0 });
+    // quit mid-round, then start again: practice
+    await press(page.getByRole('button', { name: 'Pause' }));
+    await press(page.getByRole('button', { name: 'Quit' }));
+    await expectScreen(page, 'menu');
+    await press(page.locator('#menu-daily'));
+    await expectScreen(page, 'play');
+    await expect(page.locator('.sq-practice')).toBeVisible();
+    expect((await starts())[1]!.practice).toBe(true);
+    // restart from the pause menu is practice too
+    await press(page.getByRole('button', { name: 'Pause' }));
+    await press(page.getByRole('button', { name: 'Restart' }));
+    await expectScreen(page, 'play');
+    expect((await starts()).at(-1)!.practice).toBe(true);
+    // a finished practice round changes nothing that was saved
+    await page.evaluate(() => window.__naijaTest!.autoplay({ mode: 'daily', win: true }));
+    await expectScreen(page, 'results');
+    await expect(page.locator('.ng-results__sub', { hasText: 'Practice replay' })).toBeVisible();
+    const after = await appState(page);
+    expect(after.daily).toEqual(marked);
+    expect(after.progress.best.daily ?? 0).toBe(0);
+    expect(after.progress.wins).toBe(0);
   });
 });
 

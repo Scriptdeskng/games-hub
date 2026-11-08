@@ -1,13 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { classicPoints, duelPoints, multiplierFor, nextTierAt, speedBonus } from './scoring';
+import { classicPoints, duelPoints, multiplierFor, speedBonus } from './scoring';
 
 describe('scoring', () => {
   it('streak tiers: x2 at 3, x3 at 5, x5 at 8', () => {
     expect([0, 1, 2, 3, 4, 5, 7, 8, 20].map(multiplierFor)).toEqual([1, 1, 1, 2, 2, 3, 3, 5, 5]);
-  });
-
-  it('nextTierAt names the streak that earns the next multiplier', () => {
-    expect([0, 3, 5, 8, 12].map(nextTierAt)).toEqual([3, 5, 8, null, null]);
   });
 
   it('speed bonus runs from the maximum down to zero and is clamped', () => {

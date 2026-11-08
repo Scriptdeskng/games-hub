@@ -1,0 +1,101 @@
+# QA report: sabi-quiz (2026-11-08, commit 773feb8)
+
+Verdict: **FAIL**
+
+## Summary
+- Rules engine, scoring, lifelines, duel AI, portal bridge, i18n keys, size, perf (4x CPU + Fast 3G) and the 10-minute soak all pass under independent probes. Lint, typecheck, unit tests (758), build and size gates pass; the release pack gate fails as expected (310 `reviewed:false`, a human task).
+- Two majors block PASS. **D1**: a Daily Challenge can be restarted or quit and replayed until one attempt finishes, so "one scored attempt per day" is broken and the player can learn the day's questions and score them. **D2**: the duel e2e test fails intermittently (7 of 14 executions), so the `npm run e2e` and `e2e:extra` gates fail; evidence points at the test harness under host CPU contention, not the game.
+- Content is strong (40/40 sampled answer keys correct, correct diacritics except one). Human work remains: 300 + 10 fact-checks, 59 Pidgin lines, persona/host decision against the cultural guide, and the 58 `U:` questions that are not in the repo.
+
+## Results table
+
+| # | Item | Status | Evidence |
+|---|---|---|---|
+| 1a | `npm run lint` | PASS | eslint and prettier clean |
+| 1b | `npm run typecheck` | PASS | `tsc --noEmit` clean |
+| 1c | `npm run test -- --coverage` | PASS | 63 files, 758 tests pass. `games/sabi-quiz/src/rules`: 100% statements, 99.21% branches, 100% functions, 100% lines (threshold 90) |
+| 1d | `npm run build` | PASS | production build; prod-gate OK; `dist/sabi-quiz` has 0 hits for `__naijaTest`, `autoplay`, `setSeed`, `fastForward` |
+| 1e | `npm run size` | PASS | sabi-quiz 124.1 KB gzip (355.0 KB raw) vs 3072 KB budget; core 25.7 KB of 60 KB |
+| 1f | `npm run e2e -- sabi-quiz` | **FAIL** | run 1: 54 passed, 2 failed (`intro, a real duel...` at 375x812 and 360x640). run 2: 56 passed, 0 failed. See D2 |
+| 1g | `npm run e2e:extra -- sabi-quiz` | **FAIL** | 55 passed, 2 failed (same duel test, landscape 812x375 and desktop 1280x800). See D2 |
+| 1h | `npm run e2e:perf -- sabi-quiz` | PASS | Fast 3G + 4x CPU: time to menu 1963 ms (budget 4000); fps avg 59.9, min over 1 s 57.1, worst frame 66.6 ms; core perf hook avg 60 / min 60; heap after run 2.07 MB |
+| 1i | `npm run e2e:soak -- sabi-quiz` (alone, 10 min) | PASS | 10.15 min, 54 rounds at 4x CPU. Post-GC heap 2.03 MB at 0.2 min, 2.24 MB from 2 min to 9.6 min, 2.26 MB at end. Slope -1.3 KB/min (limit 100). Listener, timer and RAF counters identical each round. 0 rescued rounds, slowest round 11.4 s |
+| 1j | `npm run packs:check` | PASS | 2 files ok; 310 items `reviewed:false` reported |
+| 1k | `npm run packs:release-check` | EXPECTED FAIL (human task) | exit 1, "310 item(s) still have reviewed:false" (300 core + 10 daily copies). Not a defect |
+| 1l | `npm run i18n:check` | PASS | sabi-quiz: 121 keys in en and pcm, no gaps, no empty values, placeholders match. 59 pcm `_review` lines (listed under Human review) |
+| 2 | Rules vs GAMES.md | PASS with D1 | 50/50 removes exactly two wrong plates across all 300 questions x 5 seeds (probe P1). Skip keeps streak, scores nothing, restarts the clock (P2). Lifelines once per round, refused after lock and on reveal (P2). Lifelines off in duel (P3). Streak x2/x3/x5 at 3/5/8. Pass mark 6, stars at 6/8/9. Classic clocks exactly 20000/15000/10000 ms, mixes and scales match the GAMES table (P5). Padi poll sums to 100 and gives eliminated plates 0 votes. Daily breaks the one-attempt rule (D1) |
+| 3a | Daily determinism | PASS | 365 consecutive days: 10 distinct questions, 4 easy/4 medium/2 hard, easy first, 3 spares, no overlap (P4). Same local date at 00:01 and 23:59 gives the same ten. Seed = `seedFromString('naija-daily|sabi-quiz|YYYY-MM-DD')`, no user id |
+| 3b | One scored attempt per day | **FAIL** | Browser probe: Daily, Pause, Restart, Quit, Daily again. Three abandoned starts, none flagged `practice`, daily record still null; the fourth attempt scored 7640 and saved. Replay after that is `practice: true`. See D1 |
+| 3c | Replays are Practice | PASS | after the saved attempt, the next start carries `practice: true`, and the practice replay leaves the saved daily score, best and wins unchanged (progress.test + probe) |
+| 4 | Duel difficulty ordering | PASS | `ai.test.ts`: Chidi (Easy) < Dung (Medium) < Aisha (Hard) by CPU score over 1200 rounds with > 5 SE gaps. Fixed human bot wins 70%+ vs Chidi and under 45% vs Aisha. Accuracy about 55/72/88% (tests) |
+| 4b | Classic difficulty raises challenge | PASS | clocks 20/15/10 s; fewer correct and more timeouts at each step; pass rate falls with difficulty (ai.test, P5). Hard uses 4 hard questions in the mix against 1 on Easy |
+| 5 | Pack-load failure: Retry, no console errors | PASS | blocked pack (service worker blocked) shows "The questions did not load" with "Try again" and "Main menu"; Retry stays on the screen while blocked; unblocking starts a round (e2e test passes; probe screenshot `extra-packerror-375.png`). Validation failure refused politely (e2e). Browser itself logs the blocked request (see W3) |
+| 6a | Seed never in portal payloads | PASS | `start`, `score`, `level_complete`, `end`, `error`, `ready` payloads carry no seed (code); e2e `expectNoSeedInStart` passes |
+| 6b | No token or MSISDN in URL, storage or logs | PASS | token only as `Authorization: Bearer` (`packages/core/src/portal/index.ts`); progress URL is `{portal}/api/games/sabi-quiz/progress`; storage keys `naija:sabi-quiz:progress` and `:daily`; storage guard rejects phone- and token-like keys; e2e "storage never holds a token" passes; no `console` calls in quiz source; `<meta name="referrer" content="no-referrer">` in `index.html` |
+| 7a | 360x640 portrait | PASS | no horizontal overflow; menu fits (640/640); results scrolls 14 px (Play again in view); e2e layout tests for all screens in en and pcm pass |
+| 7b | 375x812, landscape 812x375, desktop 1280x800 | PASS | no horizontal overflow; screenshots reviewed (menu, how-to, play, poll, results, landscape play, desktop menu) |
+| 7c | 320x568 (below minimum) | WARN | menu scrolls 46 px (developer said about 80); play screen is 39 px taller than the viewport and the lifeline labels (50/50, Skip, Padi) fall below the fold. See W1 |
+| 7d | Tap targets >= 44 px | PASS | every visible button, plate, lifeline and topic chip >= 44 px at all viewports. Only exceptions are the visually hidden 1x1 native radio inputs (their labels are the targets) |
+| 7e | Plates distinguishable in greyscale | PASS | greyscale screenshot: circle A, triangle B, square C, star D stay distinct by shape and letter |
+| 7f | Contrast and legibility | WARN | "New questions every day." sits on the floor stripe at 375, 360, 1280 and in Pidgin, partly unreadable (D10). HUD "1/10" and score overlap the bunting (D11). Answer text ink on cream passes |
+| 8 | Keyboard A-D, 1-4, F, S, H, L, P, Esc | PASS | probe: B and 3 answer; F removes two wrong plates and is refused a second time; S skips; H opens the padi poll and Escape closes it; L is refused quietly when all lifelines are used; P opens and closes pause; Escape opens and closes pause; no errors |
+| 9 | i18n: keys and hard-coded strings | PASS with D4, D12 | key parity and placeholders pass. Grep of quiz views: all UI text through `t()`. Only non-`t()` text is `<noscript>` in `index.html:28` (acceptable, see W3) and numeric placeholders (0, 1/10) |
+| 10a | Portal event order and postMessage target | PASS | order ready, start, score, level_complete, end (quit emits end with `quit: true`). postMessage target is the validated portal origin only (`portal/index.ts` emit); no wildcard. e2e "events reach only the portal origin, in order" passes |
+| 10b | Progress save and load | PASS | e2e "progress and stats are saved, shown on the stats screen and survive a reload" and the mock-portal API test pass |
+| 11 | Single-player only | PASS | grep for pass-and-play, hide-hand, player count, multiplayer, invite: no hits in quiz or core UI. One human seat; Duel contestant is CPU-driven |
+| 12a | Per-game map: visual world | PASS | buka-bar TV set, aso-oke gold spotlights, adire wall, ankara bunting, akwete diamonds (screenshots) |
+| 12b | Per-game map: signature SFX | PASS | correct = ogene + agogo; wrong = falling talking drum + udu; timer = shekere; every cue uses a named core voice (ekwe, agogo, ogene, udu, shekere, talking drum, kakaki-goje fanfare). No generic presets. Spans asserted <= 0.3 s except celebrations |
+| 12c | Per-game map: music | WARN | calm quiz bed is a synth stand-in; the three composed loops are silent 834-byte placeholders. Human composer |
+| 12d | Per-game map: personas | WARN | Uncle Etim (Efik, Calabar) is host; Dung (Berom, Jos) duel Medium; Aisha (Hausa) is the Hard rival. The guide's row says "Aisha as host/rival". See Human review |
+| 12e | Stereotypes, symbols, copy | PASS with notes | no kente, kora, safari, masquerade, sacred or party symbols in screenshots. Persona lines checked: no ethnic, religious or accent jokes. Dung's "Jos cold dey help me think" is mild and factual (flag for Jos reviewer). Political-adjacent history items: see Human review |
+| 12f | Regional balance | WARN | mentions: Yoruba-linked 68, Hausa and North 63, Igbo 49, South-South 35, Middle Belt 24. Lagos 30 and Kano 28 are the most-used places. Benue 3, Sokoto 3 |
+| 12g | Diacritics (Yoruba, Igbo, Hausa) | WARN (D3) | 14 of 15 native-review items correct: dùndún, Ẹ kú àárọ̀, Kedu, Ẹ ṣé, Daalụ, Na gode, Barka da zuwa, Sai gobe, Ndo, Nnọọ. sq-afb-031 "iyá ilù" missing the tone mark on ìlù |
+| 12h | The 58 `U:` questions from the asset designer | NOT CHECKABLE | the list is not in the repo (brief section 5 refers to it; HUMAN_ASSETS item 38 says "check those first"). See D5 |
+| 13a | Gambling, gore, brands | PASS | no coins, stakes, prizes or payments; lifelines free; streak is a score multiplier only. No gore or violence terms. No real brand names found (grep list). Real clubs and players appear as trivia facts. See Human review |
+| 13b | CREDITS.md covers all assets | PASS with D7 | every file under `games/sabi-quiz/assets` is covered; audio and art placeholders are project-owned and labelled. Stale `agogo.svg` row (D7). Chidi and Aisha avatars are covered by core CREDITS |
+| 13c | `reviewed` flags | PASS | game never reads `reviewed` (grep: only the test kit sets it). Release gate blocks as intended |
+| 14 | Question quality (sample) | PASS with notes | 40 questions drawn with seed 20261108: all 40 answer indexes verified correct. No duplicate ids or question texts; 7 repeated option sets (distractor reuse, not defects). Answer distribution 75/75/75/75. Lengths within caps (q <= 80, option <= 48). Ambiguous: sq-pcm-029 ("I dey come" = "I will be right back"), flagged native-review |
+| 15a | Code health: any, ts-ignore, console | PASS | none in quiz source |
+| 15b | Code health: file size | WARN | `view/play.ts` 419 lines (soft limit about 400). Others under 400 |
+| 15c | Code health: dead code | WARN (D6) | `isOver`, `nextTierAt`, `Category`, `dailyQuestions` are not used by the app; `assets/packs/daily-seed.json` is not loaded or shipped |
+| 16 | Stats, results, how-to | PASS | stats (pcm) and results screens render; how-to matches the rules (keys, streak tiers, lifelines, duel, daily) |
+
+## Defects
+
+| ID | Severity | Steps to reproduce | Expected | Actual | File:line |
+|---|---|---|---|---|---|
+| D1 | major | 1. Menu, Daily Challenge. 2. Pause, Restart (or Pause, Quit, then Daily Challenge again). 3. Repeat. 4. Finish the round. | Only one attempt a day is scored. The first started attempt is scored and every later start is Practice, or an abandoned attempt still counts. | Each restart or re-entry starts a scored attempt (the `start` event carries no `practice`). `dailyRec` is written only on finish, so the day's saved record stays null until a round completes. The same ten questions return each time, so a player can see them and score them on the attempt that finishes (probe: starts 1-3 abandoned, record null, attempt 4 saved 7640). | `games/sabi-quiz/src/app.ts:197` (practice flag from `dailyDone(dailyRec)`), `:226-239` (`abandonRound` writes nothing), `:250-253` (record only on finish), `:216` (start event), `games/sabi-quiz/src/view/play.ts:305-314` (pause routes Restart and Quit). Fix: record the daily attempt when it starts (or mark the day as used on first start) and keep Restart and Quit inside the same attempt |
+| D2 | major | Run `npm run e2e -- sabi-quiz` (or `e2e:extra`) several times, or repeat `-g "real duel"`. Fails in about half of duel executions (7 of 14 across the runs here). | `intro, a real duel against the contestant, scores, results` passes on every project. | 20 s timeout in `waitForQuestion(page, i)`. The test began waiting for question i after that question had already timed out, then waited for an index that never reopened. Probe evidence: the human's tap for Q1 was never made because the test was late; the page's RAF kept running at about 60 fps throughout (`rafc` deltas), the game clock and scoring were correct, and the Node or CDP side stalled 4 to 9 s on this host (load average 8; a 450%-CPU VM and Docker running). The game was not reproduced failing under 4x CPU throttle. Fix in the test: answer whichever question is open (no index lock) and do not rely on a 6 s real-time window | `tests/e2e/sabi-quiz.spec.ts:319` (duel test), `:345` (answer loop), `tests/e2e/sabi-quiz.helpers.ts:58-75` (`waitForQuestion` index predicate) |
+| D3 | minor | Read the question in `sq-afb-031` | Yoruba "ìyá ìlù" (lead drum) with tone marks | "iyá ilù" with no tone mark on ilù | `games/sabi-quiz/assets/packs/sabi-core-en.json:736` |
+| D4 | minor | Duel with the player ahead; inspect the chip's leader label | "You are in the lead" | "You is in the lead" (English template used with the name "You") | `games/sabi-quiz/src/i18n/en.json:61` (`duel.lead`), `games/sabi-quiz/src/view/playui.ts:303-306` (aria-label). Fix: separate key for "You" |
+| D5 | minor | Look for the 58 `U:` question ids named in the brief and HUMAN_ASSETS | Ids are recorded in the repo so the fact-checker starts there | Not recorded anywhere (the referenced asset-designer report is not in the repo) | `docs/assets/sabi-quiz-brief.md:77`, `docs/assets/HUMAN_ASSETS.md:44`. Fix: add the list (or a `tags: ["uncertain"]` flag) |
+| D6 | minor | Static check: exports with no app use; the daily seed file | Only used code is exported; packs in `ship.json` or referenced by code | `isOver` (`rules/engine.ts:158`), `nextTierAt` (`rules/scoring.ts:17`), `Category` (`rules/config.ts:32`), `dailyQuestions` (`rules/daily.ts:20`, test-only duplicate of the path `createRound` uses). `assets/packs/daily-seed.json` is not in `ship.json` and not loaded, yet adds 10 items to the release gate. Remove, or wire it in and drop the duplicate | as listed |
+| D7 | minor | Read `games/sabi-quiz/assets/CREDITS.md` | Rows match files | `agogo.svg` row still listed; the file was removed as the brief asked | `games/sabi-quiz/assets/CREDITS.md:25` |
+| D8 | minor | Open and close the topic picker many times on the menu | No cleanup growth | Each open registers a cleanup on the menu scope that is never removed until the menu is destroyed (listeners are removed; the cleanup list grows by one per open) | `games/sabi-quiz/src/view/screens.ts:80-124` (`openTopics`, `scope.add`) |
+| D9 | minor | Count lines | Under about 400 lines per file | `play.ts` is 419 lines | `games/sabi-quiz/src/view/play.ts` |
+| D10 | minor | Open the menu at 375x812, 360x640, 1280x800 or in Pidgin | Hint text readable on its background | "New questions every day." (`menu.dailyNew`) sits on the cream and orange floor stripe; the cream text blends in on the stripe. Brief: "the text never sits on the pattern" | `games/sabi-quiz/src/view/screens.ts:61-65` (`dailyEl`), menu footer layout in `src/style.css` |
+| D11 | minor | Play at 375x812 or 360x640 | HUD counters read cleanly | "QUESTION 1/10" and the score sit over bunting triangles, reducing legibility | `games/sabi-quiz/src/style.css` (HUD layer z-order and background) |
+| D12 | minor | Choose Pidgin, open the menu or stats | Pidgin difficulty labels read naturally | "Easy Easy" and "Hard Well Well" are shown (core Pidgin copy, already flagged `_review`) | `packages/core/src/i18n/pcm.json:28`, `:30-31` (owner: core) |
+
+## Warnings (not defects)
+- **W1** 320x568 (below the 360x640 minimum): menu needs 46 px of scroll, play screen overflows 39 px and the lifeline labels are cut at the bottom edge (measured by the playthrough probe; the screenshot was taken during the run and deleted with the scratch files).
+- **W2** Lagos (30 mentions) and Kano (28) dominate the place references; Benue and Sokoto 3 each.
+- **W3** When the pack is blocked, the browser itself logs "Failed to load resource" (the e2e filters this message). The game adds no error of its own.
+- **W4** Real clubs and players appear as trivia facts (Enyimba F.C., Shooting Stars, Rangers International, Kano Pillars, Heartland; Yekini, Okocha, Keshi, Chukwu, Okala, Odegbami, Oliseh, Amokachi, Finidi George). Compliance decision below.
+- **W5** Duel host line `persona.etim.2` says "fifteen seconds" and only plays on the 15-second Medium clock, so it is accurate.
+- **W6** `docs/STATUS.md` still lists sabi-quiz as "not started".
+
+## Needs human review
+- **Release gate (fact-check, blocking for release):** all 300 core questions and the 10 daily copies are `reviewed:false`; `packs:release-check` must pass before go-live. Start with the 58 `U:` questions (list missing, D5).
+- **Cultural: host versus guide.** The guide's per-game row says "Aisha as host/rival"; the build uses Uncle Etim (Efik, Calabar) as host and Aisha as the Hard rival. The brief documents this, but the guide is "all assets must follow" and needs either an update to the guide or a change of host. Guide owner decision.
+- **Cultural: persona names and regions.** Etim (Efik, Calabar) and Dung (Berom, Jos) need native confirmation of names, regions and banter (HUMAN_ASSETS 43). Both portraits are placeholders; a Calabar and a Jos reviewer should confirm the ankara bow tie, mic and camera read as everyday dress.
+- **Cultural: politics.** The cultural self-check says "no politics". Historical items that touch the state: sq-his-010 (1914 protectorates joined), sq-his-018 (republic year 1963), sq-his-020 (first Prime Minister), sq-his-028 (Lugard). Factual, not civil-war or party questions, but the reviewer decides.
+- **Compliance: real names.** The QA checklist asks for no real clubs or players. Factual trivia naming clubs and players (W4) is not forbidden by GAMES.md, which scopes the rule to Penalty King. Compliance owner to confirm.
+- **Compliance: buzzer and streak multiplier** (HUMAN_ASSETS 45): game-show buzzer, score multiplier and free lifelines, no stakes or prizes.
+- **Pidgin review:** 59 `_review` lines in `src/i18n/pcm.json` (listed in the i18n check output, e.g. `game.howto.1-5`, `menu.*`, `persona.etim.*`, `persona.dung.*`, `persona.aisha.*`, `sq.banter.chidi.*`, `results.*`, `error.pack.*`). Plus the 15 `native-review` questions and 5 `pidgin` questions in the pack (Yoruba, Igbo and Hausa greetings, "chop", "pikin", "gist", "shine your eye", "I dey come"). Core labels "Easy Easy" and "Hard Well Well" (D12). Note "sq-pcm-029" is ambiguous.
+- **Diacritics:** D3 fix, then a native speaker check of all 15 `native-review` items.
+- **Regional balance:** Lagos and Kano are heavily used (W2). Decide whether to add Middle Belt, Benue, Sokoto and Osogbo items.
+- **Rules decision:** Daily uses the Medium clock (15 s) and the 125% points scale. GAMES.md does not specify Daily settings. Confirm this is intended.
+- **Art and audio placeholders:** Etim and Dung portraits, hero thumbs (.webp), three silent music loops, ten silent voice lines, SFX listening check on a phone speaker (HUMAN_ASSETS 40, 41, 42, 43, 44).
+- **Real-device test:** all results are from emulated Pixel 7 and Chromium with CPU throttling. A real low-end Android (Tecno, Infinix, Itel) is still required before release.
+- **Duel e2e (D2):** the root cause should be confirmed on a quiet machine after the test-side fix.

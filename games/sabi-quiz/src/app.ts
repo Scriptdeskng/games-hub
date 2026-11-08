@@ -1,6 +1,5 @@
 import { loadPack } from '@naija/core/content';
 import type { Core } from '@naija/core/boot';
-import { localDateKey } from '@naija/core/content';
 import { createRng, randomSeed } from '@naija/core/rng';
 import {
   createScreenHost,
@@ -16,6 +15,8 @@ import {
   PASS_MARK,
   accuracy,
   dailyDone,
+  finishDaily,
+  startDaily,
   dailySeedFor,
   duelOutcome,
   recordRound,
@@ -194,7 +195,16 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     test?: { tempo?: number; bot?: { win: boolean; delayMs: number } },
   ): void {
     abandonRound();
-    const practice = mode === 'daily' && dailyDone(dailyRec);
+    let practice = false;
+    if (mode === 'daily') {
+      // the first start of the day is the scored attempt; mark the day used now
+      const d = startDaily(dailyRec, new Date());
+      practice = d.practice;
+      if (!practice) {
+        dailyRec = d.record;
+        core.storage.set('daily', dailyRec);
+      }
+    }
     ctx = { practice, mode };
     // the seed fixes every question and poll: it stays in this app and is never sent anywhere
     const seed = mode === 'daily' ? dailySeedFor() : (seedOverride ?? randomSeed());
@@ -249,7 +259,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     save(next);
     const scored = s.mode === 'daily' && !practice;
     if (scored) {
-      dailyRec = { date: localDateKey(), score: s.score, correct: s.correct };
+      dailyRec = finishDaily(dailyRec as DailyRecord, s, false);
       core.storage.set('daily', dailyRec);
     }
     const draw = s.mode === 'duel' && duelOutcome(s) === 'draw';

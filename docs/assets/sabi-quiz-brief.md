@@ -40,7 +40,7 @@ Sizes are the SVG viewBox in units. Total art 44 KB gzip including the question 
 | `fx/correct-burst.svg`, `wrong-ripple.svg`, `streak-burst.svg`, `lifeline-glow.svg`, `time-up.svg` | 200 or 160 | one-shot fx (scale and fade) | gele-ribbon burst; udu ripple; flame ring; agogo-style bell | in-repo |
 | `icon/menu-mark.svg` | 128x128 | menu mark: gold rosette, wine disc, question mark | gele rosette | in-repo |
 | `avatars/etim.svg`, `avatars/dung.svg` | 128x128 | **new** persona portraits (host, duel contestant). Chidi and Aisha use `packages/core/assets/avatars/` | section 9 | in-repo placeholder |
-| `packs/sabi-core-en.json`, `packs/daily-seed.json` | 94 KB (16 KB gzip), 3 KB | 300 questions and the 10-question daily seed (section 5) | n/a | in-repo, **human fact-check pending** |
+| `packs/sabi-core-en.json` | 94 KB (16 KB gzip) | 300 questions (the Daily Challenge picks its 10 by date) (section 5) | n/a | in-repo, **human fact-check pending** |
 | `quiz-art.css` | n/a | `.sq-*` classes and keyframes (section 4) | n/a | in-repo |
 | `thumb/thumb-512x512.svg`, `thumb-1024x500.svg` | 512x512, 1024x500 | **placeholder** hero art (stage, card and four plates; no text) | stage | in-repo placeholder, human `.webp` |
 | `audio/music/quiz-menu-highlife.mp3`, `quiz-play-highlife.mp3`, `quiz-tense-highlife.mp3` | silent | music placeholders (section 7) | highlife | human composer |
@@ -62,14 +62,14 @@ Import once: `import '../assets/quiz-art.css'`. Inline `icons/categories.svg` on
 - Motion: transform and opacity everywhere except the one `stroke-dashoffset` on the timer arc (a single circle, once per second). `prefers-reduced-motion` collapses all durations.
 
 ## 5. Question pack
-Files: `packs/sabi-core-en.json` (300) and `packs/daily-seed.json` (10). Schema exactly as the developer asked:
+Files: `packs/sabi-core-en.json` (300). Schema exactly as the developer asked:
 `{ version, id, title, lang, questions: [{ id, category, difficulty, q, options: [4], answer, source, reviewed, tags? }] }`.
 
 - **IDs** `sq-<cat>-<nnn>` (`nol afb fbl his fod gen pcm geo`). Categories (the eight the brief asks for): `nollywood`, `afrobeats` (music and instruments), `football`, `history`, `food`, `general`, `pidgin` (Pidgin and Nigerian languages), `geography` (states, capitals, landmarks). Map each to a sprite symbol `cat-<id>`.
 - **Counts:** 38 nollywood, 38 afrobeats, 38 football, 37 history, 38 food, 37 general, 37 pidgin, 37 geography = 300. Difficulty 120 easy, 120 medium, 60 hard (40/40/20) in every category. Answer index: exactly 75 / 75 / 75 / 75, spread evenly within each difficulty, no run longer than 3.
 - **`reviewed`** is `false` on all 300. **No question may ship live until a human fact-checker flips it.** `node scripts/check-sabi-quiz-pack.mjs --release` fails while any question is unreviewed; the default run only warns.
 - **`tags`:** `pidgin` on the 5 questions written in Pidgin (all in the `pidgin` category); `native-review` on 15 questions that quote Yoruba, Igbo or Hausa words and need a native speaker.
-- **Daily seed:** the schema has a fixed `questions` array, so `daily-seed.json` is a pack of 10 questions (4 easy, 4 medium, 2 hard, ramping upward, 8 categories) that are **byte-identical copies** of core questions (the checker enforces it, so one fact-check covers both; flip `reviewed` in both files). Only questions with no uncertainty flag were chosen. Alternative for the developer: pick 10 by date with the seeded RNG from the core pack and ignore this file.
+- **Daily:** the game picks the 10 daily questions from the core pack by date with the seeded RNG (no separate daily file; `daily-seed.json` was removed so a single fact-check covers everything).
 - **Length caps (enforced):** question <= 140 characters, option <= 48 characters, four unique options, exactly one correct, the answer word never repeated in the question text.
 - **Sources** name a verifiable public page (e.g. `Wikipedia: Nollywood`, `Encyclopaedia Britannica: Nigeria`). They are pointers for the fact-checker, not proof; the checker only requires a named source.
 - **Content rules applied:** original wording written in-house, no trivia site or book copied; no current office-holders or champions; no civil-war, party, religion or ethnic-comparison questions; no gore, gambling or brand advertising; family-friendly; living people appear only for a stable credit (for example a film director). Distractors are plausible but unambiguous, and several real names are used only as distractors for a different person's work.
