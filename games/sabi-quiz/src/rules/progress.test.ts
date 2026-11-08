@@ -107,7 +107,7 @@ describe('progress', () => {
     expect(newBest).toBe(false);
     expect(p.best['daily']).toBeUndefined();
     expect(p.wins).toBe(0);
-    expect(p.plays).toBe(1);
+    expect(p.plays).toBe(0); // a practice replay is not a counted round
     expect(p.lastDifficulty).toBe('medium');
     const scored = recordRound(emptyProgress(), s, { won: true });
     expect(scored.newBest).toBe(true);
@@ -182,7 +182,7 @@ describe('daily challenge', () => {
   });
 
   it('uses the local date: one scored attempt per day', () => {
-    const rec = { date: '2026-11-08', score: 900, correct: 8 };
+    const rec = { date: '2026-11-08', score: 900, correct: 8, finished: true };
     expect(dailyDone(rec, day(2026, 11, 8))).toBe(true);
     expect(dailyDone(rec, day(2026, 11, 9))).toBe(false);
     expect(dailyDone(null, day(2026, 11, 8))).toBe(false);
@@ -193,20 +193,21 @@ describe('daily challenge', () => {
       date: '2026-11-08',
       score: 5,
       correct: 0,
+      finished: true,
     });
     expect(sanitizeDaily({ date: 'yesterday', score: 1 })).toBeNull();
     expect(sanitizeDaily(null)).toBeNull();
     expect(sanitizeDaily(7)).toBeNull();
     expect(
       Object.keys(sanitizeDaily({ date: '2026-11-08', uid: 'x', token: 't' })!).sort(),
-    ).toEqual(['correct', 'date', 'score']);
+    ).toEqual(['correct', 'date', 'finished', 'score']);
   });
 
   it('the first START is the scored attempt: quit and start again is practice, saved score untouched', () => {
     const d = day(2026, 11, 8);
     const first = startDaily(null, d);
     expect(first.practice).toBe(false);
-    expect(first.record).toEqual({ date: '2026-11-08', score: 0, correct: 0 });
+    expect(first.record).toEqual({ date: '2026-11-08', score: 0, correct: 0, finished: false });
     const again = startDaily(first.record, d);
     expect(again.practice).toBe(true);
     expect(again.record).toBe(first.record);
@@ -215,6 +216,7 @@ describe('daily challenge', () => {
       date: '2026-11-08',
       score: 700,
       correct: 6,
+      finished: true,
     });
     expect(startDaily(first.record, day(2026, 11, 9)).practice).toBe(false);
   });

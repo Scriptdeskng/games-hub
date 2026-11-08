@@ -31,7 +31,9 @@ import { fastForwardRound } from './fastforward';
 import { handleKey } from './keys';
 import {
   createCard,
+  BANTER_CHANCE,
   createDuelBar,
+  duelStatus,
   createLifelines,
   createPlates,
   createPollBody,
@@ -65,7 +67,9 @@ export interface Play extends Component {
 export function createPlay(core: Core, o: PlayOptions): Play {
   const scope = createScope();
   const { t } = core;
-  const tempo = o.test?.tempo && o.test.tempo > 0 ? o.test.tempo : 1;
+  // test-build options only: in production `test` is undefined and nothing below reads it
+  const test = __NAIJA_TEST__ ? o.test : undefined;
+  const tempo = test?.tempo && test.tempo > 0 ? test.tempo : 1;
   const duel = o.mode === 'duel';
   let s = createRound({
     pool: o.pool,
@@ -84,7 +88,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   let over = false;
   let modal: Modal | null = null;
   let modalKind: 'pause' | 'poll' | null = null;
-  let botAt = o.test?.bot?.delayMs ?? 0;
+  let botAt = test?.bot?.delayMs ?? 0;
 
   // ---- view parts
   const bubble = createBubbleView(scope, { name: (p) => t(p.nameKey), ms: 3200 });
@@ -95,17 +99,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       bubble.show(line);
       core.audio.playSfx('hostIn');
     },
-    chance: {
-      correct: 0.5,
-      wrong: 0.6,
-      low: 0.5,
-      buzz: 0.6,
-      good: 0.5,
-      bad: 0.6,
-      humanGood: 0.5,
-      humanBad: 0.5,
-      idle: 0.2,
-    },
+    chance: BANTER_CHANCE,
   });
   const bar = createTopBar(core, scope, {
     practice: o.practice === true,
@@ -149,13 +143,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
 
   function paintStatus(): void {
     if (!duelBar || !cpu || !s.cpu) return;
-    const name = t(cpu.persona.nameKey);
-    let status = t('duel.thinking', { name });
-    if (s.phase === 'reveal') {
-      status =
-        s.cpu.picked === null ? '' : t('duel.cpuPicked', { name, letter: letterOf(s.cpu.picked) });
-    } else if (s.picked !== null) status = t('duel.waiting', { name });
-    else if (s.cpu.picked !== null) status = t('duel.buzzed', { name });
+    const status = duelStatus(core, cpu.persona, s);
     duelBar.set({ me: s.score, cpu: s.cpu.score, status });
   }
 
@@ -172,8 +160,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     lifelines?.sync(s);
     lastSec = -1;
     plan = cpu ? cpu.decide({ q, limitMs: s.limitMs }) : null;
-    if (plan && o.test?.bot?.win === false) plan = { ...plan, choice: q.answer };
-    botAt = o.test?.bot?.delayMs ?? 0;
+    if (plan && test?.bot?.win === false) plan = { ...plan, choice: q.answer };
+    botAt = test?.bot?.delayMs ?? 0;
     live.textContent = t('play.question', { n: s.index + 1, total: total(s), q: q.q });
     core.audio.playSfx('questionIn');
     paintStatus();
@@ -370,10 +358,10 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       say('buzz');
       if (s.phase === 'asking') paintStatus();
     }
-    if (__NAIJA_TEST__ && o.test?.bot && s.phase === 'asking' && elapsed() >= botAt) {
+    if (__NAIJA_TEST__ && test?.bot && s.phase === 'asking' && elapsed() >= botAt) {
       const q = current(s);
       botAt = Infinity;
-      pick(o.test.bot.win ? q.answer : (q.answer + 1) % 4);
+      pick(test.bot.win ? q.answer : (q.answer + 1) % 4);
     }
   }
 

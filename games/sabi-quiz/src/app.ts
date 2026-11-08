@@ -1,6 +1,6 @@
 import { loadPack } from '@naija/core/content';
 import type { Core } from '@naija/core/boot';
-import { createRng, randomSeed } from '@naija/core/rng';
+import { randomSeed } from '@naija/core/rng';
 import {
   createScreenHost,
   toast,
@@ -8,12 +8,10 @@ import {
   type Component,
   type Difficulty,
 } from '@naija/core/ui-kit';
-import { CONTESTANT_OF, HOST, personaById } from './ai';
 import { menuMusic } from './audio/music';
 import { validateSabiPack } from './content';
 import {
   PASS_MARK,
-  accuracy,
   dailyDone,
   finishDaily,
   startDaily,
@@ -21,7 +19,6 @@ import {
   duelOutcome,
   recordRound,
   stars,
-  total,
   won as roundWon,
   type DailyRecord,
   type GameState,
@@ -29,6 +26,7 @@ import {
   type Progress,
   type QuizQuestion,
 } from './rules';
+import { resultsBanter, resultsRows } from './resultsinfo';
 import { mountSprite } from './view/dom';
 import { createPlay, type Play } from './view/play';
 import {
@@ -138,6 +136,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
         progress,
         daily: dailyRec,
         dailyDone: dailyDone(dailyRec),
+        dailyFinished: dailyRec?.finished === true,
         onDifficulty: (d) => {
           difficulty = d;
           save({ ...progress, lastDifficulty: d });
@@ -215,7 +214,8 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
       categories: mode === 'daily' || category === 'all' ? undefined : [category],
       seed,
       practice,
-      onScore: (s) => core.portal.emit('score', { score: s.score }),
+      // a practice replay of the Daily is never reported as a scored level
+      onScore: (s) => (practice ? undefined : core.portal.emit('score', { score: s.score })),
       onEnd: (s) => finishRound(s),
       onRestart: () => startRound(mode, questions),
       onQuit: showMenu,
@@ -242,6 +242,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
         quit: true,
         level: s.difficulty,
         mode: s.mode,
+        ...(ctx.practice ? { practice: true } : {}),
       });
     }
     roundOpen = false;
@@ -264,7 +265,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     }
     const draw = s.mode === 'duel' && duelOutcome(s) === 'draw';
     const st = stars(s);
-    if (win)
+    if (win && !practice)
       core.portal.emit('level_complete', {
         level: s.difficulty,
         score: s.score,
@@ -283,33 +284,6 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     done.forEach((w) => w(s));
 
     const render = (): void => {
-      const rival = s.mode === 'duel' ? personaById(CONTESTANT_OF[s.difficulty]) : HOST;
-      const event = s.mode === 'duel' ? (win ? 'lose' : 'win') : win ? 'win' : 'lose';
-      const keys = rival.banter[event] ?? [];
-      const key = keys.length ? createRng(s.seed).pick(keys) : '';
-      const banter = key ? `${t(rival.nameKey)}: ${t(key)}` : '';
-      const rows =
-        s.mode === 'duel'
-          ? [
-              {
-                label: t('results.duel', { name: t(rival.nameKey) }),
-                value: `${s.score} - ${s.cpu?.score ?? 0}`,
-              },
-              { label: t('results.correct'), value: `${s.correct}/${total(s)}` },
-              {
-                label: t('results.mode'),
-                value: `${t('mode.duel')} / ${t(`difficulty.${s.difficulty}`)}`,
-              },
-            ]
-          : [
-              { label: t('results.correct'), value: `${s.correct}/${total(s)}` },
-              { label: t('results.accuracy'), value: `${Math.round(accuracy(s) * 100)}%` },
-              { label: t('results.streak'), value: s.bestStreak },
-              {
-                label: t('results.mode'),
-                value: `${t(`mode.${s.mode}`)}${s.mode === 'daily' ? '' : ` / ${t(`difficulty.${s.difficulty}`)}`}`,
-              },
-            ];
       const bestNow =
         progress.best[s.mode === 'daily' ? 'daily' : `${s.mode}:${s.difficulty}`] ?? 0;
       show(
@@ -322,12 +296,18 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
           best: bestNow,
           newBest,
           stars: s.mode === 'duel' ? undefined : win ? st : undefined,
-          banter,
-          rows,
+          banter: resultsBanter(t, s, win),
+          rows: resultsRows(t, s),
           note:
             s.mode !== 'daily'
               ? undefined
-              : t(practice ? 'results.practice' : 'results.dailySaved'),
+              : t(
+                  !practice
+                    ? 'results.dailySaved'
+                    : dailyRec?.finished
+                      ? 'results.practice'
+                      : 'results.practiceUsed',
+                ),
           onReplay: () => void begin(s.mode),
           onMenu: showMenu,
         }),

@@ -122,7 +122,7 @@ export function recordRound(
     next: {
       ...p,
       best: practice ? p.best : { ...p.best, [key]: Math.max(prevBest, s.score) },
-      plays: p.plays + 1,
+      plays: p.plays + (practice ? 0 : 1),
       wins: p.wins + (o.won && !practice ? 1 : 0),
       bestStreak: Math.max(p.bestStreak, s.bestStreak),
       categories,

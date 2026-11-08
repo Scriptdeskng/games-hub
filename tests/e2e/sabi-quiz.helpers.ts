@@ -45,7 +45,7 @@ export interface AppState {
     categories: Record<string, { asked: number; correct: number }>;
     duel: Record<string, { won: number; lost: number; drawn: number }>;
   };
-  daily: { date: string; score: number; correct: number } | null;
+  daily: { date: string; score: number; correct: number; finished: boolean } | null;
   round: RoundState | null;
   packLoaded: boolean;
 }

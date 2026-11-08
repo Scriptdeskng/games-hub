@@ -19,13 +19,17 @@
     "_review": true
   },
   "menu.hintClassic": {
-    "text": "10 question, {time} s each. Duel vs {name}.",
+    "text": "10 questions, {time} s each. Duel vs {name}.",
     "_review": true
   },
   "menu.howto": "How to play",
   "menu.dailyNew": "New questions every day.",
   "menu.dailyDone": {
     "text": "Today score: {score}. If you play again, na practice.",
+    "_review": true
+  },
+  "menu.dailyUsed": {
+    "text": "Today attempt don use. If you play again, na practice.",
     "_review": true
   },
   "menu.packLoading": {
@@ -152,6 +156,10 @@
   "results.mode": "Mode",
   "results.practice": {
     "text": "Practice replay. Today score don save already.",
+    "_review": true
+  },
+  "results.practiceUsed": {
+    "text": "Practice replay. Today attempt don use already.",
     "_review": true
   },
   "results.dailySaved": {

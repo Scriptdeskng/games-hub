@@ -245,6 +245,11 @@
   display: flex;
   justify-content: center;
   gap: var(--ng-s-5);
+  justify-self: center;
+  padding: 4px var(--ng-s-4);
+  border-radius: var(--ng-r-pill);
+  /* solid dark so the labels read even where the stage floor stripe is behind them */
+  background: rgb(20 8 14 / 0.92);
 }
 .sq-llwrap {
   display: grid;

@@ -35,6 +35,7 @@ export interface MenuOptions {
   progress: Progress;
   daily: DailyRecord | null;
   dailyDone: boolean;
+  dailyFinished: boolean;
   onDifficulty(d: Difficulty): void;
   onCategory(c: string): void;
   onPlay(m: Mode): void;
@@ -63,7 +64,11 @@ export function createMenuScreen(core: Core, o: MenuOptions): Component {
   const dailyEl = h('p', {
     class: 'hint ng-muted',
     text:
-      o.dailyDone && o.daily ? t('menu.dailyDone', { score: o.daily.score }) : t('menu.dailyNew'),
+      o.dailyDone && o.daily
+        ? o.dailyFinished
+          ? t('menu.dailyDone', { score: o.daily.score })
+          : t('menu.dailyUsed')
+        : t('menu.dailyNew'),
   });
   const picker = createDifficultyPicker(core, {
     value: o.difficulty,

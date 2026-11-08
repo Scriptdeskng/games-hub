@@ -390,7 +390,12 @@ test.describe('sabi-quiz: Daily Challenge', () => {
     ).toBeVisible();
     const first = await appState(page);
     expect(first.daily).not.toBeNull();
-    expect(Object.keys(first.daily!).sort()).toEqual(['correct', 'date', 'score']);
+    expect(Object.keys(first.daily!).sort()).toEqual(['correct', 'date', 'finished', 'score']);
+    expect(first.daily!.finished).toBe(true);
+    // the scored attempt reports its score and its level to the portal
+    const scoredTypes = await eventTypes(page);
+    expect(scoredTypes).toContain('level_complete');
+    expect(scoredTypes).toContain('score');
     expect(first.daily!.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     expect(first.progress.best.daily).toBe(first.daily!.score);
     await press(page.getByRole('button', { name: 'Main menu' }));
@@ -443,11 +448,13 @@ test.describe('sabi-quiz: Daily Challenge is one scored start (QA D1)', () => {
     await expect(page.locator('.sq-practice')).toHaveCount(0);
     expect((await starts())[0]!.practice).toBeUndefined();
     const marked = (await appState(page)).daily;
-    expect(marked).toMatchObject({ score: 0, correct: 0 });
+    expect(marked).toMatchObject({ score: 0, correct: 0, finished: false });
     // quit mid-round, then start again: practice
     await press(page.getByRole('button', { name: 'Pause' }));
     await press(page.getByRole('button', { name: 'Quit' }));
     await expectScreen(page, 'menu');
+    // an attempt that was started but not finished is not shown as a finished score of 0
+    await expect(page.locator('.hint', { hasText: "Today's attempt is used" })).toBeVisible();
     await press(page.locator('#menu-daily'));
     await expectScreen(page, 'play');
     await expect(page.locator('.sq-practice')).toBeVisible();
@@ -461,7 +468,21 @@ test.describe('sabi-quiz: Daily Challenge is one scored start (QA D1)', () => {
     await page.evaluate(() => window.__naijaTest!.autoplay({ mode: 'daily', win: true }));
     await expectScreen(page, 'results');
     await expect(page.locator('.ng-results__sub', { hasText: 'Practice replay' })).toBeVisible();
+    await expect(
+      page.locator('.ng-results__sub', { hasText: "Today's attempt is already used" }),
+    ).toBeVisible();
+    // a practice run reports neither score nor level_complete (only start and end, flagged practice)
+    const log = await page.evaluate(() =>
+      window
+        .__naijaTest!.events()
+        .map((e) => ({ type: e.type, data: e.data as { practice?: boolean } })),
+    );
+    const lastStart = log.map((e) => e.type).lastIndexOf('start');
+    const practiceRun = log.slice(lastStart);
+    expect(practiceRun.map((e) => e.type)).toEqual(['start', 'end']);
+    expect(practiceRun.every((e) => e.data.practice === true)).toBe(true);
     const after = await appState(page);
+    expect(after.progress.plays).toBe(0);
     expect(after.daily).toEqual(marked);
     expect(after.progress.best.daily ?? 0).toBe(0);
     expect(after.progress.wins).toBe(0);

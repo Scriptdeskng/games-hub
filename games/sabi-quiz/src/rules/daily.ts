@@ -8,6 +8,8 @@ export interface DailyRecord {
   date: string;
   score: number;
   correct: number;
+  /** false from the moment the attempt starts until it is finished */
+  finished: boolean;
 }
 
 /** The seed for a given local date: identical for everybody on that date. */
@@ -19,7 +21,13 @@ export function sanitizeDaily(raw: unknown): DailyRecord | null {
   if (typeof r.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.date)) return null;
   const num = (v: unknown): number =>
     typeof v === 'number' && Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0;
-  return { date: r.date, score: num(r.score), correct: num(r.correct) };
+  const score = num(r.score);
+  return {
+    date: r.date,
+    score,
+    correct: num(r.correct),
+    finished: typeof r.finished === 'boolean' ? r.finished : score > 0,
+  };
 }
 
 /** Has today's scored attempt been used? Then a replay is practice only. */
@@ -36,7 +44,10 @@ export function startDaily(
   d: Date = new Date(),
 ): { practice: boolean; record: DailyRecord } {
   if (rec && dailyDone(rec, d)) return { practice: true, record: rec };
-  return { practice: false, record: { date: localDateKey(d), score: 0, correct: 0 } };
+  return {
+    practice: false,
+    record: { date: localDateKey(d), score: 0, correct: 0, finished: false },
+  };
 }
 
 /** Fold a finished scored attempt into the day's record (a practice replay returns it untouched). */
@@ -45,5 +56,5 @@ export function finishDaily(
   r: { score: number; correct: number },
   practice: boolean,
 ): DailyRecord {
-  return practice ? rec : { ...rec, score: r.score, correct: r.correct };
+  return practice ? rec : { ...rec, score: r.score, correct: r.correct, finished: true };
 }

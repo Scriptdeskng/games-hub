@@ -348,3 +348,29 @@ export function createPollBody(
   });
   return el;
 }
+
+/** What the duel strip says under the scores: thinking, buzzed, waiting, or what the contestant picked. */
+export function duelStatus(core: Core, persona: Persona, s: GameState): string {
+  const name = core.t(persona.nameKey);
+  if (!s.cpu) return '';
+  if (s.phase === 'reveal')
+    return s.cpu.picked === null
+      ? ''
+      : core.t('duel.cpuPicked', { name, letter: letterOf(s.cpu.picked) });
+  if (s.picked !== null) return core.t('duel.waiting', { name });
+  if (s.cpu.picked !== null) return core.t('duel.buzzed', { name });
+  return core.t('duel.thinking', { name });
+}
+
+/** How often each persona event actually produces a bubble (the rest stay quiet, never spammy). */
+export const BANTER_CHANCE = {
+  correct: 0.5,
+  wrong: 0.6,
+  low: 0.5,
+  buzz: 0.6,
+  good: 0.5,
+  bad: 0.6,
+  humanGood: 0.5,
+  humanBad: 0.5,
+  idle: 0.2,
+};
