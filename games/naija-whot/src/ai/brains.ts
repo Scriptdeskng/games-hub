@@ -143,6 +143,20 @@ function sensible(v: PublicView, rng: Rng, style: Style): Action {
   return { type: 'play', card: best.card };
 }
 
+/**
+ * Medium's 20% slip: a random legal move, but a Whot is held back (like Hard does) while the hand
+ * is bigger than the style's `whotFree` and no penalty is pending, with probability 1 - TRAITS.whot
+ * (Aisha almost always, Mama Nkechi often, the others never).
+ */
+function slip(v: PublicView, rng: Rng, style: Style): Action {
+  const all = plays(v);
+  const tr = TRAITS[style];
+  if (v.pending || v.hand.length <= tr.whotFree) return rng.pick(all);
+  const rest = all.filter((a) => a.type !== 'play' || cardOf(a.card).shape !== 'whot');
+  if (rest.length > 0 && rest.length < all.length && rng.chance(1 - tr.whot)) return rng.pick(rest);
+  return rng.pick(all);
+}
+
 export const mediumBrain = (style: Style = 'balanced'): CpuBrain => ({
   decide(v, rng) {
     const c = catchChoice(v, rng, rate('medium', style, 'catch'));
@@ -151,7 +165,7 @@ export const mediumBrain = (style: Style = 'balanced'): CpuBrain => ({
       rng,
       PROFILES.medium.mistakeRate,
       () => sensible(v, rng, style),
-      () => rng.pick(plays(v)),
+      () => slip(v, rng, style),
     );
     return withCall(v, a, rng, rate('medium', style, 'announce'));
   },

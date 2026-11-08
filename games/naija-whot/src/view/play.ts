@@ -24,6 +24,7 @@ import {
 import { canDraw, legalActions, type Action } from '../rules/legal';
 import { viewFor } from '../rules/view';
 import { dealIn } from './deal';
+import { createTapGuard } from './tapGuard';
 import { createKeyMap } from './keys';
 import { createPresenter } from './present';
 import { createPlayUi } from './table';
@@ -200,8 +201,10 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     awaiting = null;
     r?.(a);
   }
+  const taps = createTapGuard();
   function onTapCard(id: number): void {
-    if (!awaiting || over || flow.modalOpen) return;
+    if (!awaiting || over || flow.modalOpen || taps.busy) return;
+    taps.cardTapped();
     if (!legalPlays(state).includes(id)) return illegal('whot.noFit');
     if (ui.hand.selected !== id) {
       ui.hand.select(id);
@@ -211,13 +214,14 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       ui.setStatus(t('whot.confirm'));
       return;
     }
-    void confirmPlay(id);
+    void taps.once(() => confirmPlay(id));
   }
   function onFlick(id: number): void {
-    if (!awaiting || over || flow.modalOpen) return;
+    if (!awaiting || over || flow.modalOpen || taps.busy) return;
+    taps.cardTapped();
     if (!legalPlays(state).includes(id)) return illegal('whot.noFit');
     ui.hand.select(id);
-    void confirmPlay(id);
+    void taps.once(() => confirmPlay(id));
   }
   async function confirmPlay(id: number): Promise<void> {
     if (cardOf(id).shape === 'whot') {
@@ -229,7 +233,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     } else submit({ type: 'play', card: id });
   }
   function onDrawTap(): void {
-    if (!awaiting || over || flow.modalOpen) return;
+    if (!awaiting || over || flow.modalOpen || taps.busy || !taps.drawAllowed()) return;
     if (!canDraw(state, state.hands[HUMAN_SEAT] as number[])) return illegal('whot.mustPlay');
     submit({ type: 'draw' });
   }

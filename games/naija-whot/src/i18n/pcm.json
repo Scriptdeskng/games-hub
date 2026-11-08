@@ -290,7 +290,10 @@
     "text": "{name} dey think...",
     "_review": true
   },
-  "whot.banter.mama-nkechi.play": "Correct card, my dear.",
+  "whot.banter.mama-nkechi.play": {
+    "text": "Correct card, my dear.",
+    "_review": true
+  },
   "whot.banter.mama-nkechi.pickTwo": {
     "text": "Na small pick two for you, take am easy.",
     "_review": true
@@ -307,7 +310,10 @@
     "text": "Sit down small, no be your turn.",
     "_review": true
   },
-  "whot.banter.mama-nkechi.holdOn": "Hold on, I go again.",
+  "whot.banter.mama-nkechi.holdOn": {
+    "text": "Hold on, I go again.",
+    "_review": true
+  },
   "whot.banter.mama-nkechi.whotCall": {
     "text": "Na star I need, abeg.",
     "_review": true
@@ -328,7 +334,10 @@
     "text": "Omo, see this one.",
     "_review": true
   },
-  "whot.banter.tari.pickTwo": "Oya, pick two!",
+  "whot.banter.tari.pickTwo": {
+    "text": "Oya, pick two!",
+    "_review": true
+  },
   "whot.banter.tari.gotPickTwo": {
     "text": "Wait, you do me so? Respect.",
     "_review": true
@@ -341,7 +350,10 @@
     "text": "Suspension! Sorry, relax small.",
     "_review": true
   },
-  "whot.banter.tari.holdOn": "Hold on, one more from me!",
+  "whot.banter.tari.holdOn": {
+    "text": "Hold on, one more from me!",
+    "_review": true
+  },
   "whot.banter.tari.whotCall": {
     "text": "Na triangle I need, abeg!",
     "_review": true
@@ -350,7 +362,10 @@
     "text": "Last card! Catch me if you fit.",
     "_review": true
   },
-  "whot.banter.tari.win": "You no fit beat me today.",
+  "whot.banter.tari.win": {
+    "text": "You no fit beat me today.",
+    "_review": true
+  },
   "whot.banter.tari.lose": {
     "text": "That one sweet me. We go again?",
     "_review": true

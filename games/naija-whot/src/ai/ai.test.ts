@@ -266,7 +266,7 @@ describe('persona styles are real inputs at every difficulty (W-03)', SIM, () =>
       balanced + 0.07,
     );
   });
-  it.each(['easy', 'hard'] as const)(
+  it.each(['easy', 'medium', 'hard'] as const)(
     '%s: Aisha hoards her Whot while she has more than 3 cards',
     (d) => {
       const hoarder = whotRate(d, 'hoarder');
@@ -274,7 +274,9 @@ describe('persona styles are real inputs at every difficulty (W-03)', SIM, () =>
       expect(hoarder, `hoarder ${hoarder} balanced ${balanced}`).toBeLessThan(
         d === 'hard' ? 0.005 : balanced * 0.5,
       );
-      expect(whotRate(d, 'cautious')).toBeLessThan(balanced);
+      expect(whotRate(d, 'cautious'), `cautious vs balanced ${balanced}`).toBeLessThan(
+        d === 'medium' ? balanced * 0.8 : balanced,
+      );
     },
   );
   it('Aisha at Hard plays her Whot again once she is down to three cards', () => {

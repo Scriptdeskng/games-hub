@@ -257,6 +257,45 @@ test.describe('naija-whot: cards, shapes, draw, last card', () => {
     expect(watch.errors).toEqual([]);
   });
 
+  test('a double tap on a playable card plays it once and never draws from the market', async ({
+    page,
+  }) => {
+    const watch = watchErrors(page);
+    for (const seed of [505, 1, 2, 3, 4, 5]) {
+      await openGame(page, SLUG, FAST);
+      await chooseMenu(page, { difficulty: 'Easy', cpus: 3 });
+      await page.evaluate((n) => window.__naijaTest!.setSeed(n), seed);
+      await press(page.locator('#menu-play'));
+      await expectScreen(page, 'play');
+      const s0 = await waitForHuman(page);
+      const card = page.locator('.wh-fan .whot-card.is-playable:not([data-card="49"])').first();
+      if (s0.phase === 'over' || (await card.count()) === 0) continue;
+      const id = Number(await card.getAttribute('data-card'));
+      if (id >= 49) continue;
+      // the first commit that follows the double tap must be this card's play, not a market draw
+      const first = page.waitForFunction(
+        (cid) => {
+          const r = (
+            window.__naijaTest!.getState() as {
+              round: { last: { type: string; seat?: number; card?: number }[] } | null;
+            }
+          ).round;
+          const mine = (r?.last ?? []).filter((e) => e.seat === 0);
+          return mine.some((e) => e.type === 'draw' || (e.type === 'play' && e.card === cid))
+            ? mine.map((e) => e.type)
+            : null;
+        },
+        id,
+        { polling: 5, timeout: 5000 },
+      );
+      await card.dblclick();
+      const acts = (await (await first).jsonValue()) as string[];
+      expect(acts, `seed ${seed}`).toContain('play');
+      expect(acts, `seed ${seed}`).not.toContain('draw');
+    }
+    expect(watch.errors).toEqual([]);
+  });
+
   test('a tapped card that does not fit is refused with a message, not played', async ({
     page,
   }) => {
