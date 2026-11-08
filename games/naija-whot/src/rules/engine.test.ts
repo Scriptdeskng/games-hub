@@ -1,246 +1,709 @@
 import { describe, expect, it } from 'vitest';
+import { DECK, SHAPES, cardOf, cardValue, handValue, isSpecial, isWhot } from './cards';
+import { CPU_COUNTS, DEFAULT_RULES, MAX_TURNS, RULE_KEYS, sanitizeRules } from './config';
 import {
-  BASE_POINTS,
-  COMBO_BONUS,
-  PROFILES,
-  accuracy,
+  apply,
+  announce,
+  canAnnounce,
+  canCatch,
+  catchPlayer,
   createGame,
-  hit,
-  missTap,
-  oldestTarget,
-  recordResult,
-  sanitizeProgress,
-  emptyProgress,
-  stars,
-  tick,
-  type Difficulty,
-  type GameState,
-} from './index';
+  currentSeatOf,
+  exposedSeat,
+  handOf,
+  isOver,
+  legalPlays,
+  mustDraw,
+  seatIndexOf,
+  topCard,
+  turnsOf,
+} from './engine';
+import { canDraw, canPlayCard, legalActions, matchesTop, requiredCall } from './legal';
+import { id, position, whot, SEATS } from './testkit';
+import { viewFor } from './view';
 
-const run = (s: GameState, ms: number, step = 50): GameState => {
-  for (let t = 0; t < ms; t += step) s = tick(s, step);
-  return s;
-};
-/** a bot that always hits the oldest bell */
-const bot = (d: Difficulty, seed: number, reactionMs = 100): GameState => {
-  let s = createGame(d, seed);
-  for (let i = 0; i < 2000 && s.status === 'playing'; i++) {
-    s = tick(s, reactionMs);
-    const id = oldestTarget(s);
-    if (id !== null) s = hit(s, id);
-  }
-  return s;
-};
+const game = (cpus: number, seed = 1) =>
+  createGame({ seed, human: { id: 'you', name: 'You' }, cpus: SEATS(cpus) });
+
+describe('the deck', () => {
+  it('has exactly the 54 cards of GAMES.md', () => {
+    expect(DECK).toHaveLength(54);
+    const count = (s: string): number => DECK.filter((c) => c.shape === s).length;
+    expect([
+      count('circle'),
+      count('triangle'),
+      count('cross'),
+      count('square'),
+      count('star'),
+    ]).toEqual([12, 12, 9, 9, 7]);
+    expect(count('whot')).toBe(5);
+    expect(DECK.filter((c) => c.shape === 'whot').every((c) => c.n === 20)).toBe(true);
+    expect(DECK.filter((c) => c.shape === 'circle').map((c) => c.n)).toEqual([
+      1, 2, 3, 4, 5, 7, 8, 10, 11, 12, 13, 14,
+    ]);
+    expect(DECK.filter((c) => c.shape === 'cross').map((c) => c.n)).toEqual([
+      1, 2, 3, 5, 7, 10, 11, 13, 14,
+    ]);
+    expect(DECK.filter((c) => c.shape === 'star').map((c) => c.n)).toEqual([1, 2, 3, 4, 5, 7, 8]);
+    expect(DECK.map((c) => c.id)).toEqual([...Array(54).keys()]);
+  });
+  it('knows power cards and count-up values', () => {
+    expect([1, 2, 5, 8, 14, 20].every((n) => isSpecial(DECK.find((c) => c.n === n)!.id))).toBe(
+      true,
+    );
+    expect(isSpecial(id('circle', 7))).toBe(false);
+    expect(isWhot(whot())).toBe(true);
+    expect(cardValue(whot())).toBe(20);
+    expect(handValue([id('circle', 7), id('star', 3), whot()])).toBe(30);
+    expect(cardOf(id('star', 7)).shape).toBe('star');
+  });
+});
 
 describe('createGame', () => {
-  it('starts playing with the profile clock and no bells', () => {
-    const s = createGame('medium', 1);
-    expect(s.status).toBe('playing');
-    expect(s.timeLeftMs).toBe(PROFILES.medium.durationMs);
-    expect(s.targets).toEqual([]);
-    expect(s.score).toBe(0);
-  });
-  it('state is JSON-serializable and round-trips', () => {
-    const s = run(createGame('hard', 5), 2000);
-    expect(JSON.parse(JSON.stringify(s))).toEqual(s);
-  });
-});
-
-describe('tick', () => {
-  it('spawns bells and respects maxTargets', () => {
-    const s = run(createGame('easy', 3), 5000);
-    expect(s.targets.length).toBeGreaterThan(0);
-    expect(s.targets.length).toBeLessThanOrEqual(PROFILES.easy.maxTargets);
-  });
-  it('is deterministic for a seed and differs across seeds', () => {
-    const a = run(createGame('medium', 9), 4000);
-    const b = run(createGame('medium', 9), 4000);
-    const c = run(createGame('medium', 10), 4000);
-    expect(a).toEqual(b);
-    expect(a.targets.map((t) => t.x)).not.toEqual(c.targets.map((t) => t.x));
-  });
-  it('keeps bell positions inside 0..1', () => {
-    let s = createGame('hard', 2);
-    for (let i = 0; i < 400; i++) {
-      s = tick(s, 50);
-      for (const t of s.targets) {
-        expect(t.x).toBeGreaterThanOrEqual(0);
-        expect(t.x).toBeLessThan(1);
-        expect(t.y).toBeGreaterThanOrEqual(0);
-        expect(t.y).toBeLessThan(1);
+  it.each(CPU_COUNTS)(
+    'deals 5 cards to each of %i CPUs plus the human, and flips a plain starter',
+    (n) => {
+      for (let seed = 1; seed <= 40; seed++) {
+        const s = game(n, seed);
+        expect(s.hands).toHaveLength(n + 1);
+        expect(s.hands.every((h) => h.length === 5)).toBe(true);
+        expect(s.discard).toHaveLength(1);
+        expect(isSpecial(topCard(s))).toBe(false);
+        const all = [...s.hands.flat(), ...s.draw, ...s.discard];
+        expect(new Set(all).size).toBe(54);
+        expect(all).toHaveLength(54);
+        expect(s.turns.seats[0]).toMatchObject({ id: 'you', kind: 'human' });
+        expect(s.phase).toBe('play');
       }
-    }
+    },
+  );
+  it('is deterministic per seed and differs across seeds', () => {
+    expect(game(2, 5)).toEqual(game(2, 5));
+    expect(game(2, 5).hands).not.toEqual(game(2, 6).hands);
   });
-  it('expired bells count as misses and reset the combo', () => {
-    let s = run(createGame('easy', 4), 400);
-    expect(s.targets.length).toBeGreaterThan(0);
-    s = hit(s, s.targets[0]!.id);
-    expect(s.combo).toBe(1);
-    s = run(s, PROFILES.easy.lifetimeMs * 2, 100);
-    expect(s.misses).toBeGreaterThan(0);
-    expect(s.combo).toBe(0);
-  });
-  it('loses when time runs out below the goal', () => {
-    const s = run(createGame('easy', 1), PROFILES.easy.durationMs + 100);
-    expect(s.status).toBe('lost');
-    expect(s.timeLeftMs).toBe(0);
-    expect(s.targets).toEqual([]);
-  });
-  it('clamps negative or NaN dt: time never runs backwards', () => {
-    const s = run(createGame('easy', 4), 1000);
-    for (const bad of [-50, -1e9, NaN]) {
-      const t = tick(s, bad);
-      expect(t.timeLeftMs).toBe(s.timeLeftMs);
-      expect(t.targets.map((x) => x.ttlMs)).toEqual(s.targets.map((x) => x.ttlMs));
-    }
-  });
-  it('does nothing once the game is over', () => {
-    const over = run(createGame('easy', 1), PROFILES.easy.durationMs + 100);
-    expect(tick(over, 50)).toBe(over);
-    expect(hit(over, 1)).toBe(over);
-    expect(missTap(over)).toBe(over);
-  });
-  it('never leaves the arena empty for long', () => {
-    let s = createGame('easy', 8);
-    let emptyMs = 0;
-    for (let i = 0; i < 300; i++) {
-      s = tick(s, 50);
-      emptyMs = s.targets.length ? 0 : emptyMs + 50;
-      expect(emptyMs).toBeLessThanOrEqual(300);
-    }
+  it('rejects 0 or 4 CPUs (single human only) and honours the first seat', () => {
+    expect(() => game(0)).toThrow(RangeError);
+    expect(() =>
+      createGame({ seed: 1, human: { id: 'you', name: 'You' }, cpus: [...SEATS(3), SEATS(1)[0]!] }),
+    ).toThrow(RangeError);
+    const s = createGame({ seed: 1, human: { id: 'you', name: 'You' }, cpus: SEATS(2), first: 2 });
+    expect(s.turns.index).toBe(2);
+    expect(currentSeatOf(s).id).toBe('c2');
+    expect(
+      createGame({ seed: 1, human: { id: 'you', name: 'You' }, cpus: SEATS(1), first: 9 }).turns
+        .index,
+    ).toBe(1);
   });
 });
 
-describe('hit and miss', () => {
-  const withBell = (): GameState => run(createGame('medium', 6), 400);
-  it('scores base points then adds a combo bonus', () => {
-    let s = withBell();
-    s = hit(s, oldestTarget(s)!);
-    expect(s.score).toBe(BASE_POINTS);
-    s = run(s, 1500);
-    s = hit(s, oldestTarget(s)!);
-    expect(s.score).toBeGreaterThanOrEqual(BASE_POINTS * 2);
-    expect(s.hits).toBe(2);
+describe('matching', () => {
+  const ctx = (discard: number[], called: 'star' | null = null) =>
+    position({ hands: [[], []], discard, called });
+  it('matches by shape or by number', () => {
+    const s = ctx([id('circle', 7)]);
+    expect(matchesTop(s, id('circle', 3))).toBe(true);
+    expect(matchesTop(s, id('star', 7))).toBe(true);
+    expect(matchesTop(s, id('star', 3))).toBe(false);
   });
-  it('combo bonus is 2 per combo step, capped at 5 steps', () => {
-    let s = withBell();
-    s = { ...s, combo: 9 };
-    const before = s.score;
-    s = hit(s, oldestTarget(s)!);
-    expect(s.score - before).toBe(BASE_POINTS + 5 * COMBO_BONUS);
-    expect(s.bestCombo).toBe(10);
+  it('a Whot matches anything and after a Whot only the called shape (or another Whot) matches', () => {
+    expect(matchesTop(ctx([id('circle', 7)]), whot())).toBe(true);
+    const s = ctx([whot()], 'star');
+    expect(matchesTop(s, id('star', 3))).toBe(true);
+    expect(matchesTop(s, id('circle', 3))).toBe(false);
+    expect(matchesTop(s, whot(1))).toBe(true);
   });
-  it('ignores a tap on a bell that already vanished', () => {
-    const s = withBell();
-    expect(hit(s, 999)).toBe(s);
-  });
-  it('a tap on empty space is a miss and breaks the combo', () => {
-    let s = withBell();
-    s = hit(s, oldestTarget(s)!);
-    s = missTap(s);
-    expect(s.misses).toBe(1);
-    expect(s.combo).toBe(0);
-    expect(s.bestCombo).toBe(1);
-  });
-  it('wins as soon as the goal is reached', () => {
-    let s = withBell();
-    s = { ...s, hits: PROFILES.medium.goal - 1 };
-    s = hit(s, oldestTarget(s)!);
-    expect(s.status).toBe('won');
+  it('playing a card you do not hold is illegal', () => {
+    const s = position({
+      hands: [[id('circle', 3)], [id('circle', 4)]],
+      discard: [id('circle', 7)],
+    });
+    expect(canPlayCard(s, s.hands[0]!, id('circle', 4))).toBe(false);
+    expect(() => apply(s, { type: 'play', card: id('circle', 4) })).toThrow(RangeError);
   });
 });
 
-describe('oldestTarget / accuracy / stars', () => {
-  it('oldestTarget picks the bell with the least life left, or null', () => {
-    expect(oldestTarget(createGame('easy', 1))).toBeNull();
-    const s = {
-      ...createGame('easy', 1),
-      targets: [
-        { id: 1, x: 0, y: 0, ttlMs: 900 },
-        { id: 2, x: 0, y: 0, ttlMs: 300 },
+describe('playing and drawing', () => {
+  const base = () =>
+    position({
+      hands: [
+        [id('circle', 3), id('star', 4), id('cross', 10)],
+        [id('square', 3), id('square', 7)],
       ],
-    };
-    expect(oldestTarget(s)).toBe(2);
-  });
-  it('accuracy is 0 with no taps, else hits over taps', () => {
-    expect(accuracy(createGame('easy', 1))).toBe(0);
-    expect(accuracy({ ...createGame('easy', 1), hits: 3, misses: 1 })).toBe(0.75);
-  });
-  it('stars: 0 lost, 1 sloppy win, 2 clean slow win, 3 clean fast win', () => {
-    const won = (over: Partial<GameState>): GameState => ({
-      ...createGame('easy', 1),
-      status: 'won',
-      hits: 12,
-      ...over,
+      discard: [id('circle', 7)],
+      draw: [id('triangle', 10), id('triangle', 11)],
     });
-    expect(stars(createGame('easy', 1))).toBe(0);
-    expect(stars(won({ hits: 5, misses: 10 }))).toBe(1);
-    expect(stars(won({ misses: 0, timeLeftMs: 1000 }))).toBe(2);
-    expect(stars(won({ misses: 0, timeLeftMs: 20000 }))).toBe(3);
+  it('a normal play moves the card to the pile and passes the turn', () => {
+    const s = apply(base(), { type: 'play', card: id('circle', 3) });
+    expect(topCard(s)).toBe(id('circle', 3));
+    expect(s.hands[0]).toHaveLength(2);
+    expect(currentSeatOf(s).id).toBe('c1');
+    expect(s.last.map((e) => e.type)).toContain('play');
+    expect(turnsOf(s, 'you')).toBe(1);
+  });
+  it('does not mutate the previous state', () => {
+    const before = base();
+    const copy = JSON.stringify(before);
+    apply(before, { type: 'play', card: id('circle', 3) });
+    expect(JSON.stringify(before)).toBe(copy);
+  });
+  it('a card that does not match is refused', () => {
+    expect(() => apply(base(), { type: 'play', card: id('cross', 10) })).toThrow(RangeError);
+  });
+  it('drawing is refused while a card can be played, allowed otherwise', () => {
+    expect(() => apply(base(), { type: 'draw' })).toThrow(RangeError);
+    const stuck = position({
+      hands: [[id('star', 4)], [id('square', 3)]],
+      discard: [id('circle', 7)],
+      draw: [id('triangle', 10)],
+    });
+    expect(mustDraw(stuck)).toBe(true);
+    const s = apply(stuck, { type: 'draw' });
+    expect(handOf(s, 'you')).toEqual([id('star', 4), id('triangle', 10)]);
+    expect(currentSeatOf(s).id).toBe('c1');
+  });
+  it('legalActions lists plays (a Whot once per shape) and the draw only when allowed', () => {
+    const s = position({
+      hands: [[whot(), whot(1), id('circle', 3)], [id('star', 1)]],
+      discard: [id('circle', 7)],
+    });
+    const acts = legalActions(s, s.hands[0]!);
+    expect(acts.filter((a) => a.type === 'play' && a.card === whot())).toHaveLength(5);
+    expect(acts.filter((a) => a.type === 'play' && a.card === whot(1))).toHaveLength(5);
+    expect(acts.some((a) => a.type === 'draw')).toBe(false);
+    expect(legalPlays(s)).toEqual([whot(), whot(1), id('circle', 3)]);
+  });
+  it('is closed once the game is over', () => {
+    const s = position({ hands: [[id('circle', 3)], [id('star', 1)]], discard: [id('circle', 7)] });
+    const done = apply(s, { type: 'play', card: id('circle', 3) });
+    expect(isOver(done)).toBe(true);
+    expect(legalPlays(done)).toEqual([]);
+    expect(mustDraw(done)).toBe(false);
+    expect(() => apply(done, { type: 'draw' })).toThrow(RangeError);
+    expect(announce(done, 0)).toBe(done);
   });
 });
 
-describe('difficulty profiles', () => {
-  it('get strictly harder: smaller bells, shorter life, higher goal', () => {
-    const { easy, medium, hard } = PROFILES;
-    expect(easy.sizePx).toBeGreaterThan(medium.sizePx);
-    expect(medium.sizePx).toBeGreaterThan(hard.sizePx);
-    expect(easy.lifetimeMs).toBeGreaterThan(medium.lifetimeMs);
-    expect(medium.lifetimeMs).toBeGreaterThan(hard.lifetimeMs);
-    expect(hard.goal).toBeGreaterThan(medium.goal);
-    expect(medium.goal).toBeGreaterThan(easy.goal);
+describe('Whot 20', () => {
+  it('plays on anything, names a shape and only that shape (or a Whot) follows', () => {
+    const s0 = position({
+      hands: [
+        [whot(), id('circle', 3)],
+        [id('star', 4), id('circle', 5), whot(1)],
+      ],
+      discard: [id('circle', 7)],
+    });
+    expect(() => apply(s0, { type: 'play', card: whot() })).toThrow(/name a shape/);
+    const s = apply(s0, { type: 'play', card: whot(), call: 'star' });
+    expect(s.called).toBe('star');
+    expect(legalPlays(s)).toEqual([id('star', 4), whot(1)]);
+    const s2 = apply(s, { type: 'play', card: id('star', 4) });
+    expect(s2.called).toBeNull();
   });
-  it('every bell stays at least 44 px (tap target rule)', () => {
-    for (const p of Object.values(PROFILES)) expect(p.sizePx).toBeGreaterThanOrEqual(44);
-  });
-  it('a bot with the same reaction time wins less on harder levels (challenge rises)', () => {
-    const rate = (d: Difficulty, reaction: number): number => {
-      let wins = 0;
-      for (let seed = 1; seed <= 40; seed++) if (bot(d, seed, reaction).status === 'won') wins++;
-      return wins / 40;
-    };
-    expect(rate('easy', 100)).toBeGreaterThanOrEqual(rate('medium', 100));
-    // a slow bot beats easy but not hard: bells outlive its reaction on easy only
-    expect(rate('easy', 900)).toBeGreaterThan(rate('hard', 900));
-  });
-  it('the fast bot clears every level (used by the e2e autoplay)', () => {
-    for (const d of ['easy', 'medium', 'hard'] as const) expect(bot(d, 1).status).toBe('won');
+  it('a Whot as the last card wins (finishOnSpecial on)', () => {
+    const s = position({ hands: [[whot()], [id('circle', 2)]], discard: [id('circle', 7)] });
+    const w = apply(s, { type: 'play', card: whot(), call: 'cross' });
+    expect(w.winner).toBe('you');
+    expect(w.endedBy).toBe('empty');
   });
 });
 
-describe('progress', () => {
-  it('sanitizeProgress repairs garbage', () => {
-    expect(sanitizeProgress(null)).toEqual(emptyProgress());
-    expect(sanitizeProgress('x')).toEqual(emptyProgress());
-    const p = sanitizeProgress({
-      best: { easy: -5, medium: 'a', hard: 40.7 },
-      plays: 3,
-      streak: 2,
-      bestStreak: 1,
-      lastDifficulty: 'nope',
-    });
-    expect(p.best).toEqual({ easy: 0, medium: 0, hard: 40 });
-    expect(p.plays).toBe(3);
-    expect(p.bestStreak).toBe(2);
-    expect(p.lastDifficulty).toBe('medium');
-    expect(sanitizeProgress({ lastDifficulty: 'hard' }).lastDifficulty).toBe('hard');
+describe('1 Hold On', () => {
+  it('plays again, with any number of CPUs', () => {
+    for (const cpus of CPU_COUNTS) {
+      const s0 = position({
+        hands: [
+          [id('circle', 1), id('circle', 3)],
+          ...Array.from({ length: cpus }, () => [id('star', 4)]),
+        ],
+        discard: [id('circle', 7)],
+      });
+      const s = apply(s0, { type: 'play', card: id('circle', 1) });
+      expect(currentSeatOf(s).id).toBe('you');
+      expect(s.last.some((e) => e.type === 'effect' && e.kind === 'hold')).toBe(true);
+    }
   });
-  it('recordResult tracks best, wins and streak', () => {
-    const won = { ...createGame('hard', 1), status: 'won' as const, score: 120 };
-    const lost = { ...createGame('hard', 1), status: 'lost' as const, score: 50 };
-    let r = recordResult(emptyProgress(), won);
-    expect(r.newBest).toBe(true);
-    expect(r.next).toMatchObject({
-      plays: 1,
-      wins: 1,
-      streak: 1,
-      bestStreak: 1,
-      lastDifficulty: 'hard',
+});
+
+describe('2 Pick Two and 5 Pick Three', () => {
+  const two = (rules = {}) =>
+    position({
+      hands: [[id('circle', 2), id('star', 4)], [id('square', 2), id('cross', 3)], [id('star', 5)]],
+      discard: [id('circle', 7)],
+      draw: [1, 2, 3, 4, 5, 6, 7, 8].map((n) => id('triangle', [1, 2, 3, 4, 5, 7, 8, 10][n - 1]!)),
+      rules,
     });
-    expect(r.next.best.hard).toBe(120);
-    r = recordResult(r.next, lost);
-    expect(r.newBest).toBe(false);
-    expect(r.next).toMatchObject({ plays: 2, wins: 1, streak: 0, bestStreak: 1 });
-    expect(r.next.best.hard).toBe(120);
+  it('the next player must draw 2 (or defend with a 2: stacking)', () => {
+    const s = apply(two(), { type: 'play', card: id('circle', 2) });
+    expect(s.pending).toEqual({ kind: 'two', count: 2 });
+    expect(legalPlays(s)).toEqual([id('square', 2)]);
+    expect(canDraw(s, s.hands[1]!)).toBe(true);
+    const taken = apply(s, { type: 'draw' });
+    expect(taken.hands[1]).toHaveLength(4);
+    expect(taken.pending).toBeNull();
+    expect(currentSeatOf(taken).id).toBe('c2');
+    expect(taken.log.some((l) => l.t === 'draw' && l.n === 2 && !l.voluntary)).toBe(true);
+  });
+  it('defending with a 2 adds 2 and passes it on; stacks keep growing', () => {
+    const s = apply(apply(two(), { type: 'play', card: id('circle', 2) }), {
+      type: 'play',
+      card: id('square', 2),
+    });
+    expect(s.pending).toEqual({ kind: 'two', count: 4 });
+    expect(currentSeatOf(s).id).toBe('c2');
+    expect(s.last.some((e) => e.type === 'effect' && e.kind === 'defend')).toBe(true);
+    const drawn = apply(s, { type: 'draw' });
+    expect(drawn.hands[2]).toHaveLength(5);
+  });
+  it('with stacking off a Pick Two can only be taken', () => {
+    const s = apply(two({ stackTwo: false }), { type: 'play', card: id('circle', 2) });
+    expect(legalPlays(s)).toEqual([]);
+    expect(() => apply(s, { type: 'play', card: id('square', 2) })).toThrow(RangeError);
+  });
+  it('a 2 cannot defend a Pick Three and a 5 cannot defend a Pick Two', () => {
+    const s = position({
+      hands: [[id('circle', 5)], [id('square', 2), id('square', 5), id('cross', 3)]],
+      discard: [id('circle', 7)],
+      pending: null,
+      rules: { finishOnSpecial: false },
+    });
+    // hand of one power card cannot go out (finishOnSpecial off): so use a two-card hand
+    const s2 = position({
+      hands: [
+        [id('circle', 5), id('circle', 3)],
+        [id('square', 2), id('square', 5), id('cross', 3)],
+      ],
+      discard: [id('circle', 7)],
+    });
+    expect(s).toBeTruthy();
+    const p = apply(s2, { type: 'play', card: id('circle', 5) });
+    expect(p.pending).toEqual({ kind: 'three', count: 3 });
+    expect(legalPlays(p)).toEqual([id('square', 5)]);
+    const two2 = position({
+      hands: [
+        [id('circle', 2), id('circle', 3)],
+        [id('square', 5), id('cross', 3)],
+      ],
+      discard: [id('circle', 7)],
+    });
+    expect(legalPlays(apply(two2, { type: 'play', card: id('circle', 2) }))).toEqual([]);
+  });
+  it('with defend-with-5 off a Pick Three can only be taken', () => {
+    const s0 = position({
+      hands: [
+        [id('circle', 5), id('circle', 3)],
+        [id('square', 5), id('cross', 3)],
+      ],
+      discard: [id('circle', 7)],
+      rules: { defendFive: false },
+    });
+    const s = apply(s0, { type: 'play', card: id('circle', 5) });
+    expect(legalPlays(s)).toEqual([]);
+    expect(apply(s, { type: 'draw' }).hands[1]).toHaveLength(5);
+  });
+  it('a 5 stacks on a 5 (Pick Three grows to 6)', () => {
+    const s0 = position({
+      hands: [
+        [id('circle', 5), id('circle', 3)],
+        [id('square', 5), id('cross', 3)],
+        [id('star', 4)],
+      ],
+      discard: [id('circle', 7)],
+    });
+    const s = apply(apply(s0, { type: 'play', card: id('circle', 5) }), {
+      type: 'play',
+      card: id('square', 5),
+    });
+    expect(s.pending).toEqual({ kind: 'three', count: 6 });
+  });
+  it('a plain card cannot be played on a pending pick', () => {
+    const s = apply(two(), { type: 'play', card: id('circle', 2) });
+    expect(() => apply(s, { type: 'play', card: id('cross', 3) })).toThrow(RangeError);
+  });
+});
+
+describe('Whot on a pending pick (toggle, default off)', () => {
+  const mk = (on: boolean) =>
+    apply(
+      position({
+        hands: [[id('circle', 2), id('circle', 3)], [whot(), id('cross', 3)], [id('star', 4)]],
+        discard: [id('circle', 7)],
+        rules: { whotOnPending: on },
+      }),
+      { type: 'play', card: id('circle', 2) },
+    );
+  it('off: the Whot cannot cancel the pick', () => {
+    expect(legalPlays(mk(false))).toEqual([]);
+  });
+  it('on: the Whot cancels the pick and names a shape', () => {
+    const s = apply(mk(true), { type: 'play', card: whot(), call: 'cross' });
+    expect(s.pending).toBeNull();
+    expect(s.called).toBe('cross');
+    expect(currentSeatOf(s).id).toBe('c2');
+  });
+  it('on: the 5 is also cancelled', () => {
+    const s0 = position({
+      hands: [
+        [id('circle', 5), id('circle', 3)],
+        [whot(), id('cross', 3)],
+      ],
+      discard: [id('circle', 7)],
+      rules: { whotOnPending: true },
+    });
+    const p = apply(s0, { type: 'play', card: id('circle', 5) });
+    expect(apply(p, { type: 'play', card: whot(), call: 'star' }).pending).toBeNull();
+  });
+});
+
+describe('8 Suspension', () => {
+  it('skips the next player', () => {
+    const s0 = position({
+      hands: [[id('circle', 8), id('star', 3)], [id('cross', 3)], [id('cross', 5)]],
+      discard: [id('circle', 7)],
+    });
+    const s = apply(s0, { type: 'play', card: id('circle', 8) });
+    expect(currentSeatOf(s).id).toBe('c2');
+    expect(s.last.some((e) => e.type === 'effect' && e.kind === 'suspend' && e.victim === 1)).toBe(
+      true,
+    );
+  });
+  it('with one CPU the human plays again', () => {
+    const s0 = position({
+      hands: [[id('circle', 8), id('star', 3)], [id('cross', 3)]],
+      discard: [id('circle', 7)],
+    });
+    expect(currentSeatOf(apply(s0, { type: 'play', card: id('circle', 8) })).id).toBe('you');
+  });
+});
+
+describe('14 General Market', () => {
+  const draw = [id('triangle', 1), id('triangle', 2), id('triangle', 3), id('triangle', 4)];
+  for (const cpus of CPU_COUNTS) {
+    it(`every other player draws 1 and the player plays again (${cpus} CPU${cpus > 1 ? 's' : ''})`, () => {
+      const s0 = position({
+        hands: [
+          [id('circle', 14), id('circle', 3)],
+          ...Array.from({ length: cpus }, () => [id('star', 4), id('star', 5)]),
+        ],
+        discard: [id('circle', 7)],
+        draw,
+      });
+      const s = apply(s0, { type: 'play', card: id('circle', 14) });
+      expect(s.hands[0]).toHaveLength(1);
+      for (let i = 1; i <= cpus; i++) expect(s.hands[i]).toHaveLength(3);
+      expect(s.draw).toHaveLength(draw.length - cpus);
+      expect(currentSeatOf(s).id).toBe('you');
+      expect(s.last.filter((e) => e.type === 'draw')).toHaveLength(cpus);
+    });
+  }
+  it('with marketAgain off the turn passes', () => {
+    const s0 = position({
+      hands: [[id('circle', 14), id('circle', 3)], [id('star', 4)]],
+      discard: [id('circle', 7)],
+      draw,
+      rules: { marketAgain: false },
+    });
+    expect(currentSeatOf(apply(s0, { type: 'play', card: id('circle', 14) })).id).toBe('c1');
+  });
+  it('reshuffles the discard pile when the market runs dry in the middle of a General Market', () => {
+    const s0 = position({
+      hands: [[id('circle', 14), id('circle', 3)], [id('star', 4)], [id('star', 5)]],
+      discard: [id('triangle', 7), id('triangle', 8), id('circle', 7)],
+      draw: [id('cross', 1)],
+    });
+    const s = apply(s0, { type: 'play', card: id('circle', 14) });
+    expect(s.hands[1]).toHaveLength(2);
+    expect(s.hands[2]).toHaveLength(2);
+    expect(s.last.some((e) => e.type === 'reshuffle')).toBe(true);
+  });
+});
+
+describe('finishing on a power card', () => {
+  for (const card of [
+    id('circle', 1),
+    id('circle', 8),
+    id('circle', 14),
+    id('circle', 2),
+    id('circle', 5),
+  ]) {
+    it(`default: going out on a ${cardOf(card).n} wins at once`, () => {
+      const s0 = position({
+        hands: [[card], [id('square', 3)], [id('star', 4)]],
+        discard: [id('circle', 7)],
+      });
+      const s = apply(s0, { type: 'play', card });
+      expect(s.winner).toBe('you');
+      expect(s.pending).toBeNull();
+    });
+    it(`finishOnSpecial off: a lone ${cardOf(card).n} cannot be played, the player draws`, () => {
+      const s0 = position({
+        hands: [[card], [id('square', 3)]],
+        discard: [id('circle', 7)],
+        rules: { finishOnSpecial: false },
+      });
+      expect(legalPlays(s0)).toEqual([]);
+      expect(mustDraw(s0)).toBe(true);
+      expect(() => apply(s0, { type: 'play', card })).toThrow(RangeError);
+    });
+  }
+  it('finishOnSpecial off: two cards, the plain one goes first and a plain last card wins', () => {
+    const s0 = position({
+      hands: [[id('circle', 1), id('circle', 3)], [id('square', 3)]],
+      discard: [id('circle', 7)],
+      rules: { finishOnSpecial: false },
+    });
+    expect(legalPlays(s0)).toEqual([id('circle', 1), id('circle', 3)]);
+    const lone = position({
+      hands: [[id('circle', 3)], [id('square', 3)]],
+      discard: [id('circle', 7)],
+      rules: { finishOnSpecial: false },
+    });
+    expect(apply(lone, { type: 'play', card: id('circle', 3) }).winner).toBe('you');
+  });
+});
+
+describe('Last card and Semi-last card', () => {
+  const two = (rules = {}, hand = [id('circle', 3), id('circle', 4)]) =>
+    position({
+      hands: [hand, [id('star', 4), id('star', 5), id('star', 7)]],
+      discard: [id('circle', 7)],
+      rules,
+    });
+  it('requires the announcement at one card, at two only with semiLast', () => {
+    expect(requiredCall({ ...DEFAULT_RULES }, 1)).toBe('last');
+    expect(requiredCall({ ...DEFAULT_RULES }, 2)).toBe('none');
+    expect(requiredCall({ ...DEFAULT_RULES, semiLast: true }, 2)).toBe('semi');
+    expect(requiredCall({ ...DEFAULT_RULES, lastCard: false }, 1)).toBe('none');
+  });
+  it('playing down to one card without calling exposes you; calling (with the play) does not', () => {
+    const silent = apply(two(), { type: 'play', card: id('circle', 3) });
+    expect(exposedSeat(silent, 0)).toBe(true);
+    expect(canCatch(silent, 1, 0)).toBe(true);
+    const loud = apply(two(), { type: 'play', card: id('circle', 3), announce: true });
+    expect(exposedSeat(loud, 0)).toBe(false);
+    expect(loud.calls[0]).toBe('last');
+    expect(loud.last.some((e) => e.type === 'announce')).toBe(true);
+  });
+  it('the Last card button works out of turn and may be pressed early at two cards', () => {
+    const s = apply(two(), { type: 'play', card: id('circle', 3) });
+    const called = announce(s, 0);
+    expect(called.calls[0]).toBe('last');
+    expect(exposedSeat(called, 0)).toBe(false);
+    expect(announce(called, 0)).toBe(called);
+    // early: pre-announce at two cards, then play down to one
+    const early = announce(two(), 0);
+    expect(early.calls[0]).toBe('last');
+    expect(exposedSeat(apply(early, { type: 'play', card: id('circle', 3) }), 0)).toBe(false);
+  });
+  it('cannot be called with three or more cards, or when the rule is off', () => {
+    const three = two({}, [id('circle', 3), id('circle', 4), id('circle', 5)]);
+    expect(canAnnounce(three, 0)).toBe(false);
+    expect(announce(three, 0)).toBe(three);
+    expect(canAnnounce(two({ lastCard: false }), 0)).toBe(false);
+  });
+  it('catching costs 2 cards, once, and cannot be done to yourself or the announced', () => {
+    const s = apply(two(), { type: 'play', card: id('circle', 3) });
+    expect(canCatch(s, 0, 0)).toBe(false);
+    expect(canCatch(s, 1, 1)).toBe(false);
+    const caught = catchPlayer(s, 1, 0);
+    expect(caught.hands[0]).toHaveLength(3);
+    expect(caught.last.map((e) => e.type)).toEqual(['catch', 'draw']);
+    expect(exposedSeat(caught, 0)).toBe(false);
+    expect(catchPlayer(caught, 1, 0)).toBe(caught);
+    expect(catchPlayer(announce(s, 0), 1, 0).hands[0]).toHaveLength(1);
+  });
+  it('the current CPU can catch with a catch action, which does not end its turn', () => {
+    const s = apply(two(), { type: 'play', card: id('circle', 3) });
+    const c = apply(s, { type: 'catch', target: 0 });
+    expect(c.hands[0]).toHaveLength(3);
+    expect(currentSeatOf(c).id).toBe('c1');
+    expect(() => apply(c, { type: 'catch', target: 0 })).toThrow(/nothing to catch/);
+    expect(() => apply(c, { type: 'catch', target: 1 })).toThrow(RangeError);
+    expect(() => apply(c, { type: 'catch', target: 9 })).toThrow(RangeError);
+  });
+  it('drawing resets the announcement', () => {
+    const s = announce(apply(two(), { type: 'play', card: id('circle', 3) }), 0);
+    expect(s.calls[0]).toBe('last');
+    const big = { ...s, calls: s.calls.slice() };
+    const stuck = position({
+      hands: [[id('star', 4)], [id('star', 5), id('star', 7)]],
+      discard: [id('circle', 7)],
+      draw: [id('cross', 1), id('cross', 2)],
+    });
+    const withCall = { ...stuck, calls: ['last', 'none'] as typeof stuck.calls };
+    const after = apply(withCall, { type: 'draw' });
+    expect(after.calls[0]).toBe('none');
+    expect(big).toBeTruthy();
+  });
+  it('Semi-last: exposed at two cards until "semi", and at one card needs "last" again', () => {
+    const s0 = position({
+      hands: [
+        [id('circle', 3), id('circle', 4), id('star', 4)],
+        [id('star', 3), id('star', 5)],
+      ],
+      discard: [id('circle', 7)],
+      rules: { semiLast: true },
+    });
+    const s = apply(s0, { type: 'play', card: id('circle', 3) });
+    expect(exposedSeat(s, 0)).toBe(true);
+    const semi = announce(s, 0);
+    expect(semi.calls[0]).toBe('semi');
+    expect(exposedSeat(semi, 0)).toBe(false);
+    const down = apply(apply(semi, { type: 'play', card: id('star', 3) }), {
+      type: 'play',
+      card: id('star', 4),
+    });
+    expect(down.hands[0]).toHaveLength(1);
+    expect(exposedSeat(down, 0)).toBe(true);
+    expect(announce(down, 0).calls[0]).toBe('last');
+    expect(catchPlayer(down, 1, 0).hands[0]).toHaveLength(3);
+  });
+  it('with Last card off nobody is ever exposed', () => {
+    const s = apply(two({ lastCard: false }), { type: 'play', card: id('circle', 3) });
+    expect(exposedSeat(s, 0)).toBe(false);
+    expect(canCatch(s, 1, 0)).toBe(false);
+  });
+});
+
+describe('the market runs out', () => {
+  it('reshuffles the discard pile and keeps the top card', () => {
+    const top = id('circle', 7);
+    const s0 = position({
+      hands: [[id('star', 4)], [id('star', 5), id('star', 7)]],
+      discard: [id('triangle', 2), id('triangle', 3), id('cross', 3), top],
+      draw: [],
+    });
+    const s = apply(s0, { type: 'draw' });
+    expect(topCard(s)).toBe(top);
+    expect(s.discard).toEqual([top]);
+    expect(s.hands[0]).toHaveLength(2);
+    expect(s.draw).toHaveLength(2);
+    expect(s.last.map((e) => e.type)).toEqual(['reshuffle', 'draw']);
+    expect(new Set([...s.draw, ...s.hands[0]!]).size).toBe(4);
+  });
+  it('is deterministic (same seed, same reshuffle)', () => {
+    const mk = () =>
+      position({
+        hands: [[id('star', 4)], [id('star', 5)]],
+        discard: [id('triangle', 2), id('triangle', 3), id('cross', 3), id('circle', 7)],
+        draw: [],
+      });
+    expect(apply(mk(), { type: 'draw' })).toEqual(apply(mk(), { type: 'draw' }));
+  });
+  it('with nothing to draw at all the player simply passes', () => {
+    const s0 = position({
+      hands: [[id('star', 4)], [id('star', 5)]],
+      discard: [id('circle', 7)],
+      draw: [],
+    });
+    const s = apply(s0, { type: 'draw' });
+    expect(s.hands[0]).toHaveLength(1);
+    expect(currentSeatOf(s).id).toBe('c1');
+  });
+  it('count-up variant: the game ends when the market is empty; lowest hand wins', () => {
+    const s0 = position({
+      hands: [
+        [id('star', 4), id('circle', 10)],
+        [id('star', 5), id('star', 1)],
+        [whot(), id('cross', 10)],
+      ],
+      discard: [id('circle', 7)],
+      draw: [],
+      rules: { marketEnds: true },
+    });
+    const s = apply(
+      { ...s0, hands: [[id('triangle', 8)], s0.hands[1]!, s0.hands[2]!] },
+      { type: 'draw' },
+    );
+    expect(s.endedBy).toBe('market');
+    expect(s.totals).toEqual([8, 6, 30]);
+    expect(s.winner).toBe('c1');
+    expect(isOver(s)).toBe(true);
+  });
+  it('count-up ties go to the shorter hand, then the earlier seat', () => {
+    const s0 = position({
+      hands: [[id('star', 5)], [id('star', 2), id('star', 3)], [id('cross', 5)]],
+      discard: [id('circle', 7)],
+      draw: [],
+      rules: { marketEnds: true },
+      turn: 1,
+    });
+    const s = apply(
+      {
+        ...s0,
+        hands: [
+          [id('triangle', 5)],
+          [id('star', 2), id('star', 3), id('cross', 14)],
+          [id('cross', 5)],
+        ],
+      },
+      { type: 'draw' },
+    );
+    expect(s.totals).toEqual([5, 19, 5]);
+    expect(s.winner).toBe('you');
+  });
+  it('count-up also ends a General Market that empties the market', () => {
+    const s0 = position({
+      hands: [[id('circle', 14), id('circle', 3)], [id('star', 4)], [id('star', 5)]],
+      discard: [id('circle', 7)],
+      draw: [id('cross', 1)],
+      rules: { marketEnds: true },
+    });
+    const s = apply(s0, { type: 'play', card: id('circle', 14) });
+    expect(s.endedBy).toBe('market');
+  });
+  it('a game that goes on too long ends by count-up', () => {
+    const s0 = position({ hands: [[id('star', 4)], [id('star', 5)]], discard: [id('circle', 7)] });
+    const long = { ...s0, turns: { ...s0.turns, turn: MAX_TURNS - 1 } };
+    const s = apply(long, { type: 'draw' });
+    expect(s.endedBy).toBe('cap');
+    expect(isOver(s)).toBe(true);
+  });
+});
+
+describe('seats, views and rules data', () => {
+  it('finds seats and exposes only public information in a view', () => {
+    const s = game(3, 3);
+    expect(seatIndexOf(s, 'c2')).toBe(2);
+    const v = viewFor(s, 1);
+    expect(v.hand).toEqual(s.hands[1]);
+    expect(v.sizes).toEqual([5, 5, 5, 5]);
+    expect(v.drawCount).toBe(s.draw.length);
+    expect(JSON.stringify(v)).not.toContain('"hands"');
+    expect(Object.keys(v).sort()).toEqual(
+      [
+        'called',
+        'calls',
+        'discard',
+        'drawCount',
+        'hand',
+        'log',
+        'pending',
+        'rules',
+        'seat',
+        'seats',
+        'sizes',
+        'turn',
+      ].sort(),
+    );
+  });
+  it('sanitizeRules repairs anything', () => {
+    expect(sanitizeRules(null)).toEqual(DEFAULT_RULES);
+    expect(sanitizeRules('x')).toEqual(DEFAULT_RULES);
+    expect(sanitizeRules({ stackTwo: 'no', defendFive: false }).stackTwo).toBe(true);
+    expect(sanitizeRules({ defendFive: false }).defendFive).toBe(false);
+    expect(sanitizeRules({ lastCard: false, semiLast: true }).semiLast).toBe(false);
+    expect(RULE_KEYS).toHaveLength(8);
+    expect(DEFAULT_RULES).toMatchObject({
+      stackTwo: true,
+      defendFive: true,
+      whotOnPending: false,
+      finishOnSpecial: true,
+      lastCard: true,
+      semiLast: false,
+      marketEnds: false,
+    });
+  });
+  it('every shape appears in SHAPES', () => {
+    expect(SHAPES).toEqual(['circle', 'triangle', 'cross', 'square', 'star']);
   });
 });

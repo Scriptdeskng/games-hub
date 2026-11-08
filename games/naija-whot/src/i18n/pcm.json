@@ -1,40 +1,375 @@
 {
   "game.title": "Naija Whot",
-  "game.tagline": "Hit di bells before dem vanish!",
-  "game.arenaLabel": "Where we dey play",
-  "game.bell": "Agogo bell",
-  "game.hint": "Target: {goal} bells inside {time} seconds",
+  "game.tagline": {
+    "text": "Match di card, call your shape, make your hand empty first!",
+    "_review": true
+  },
   "game.howto.1": {
-    "text": "Golden agogo bells dey pop up for screen. Tap or click each one before e vanish.",
+    "text": "Match di top card by shape or by number. Tap one card make e rise, tap am again (or flick am up) to play am. If no card fit, tap di market to pick one.",
     "_review": true
   },
   "game.howto.2": {
-    "text": "Hit plenty bells before time finish and you go win. Di target dey for top.",
+    "text": "Whot 20 fit enter anywhere. After you play am, you go call di shape wey you need. Better keep am for last.",
     "_review": true
   },
-  "game.howto.3": "Hit bells one after di other to build combo and get more points. If you miss, combo go break.",
+  "game.howto.3": {
+    "text": "1 Hold On: you go play again. 8 Suspension: di next person miss turn. 14 General Market: everybody else go pick one card, then you go play again.",
+    "_review": true
+  },
   "game.howto.4": {
-    "text": "If you dey use keyboard, press Space to hit di oldest bell, and press P if you wan pause.",
+    "text": "2 Pick Two and 5 Pick Three: di next person must pick 2 or 3 cards, except e answer with another 2 or 5 (you fit change dis one for Rules).",
     "_review": true
   },
-  "hud.score": "Score",
-  "hud.time": "Time",
-  "hud.goal": "Bells",
-  "hud.combo": "Combo",
-  "results.accuracy": "How you hit am",
-  "results.combo": "Best combo",
-  "results.level": "Level",
-  "persona.name": "Mama Nkechi",
-  "banter.win.0": {
-    "text": "Well done! Your hand quick pass danfo conductor.",
+  "game.howto.5": {
+    "text": "When your last card remain one, press Last card. If you forget and CPU catch you, you go pick 2 cards. You fit catch dem too: tap Catch.",
     "_review": true
   },
-  "banter.win.1": "Na so! Come siddon, di jollof don ready.",
-  "banter.win.2": "Sharp sharp! Di bells dey fear you.",
-  "banter.lose.0": "No wahala, try again. Even NEPA dey bring light back.",
-  "banter.lose.1": "Small small, you go get am.",
-  "banter.lose.2": {
-    "text": "Calm down. Di bells no go run anywhere.",
+  "game.howto.6": {
+    "text": "Whoever empty im hand first don win. Di computer players dey follow di same rules wey you dey follow.",
+    "_review": true
+  },
+  "menu.opponents": {
+    "text": "Who you wan play against",
+    "_review": true
+  },
+  "menu.rules": "Rules",
+  "hud.market": "Market",
+  "hud.cards": "Your cards",
+  "player.you": "You",
+  "legend.hold": "1 Hold On",
+  "legend.two": "2 Pick Two",
+  "legend.three": "5 Pick Three",
+  "legend.suspend": "8 Suspension",
+  "legend.market": "14 General Market",
+  "legend.whot": {
+    "text": "20 Whot: call one shape",
+    "_review": true
+  },
+  "rules.title": "Rules",
+  "rules.note": {
+    "text": "Di computer players dey follow di same rules wey you dey follow. Lagos house rules na di default.",
+    "_review": true
+  },
+  "rules.stackTwo": {
+    "text": "Defend Pick Two with 2",
+    "_review": true
+  },
+  "rules.stackTwo.help": {
+    "text": "Play 2 for Pick Two and di penalty go add 2 for di next person.",
+    "_review": true
+  },
+  "rules.defendFive": {
+    "text": "Defend Pick Three with 5",
+    "_review": true
+  },
+  "rules.defendFive.help": {
+    "text": "Play 5 for Pick Three and di penalty go add 3 for di next person.",
+    "_review": true
+  },
+  "rules.whotOnPending": {
+    "text": "Whot fit cancel pick",
+    "_review": true
+  },
+  "rules.whotOnPending.help": {
+    "text": "Whot 20 fit enter Pick Two or Three and cancel am. E dey off for default.",
+    "_review": true
+  },
+  "rules.finishOnSpecial": {
+    "text": "Finish with power card",
+    "_review": true
+  },
+  "rules.finishOnSpecial.help": {
+    "text": "You fit finish with any card, even power card. If you off am, your last card no fit be power card, so you must pick card.",
+    "_review": true
+  },
+  "rules.marketAgain": {
+    "text": "General Market: play again",
+    "_review": true
+  },
+  "rules.marketAgain.help": {
+    "text": "After 14, everybody else go pick one card and you go play again.",
+    "_review": true
+  },
+  "rules.lastCard": {
+    "text": "Last card call",
+    "_review": true
+  },
+  "rules.lastCard.help": {
+    "text": "Press Last card when one card remain. If you forget and dem catch you, you go pick 2 cards.",
+    "_review": true
+  },
+  "rules.semiLast": {
+    "text": "Semi-last card call",
+    "_review": true
+  },
+  "rules.semiLast.help": {
+    "text": "Call Semi-last card too when two cards remain. Last card must dey on.",
+    "_review": true
+  },
+  "rules.marketEnds": {
+    "text": "Count-up when market finish",
+    "_review": true
+  },
+  "rules.marketEnds.help": {
+    "text": "When market finish, di game go end and di person wey im cards add small pass go win (Whot na 20).",
+    "_review": true
+  },
+  "rules.autoDraw": {
+    "text": "Pick card for me when nothing fit",
+    "_review": true
+  },
+  "rules.autoDraw.help": {
+    "text": "If you no get card to play, market go pick for you after small time.",
+    "_review": true
+  },
+  "rules.fastPlay": {
+    "text": "Fast play",
+    "_review": true
+  },
+  "rules.fastPlay.help": {
+    "text": "Faster animation and CPU pause for long games.",
+    "_review": true
+  },
+  "results.cardsLeft": {
+    "text": "Cards wey remain",
+    "_review": true
+  },
+  "results.catches": {
+    "text": "Dem catch",
+    "_review": true
+  },
+  "results.wins": "Wins",
+  "results.streak": "Streak",
+  "persona.mama-nkechi.name": "Mama Nkechi",
+  "persona.tari.name": "Tari",
+  "persona.aisha.name": "Aisha",
+  "whot.lastCard": "Last card",
+  "whot.semiLast": "Semi-last card",
+  "whot.shape.circle": "circle",
+  "whot.shape.triangle": "triangle",
+  "whot.shape.cross": "cross",
+  "whot.shape.square": "square",
+  "whot.shape.star": "star",
+  "whot.shape.whot": "Whot",
+  "whot.card": "{n} {shape}",
+  "whot.catch": "Catch {name}",
+  "whot.seat.cards": {
+    "text": "{name} get {n} cards",
+    "_review": true
+  },
+  "whot.market": {
+    "text": "Market: {n} cards. Tap to pick",
+    "_review": true
+  },
+  "whot.hand": "Your cards",
+  "whot.pick.title": {
+    "text": "Call one shape",
+    "_review": true
+  },
+  "whot.called": {
+    "text": "Shape wey dem call: {shape}",
+    "_review": true
+  },
+  "whot.called.by": {
+    "text": "{name} call {shape}",
+    "_review": true
+  },
+  "whot.called.you": {
+    "text": "You call {shape}",
+    "_review": true
+  },
+  "whot.played": {
+    "text": "{name} play {n} {shape}",
+    "_review": true
+  },
+  "whot.played.you": {
+    "text": "You play {n} {shape}",
+    "_review": true
+  },
+  "whot.hold": {
+    "text": "{name} go play again",
+    "_review": true
+  },
+  "whot.hold.you": {
+    "text": "Hold On! You go play again",
+    "_review": true
+  },
+  "whot.pick2": "{name}: pick two, {victim}!",
+  "whot.pick3": "{name}: pick three, {victim}!",
+  "whot.defend": {
+    "text": "{name} answer! Di penalty go {victim}",
+    "_review": true
+  },
+  "whot.suspend": {
+    "text": "Suspension! {victim} miss turn",
+    "_review": true
+  },
+  "whot.market.open": {
+    "text": "General Market! Everybody else go pick one",
+    "_review": true
+  },
+  "whot.took": {
+    "text": "{name} pick {n} cards",
+    "_review": true
+  },
+  "whot.took.you": {
+    "text": "You pick {n} cards",
+    "_review": true
+  },
+  "whot.drew": {
+    "text": "{name} pick one card",
+    "_review": true
+  },
+  "whot.drew.you": {
+    "text": "You pick one card",
+    "_review": true
+  },
+  "whot.said": "{name}: {call}!",
+  "whot.said.you": "You call: {call}!",
+  "whot.reshuffle": {
+    "text": "Market don finish. Dem dey shuffle di pile!",
+    "_review": true
+  },
+  "whot.caught": {
+    "text": "Dem catch am!",
+    "_review": true
+  },
+  "whot.catch.status": {
+    "text": "{by} catch {name} wey no call Last card: pick two!",
+    "_review": true
+  },
+  "whot.noFit": {
+    "text": "Dat card no fit di top card.",
+    "_review": true
+  },
+  "whot.mustPlay": {
+    "text": "You get card wey you fit play first.",
+    "_review": true
+  },
+  "whot.confirm": {
+    "text": "Tap am again to play am.",
+    "_review": true
+  },
+  "whot.pending": {
+    "text": "Pick {n}! Defend am or take from market.",
+    "_review": true
+  },
+  "whot.mustDraw": {
+    "text": "No card fit. Pick from market.",
+    "_review": true
+  },
+  "whot.yourTurn": {
+    "text": "Your turn. Pick card.",
+    "_review": true
+  },
+  "whot.nudge": {
+    "text": "Na your turn! Tap card.",
+    "_review": true
+  },
+  "whot.cpuTurn": {
+    "text": "{name} dey think...",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.play": "Correct card, my dear.",
+  "whot.banter.mama-nkechi.pickTwo": {
+    "text": "Na small pick two for you, take am easy.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.gotPickTwo": {
+    "text": "Ah ah, you catch me. Well done.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.market": {
+    "text": "Everybody pick one. Nobody go hungry for here.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.suspension": {
+    "text": "Sit down small, no be your turn.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.holdOn": "Hold on, I go again.",
+  "whot.banter.mama-nkechi.whotCall": {
+    "text": "Na star I need, abeg.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.lastCard": {
+    "text": "Last card! No tell anybody.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.win": {
+    "text": "Ọ dị mma! Well played, everybody.",
+    "_review": true
+  },
+  "whot.banter.mama-nkechi.lose": {
+    "text": "You don earn am. Sit down, drink water.",
+    "_review": true
+  },
+  "whot.banter.tari.play": {
+    "text": "Omo, see this one.",
+    "_review": true
+  },
+  "whot.banter.tari.pickTwo": "Oya, pick two!",
+  "whot.banter.tari.gotPickTwo": {
+    "text": "Wait, you do me so? Respect.",
+    "_review": true
+  },
+  "whot.banter.tari.market": {
+    "text": "Market don open! Everybody pick!",
+    "_review": true
+  },
+  "whot.banter.tari.suspension": "Suspension! Sorry, relax small.",
+  "whot.banter.tari.holdOn": "Hold on, one more from me!",
+  "whot.banter.tari.whotCall": {
+    "text": "Na triangle I need, abeg!",
+    "_review": true
+  },
+  "whot.banter.tari.lastCard": {
+    "text": "Last card! Catch me if you fit.",
+    "_review": true
+  },
+  "whot.banter.tari.win": "You no fit beat me today.",
+  "whot.banter.tari.lose": {
+    "text": "That one sweet me. We go again?",
+    "_review": true
+  },
+  "whot.banter.aisha.play": {
+    "text": "I dey count these ones.",
+    "_review": true
+  },
+  "whot.banter.aisha.pickTwo": {
+    "text": "Pick two. No panic o.",
+    "_review": true
+  },
+  "whot.banter.aisha.gotPickTwo": {
+    "text": "Haba! You catch me there.",
+    "_review": true
+  },
+  "whot.banter.aisha.market": {
+    "text": "Market don open. Everybody pick one.",
+    "_review": true
+  },
+  "whot.banter.aisha.suspension": {
+    "text": "Suspension. Na fair play.",
+    "_review": true
+  },
+  "whot.banter.aisha.holdOn": {
+    "text": "Hold on, I never finish.",
+    "_review": true
+  },
+  "whot.banter.aisha.whotCall": {
+    "text": "Make I take square.",
+    "_review": true
+  },
+  "whot.banter.aisha.lastCard": {
+    "text": "Last card. I don count am.",
+    "_review": true
+  },
+  "whot.banter.aisha.win": {
+    "text": "Madalla! Clean game.",
+    "_review": true
+  },
+  "whot.banter.aisha.lose": {
+    "text": "Well played. I go count again.",
     "_review": true
   }
 }

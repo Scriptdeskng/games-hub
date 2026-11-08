@@ -104,8 +104,14 @@ describe('planner (exact expected turns)', () => {
     cache.warm(DEFAULT_LAYOUT, rules);
     expect(cache.get(DEFAULT_LAYOUT, rules)).toBe(a);
     expect(cache.size).toBe(2);
-    // main-thread budget: a few ms natively, far below the 50 ms limit even at 4x slower
-    expect(solve * 4).toBeLessThan(400);
+    // Deterministic cost guard (a wall clock is useless here: v8 coverage instrumentation made
+    // this solve ~20x slower, and coverage cannot be detected cleanly). The solve costs
+    // sweeps * squares * choice-period operations, so bounding the sweeps catches a convergence
+    // regression the same on every machine. Measured natively: a few ms.
+    expect(a.sweeps).toBeGreaterThan(0);
+    expect(a.sweeps).toBeLessThan(400); // measured: 221
+    // Loose sanity ceiling only (~10x the coverage-run measurement); never the real guard.
+    expect(solve).toBeLessThan(10000);
   });
 
   it('caches are instance-local: another cache (another game or app) never sees these tables', () => {

@@ -4,7 +4,7 @@ export const gameConfig = {
   title: 'Naija Whot',
   version: '0.1.0',
   /** design tokens theme class from packages/core/src/styles/tokens.css */
-  theme: 'theme-naija-green',
+  theme: 'theme-aso-oke',
   orientation: 'any',
   defaultDifficulty: 'medium',
 } as const;

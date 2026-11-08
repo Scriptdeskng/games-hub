@@ -16,7 +16,6 @@ All art is **made in-repo by the asset-designer (Claude)** from basic shapes and
 | `audio/voice/vo-wh-*.mp3` (8), `audio/voice-manifest.json`                                           | silent placeholders and manifest                                                     | asset-designer          | project-owned | **awaiting voice actors**                                   |
 | `ship.json`                                                                                          | include-list of runtime art                                                          | asset-designer          | project-owned |                                                             |
 | `../src/audio/sfx.ts`, `sfx.test.ts`                                                                 | synth cue map `whotSfx` (core voices only)                                           | asset-designer          | project-owned |                                                             |
-| `agogo.svg`                                                                                          | scaffold template art, drawn in-repo; **delete when the template UI is replaced**    | scaffold                | project-owned | not in `ship.json`                                          |
 
 Fonts: none (shared Nunito and Bungee, see `packages/core/assets/CREDITS.md`). Third-party items: none.
 Avatars used by this game (`mama-nkechi`, `tari`, `aisha`): shared placeholders in `packages/core/assets/avatars`.

@@ -15,7 +15,7 @@ Banter format: each line has `en` and `pcm` (Nigerian Pidgin). `_review: true` m
 | `malam-sani` | Malam Sani | Hausa-Fulani, Kano | 40s to 50s | `#8A5A3A` | White embroidered kufi, trimmed beard | Draughts, Ayo |
 | `tari` | Tari | Ijaw, Port Harcourt | 20 | `#5E3822` | Short box braids, headphones | Snakes & Ladders, Whot |
 | `efe` | Efe | Urhobo, Warri (drives in Lagos) | 30s | `#3B2314` | Low cut | Danfo Dash, Snakes & Ladders |
-| `aisha` | Aisha | Hausa, Kaduna | 20s | `#A8744C` | Teal hijab, round glasses | Sabi Quiz, Draughts, Sabi Words |
+| `aisha` | Aisha | Hausa, Kaduna | 20s | `#A8744C` | Teal hijab, round glasses | Sabi Quiz, Draughts, Sabi Words, Whot |
 | `chidi` | Chidi | Igbo, Owerri | 20s | `#6B3F26` | Short twists | Penalty King |
 | `funmi` | Funmi | Yoruba, Lagos | 30s | `#94613D` | Cornrows into a bun, gold hoops | Ludo, Whot |
 
@@ -110,7 +110,7 @@ Skin tones cover the dark to medium-brown range (`#3B2314` to `#A8744C`).
 
 ## Aisha (`aisha`)
 **Region:** Hausa, Kaduna. Bookish quiz champion.
-**Play style:** precise and quick on facts; in Quiz Duel she answers fast and rarely misses (Hard). She explains politely when you miss. In Draughts she plays tidy structure.
+**Play style:** precise and quick on facts; in Quiz Duel she answers fast and rarely misses (Hard). She explains politely when you miss. In Draughts she plays tidy structure. In Whot (seat 3) she hoards Whot 20 cards until she has three or fewer cards left, counts the cards played and calls the shape the next player is least likely to hold.
 **Colour world:** Creek & Coral teal accents on Adire Indigo menus; Danfo Yellow cream.
 **Animation cue:** pushes up glasses; page-flick ekwe click.
 

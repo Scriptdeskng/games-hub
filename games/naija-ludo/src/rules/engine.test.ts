@@ -540,5 +540,6 @@ describe('1000 random games terminate and stay legal', () => {
       games++;
     }
     expect(games).toBe(1000);
-  });
+    // 1000 full games with per-step invariant checks: ~11 s under v8 coverage, over the 5 s default.
+  }, 60000);
 });

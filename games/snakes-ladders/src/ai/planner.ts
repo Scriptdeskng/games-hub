@@ -25,6 +25,8 @@ export interface Planner {
   /** Spend the re-roll on this roll? */
   shouldReroll(pos: number, turnIndex: number, roll: number): boolean;
   readonly period: number;
+  /** Value-iteration sweeps the solve needed (a deterministic cost measure, for tests). */
+  readonly sweeps: number;
 }
 
 const EPS = 1e-9;
@@ -46,7 +48,9 @@ export function createPlanner(layout: BoardLayout, rules: Rules): Planner {
   const choiceAt = (k: number): boolean => period > 1 && k === period - 1;
   const hasReroll = rules.reroll;
 
+  let sweeps = 0;
   for (let iter = 0; iter < 6000; iter++) {
+    sweeps++;
     let delta = 0;
     for (let k = 0; k < period; k++) {
       const k2 = (k + 1) % period;
@@ -109,6 +113,7 @@ export function createPlanner(layout: BoardLayout, rules: Rules): Planner {
 
   return {
     period,
+    sweeps,
     turnsLeft: (pos, k, f) => table(f, k % period)[pos] as number,
     afterRoll,
     afterReroll,
