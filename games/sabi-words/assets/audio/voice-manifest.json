@@ -1,0 +1,148 @@
+{
+  "_readme": "Sabi Words voice placeholders (silent mp3, ogg null until human delivery). Guide = Osas (Edo, Benin City). Shared lines (oya, madalla, e-ku-ise, you-don-win, e-don-do) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "sw-koyo",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Kóyo! Welcome. Make we find some words.",
+        "en": "Kóyo! Welcome. Let us find some words."
+      },
+      "files": {
+        "mp3": "voice/vo-sw-koyo.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-start",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Oya, make we find the words!",
+        "en": "Come on, let's find the words!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-start.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-found",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Ehen! You see am!",
+        "en": "There it is! You found it!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-found.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-long",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Chai! Na big word be that!",
+        "en": "Wow! That is a big word!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-long.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-wrong",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Hmm, no be word o. Try again.",
+        "en": "Hmm, that's not a word. Try again."
+      },
+      "files": {
+        "mp3": "voice/vo-sw-wrong.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-hint",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Make I light lantern for you small.",
+        "en": "Let me light a lantern for you."
+      },
+      "files": {
+        "mp3": "voice/vo-sw-hint.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-last5",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Time dey go o! Five seconds!",
+        "en": "Time is running! Five seconds!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-last5.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-star3",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Three stars! Sabi person!",
+        "en": "Three stars! A real word master!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-star3.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-win",
+      "speaker": "osas",
+      "text": {
+        "pcm": "All the words don show! Well done!",
+        "en": "Every word is found! Well done!"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-win.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-lose",
+      "speaker": "osas",
+      "text": {
+        "pcm": "No wahala. Make we try am again.",
+        "en": "No problem. Let us try again."
+      },
+      "files": {
+        "mp3": "voice/vo-sw-lose.mp3",
+        "ogg": null
+      },
+      "_review": true
+    },
+    {
+      "id": "sw-pack",
+      "speaker": "osas",
+      "text": {
+        "pcm": "Which pack you wan play today?",
+        "en": "Which pack do you want to play today?"
+      },
+      "files": {
+        "mp3": "voice/vo-sw-pack.mp3",
+        "ogg": null
+      },
+      "_review": true
+    }
+  ]
+}

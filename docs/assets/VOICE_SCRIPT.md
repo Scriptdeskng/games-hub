@@ -106,3 +106,19 @@ Files in `games/sabi-quiz/assets/audio/voice/vo-<id>.mp3` (silent placeholders) 
 | `sq-win` | Sabi person! You don win! `_review` | A true know-it-all! You win! | Big, proud, celebratory. | M, 40s | round or duel won | `vo-sq-win.mp3` |
 | `sq-lose` | No vex. Next round go better. `_review` | No worries. The next round will be better. | Kind and encouraging, never pitying. | M, 40s | round lost | `vo-sq-lose.mp3` |
 
+
+## Game-specific lines: Sabi Words
+Files in `games/sabi-words/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Speaker: **Osas**, the guide (F, 30s; a warm, meticulous sign-painter, playful but never sarcastic; an Edo or Benin-flavoured voice is welcome, no exaggerated accent). Same rules as above: every Pidgin line is `_review` for a native check. Shared lines also used: `oya`, `madalla`, `e-ku-ise`, `you-don-win`, `e-don-do`.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `sw-koyo` | Kóyo! Welcome. Make we find some words. `_review` | Kóyo! Welcome. Let us find some words. | Warm greeting; `Kóyo` is the Edo hello, an Edo speaker sets the tones. | F, 30s | first launch or menu | `vo-sw-koyo.mp3` |
+| `sw-start` | Oya, make we find the words! `_review` | Come on, let's find the words! | Bright, quick, rising. | F, 30s | level start | `vo-sw-start.mp3` |
+| `sw-found` | Ehen! You see am! `_review` | There it is! You found it! | Delighted, a small laugh. | F, 30s | word found (rotate with `madalla`) | `vo-sw-found.mp3` |
+| `sw-long` | Chai! Na big word be that! `_review` | Wow! That is a big word! | Impressed, big, short. | F, 30s | 8+ letter word found | `vo-sw-long.mp3` |
+| `sw-wrong` | Hmm, no be word o. Try again. `_review` | Hmm, that's not a word. Try again. | Gentle and kind, a smile in the voice, never mocking. | F, 30s | wrong swipe (sparingly) | `vo-sw-wrong.mp3` |
+| `sw-hint` | Make I light lantern for you small. `_review` | Let me light a lantern for you. | Soft, conspiratorial, helpful. | F, 30s | hint used | `vo-sw-hint.mp3` |
+| `sw-last5` | Time dey go o! Five seconds! `_review` | Time is running! Five seconds! | Urgent but friendly, quick. | F, 30s | last 5 s (optional) | `vo-sw-last5.mp3` |
+| `sw-star3` | Three stars! Sabi person! `_review` | Three stars! A real word master! | Proud, rising on "Three". | F, 30s | three-star finish | `vo-sw-star3.mp3` |
+| `sw-win` | All the words don show! Well done! `_review` | Every word is found! Well done! | Big, warm, celebratory. | F, 30s | level complete | `vo-sw-win.mp3` |
+| `sw-lose` | No wahala. Make we try am again. `_review` | No problem. Let us try again. | Kind and encouraging, never pitying. | F, 30s | time ran out | `vo-sw-lose.mp3` |
+| `sw-pack` | Which pack you wan play today? `_review` | Which pack do you want to play today? | Curious, friendly. | F, 30s | pack picker opens | `vo-sw-pack.mp3` |

@@ -1,0 +1,485 @@
+{
+  "version": 1,
+  "id": "cloth-markets",
+  "title": "Cloth and Markets",
+  "lang": "en",
+  "theme": "cloth",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "ADIRE",
+      "hint": "Yoruba resist-dyed indigo cloth with patterns",
+      "reviewed": false
+    },
+    {
+      "word": "ASOOKE",
+      "hint": "Hand-woven Yoruba cloth made in narrow strips",
+      "tags": [
+        "display:Aso-oke"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AKWETE",
+      "hint": "Igbo hand-woven cloth with geometric motifs",
+      "reviewed": false
+    },
+    {
+      "word": "ANKARA",
+      "hint": "Bold wax-print cotton, the party fabric",
+      "reviewed": false
+    },
+    {
+      "word": "GELE",
+      "hint": "Folded head tie worn to weddings and parties",
+      "reviewed": false
+    },
+    {
+      "word": "AGBADA",
+      "hint": "Wide, flowing robe worn over a matching outfit",
+      "reviewed": false
+    },
+    {
+      "word": "BUBA",
+      "hint": "Loose Yoruba top worn with a wrapper or trousers",
+      "reviewed": false
+    },
+    {
+      "word": "IRO",
+      "hint": "Wrapper skirt tied at the waist",
+      "reviewed": false
+    },
+    {
+      "word": "FILA",
+      "hint": "Soft Yoruba cap",
+      "reviewed": false
+    },
+    {
+      "word": "KUFI",
+      "hint": "Rounded cap popular in the north",
+      "reviewed": false
+    },
+    {
+      "word": "ASOEBI",
+      "hint": "Matching cloth chosen by friends or family for a party",
+      "tags": [
+        "display:Aso ebi"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "LACE",
+      "hint": "Delicate embroidered fabric for special occasions",
+      "reviewed": false
+    },
+    {
+      "word": "INDIGO",
+      "hint": "Deep blue dye made from plant leaves",
+      "reviewed": false
+    },
+    {
+      "word": "DYE",
+      "hint": "Colour that soaks into cloth",
+      "reviewed": false
+    },
+    {
+      "word": "DYEPIT",
+      "hint": "Deep pit where cloth turns blue",
+      "tags": [
+        "display:Dye pit"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "RAFFIA",
+      "hint": "Palm fibre used for weaving mats and baskets",
+      "reviewed": false
+    },
+    {
+      "word": "LOOM",
+      "hint": "Frame used for weaving cloth",
+      "reviewed": false
+    },
+    {
+      "word": "THREAD",
+      "hint": "Fine line pulled through a needle",
+      "reviewed": false
+    },
+    {
+      "word": "NEEDLE",
+      "hint": "Sharp tool with an eye for sewing",
+      "reviewed": false
+    },
+    {
+      "word": "TAILOR",
+      "hint": "Person who sews your outfit",
+      "reviewed": false
+    },
+    {
+      "word": "SEAMSTRESS",
+      "hint": "Woman who sews clothes for a living",
+      "reviewed": false
+    },
+    {
+      "word": "BEADS",
+      "hint": "Small coloured balls strung for jewellery",
+      "reviewed": false
+    },
+    {
+      "word": "CALABASH",
+      "hint": "Gourd bowl used for serving and for music",
+      "reviewed": false
+    },
+    {
+      "word": "BRASS",
+      "hint": "Golden metal, cast into bells and trays",
+      "reviewed": false
+    },
+    {
+      "word": "IROKO",
+      "hint": "Strong tropical hardwood used for carving",
+      "reviewed": false
+    },
+    {
+      "word": "WOVEN",
+      "hint": "Made by crossing threads over and under",
+      "reviewed": false
+    },
+    {
+      "word": "STRIPE",
+      "hint": "Long narrow band of colour",
+      "reviewed": false
+    },
+    {
+      "word": "PATTERN",
+      "hint": "Repeating design on a cloth",
+      "reviewed": false
+    },
+    {
+      "word": "MOTIF",
+      "hint": "Small shape repeated in a design",
+      "reviewed": false
+    },
+    {
+      "word": "BALOGUN",
+      "hint": "Giant market district on Lagos Island",
+      "tags": [
+        "display:Balogun Market"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "KURMI",
+      "hint": "Old and famous market in Kano",
+      "tags": [
+        "display:Kurmi Market",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "WUSE",
+      "hint": "Large market district in Abuja",
+      "tags": [
+        "display:Wuse Market"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OGBETE",
+      "hint": "Busy open market in Enugu",
+      "tags": [
+        "display:Ogbete Market",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ARIARIA",
+      "hint": "Big market in Aba known for leather and clothes",
+      "tags": [
+        "display:Ariaria Market",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ONITSHA",
+      "hint": "River city famous for its huge main market",
+      "reviewed": false
+    },
+    {
+      "word": "STALL",
+      "hint": "Table or booth where goods are sold",
+      "reviewed": false
+    },
+    {
+      "word": "KIOSK",
+      "hint": "Tiny shop on the street",
+      "reviewed": false
+    },
+    {
+      "word": "HAGGLE",
+      "hint": "Bargain over a price",
+      "reviewed": false
+    },
+    {
+      "word": "BARGAIN",
+      "hint": "A good deal, or the act of haggling",
+      "reviewed": false
+    },
+    {
+      "word": "SELLER",
+      "hint": "Person who sells things",
+      "reviewed": false
+    },
+    {
+      "word": "BUYER",
+      "hint": "Person who pays for things",
+      "reviewed": false
+    },
+    {
+      "word": "BASKET",
+      "hint": "Woven container for carrying goods",
+      "reviewed": false
+    },
+    {
+      "word": "TARPAULIN",
+      "hint": "Waterproof sheet that shades a market stall",
+      "reviewed": false
+    },
+    {
+      "word": "SCALE",
+      "hint": "Tool for weighing goods",
+      "reviewed": false
+    },
+    {
+      "word": "TRAY",
+      "hint": "Flat board for carrying goods",
+      "reviewed": false
+    },
+    {
+      "word": "BOWL",
+      "hint": "Round dish for food or for measuring grain",
+      "reviewed": false
+    },
+    {
+      "word": "WRAPPER",
+      "hint": "Cloth tied around the waist",
+      "reviewed": false
+    },
+    {
+      "word": "HEADTIE",
+      "hint": "Cloth wrapped around the head",
+      "tags": [
+        "display:Head tie"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CLAY",
+      "hint": "Earth shaped into pots",
+      "reviewed": false
+    },
+    {
+      "word": "POTTERY",
+      "hint": "Pots and bowls made from baked clay",
+      "reviewed": false
+    },
+    {
+      "word": "LEATHER",
+      "hint": "Tanned animal skin, made into sandals and bags",
+      "reviewed": false
+    },
+    {
+      "word": "WEAVER",
+      "hint": "Person who makes cloth on a loom",
+      "reviewed": false
+    },
+    {
+      "word": "STITCH",
+      "hint": "One pass of the needle",
+      "reviewed": false
+    },
+    {
+      "word": "SEW",
+      "hint": "Join cloth with thread",
+      "reviewed": false
+    },
+    {
+      "word": "MEASURE",
+      "hint": "Check the size with a tape",
+      "reviewed": false
+    },
+    {
+      "word": "FABRIC",
+      "hint": "Another word for cloth",
+      "reviewed": false
+    },
+    {
+      "word": "CLOTH",
+      "hint": "Material for making garments",
+      "reviewed": false
+    },
+    {
+      "word": "MARKET",
+      "hint": "Place where people buy and sell",
+      "reviewed": false
+    },
+    {
+      "word": "SANDALS",
+      "hint": "Open shoes worn in hot weather",
+      "reviewed": false
+    }
+  ]
+}

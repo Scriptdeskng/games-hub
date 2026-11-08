@@ -1,0 +1,700 @@
+{
+  "version": 1,
+  "id": "naija-food",
+  "title": "Naija Food",
+  "lang": "en",
+  "theme": "food",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "JOLLOF",
+      "hint": "Spicy tomato rice cooked in one pot, a party favourite",
+      "tags": [
+        "display:Jollof rice"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EGUSI",
+      "hint": "Soup thickened with ground melon seeds",
+      "reviewed": false
+    },
+    {
+      "word": "AMALA",
+      "hint": "Dark yam-flour swallow, often served with a bean soup",
+      "reviewed": false
+    },
+    {
+      "word": "EBA",
+      "hint": "Swallow made by stirring dried cassava flakes in hot water",
+      "reviewed": false
+    },
+    {
+      "word": "FUFU",
+      "hint": "Soft, stretchy cassava swallow",
+      "reviewed": false
+    },
+    {
+      "word": "AKARA",
+      "hint": "Fried bean cakes, a breakfast favourite",
+      "reviewed": false
+    },
+    {
+      "word": "MOIMOI",
+      "hint": "Steamed bean pudding wrapped in leaf",
+      "tags": [
+        "display:Moi moi"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "SUYA",
+      "hint": "Spicy grilled meat on a stick with a peanut-pepper rub",
+      "reviewed": false
+    },
+    {
+      "word": "PEPPERSOUP",
+      "hint": "Hot, aromatic broth with fish or goat meat",
+      "tags": [
+        "display:Pepper soup"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OKRO",
+      "hint": "Green soup made from a slimy pod vegetable",
+      "tags": [
+        "display:Okro soup"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OGBONO",
+      "hint": "Draw soup made from ground wild mango seeds",
+      "reviewed": false
+    },
+    {
+      "word": "EFORIRO",
+      "hint": "Rich Yoruba vegetable soup cooked with peppers and locust beans",
+      "tags": [
+        "display:Efo riro"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EWEDU",
+      "hint": "Slippery green jute-leaf soup served with amala",
+      "reviewed": false
+    },
+    {
+      "word": "GBEGIRI",
+      "hint": "Smooth, golden bean soup eaten with amala",
+      "reviewed": false
+    },
+    {
+      "word": "ABACHA",
+      "hint": "Igbo cassava salad dressed in palm oil",
+      "tags": [
+        "display:Abacha"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AKPU",
+      "hint": "Igbo name for soft fermented cassava swallow",
+      "reviewed": false
+    },
+    {
+      "word": "BANGA",
+      "hint": "Palm-nut soup loved in the Niger Delta",
+      "reviewed": false
+    },
+    {
+      "word": "OFADA",
+      "hint": "Locally grown rice often served with a spicy green stew",
+      "tags": [
+        "display:Ofada rice"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "NKWOBI",
+      "hint": "Spicy cow-foot delicacy in palm oil sauce",
+      "reviewed": false
+    },
+    {
+      "word": "ISIEWU",
+      "hint": "Spicy goat-head delicacy from the east",
+      "tags": [
+        "display:Isi ewu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ASUN",
+      "hint": "Peppery grilled goat meat, a party snack",
+      "reviewed": false
+    },
+    {
+      "word": "KILISHI",
+      "hint": "Thin, spicy dried beef from the north",
+      "reviewed": false
+    },
+    {
+      "word": "TUWO",
+      "hint": "Soft northern swallow made from rice or maize",
+      "tags": [
+        "display:Tuwo shinkafa",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "MASA",
+      "hint": "Northern rice cakes, fried and fluffy",
+      "reviewed": false
+    },
+    {
+      "word": "MIYAN",
+      "hint": "Hausa word for soup or stew",
+      "tags": [
+        "display:Miyan kuka",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "KUNU",
+      "hint": "Chilled millet or sorghum drink from the north",
+      "tags": [
+        "display:Kunu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ZOBO",
+      "hint": "Red drink brewed from dried hibiscus petals",
+      "reviewed": false
+    },
+    {
+      "word": "FURA",
+      "hint": "Millet balls shaped by hand and served in sour milk",
+      "tags": [
+        "display:Fura da nono",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DAMBU",
+      "hint": "Fluffy northern dish of steamed grains or shredded meat",
+      "tags": [
+        "display:Dambu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DANWAKE",
+      "hint": "Small northern bean dumplings cooked in a leafy broth",
+      "tags": [
+        "display:Danwake",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "PLANTAIN",
+      "hint": "Big banana relative, fried, boiled or roasted",
+      "reviewed": false
+    },
+    {
+      "word": "DODO",
+      "hint": "Sweet fried plantain slices",
+      "reviewed": false
+    },
+    {
+      "word": "BOLE",
+      "hint": "Roasted plantain sold hot by the roadside, often with fish",
+      "tags": [
+        "display:Bole",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GIZDODO",
+      "hint": "Gizzard and plantain stir-fry in pepper sauce",
+      "tags": [
+        "display:Gizdodo"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "PUFFPUFF",
+      "hint": "Soft, sweet, deep-fried dough balls",
+      "tags": [
+        "display:Puff puff"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CHINCHIN",
+      "hint": "Crunchy fried dough snack cut into small cubes",
+      "tags": [
+        "display:Chin chin"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AGEGEBREAD",
+      "hint": "Soft, sweet loaf named after a Lagos neighbourhood",
+      "tags": [
+        "display:Agege bread"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ASARO",
+      "hint": "Yam cooked down into a peppery palm-oil porridge",
+      "tags": [
+        "display:Asaro",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EKURU",
+      "hint": "Soft, white steamed bean paste eaten with stew",
+      "tags": [
+        "display:Ekuru",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OKPA",
+      "hint": "Steamed Bambara-nut pudding from Enugu",
+      "tags": [
+        "display:Okpa",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OHA",
+      "hint": "Igbo soup made with ora leaves",
+      "tags": [
+        "display:Oha soup",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AFANG",
+      "hint": "Efik and Ibibio soup made with waterleaf and a wild leafy vine",
+      "tags": [
+        "display:Afang soup"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EDIKANGIKONG",
+      "hint": "Rich Efik vegetable soup with ugu and waterleaf",
+      "tags": [
+        "display:Edikang ikong"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "BITTERLEAF",
+      "hint": "Leafy vegetable that tastes as its name says",
+      "tags": [
+        "display:Bitterleaf"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "UGU",
+      "hint": "Fluted pumpkin leaves, popular in soups",
+      "reviewed": false
+    },
+    {
+      "word": "UZIZA",
+      "hint": "Peppery leaf and seed used in pepper soup",
+      "tags": [
+        "display:Uziza",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CRAYFISH",
+      "hint": "Dried, ground freshwater shrimp that gives soup its flavour",
+      "reviewed": false
+    },
+    {
+      "word": "STOCKFISH",
+      "hint": "Dried cod used in rich soups",
+      "reviewed": false
+    },
+    {
+      "word": "PONMO",
+      "hint": "Soft cow skin cooked in stews and soups",
+      "tags": [
+        "display:Ponmo"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "SNAIL",
+      "hint": "Large land delicacy, peppery and grilled",
+      "reviewed": false
+    },
+    {
+      "word": "SHAWARMA",
+      "hint": "Wrapped meat roll, a city street-food favourite",
+      "reviewed": false
+    },
+    {
+      "word": "MEATPIE",
+      "hint": "Pastry filled with minced meat and potato",
+      "tags": [
+        "display:Meat pie"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "BEANS",
+      "hint": "Brown or white legume cooked with palm oil or stew",
+      "reviewed": false
+    },
+    {
+      "word": "ADALU",
+      "hint": "Beans and sweet corn cooked together",
+      "tags": [
+        "display:Adalu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AGIDI",
+      "hint": "Smooth corn pudding set in leaves",
+      "tags": [
+        "display:Agidi",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OGI",
+      "hint": "Yoruba word for fermented corn porridge",
+      "tags": [
+        "display:Ogi"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "PAP",
+      "hint": "Smooth corn porridge for breakfast, often with akara",
+      "reviewed": false
+    },
+    {
+      "word": "KULIKULI",
+      "hint": "Crunchy fried groundnut cake",
+      "tags": [
+        "display:Kuli-kuli"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GROUNDNUT",
+      "hint": "Peanut, roasted or boiled and sold roadside",
+      "reviewed": false
+    },
+    {
+      "word": "TIGERNUT",
+      "hint": "Chewy sweet tuber also blended into a creamy drink",
+      "tags": [
+        "display:Tiger nut"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DAWADAWA",
+      "hint": "Fermented locust bean seasoning, strong and savoury",
+      "tags": [
+        "display:Dawadawa"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FRIEDRICE",
+      "hint": "Party rice with carrots, peas and spices",
+      "tags": [
+        "display:Fried rice"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "TOMATO",
+      "hint": "Red base of most stews",
+      "reviewed": false
+    },
+    {
+      "word": "ONION",
+      "hint": "Layered bulb that makes eyes water",
+      "reviewed": false
+    },
+    {
+      "word": "PEPPER",
+      "hint": "Hot red chilli",
+      "reviewed": false
+    },
+    {
+      "word": "TATASHE",
+      "hint": "Large red pepper blended for stew base",
+      "tags": [
+        "display:Tatashe"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "RODO",
+      "hint": "Fiery scotch bonnet pepper, Yoruba name",
+      "tags": [
+        "display:Rodo"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "MANGO",
+      "hint": "Juicy yellow fruit of the hot season",
+      "reviewed": false
+    },
+    {
+      "word": "ORANGE",
+      "hint": "Sweet citrus sold peeled by the roadside",
+      "reviewed": false
+    },
+    {
+      "word": "AGBALUMO",
+      "hint": "Orange star-apple fruit, sweet and tangy",
+      "tags": [
+        "display:Agbalumo"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GARRI",
+      "hint": "Dried cassava flakes for eba or for soaking",
+      "tags": [
+        "display:Garri"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CASSAVA",
+      "hint": "Root crop turned into garri and fufu",
+      "reviewed": false
+    },
+    {
+      "word": "YAM",
+      "hint": "Big white tuber, boiled, fried or pounded",
+      "reviewed": false
+    },
+    {
+      "word": "COCOYAM",
+      "hint": "Starchy tuber used to thicken soups",
+      "reviewed": false
+    },
+    {
+      "word": "POUNDEDYAM",
+      "hint": "Smooth, stretchy swallow beaten from boiled yam",
+      "tags": [
+        "display:Pounded yam"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AKAMU",
+      "hint": "Igbo name for corn pap",
+      "tags": [
+        "display:Akamu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EGGROLL",
+      "hint": "Fried pastry with an egg inside, a party snack",
+      "tags": [
+        "display:Egg roll"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "COCONUT",
+      "hint": "Hard-shelled fruit with sweet water and white flesh",
+      "reviewed": false
+    },
+    {
+      "word": "GINGER",
+      "hint": "Spicy root added to zobo and kunu",
+      "reviewed": false
+    }
+  ]
+}

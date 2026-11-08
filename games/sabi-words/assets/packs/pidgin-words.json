@@ -1,0 +1,626 @@
+{
+  "version": 1,
+  "id": "pidgin-words",
+  "title": "Pidgin Words",
+  "lang": "pcm",
+  "theme": "pidgin",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "ABEG",
+      "hint": "Please, or excuse me",
+      "reviewed": false
+    },
+    {
+      "word": "OGA",
+      "hint": "Boss or sir",
+      "reviewed": false
+    },
+    {
+      "word": "SABI",
+      "hint": "To know, or to be good at something",
+      "reviewed": false
+    },
+    {
+      "word": "WAHALA",
+      "hint": "Trouble or problem",
+      "reviewed": false
+    },
+    {
+      "word": "CHOP",
+      "hint": "To eat, or food",
+      "reviewed": false
+    },
+    {
+      "word": "WETIN",
+      "hint": "What",
+      "reviewed": false
+    },
+    {
+      "word": "PIKIN",
+      "hint": "Child",
+      "reviewed": false
+    },
+    {
+      "word": "GIST",
+      "hint": "Chat or gossip",
+      "reviewed": false
+    },
+    {
+      "word": "OYA",
+      "hint": "Come on, let us go",
+      "reviewed": false
+    },
+    {
+      "word": "NAWA",
+      "hint": "Word of surprise, as in \"wow\"",
+      "reviewed": false
+    },
+    {
+      "word": "CHAI",
+      "hint": "Cry of surprise or sorrow",
+      "reviewed": false
+    },
+    {
+      "word": "EHEN",
+      "hint": "Word that means \"so, go on\"",
+      "reviewed": false
+    },
+    {
+      "word": "ABI",
+      "hint": "Word that means \"right?\" at the end of a sentence",
+      "reviewed": false
+    },
+    {
+      "word": "JARA",
+      "hint": "A little extra added by the seller",
+      "reviewed": false
+    },
+    {
+      "word": "GBAM",
+      "hint": "Exactly right",
+      "reviewed": false
+    },
+    {
+      "word": "PADI",
+      "hint": "Friend",
+      "reviewed": false
+    },
+    {
+      "word": "BUKA",
+      "hint": "Small neighbourhood eatery",
+      "reviewed": false
+    },
+    {
+      "word": "KOBO",
+      "hint": "Smallest unit of the naira",
+      "reviewed": false
+    },
+    {
+      "word": "NAIRA",
+      "hint": "Nigerian money",
+      "reviewed": false
+    },
+    {
+      "word": "DASH",
+      "hint": "To give a little gift, or the gift itself",
+      "reviewed": false
+    },
+    {
+      "word": "SHARP",
+      "hint": "Quick, or an agreement",
+      "reviewed": false
+    },
+    {
+      "word": "JOOR",
+      "hint": "Word added to a request, as in \"please, now\"",
+      "tags": [
+        "display:Joor",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OMO",
+      "hint": "Child, or a word for \"wow, my friend\"",
+      "tags": [
+        "display:Omo",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ODOGWU",
+      "hint": "Word for a strong, impressive man",
+      "tags": [
+        "display:Odogwu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "SHEBI",
+      "hint": "Word that means \"is it not so?\" at the start of a question",
+      "tags": [
+        "display:Shebi",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ANYHOW",
+      "hint": "Without care or order",
+      "reviewed": false
+    },
+    {
+      "word": "CARRYGO",
+      "hint": "Keep going, or take it away",
+      "tags": [
+        "display:Carry go"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FLEX",
+      "hint": "Relax and enjoy yourself",
+      "reviewed": false
+    },
+    {
+      "word": "GBOSA",
+      "hint": "Shout of loud approval",
+      "tags": [
+        "display:Gbosa",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "JAPA",
+      "hint": "To travel abroad to live",
+      "tags": [
+        "display:Japa"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "KASALA",
+      "hint": "Confusion or trouble",
+      "tags": [
+        "display:Kasala",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "LAGBAJA",
+      "hint": "An ordinary everyday person",
+      "tags": [
+        "display:Lagbaja",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OWAMBE",
+      "hint": "Big party with food, music and cloth",
+      "reviewed": false
+    },
+    {
+      "word": "SAPA",
+      "hint": "The state of having no money left",
+      "reviewed": false
+    },
+    {
+      "word": "SHAKARA",
+      "hint": "Showing off in a fussy way",
+      "reviewed": false
+    },
+    {
+      "word": "SMALLSMALL",
+      "hint": "Little by little",
+      "tags": [
+        "display:Small small"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "WELLWELL",
+      "hint": "Very carefully or very much",
+      "tags": [
+        "display:Well well"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "WAKA",
+      "hint": "To walk",
+      "reviewed": false
+    },
+    {
+      "word": "VEX",
+      "hint": "To be angry",
+      "reviewed": false
+    },
+    {
+      "word": "YAWA",
+      "hint": "Trouble or wahala",
+      "tags": [
+        "display:Yawa"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DEY",
+      "hint": "Word for \"is\", \"are\" or \"am\"",
+      "reviewed": false
+    },
+    {
+      "word": "COMOT",
+      "hint": "To come out or to leave",
+      "reviewed": false
+    },
+    {
+      "word": "DEM",
+      "hint": "They or them",
+      "reviewed": false
+    },
+    {
+      "word": "HABA",
+      "hint": "Cry of disbelief, as in \"come on!\"",
+      "tags": [
+        "display:Haba",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "WEY",
+      "hint": "Which, who or that",
+      "reviewed": false
+    },
+    {
+      "word": "SEF",
+      "hint": "Even or also",
+      "tags": [
+        "display:Sef",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "KAI",
+      "hint": "Cry of surprise or pain",
+      "tags": [
+        "display:Kai",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "BABA",
+      "hint": "Father, elder or respected man",
+      "reviewed": false
+    },
+    {
+      "word": "MAMA",
+      "hint": "Mother or respected woman",
+      "reviewed": false
+    },
+    {
+      "word": "AUNTY",
+      "hint": "Polite way to call an older woman",
+      "reviewed": false
+    },
+    {
+      "word": "UNCLE",
+      "hint": "Polite way to call an older man",
+      "reviewed": false
+    },
+    {
+      "word": "MADAM",
+      "hint": "Polite title for a woman",
+      "reviewed": false
+    },
+    {
+      "word": "CHIEF",
+      "hint": "Respectful title for an important person",
+      "reviewed": false
+    },
+    {
+      "word": "PALAVA",
+      "hint": "Noisy argument or fuss",
+      "tags": [
+        "display:Palava"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "PLENTY",
+      "hint": "A lot",
+      "reviewed": false
+    },
+    {
+      "word": "PROPER",
+      "hint": "Correct or very good",
+      "reviewed": false
+    },
+    {
+      "word": "GBEGE",
+      "hint": "Big trouble or big event",
+      "tags": [
+        "display:Gbege",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "WELLDONE",
+      "hint": "Word of praise",
+      "tags": [
+        "display:Well done"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "NEPA",
+      "hint": "The old name people still use for the light company",
+      "reviewed": false
+    },
+    {
+      "word": "TRAFFIC",
+      "hint": "Go-slow on the road",
+      "tags": [
+        "display:Traffic"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GOSLOW",
+      "hint": "Long, slow traffic jam",
+      "tags": [
+        "display:Go-slow"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DANFO",
+      "hint": "Yellow Lagos bus",
+      "reviewed": false
+    },
+    {
+      "word": "KEKE",
+      "hint": "Three-wheeler taxi",
+      "tags": [
+        "display:Keke"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OKADA",
+      "hint": "Motorbike taxi",
+      "reviewed": false
+    },
+    {
+      "word": "BUSSTOP",
+      "hint": "Place where the conductor shouts the destination",
+      "tags": [
+        "display:Bus stop"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CONDUCTOR",
+      "hint": "Person who collects the fare and calls out the stops",
+      "reviewed": false
+    },
+    {
+      "word": "SHINE",
+      "hint": "To look good, or to enjoy",
+      "reviewed": false
+    },
+    {
+      "word": "JOLLY",
+      "hint": "Happy and ready for fun",
+      "reviewed": false
+    },
+    {
+      "word": "SMALL",
+      "hint": "A little",
+      "reviewed": false
+    },
+    {
+      "word": "TODAY",
+      "hint": "This very day",
+      "reviewed": false
+    },
+    {
+      "word": "WAIT",
+      "hint": "Hold on a moment",
+      "reviewed": false
+    },
+    {
+      "word": "FINEBOY",
+      "hint": "Handsome young man",
+      "tags": [
+        "display:Fine boy"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FINEGIRL",
+      "hint": "Beautiful young woman",
+      "tags": [
+        "display:Fine girl"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GREETING",
+      "hint": "Polite words you owe elders when you meet",
+      "tags": [
+        "display:Greeting"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ENOUGH",
+      "hint": "As much as is needed",
+      "reviewed": false
+    },
+    {
+      "word": "MAKE",
+      "hint": "Word for \"let\", as in \"let us go\"",
+      "reviewed": false
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "include": [
+    "agogo.svg",
+    "icon/menu-mark.svg",
+    "avatars/osas.svg",
+    "packs/naija-food.json",
+    "packs/lagos-places.json",
+    "packs/football-terms.json",
+    "packs/pidgin-words.json",
+    "packs/states-capitals.json",
+    "packs/cloth-markets.json"
+  ],
+  "dynamic": [],
+  "keep": []
+}

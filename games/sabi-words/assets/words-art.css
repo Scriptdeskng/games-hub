@@ -1,0 +1,558 @@
+/* Sabi Words art helpers (asset-designer). Import once: import '../assets/words-art.css'.
+   Theme: set gameConfig.theme to 'theme-market' (Market Spice) so .ng-* components match the stall art.
+   Transform and opacity everywhere (the time bar uses clip-path on one element).
+
+   Stage:   <div class="sw-stage"> (full-bleed market-stall backdrop, portrait and landscape)
+   Board:   <div class="sw-board" style="--sw-n:10;--sw-cell:32px">
+              <div class="sw-grid">  <button class="sw-tile" data-r data-c><span class="sw-tile__l">A</span></button> x n*n  </div>
+              <div class="sw-lanes"> <i class="sw-lane sw-lane--1" style="--x;--y;--len;--a"></i> ...
+                                     <i class="sw-trail" style="--x;--y;--len;--a"></i> </div>   (both sit UNDER the letters;
+                                     selected tiles are see-through so the gold trail reads as one ribbon behind the letters)
+            </div>
+            --x / --y = centre of the FIRST tile in px inside .sw-grid, --len = distance first centre to last centre in px,
+            --a = angle in degrees (0, 45, 90, 135, 180, 225, 270, 315). Lane and trail are drawn from the first tile.
+   Tile states (class): is-sel (in the live swipe), is-found (part of a found word; also set data-lane="1..6"),
+            is-hint (hint ring), is-wrong (shake). Colour is never the only cue: see the legibility contract in the brief.
+   Words:   <ul class="sw-words"><li class="sw-word [is-found]" data-lane="3"><i class="sw-word__sw"></i><span>JOLLOF</span></li></ul>
+   HUD:     .sw-hud, .sw-time (+ .is-low) with <i class="sw-time__fill" style="--sw-p:.6">, .sw-stars > .sw-star(.is-on), .sw-coins,
+            button.sw-hint (lantern)
+   Packs:   <button class="sw-pack sw-pack--food"><svg class="sw-pack__i"><use href="#pack-food"/></svg><span class="sw-pack__t">..</span></button>
+            inline icons/packs.svg once (?raw).
+   Finger:  <i class="sw-bead" style="--px;--py"> follows the pointer while swiping (inside .sw-board)
+   Fx:      .sw-fx.sw-fx--found (gele burst at the lane end), .sw-fx--hint (ring on a tile); remove on animationend.
+   Banner:  .sw-banner (level complete) with three .sw-star.
+   Fonts: letters use var(--ng-font-display) (Bungee, sign-painter), UI text var(--ng-font-ui). */
+
+:root {
+  --sw-ink: #3a0e06;
+  --sw-cream: #fff1dc;
+  --sw-cream-2: #f7d9ae;
+  --sw-wall: #6b1a0e;
+  --sw-wall-2: #430e07;
+  --sw-gold: #e8ae32;
+  --sw-plantain: #f7d348;
+  --sw-pepper: #d63a1f;
+  --sw-cell: 32px;
+  --sw-n: 10;
+  --sw-lane-1: #ffb8a3;
+  --sw-lane-2: #ffe27a;
+  --sw-lane-3: #a9e08a;
+  --sw-lane-4: #9dc2ff;
+  --sw-lane-5: #e6b3f2;
+  --sw-lane-6: #ffc98a;
+}
+
+/* ---- stage ---- */
+.sw-stage {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #430e07 url('./bg/board-portrait.svg') center / cover no-repeat;
+}
+@media (orientation: landscape) {
+  .sw-stage {
+    background-image: url('./bg/board-landscape.svg');
+  }
+}
+
+/* ---- board and grid ---- */
+.sw-board {
+  position: relative;
+  width: calc(var(--sw-cell) * var(--sw-n) + 28px);
+  max-width: 100%;
+  margin-inline: auto;
+  padding: 14px;
+  box-sizing: border-box;
+  background: url('./ui/board-frame.svg') center / 100% 100% no-repeat;
+  touch-action: none; /* the swipe owns the gesture */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.sw-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--sw-n), var(--sw-cell));
+  grid-auto-rows: var(--sw-cell);
+}
+.sw-tile {
+  position: relative;
+  z-index: 2;
+  margin: 2px;
+  padding: 0;
+  border: 2px solid var(--sw-ink);
+  border-bottom-width: 4px;
+  border-radius: 7px;
+  background: var(--sw-cream);
+  color: var(--sw-ink);
+  font-family: var(--ng-font-display, 'Arial Black', sans-serif);
+  font-size: max(15px, calc(var(--sw-cell) * 0.52));
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.sw-tile__l {
+  position: relative;
+  z-index: 3;
+  text-shadow:
+    0 0 3px var(--sw-cream),
+    0 0 3px var(--sw-cream);
+  pointer-events: none;
+}
+.sw-tile:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 1px;
+}
+/* selected: see-through (the gold trail shows behind it) + a thick dark ring + raised + a bar under the letter */
+.sw-tile.is-sel {
+  background: transparent;
+  border-width: 3px 3px 5px;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 0 0 2px var(--sw-gold);
+}
+.sw-tile.is-sel::after,
+.sw-tile.is-found::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 5%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--sw-ink);
+  z-index: 3;
+}
+/* found: pattern shows through the tile, letter keeps a cream halo, underline bar, flat (not raised) */
+.sw-tile.is-found {
+  border-bottom-width: 2px;
+  background-color: var(--sw-lane-tint, var(--sw-lane-1));
+  background-repeat: repeat;
+}
+.sw-tile.is-found[data-lane='1'] {
+  --sw-lane-tint: var(--sw-lane-1);
+  background-image: url('./lanes/pat-1.svg');
+}
+.sw-tile.is-found[data-lane='2'] {
+  --sw-lane-tint: var(--sw-lane-2);
+  background-image: url('./lanes/pat-2.svg');
+}
+.sw-tile.is-found[data-lane='3'] {
+  --sw-lane-tint: var(--sw-lane-3);
+  background-image: url('./lanes/pat-3.svg');
+}
+.sw-tile.is-found[data-lane='4'] {
+  --sw-lane-tint: var(--sw-lane-4);
+  background-image: url('./lanes/pat-4.svg');
+}
+.sw-tile.is-found[data-lane='5'] {
+  --sw-lane-tint: var(--sw-lane-5);
+  background-image: url('./lanes/pat-5.svg');
+}
+.sw-tile.is-found[data-lane='6'] {
+  --sw-lane-tint: var(--sw-lane-6);
+  background-image: url('./lanes/pat-6.svg');
+}
+.sw-tile.is-hint {
+  animation: sw-pulse 0.9s ease-in-out infinite;
+  outline: 3px dashed var(--sw-plantain);
+  outline-offset: 2px;
+}
+.sw-tile.is-wrong {
+  animation: sw-shake 0.32s ease-in-out;
+  border-style: dashed;
+  border-color: var(--sw-pepper);
+}
+
+/* ---- lanes (found words) and the live trail ---- */
+.sw-lanes {
+  position: absolute;
+  inset: 14px;
+  pointer-events: none;
+  z-index: 1;
+}
+.sw-lane,
+.sw-trail {
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
+  width: calc(var(--len) * 1px + var(--sw-cell) * 0.84);
+  height: calc(var(--sw-cell) * 0.84);
+  margin-left: calc(var(--sw-cell) * -0.42);
+  margin-top: calc(var(--sw-cell) * -0.42);
+  transform-origin: calc(var(--sw-cell) * 0.42) 50%;
+  transform: rotate(calc(var(--a) * 1deg));
+  border-radius: 999px;
+  pointer-events: none;
+}
+.sw-lane {
+  border: 2px solid var(--sw-ink);
+  background-color: var(--sw-lane-tint, var(--sw-lane-1));
+  background-repeat: repeat;
+  animation: sw-lane-in 0.28s ease-out both;
+}
+.sw-lane--1 {
+  --sw-lane-tint: var(--sw-lane-1);
+  background-image: url('./lanes/pat-1.svg');
+}
+.sw-lane--2 {
+  --sw-lane-tint: var(--sw-lane-2);
+  background-image: url('./lanes/pat-2.svg');
+}
+.sw-lane--3 {
+  --sw-lane-tint: var(--sw-lane-3);
+  background-image: url('./lanes/pat-3.svg');
+}
+.sw-lane--4 {
+  --sw-lane-tint: var(--sw-lane-4);
+  background-image: url('./lanes/pat-4.svg');
+}
+.sw-lane--5 {
+  --sw-lane-tint: var(--sw-lane-5);
+  background-image: url('./lanes/pat-5.svg');
+}
+.sw-lane--6 {
+  --sw-lane-tint: var(--sw-lane-6);
+  background-image: url('./lanes/pat-6.svg');
+}
+/* the swipe trail: a gold ribbon with dark edges, light diagonal stripes and so it reads
+   without colour; it sits under the letters (z-index 1) and the selected tiles are transparent over it */
+.sw-trail {
+  z-index: 1;
+  border: 3px solid var(--sw-ink);
+  background:
+    repeating-linear-gradient(135deg, transparent 0 7px, rgba(58, 14, 6, 0.16) 7px 10px),
+    var(--sw-plantain);
+}
+/* the finger bead: a small gold bead that follows the pointer (set --px and --py in px inside .sw-board) */
+.sw-bead {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  transform: translate(calc(var(--px, 0) * 1px), calc(var(--py, 0) * 1px));
+  background: url('./fx/trail-bead.svg') center / contain no-repeat;
+  pointer-events: none;
+  will-change: transform;
+}
+.sw-trail.is-wrong {
+  border-style: dashed;
+  border-color: var(--sw-pepper);
+  animation: sw-shake 0.32s ease-in-out;
+}
+
+/* ---- word list (notice slip) ---- */
+.sw-words {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 18px 12px 12px;
+  list-style: none;
+  background: var(--sw-cream);
+  color: var(--sw-ink);
+  border: 3px solid var(--sw-ink);
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+.sw-words::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  background: url('./ui/pin.svg') center / contain no-repeat;
+}
+.sw-word {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 2px 10px 2px 6px;
+  border: 2px solid var(--sw-ink);
+  border-radius: 999px;
+  background: var(--sw-cream-2);
+  font: 800 14px/1.1 var(--ng-font-ui, system-ui, sans-serif);
+  letter-spacing: 0.04em;
+}
+.sw-word__sw {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--sw-ink);
+  background: #fff url('./lanes/pat-1.svg') center / 12px;
+}
+/* found: the swatch takes the lane's colour AND pattern, the word is struck through, a check disc appears */
+.sw-word.is-found {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  background: #fff;
+}
+.sw-word.is-found::after {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background: url('./hud/check-disc.svg') center / contain no-repeat;
+}
+.sw-word[data-lane='1'] .sw-word__sw {
+  background: var(--sw-lane-1) url('./lanes/pat-1.svg') center / 12px;
+}
+.sw-word[data-lane='2'] .sw-word__sw {
+  background: var(--sw-lane-2) url('./lanes/pat-2.svg') center / 12px;
+}
+.sw-word[data-lane='3'] .sw-word__sw {
+  background: var(--sw-lane-3) url('./lanes/pat-3.svg') center / 12px;
+}
+.sw-word[data-lane='4'] .sw-word__sw {
+  background: var(--sw-lane-4) url('./lanes/pat-4.svg') center / 12px;
+}
+.sw-word[data-lane='5'] .sw-word__sw {
+  background: var(--sw-lane-5) url('./lanes/pat-5.svg') center / 12px;
+}
+.sw-word[data-lane='6'] .sw-word__sw {
+  background: var(--sw-lane-6) url('./lanes/pat-6.svg') center / 12px;
+}
+
+/* ---- HUD ---- */
+.sw-hud {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+}
+.sw-time {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  border: 2px solid var(--sw-ink);
+  border-radius: 999px;
+  background: var(--sw-wall-2);
+  overflow: hidden;
+}
+.sw-time__fill {
+  position: absolute;
+  inset: 0;
+  background: url('./hud/time-strip.svg') left center / auto 100% repeat-x;
+  clip-path: inset(0 calc((1 - var(--sw-p, 1)) * 100%) 0 0 round 999px);
+}
+.sw-time.is-low {
+  border-style: dashed;
+  border-color: var(--sw-plantain);
+  animation: sw-pulse 0.5s ease-in-out infinite;
+}
+.sw-time.is-low::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  top: -2px;
+  width: 18px;
+  height: 18px;
+  background: url('./hud/time-low.svg') center / contain no-repeat;
+}
+.sw-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+.sw-star {
+  width: 28px;
+  height: 28px;
+  background: url('./hud/star-off.svg') center / contain no-repeat;
+}
+.sw-star.is-on {
+  background-image: url('./hud/star-on.svg');
+  animation: sw-pop 0.4s ease-out both;
+}
+.sw-coins {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 800 16px/1 var(--ng-font-ui, system-ui, sans-serif);
+  color: var(--ng-ink, var(--sw-cream));
+}
+.sw-hint {
+  width: 48px;
+  height: 48px; /* >= 44 px tap target */
+  padding: 0;
+  border: 0;
+  background: url('./hud/hint-lantern.svg') center / 40px no-repeat;
+  -webkit-tap-highlight-color: transparent;
+}
+.sw-hint:disabled {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.sw-hint:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* ---- pack picker ---- */
+.sw-pack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 84px;
+  padding: 0 16px 0 96px;
+  border: 0;
+  background: url('./ui/pack-card.svg') center / 100% 100% no-repeat;
+  color: var(--sw-ink);
+  text-align: left;
+  font: 800 18px/1.15 var(--ng-font-ui, system-ui, sans-serif);
+  --sw-accent: #d63a1f;
+  -webkit-tap-highlight-color: transparent;
+}
+.sw-pack__i {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin-top: -28px;
+  padding: 8px;
+  box-sizing: border-box;
+  color: var(--sw-accent);
+}
+.sw-pack:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 2px;
+  border-radius: 16px;
+}
+.sw-pack[disabled] {
+  opacity: 0.55;
+}
+.sw-pack--food {
+  --sw-accent: #b02a12;
+}
+.sw-pack--lagos {
+  --sw-accent: #8a6a00;
+}
+.sw-pack--football {
+  --sw-accent: #0e6b3a;
+}
+.sw-pack--pidgin {
+  --sw-accent: #8c1d3d;
+}
+.sw-pack--states {
+  --sw-accent: #1d3a9e;
+}
+.sw-pack--cloth {
+  --sw-accent: #8a3a10;
+}
+
+/* ---- level banner ---- */
+.sw-banner {
+  position: relative;
+  width: min(340px, 100%);
+  aspect-ratio: 340 / 120;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  background: url('./ui/banner.svg') center / 100% 100% no-repeat;
+  animation: sw-sweep 0.6s ease-out both;
+}
+.sw-banner .sw-stars {
+  gap: 10px;
+}
+.sw-banner .sw-star {
+  width: 44px;
+  height: 44px;
+}
+
+/* ---- fx (one-shot) ---- */
+.sw-fx {
+  position: absolute;
+  pointer-events: none;
+  z-index: 6;
+  background: center / contain no-repeat;
+}
+.sw-fx--found {
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  background-image: url('./fx/found-burst.svg');
+  animation: sw-burst 0.6s ease-out both;
+}
+.sw-fx--hint {
+  width: calc(var(--sw-cell) * 1.5);
+  height: calc(var(--sw-cell) * 1.5);
+  margin: calc(var(--sw-cell) * -0.75) 0 0 calc(var(--sw-cell) * -0.75);
+  background-image: url('./fx/hint-ring.svg');
+  animation: sw-burst 0.9s ease-out both;
+}
+
+/* ---- keyframes (transform and opacity only) ---- */
+@keyframes sw-pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+@keyframes sw-shake {
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+@keyframes sw-pop {
+  0% {
+    transform: scale(0.2) rotate(-30deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes sw-lane-in {
+  from {
+    opacity: 0;
+    transform: rotate(calc(var(--a) * 1deg)) scaleX(0.2);
+  }
+}
+@keyframes sw-burst {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+@keyframes sw-sweep {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-tile,
+  .sw-lane,
+  .sw-trail,
+  .sw-star,
+  .sw-banner,
+  .sw-fx,
+  .sw-time {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

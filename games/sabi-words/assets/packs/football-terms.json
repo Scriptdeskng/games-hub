@@ -1,0 +1,562 @@
+{
+  "version": 1,
+  "id": "football-terms",
+  "title": "Football Terms",
+  "lang": "en",
+  "theme": "football",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "GOAL",
+      "hint": "What every striker wants to score",
+      "reviewed": false
+    },
+    {
+      "word": "PENALTY",
+      "hint": "Spot kick awarded after a foul in the box",
+      "reviewed": false
+    },
+    {
+      "word": "OFFSIDE",
+      "hint": "Position that stops a forward from scoring when the flag goes up",
+      "reviewed": false
+    },
+    {
+      "word": "DRIBBLE",
+      "hint": "Run with the ball past a defender",
+      "reviewed": false
+    },
+    {
+      "word": "TACKLE",
+      "hint": "Challenge to win the ball from a player",
+      "reviewed": false
+    },
+    {
+      "word": "CORNER",
+      "hint": "Kick taken from the flag at the edge of the pitch",
+      "reviewed": false
+    },
+    {
+      "word": "FREEKICK",
+      "hint": "Kick awarded after a foul, taken where it happened",
+      "tags": [
+        "display:Free kick"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "HEADER",
+      "hint": "Ball struck with the forehead",
+      "reviewed": false
+    },
+    {
+      "word": "STRIKER",
+      "hint": "Forward whose main job is to score",
+      "reviewed": false
+    },
+    {
+      "word": "KEEPER",
+      "hint": "The player allowed to use hands in the box",
+      "reviewed": false
+    },
+    {
+      "word": "GOALKEEPER",
+      "hint": "Last line of defence between the posts",
+      "tags": [
+        "display:Goalkeeper"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DEFENDER",
+      "hint": "Player who stops attacks at the back",
+      "reviewed": false
+    },
+    {
+      "word": "MIDFIELD",
+      "hint": "The middle of the pitch, where games are controlled",
+      "reviewed": false
+    },
+    {
+      "word": "MIDFIELDER",
+      "hint": "Player who links defence and attack",
+      "reviewed": false
+    },
+    {
+      "word": "WINGER",
+      "hint": "Fast attacker who runs down the side",
+      "reviewed": false
+    },
+    {
+      "word": "REFEREE",
+      "hint": "Official who blows the whistle",
+      "reviewed": false
+    },
+    {
+      "word": "WHISTLE",
+      "hint": "Sound that starts and stops play",
+      "reviewed": false
+    },
+    {
+      "word": "PITCH",
+      "hint": "The field of play",
+      "reviewed": false
+    },
+    {
+      "word": "CROSSBAR",
+      "hint": "Top beam of the goal frame",
+      "reviewed": false
+    },
+    {
+      "word": "GOALPOST",
+      "hint": "Upright of the goal frame",
+      "tags": [
+        "display:Goalpost"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CAPTAIN",
+      "hint": "Player who wears the armband",
+      "reviewed": false
+    },
+    {
+      "word": "COACH",
+      "hint": "Person who picks the team and shouts from the touchline",
+      "reviewed": false
+    },
+    {
+      "word": "FOUL",
+      "hint": "Unfair challenge that stops play",
+      "reviewed": false
+    },
+    {
+      "word": "YELLOWCARD",
+      "hint": "Warning shown by the referee",
+      "tags": [
+        "display:Yellow card"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "REDCARD",
+      "hint": "Sending-off card",
+      "tags": [
+        "display:Red card"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "SUBSTITUTE",
+      "hint": "Player who comes on from the bench",
+      "reviewed": false
+    },
+    {
+      "word": "HALFTIME",
+      "hint": "Break between the two halves",
+      "tags": [
+        "display:Half time"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FULLTIME",
+      "hint": "The final whistle",
+      "tags": [
+        "display:Full time"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "KICKOFF",
+      "hint": "The kick that starts each half",
+      "tags": [
+        "display:Kick-off"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "THROWIN",
+      "hint": "Two-handed throw to restart play from the side",
+      "tags": [
+        "display:Throw-in"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "PASS",
+      "hint": "Send the ball to a team-mate",
+      "reviewed": false
+    },
+    {
+      "word": "SHOT",
+      "hint": "Strike at the goal",
+      "reviewed": false
+    },
+    {
+      "word": "VOLLEY",
+      "hint": "Strike on the ball before it bounces",
+      "reviewed": false
+    },
+    {
+      "word": "NUTMEG",
+      "hint": "Slip the ball between a defender's legs",
+      "reviewed": false
+    },
+    {
+      "word": "HATTRICK",
+      "hint": "Three goals by one player in a game",
+      "tags": [
+        "display:Hat-trick"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "CLEANSHEET",
+      "hint": "A match where the goalkeeper lets nothing in",
+      "tags": [
+        "display:Clean sheet"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EXTRATIME",
+      "hint": "Extra thirty minutes in a knockout match",
+      "tags": [
+        "display:Extra time"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "SHOOTOUT",
+      "hint": "Penalty kicks that decide a drawn game",
+      "tags": [
+        "display:Shoot-out"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FIXTURE",
+      "hint": "A scheduled match",
+      "reviewed": false
+    },
+    {
+      "word": "LEAGUE",
+      "hint": "Competition where teams play each other over a season",
+      "reviewed": false
+    },
+    {
+      "word": "CUP",
+      "hint": "Knockout competition or the prize for winning it",
+      "reviewed": false
+    },
+    {
+      "word": "TROPHY",
+      "hint": "Shiny prize held up by the winners",
+      "reviewed": false
+    },
+    {
+      "word": "STADIUM",
+      "hint": "Big ground with stands for supporters",
+      "reviewed": false
+    },
+    {
+      "word": "SUPPORTER",
+      "hint": "A person who cheers for a team",
+      "reviewed": false
+    },
+    {
+      "word": "CHANT",
+      "hint": "Song sung by the crowd",
+      "reviewed": false
+    },
+    {
+      "word": "BANNER",
+      "hint": "Cloth sign waved in the stands",
+      "reviewed": false
+    },
+    {
+      "word": "JERSEY",
+      "hint": "Shirt a player wears",
+      "reviewed": false
+    },
+    {
+      "word": "BOOTS",
+      "hint": "Footwear with studs",
+      "reviewed": false
+    },
+    {
+      "word": "SHINGUARD",
+      "hint": "Protection worn under the socks",
+      "tags": [
+        "display:Shin guard"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "GLOVES",
+      "hint": "What a goalkeeper wears on the hands",
+      "reviewed": false
+    },
+    {
+      "word": "NET",
+      "hint": "Mesh behind the goal line",
+      "reviewed": false
+    },
+    {
+      "word": "BALL",
+      "hint": "Round thing everyone chases",
+      "reviewed": false
+    },
+    {
+      "word": "ASSIST",
+      "hint": "Final pass before a goal",
+      "reviewed": false
+    },
+    {
+      "word": "SAVE",
+      "hint": "What the keeper makes to stop a shot",
+      "reviewed": false
+    },
+    {
+      "word": "TURF",
+      "hint": "Grass or artificial surface of the pitch",
+      "reviewed": false
+    },
+    {
+      "word": "DERBY",
+      "hint": "Match between local rivals",
+      "reviewed": false
+    },
+    {
+      "word": "FORMATION",
+      "hint": "Pattern in which the team lines up",
+      "reviewed": false
+    },
+    {
+      "word": "LINESMAN",
+      "hint": "Official who runs the line with a flag",
+      "reviewed": false
+    },
+    {
+      "word": "VAR",
+      "hint": "Video check used by officials",
+      "reviewed": false
+    },
+    {
+      "word": "WALL",
+      "hint": "Line of players blocking a free kick",
+      "reviewed": false
+    },
+    {
+      "word": "FLAIR",
+      "hint": "Stylish skill with the ball",
+      "reviewed": false
+    },
+    {
+      "word": "SPRINT",
+      "hint": "Short, fast run",
+      "reviewed": false
+    },
+    {
+      "word": "STAMINA",
+      "hint": "Ability to keep running for ninety minutes",
+      "reviewed": false
+    },
+    {
+      "word": "TRAINING",
+      "hint": "Practice before the match",
+      "reviewed": false
+    },
+    {
+      "word": "FRIENDLY",
+      "hint": "Match that does not count for points",
+      "reviewed": false
+    },
+    {
+      "word": "RELEGATION",
+      "hint": "Drop to a lower division",
+      "reviewed": false
+    },
+    {
+      "word": "PROMOTION",
+      "hint": "Move up to a higher division",
+      "reviewed": false
+    },
+    {
+      "word": "TRANSFER",
+      "hint": "Move of a player from one team to another",
+      "reviewed": false
+    },
+    {
+      "word": "SQUAD",
+      "hint": "The group of players in a team",
+      "reviewed": false
+    },
+    {
+      "word": "BENCH",
+      "hint": "Where the substitutes sit",
+      "reviewed": false
+    },
+    {
+      "word": "DUGOUT",
+      "hint": "Sheltered seat beside the pitch",
+      "reviewed": false
+    },
+    {
+      "word": "TUNNEL",
+      "hint": "Passage players walk through to reach the pitch",
+      "reviewed": false
+    }
+  ]
+}

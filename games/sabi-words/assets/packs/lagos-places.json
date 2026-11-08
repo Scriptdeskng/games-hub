@@ -1,0 +1,620 @@
+{
+  "version": 1,
+  "id": "lagos-places",
+  "title": "Lagos Places",
+  "lang": "en",
+  "theme": "lagos",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "IKEJA",
+      "hint": "State capital on the mainland, home of the airport",
+      "reviewed": false
+    },
+    {
+      "word": "LEKKI",
+      "hint": "Peninsula of beaches, estates and a famous toll gate",
+      "reviewed": false
+    },
+    {
+      "word": "SURULERE",
+      "hint": "Mainland district known for its national stadium",
+      "reviewed": false
+    },
+    {
+      "word": "YABA",
+      "hint": "Mainland district known for tech start-ups and a busy market",
+      "reviewed": false
+    },
+    {
+      "word": "APAPA",
+      "hint": "Port area where ships bring in goods",
+      "reviewed": false
+    },
+    {
+      "word": "IKOYI",
+      "hint": "Leafy island district beside the lagoon",
+      "reviewed": false
+    },
+    {
+      "word": "AJEGUNLE",
+      "hint": "Busy mainland neighbourhood with a proud football and music story",
+      "tags": [
+        "display:Ajegunle"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "BADAGRY",
+      "hint": "Historic coastal town in the west of the state",
+      "reviewed": false
+    },
+    {
+      "word": "EPE",
+      "hint": "Lagoon town in the east, famous for fish",
+      "reviewed": false
+    },
+    {
+      "word": "IKORODU",
+      "hint": "Large town across the lagoon, reached by road and ferry",
+      "reviewed": false
+    },
+    {
+      "word": "OSHODI",
+      "hint": "Major transport hub with a big bus interchange",
+      "reviewed": false
+    },
+    {
+      "word": "MUSHIN",
+      "hint": "Busy mainland district with lively markets",
+      "reviewed": false
+    },
+    {
+      "word": "MARYLAND",
+      "hint": "Junction area on the mainland with a mall and many buses",
+      "reviewed": false
+    },
+    {
+      "word": "OJUELEGBA",
+      "hint": "Famous junction area on the mainland",
+      "tags": [
+        "display:Ojuelegba",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OBALENDE",
+      "hint": "Neighbourhood on the mainland beside the lagoon",
+      "tags": [
+        "display:Obalende",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "FESTAC",
+      "hint": "Large estate built for a famous cultural festival",
+      "tags": [
+        "display:Festac Town"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AGEGE",
+      "hint": "Northern district known for its bread and its railway line",
+      "reviewed": false
+    },
+    {
+      "word": "ALAUSA",
+      "hint": "Ikeja neighbourhood where many government offices sit",
+      "reviewed": false
+    },
+    {
+      "word": "OJOTA",
+      "hint": "Northern district beside a busy expressway",
+      "reviewed": false
+    },
+    {
+      "word": "IKOTA",
+      "hint": "Residential area on the Lekki side",
+      "tags": [
+        "display:Ikota",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AJAH",
+      "hint": "Town on the Lekki side with a busy roundabout",
+      "reviewed": false
+    },
+    {
+      "word": "OGUDU",
+      "hint": "Residential area in the north of the city",
+      "tags": [
+        "display:Ogudu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "MAGODO",
+      "hint": "Residential estate area in the north",
+      "reviewed": false
+    },
+    {
+      "word": "GBAGADA",
+      "hint": "Mainland district beside the expressway",
+      "reviewed": false
+    },
+    {
+      "word": "SOMOLU",
+      "hint": "Mainland district known for its printing presses",
+      "reviewed": false
+    },
+    {
+      "word": "BARIGA",
+      "hint": "Mainland neighbourhood near Somolu",
+      "tags": [
+        "display:Bariga",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ILUPEJU",
+      "hint": "Industrial district near the airport road",
+      "reviewed": false
+    },
+    {
+      "word": "ISOLO",
+      "hint": "Mainland district with many industries",
+      "reviewed": false
+    },
+    {
+      "word": "EJIGBO",
+      "hint": "Mainland area in the Oshodi-Isolo district",
+      "tags": [
+        "display:Ejigbo",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IDIMU",
+      "hint": "Western suburb with a busy road",
+      "tags": [
+        "display:Idimu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EGBEDA",
+      "hint": "Western suburb on the mainland",
+      "tags": [
+        "display:Egbeda",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AKOKA",
+      "hint": "Mainland area beside a university",
+      "reviewed": false
+    },
+    {
+      "word": "ONIPANU",
+      "hint": "Lively junction area on the mainland",
+      "tags": [
+        "display:Onipanu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OKOTA",
+      "hint": "Residential and industrial area near Isolo",
+      "tags": [
+        "display:Okota",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ORILE",
+      "hint": "Industrial area near the port",
+      "tags": [
+        "display:Orile",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IJORA",
+      "hint": "Mainland area near a causeway and power station",
+      "tags": [
+        "display:Ijora",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AMUWO",
+      "hint": "Western district near Festac",
+      "tags": [
+        "display:Amuwo Odofin",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AJEROMI",
+      "hint": "Mainland district in the south-west",
+      "tags": [
+        "display:Ajeromi-Ifelodun",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IBEJU",
+      "hint": "Far eastern coast of the state, beyond Lekki",
+      "tags": [
+        "display:Ibeju-Lekki"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "MARINA",
+      "hint": "Waterfront road on the island, a business centre",
+      "reviewed": false
+    },
+    {
+      "word": "BALOGUN",
+      "hint": "Giant market district on Lagos Island",
+      "tags": [
+        "display:Balogun Market"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OYINGBO",
+      "hint": "Mainland market area near a big bridge",
+      "tags": [
+        "display:Oyingbo",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IDUMOTA",
+      "hint": "Island market district famous for cloth",
+      "tags": [
+        "display:Idumota"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "TRADEFAIR",
+      "hint": "Large exhibition grounds on the Badagry road",
+      "tags": [
+        "display:Trade Fair"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "TARKWA",
+      "hint": "Small beach reached by boat from the island",
+      "tags": [
+        "display:Tarkwa Bay",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ELEGUSHI",
+      "hint": "Popular beach in the Lekki area",
+      "tags": [
+        "display:Elegushi Beach",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ONIKAN",
+      "hint": "Island neighbourhood near the lagoon",
+      "tags": [
+        "display:Onikan",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "MAINLAND",
+      "hint": "Part of the city on the other side of the lagoon from the island",
+      "reviewed": false
+    },
+    {
+      "word": "ISLAND",
+      "hint": "Part of the city surrounded by water, home to many offices",
+      "reviewed": false
+    },
+    {
+      "word": "LAGOON",
+      "hint": "Calm water that the city is built around",
+      "reviewed": false
+    },
+    {
+      "word": "BRIDGE",
+      "hint": "Long crossing over the lagoon",
+      "reviewed": false
+    },
+    {
+      "word": "TOLLGATE",
+      "hint": "Gate where drivers pay to cross",
+      "tags": [
+        "display:Toll gate"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ALLEN",
+      "hint": "Busy avenue and roundabout in Ikeja",
+      "tags": [
+        "display:Allen Avenue",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OPEBI",
+      "hint": "Ikeja area with offices and restaurants",
+      "tags": [
+        "display:Opebi",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OREGUN",
+      "hint": "Ikeja area with hotels and offices",
+      "tags": [
+        "display:Oregun",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "AGIDINGBI",
+      "hint": "Ikeja area known for nightlife and eateries",
+      "tags": [
+        "display:Agidingbi",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OGBA",
+      "hint": "Industrial and residential area in the north-west",
+      "tags": [
+        "display:Ogba",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ITIRE",
+      "hint": "Mainland area near Surulere",
+      "tags": [
+        "display:Itire",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "LAWANSON",
+      "hint": "Busy Surulere area with a market",
+      "tags": [
+        "display:Lawanson",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "EBUTEMETTA",
+      "hint": "Mainland district with a railway terminus and a market",
+      "tags": [
+        "display:Ebute Metta"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IGANMU",
+      "hint": "Mainland area with a large national theatre",
+      "tags": [
+        "display:Iganmu",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "COSTAIN",
+      "hint": "Busy junction near the Apapa road",
+      "tags": [
+        "display:Costain",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "IYANAPAJA",
+      "hint": "Northern area along the Abule Egba road",
+      "tags": [
+        "display:Iyana Paja",
+        "uncertain"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ALAGBADO",
+      "hint": "Northern area on the border with Ogun State",
+      "tags": [
+        "display:Alagbado",
+        "uncertain"
+      ],
+      "reviewed": false
+    }
+  ]
+}

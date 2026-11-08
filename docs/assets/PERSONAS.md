@@ -215,3 +215,26 @@ Avatars for the two new personas are placeholders in `games/sabi-quiz/assets/ava
 | 6 | The cool Jos air helps me think. | Jos cold dey help me think. | `_review: true` |
 | 7 | Look closely. The answer is in the small details. | Look well well. Answer dey inside the small small details. | `_review: true` |
 | 8 | Good game. Let us go again. | Good game. Make we run am again. | |
+
+---
+
+## Added with Sabi Words
+
+One new persona: **Osas**, the guide of Sabi Words. Avatar is a placeholder in `games/sabi-words/assets/avatars/osas.svg` (128x128 viewBox, same format as core). She fills the **Edo** gap listed in `HUMAN_ASSETS.md` row 12 (the other South-South voices are Tari, Efe and Uncle Etim). Name, region and the Pidgin below need native confirmation (HUMAN_ASSETS rows 46 to 50). Personality is individual, never an ethnic trope. Developer keys `persona.osas.<n>`.
+
+## Osas (`osas`)
+**Region:** Edo, Benin City. 30s. Sign-painter and letterer who paints shop boards by hand (the origin of the painted-letter tiles). Guide and coach, not an opponent: she greets, praises and nudges; she never mocks a wrong swipe.
+**Look:** skin `#6A4430`; adire-indigo head tie with a small knot; paintbrush behind the ear; cream apron with paint dots; plantain-yellow top. No royal or ceremonial regalia and no sacred symbol.
+**Colour world:** Market Spice with Adire Indigo accents.
+**Animation cue:** taps the brush on the board; agogo ting.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Kóyo! Welcome to my stall. Let us find some words. | Kóyo! Welcome to my stall. Make we find some words. | `_review: true` |
+| 2 | Take your time and look in every direction. | Take your time, look for every side. | `_review: true` |
+| 3 | There it is! You found it! | E dey there! You see am! | `_review: true` |
+| 4 | That one is long. Well done! | That one long o. Well done! | |
+| 5 | Not a word, but nice try. Swipe again. | No be word, but you try. Swipe again. | `_review: true` |
+| 6 | Let me light the lantern for you. | Make I light lantern for you. | |
+| 7 | The clock is moving o. Five seconds! | Time dey run o. Five seconds! | |
+| 8 | Three stars! Every letter in its place. | Three stars! Every letter dey him place. | `_review: true` |

@@ -1,0 +1,513 @@
+{
+  "version": 1,
+  "id": "states-capitals",
+  "title": "States and Capitals",
+  "lang": "en",
+  "theme": "geography",
+  "blocklist": [
+    "ANUS",
+    "APC",
+    "ARSE",
+    "ARSEHOLE",
+    "ASHAWO",
+    "ASSHOLE",
+    "BADASS",
+    "BALLS",
+    "BANDIT",
+    "BANDITS",
+    "BASTARD",
+    "BETTING",
+    "BIAFRA",
+    "BITCH",
+    "BLOOD",
+    "BOKO",
+    "BOKOHARAM",
+    "BOMB",
+    "BOMBER",
+    "BOOBS",
+    "BULLSHIT",
+    "BUSHMAN",
+    "CASINO",
+    "CHINK",
+    "COCAINE",
+    "COCK",
+    "COCKS",
+    "CODEINE",
+    "CONDOM",
+    "COON",
+    "CORPSE",
+    "CUM",
+    "CUNT",
+    "DAMN",
+    "DICK",
+    "DICKHEAD",
+    "DUMBASS",
+    "DYKE",
+    "ENDSARS",
+    "ERECTION",
+    "FAG",
+    "FAGGOT",
+    "FATSO",
+    "FRAUD",
+    "FUCK",
+    "FUCKER",
+    "FUCKING",
+    "GAMBARI",
+    "GAMBLE",
+    "GENOCIDE",
+    "GOOK",
+    "GORE",
+    "HEATHEN",
+    "HEROIN",
+    "HOOKER",
+    "HORNY",
+    "IDIOT",
+    "IMBECILE",
+    "INCEST",
+    "INFIDEL",
+    "IPOB",
+    "JACKASS",
+    "JACKPOT",
+    "JIHAD",
+    "KAFFIR",
+    "KAFIR",
+    "KIDNAP",
+    "KIDNAPPER",
+    "KIKE",
+    "KILL",
+    "KILLER",
+    "KILLING",
+    "LOSER",
+    "LOTTO",
+    "LUST",
+    "LYNCH",
+    "MAGA",
+    "MARIJUANA",
+    "MASSACRE",
+    "MASTURBATE",
+    "MILITANT",
+    "MOLEST",
+    "MONGOL",
+    "MORON",
+    "MOTHERFUCKER",
+    "MUMU",
+    "MURDER",
+    "NAKED",
+    "NEGRO",
+    "NIGGA",
+    "NIGGER",
+    "NUDE",
+    "OLOKO",
+    "ORGASM",
+    "PAEDO",
+    "PAGAN",
+    "PAKI",
+    "PDP",
+    "PEDO",
+    "PENIS",
+    "PISS",
+    "PISSED",
+    "PISTOL",
+    "PORN",
+    "PORNO",
+    "PROSTITUTE",
+    "PUSSY",
+    "RAPE",
+    "RAPIST",
+    "RETARD",
+    "RIFLE",
+    "RIGGING",
+    "RIOT",
+    "SCAM",
+    "SCROTUM",
+    "SEX",
+    "SEXUAL",
+    "SEXY",
+    "SHIT",
+    "SHITTY",
+    "SLAUGHTER",
+    "SLUT",
+    "SPASTIC",
+    "SPERM",
+    "SPIC",
+    "STAB",
+    "STABBING",
+    "STUPID",
+    "SUICIDE",
+    "TERROR",
+    "TERRORIST",
+    "TESTICLE",
+    "TITTIES",
+    "TITTY",
+    "TORTURE",
+    "TOTO",
+    "TRAMADOL",
+    "TRANNY",
+    "TWAT",
+    "UGLY",
+    "VAGINA",
+    "WANK",
+    "WANKER",
+    "WEED",
+    "WETBACK",
+    "WHORE",
+    "YAHOO",
+    "YAMYAM",
+    "YANSH"
+  ],
+  "words": [
+    {
+      "word": "ABIA",
+      "hint": "South-east state with capital Umuahia",
+      "reviewed": false
+    },
+    {
+      "word": "ADAMAWA",
+      "hint": "North-east state with capital Yola",
+      "reviewed": false
+    },
+    {
+      "word": "AKWAIBOM",
+      "hint": "South-south state with capital Uyo",
+      "tags": [
+        "display:Akwa Ibom"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ANAMBRA",
+      "hint": "South-east state with capital Awka",
+      "reviewed": false
+    },
+    {
+      "word": "BAUCHI",
+      "hint": "North-east state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "BAYELSA",
+      "hint": "South-south state with capital Yenagoa",
+      "reviewed": false
+    },
+    {
+      "word": "BENUE",
+      "hint": "North-central state with capital Makurdi",
+      "reviewed": false
+    },
+    {
+      "word": "BORNO",
+      "hint": "North-east state with capital Maiduguri",
+      "reviewed": false
+    },
+    {
+      "word": "CROSSRIVER",
+      "hint": "South-south state with capital Calabar",
+      "tags": [
+        "display:Cross River"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "DELTA",
+      "hint": "South-south state with capital Asaba",
+      "reviewed": false
+    },
+    {
+      "word": "EBONYI",
+      "hint": "South-east state with capital Abakaliki",
+      "reviewed": false
+    },
+    {
+      "word": "EDO",
+      "hint": "South-south state with capital Benin City",
+      "reviewed": false
+    },
+    {
+      "word": "EKITI",
+      "hint": "South-west state whose capital town is Ado",
+      "reviewed": false
+    },
+    {
+      "word": "ENUGU",
+      "hint": "South-east state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "GOMBE",
+      "hint": "North-east state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "IMO",
+      "hint": "South-east state with capital Owerri",
+      "reviewed": false
+    },
+    {
+      "word": "JIGAWA",
+      "hint": "North-west state with capital Dutse",
+      "reviewed": false
+    },
+    {
+      "word": "KADUNA",
+      "hint": "North-west state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "KANO",
+      "hint": "North-west state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "KATSINA",
+      "hint": "North-west state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "KEBBI",
+      "hint": "North-west state whose capital begins with Birnin",
+      "reviewed": false
+    },
+    {
+      "word": "KOGI",
+      "hint": "North-central state with capital Lokoja",
+      "reviewed": false
+    },
+    {
+      "word": "KWARA",
+      "hint": "North-central state with capital Ilorin",
+      "reviewed": false
+    },
+    {
+      "word": "LAGOS",
+      "hint": "South-west state with capital Ikeja",
+      "reviewed": false
+    },
+    {
+      "word": "NASARAWA",
+      "hint": "North-central state with capital Lafia",
+      "reviewed": false
+    },
+    {
+      "word": "NIGER",
+      "hint": "North-central state with capital Minna",
+      "reviewed": false
+    },
+    {
+      "word": "OGUN",
+      "hint": "South-west state with capital Abeokuta",
+      "reviewed": false
+    },
+    {
+      "word": "ONDO",
+      "hint": "South-west state with capital Akure",
+      "reviewed": false
+    },
+    {
+      "word": "OSUN",
+      "hint": "South-west state with capital Osogbo",
+      "reviewed": false
+    },
+    {
+      "word": "OYO",
+      "hint": "South-west state with capital Ibadan",
+      "reviewed": false
+    },
+    {
+      "word": "PLATEAU",
+      "hint": "North-central state with capital Jos",
+      "reviewed": false
+    },
+    {
+      "word": "RIVERS",
+      "hint": "South-south state with capital Port Harcourt",
+      "reviewed": false
+    },
+    {
+      "word": "SOKOTO",
+      "hint": "North-west state whose capital shares its name",
+      "reviewed": false
+    },
+    {
+      "word": "TARABA",
+      "hint": "North-east state with capital Jalingo",
+      "reviewed": false
+    },
+    {
+      "word": "YOBE",
+      "hint": "North-east state with capital Damaturu",
+      "reviewed": false
+    },
+    {
+      "word": "ZAMFARA",
+      "hint": "North-west state with capital Gusau",
+      "reviewed": false
+    },
+    {
+      "word": "FCT",
+      "hint": "Territory that holds the national capital",
+      "reviewed": false
+    },
+    {
+      "word": "ABUJA",
+      "hint": "Capital city of Nigeria, in the Federal Capital Territory",
+      "reviewed": false
+    },
+    {
+      "word": "UMUAHIA",
+      "hint": "Capital city of Abia State",
+      "reviewed": false
+    },
+    {
+      "word": "YOLA",
+      "hint": "Capital city of Adamawa State",
+      "reviewed": false
+    },
+    {
+      "word": "UYO",
+      "hint": "Capital city of Akwa Ibom State",
+      "reviewed": false
+    },
+    {
+      "word": "AWKA",
+      "hint": "Capital city of Anambra State",
+      "reviewed": false
+    },
+    {
+      "word": "YENAGOA",
+      "hint": "Capital city of Bayelsa State",
+      "reviewed": false
+    },
+    {
+      "word": "MAKURDI",
+      "hint": "Capital city of Benue State",
+      "reviewed": false
+    },
+    {
+      "word": "MAIDUGURI",
+      "hint": "Capital city of Borno State",
+      "reviewed": false
+    },
+    {
+      "word": "CALABAR",
+      "hint": "Capital city of Cross River State",
+      "reviewed": false
+    },
+    {
+      "word": "ASABA",
+      "hint": "Capital city of Delta State",
+      "reviewed": false
+    },
+    {
+      "word": "ABAKALIKI",
+      "hint": "Capital city of Ebonyi State",
+      "reviewed": false
+    },
+    {
+      "word": "BENINCITY",
+      "hint": "Capital city of Edo State",
+      "tags": [
+        "display:Benin City"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "ADOEKITI",
+      "hint": "Capital city of Ekiti State",
+      "tags": [
+        "display:Ado-Ekiti"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "OWERRI",
+      "hint": "Capital city of Imo State",
+      "reviewed": false
+    },
+    {
+      "word": "DUTSE",
+      "hint": "Capital city of Jigawa State",
+      "reviewed": false
+    },
+    {
+      "word": "BIRNINKEBBI",
+      "hint": "Capital city of Kebbi State",
+      "tags": [
+        "display:Birnin Kebbi"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "LOKOJA",
+      "hint": "Capital city of Kogi State where two rivers meet",
+      "reviewed": false
+    },
+    {
+      "word": "ILORIN",
+      "hint": "Capital city of Kwara State",
+      "reviewed": false
+    },
+    {
+      "word": "IKEJA",
+      "hint": "Capital city of Lagos State",
+      "reviewed": false
+    },
+    {
+      "word": "LAFIA",
+      "hint": "Capital city of Nasarawa State",
+      "reviewed": false
+    },
+    {
+      "word": "MINNA",
+      "hint": "Capital city of Niger State",
+      "reviewed": false
+    },
+    {
+      "word": "ABEOKUTA",
+      "hint": "Capital city of Ogun State, city of the rock",
+      "reviewed": false
+    },
+    {
+      "word": "AKURE",
+      "hint": "Capital city of Ondo State",
+      "reviewed": false
+    },
+    {
+      "word": "OSOGBO",
+      "hint": "Capital city of Osun State",
+      "reviewed": false
+    },
+    {
+      "word": "IBADAN",
+      "hint": "Capital city of Oyo State",
+      "reviewed": false
+    },
+    {
+      "word": "JOS",
+      "hint": "Capital city of Plateau State",
+      "reviewed": false
+    },
+    {
+      "word": "PORTHARCOURT",
+      "hint": "Capital city of Rivers State, the Garden City",
+      "tags": [
+        "display:Port Harcourt"
+      ],
+      "reviewed": false
+    },
+    {
+      "word": "JALINGO",
+      "hint": "Capital city of Taraba State",
+      "reviewed": false
+    },
+    {
+      "word": "DAMATURU",
+      "hint": "Capital city of Yobe State",
+      "reviewed": false
+    },
+    {
+      "word": "GUSAU",
+      "hint": "Capital city of Zamfara State",
+      "reviewed": false
+    }
+  ]
+}
