@@ -58,13 +58,18 @@ export const hasMark = (text) =>
 // guide: "always with correct diacritics"). These stay PLAIN on purpose, each with its reason; a native
 // reviewer decides (they are listed in games/sabi-words/README.md):
 export const PLAIN_OK = {
-  AKWETE: 'Igbo name; no confident tone-marked form (reviewer to supply)',
-  ABACHA: 'Igbo; "Àbàchà" suggested by QA but not confirmed (reviewer)',
-  AKPU: 'Igbo; standard spelling carries no mark we are sure of (reviewer)',
-  MIYAN: 'Hausa; standard orthography has no mark in "miyan kuka"',
-  RODO: 'Yoruba; no confident tone-marked form (reviewer)',
-  BENINCITY: 'English place name (policy call: English spellings of places stay as is)',
+  AKWETE:
+    'Igbo cloth name; standard spelling has no dot-below letters, tone is not written in everyday orthography',
+  ABACHA:
+    'Igbo; standard spelling has no dot-below letters, tone is not written in everyday orthography (a tone-marked Àbàchà is for the reviewer)',
+  MIYAN:
+    'Hausa; standard spelling has no hooked letters, tone and vowel length are not written in everyday orthography',
+  BENINCITY: 'English place name (policy: English spellings of places stay as is)',
 };
+// Every plain-left native word, and every word whose display gained marks, carries the tag `uncertain` so
+// `node scripts/check-sabi-words-pack.mjs --uncertain` lists it for the native reviewer (QA DEF-24).
+// Also kept plain by design and tagged: GARRI (loanword), ISIEWU and UGU (no dot-below letters).
+export const PLAIN_TAGGED = ['GARRI', 'ISIEWU', 'UGU'];
 const NAMES_REGION = /\b(Yoruba|Igbo|Hausa|Edo)\b/i;
 export const EMBED_MAX = 4;
 const embedded = [];
@@ -124,6 +129,10 @@ for (const f of files) {
       else if (!forms.some((f) => f.toUpperCase().startsWith(W)))
         bad.push(`${W}: display "${disp.slice(8)}" does not start with the word`);
     }
+    if ((PLAIN_OK[W] || PLAIN_TAGGED.includes(W)) && !(w.tags ?? []).includes('uncertain'))
+      bad.push(
+        `${W}: left plain on purpose, so it must carry the tag "uncertain" for the native reviewer`,
+      );
     if (NAMES_REGION.test(w.hint ?? '') && !PLAIN_OK[W]) {
       const shown = disp ? disp.slice(8) : '';
       if (!hasMark(shown))

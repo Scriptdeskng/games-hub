@@ -5,6 +5,7 @@
   "lang": "en",
   "theme": "food",
   "blocklist": [
+    "ACCA",
     "AKATA",
     "ALQAEDA",
     "AMPHETAMINE",
@@ -124,6 +125,7 @@
     "GAMBLER",
     "GAMBLERS",
     "GAMBLING",
+    "GANJA",
     "GAY",
     "GAYS",
     "GENITALS",
@@ -131,6 +133,7 @@
     "GOOK",
     "GOOKS",
     "GORE",
+    "GORY",
     "GUN",
     "GUNS",
     "GYP",
@@ -163,6 +166,7 @@
     "JACKPOTS",
     "JAP",
     "JAPS",
+    "JERK",
     "JERKOFF",
     "JEW",
     "JEWISH",
@@ -260,6 +264,7 @@
     "PEES",
     "PENIS",
     "PENISES",
+    "PERV",
     "PIMP",
     "PIMPS",
     "PISS",
@@ -299,6 +304,7 @@
     "SEXTING",
     "SEXUAL",
     "SEXY",
+    "SHABU",
     "SHAG",
     "SHEGE",
     "SHEMALE",
@@ -466,13 +472,14 @@
     {
       "word": "ABACHA",
       "hint": "Igbo cassava salad dressed in palm oil",
-      "tags": ["display:Abacha"],
+      "tags": ["display:Abacha", "uncertain"],
       "reviewed": false
     },
     {
       "word": "AKPU",
       "hint": "Igbo name for soft fermented cassava swallow",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Akpụ", "uncertain"]
     },
     {
       "word": "BANGA",
@@ -488,7 +495,8 @@
     {
       "word": "NKWOBI",
       "hint": "Spicy cow-foot delicacy in palm oil sauce",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Nkwọ̀bị", "uncertain"]
     },
     {
       "word": "ISIEWU",
@@ -499,7 +507,8 @@
     {
       "word": "ASUN",
       "hint": "Peppery grilled goat meat, a party snack",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Àsùn", "uncertain"]
     },
     {
       "word": "KILISHI",
@@ -638,7 +647,8 @@
     {
       "word": "UGU",
       "hint": "Fluted pumpkin leaves, popular in soups",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "word": "UZIZA",
@@ -759,7 +769,7 @@
     {
       "word": "RODO",
       "hint": "Fiery scotch bonnet pepper, Yoruba name",
-      "tags": ["display:Rodo"],
+      "tags": ["display:Rọ̀dọ̀", "uncertain"],
       "reviewed": false
     },
     {
@@ -781,7 +791,8 @@
     {
       "word": "GARRI",
       "hint": "Dried cassava flakes for eba or for soaking",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["uncertain"]
     },
     {
       "word": "CASSAVA",

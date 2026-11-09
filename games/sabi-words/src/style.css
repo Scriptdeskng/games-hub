@@ -388,6 +388,18 @@
   border-radius: 14px;
   background: rgb(40 8 4 / 0.9);
 }
+/* results (portrait): Play again and Main menu side by side, so the sticky bar is one button tall and
+   the last stat row clears it at rest (QA DEF-21); landscape keeps core's in-flow row */
+.ng-results .ng-sticky-actions {
+  flex-direction: row;
+  gap: 8px;
+  max-width: 360px;
+}
+.ng-results .ng-sticky-actions .ng-btn {
+  flex: 1;
+  min-width: 0;
+  padding-inline: 8px;
+}
 /* results: the tiles come first, the word slip below them, so SCORE and BEST clear the sticky bar */
 .ng-results {
   padding-bottom: 8px;

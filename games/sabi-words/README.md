@@ -78,11 +78,11 @@ handled, never a console error.
 
 ## Blocklist: how short strings are handled
 
-Every pack carries the same 374-entry `blocklist`, identical to `src/rules/min-blocklist.json` (the
+Every pack carries the same 380-entry `blocklist`, identical to `src/rules/min-blocklist.json` (the
 built-in floor, `MIN_BLOCKLIST`); the pack checker enforces that. It was widened in QA round 2 to a
 systematic sweep of vulgar, sexual, slur, drug, gambling and violence terms in English and Pidgin
 (ANAL, CLIT, MILF, JEW, WOP, DAGO, GYP, SLOT, DICE, ODDS, WAGER, POKER, DRUG, WEED, KILL, ...), and in
-QA round 3 with hate-group, slur, sexual and gambling terms (KKK, KLAN, NGGR, TITSY, BINGO, NAZIS, ISIS,
+QA rounds 3 and 4 with hate-group, slur, sexual and gambling terms (KKK, KLAN, NGGR, TITSY, BINGO, NAZIS, ISIS,
 PORNO, BLACKJACK, ...). Checked in both reading directions in every row, column and diagonal.
 
 **Open decision: the blocklist is only as complete as the list a human has reviewed.** It was written
@@ -112,11 +112,18 @@ ASSIST, CASSAVA, STITCH, SUBSTITUTE). No shipped word IS an entry.
 Egusi (Ẹ̀gúsí), Amala (Àmàlà), Eba (Èbà), Akara (Àkàrà), Ogbono (Ọ̀gbọ̀nọ̀), Efọ riro, Ewedu (Ẹ̀wẹ́dú),
 Gbegiri (Gbẹ̀gìrì), Dodo (Dòdò), Asaro (Àsáró), Ekuru (Ẹ̀kuru), Ọha soup, Ogi (Ògì), Agbalumo
 (Agbálùmọ̀), Àkàmù, Àgídí, Àdàlù, Tátáshé, Pọ̀nmọ̀, Ọkpa, Ófádà rice, Ɗanwake (Hausa), Ọmọ, Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
-hints for DASH and FLEX were reworded (neutral gloss; native review). Corrected in round 3: Tátáṣé (ṣ, not sh), Efọ riró, Àdìrẹ. Left plain on purpose, for the native
-reviewer: Garri (loanword; a tone-marked form would not start with GARRI), Nkwobi, Isi ewu, Rodo,
-Abacha (QA suggests Àbàchà), Akpu, Akwete, Miyan kuka (Hausa orthography has no mark), and the
-English place-name spellings (Ojuelegba, Idumota; policy call). The checker's `PLAIN_OK` allow-list holds
-the ones whose hint names Yoruba/Igbo/Hausa/Edo, each with its reason. The pack checker
+hints for DASH and FLEX were reworded (neutral gloss; native review). Round 3 and 4: Tátáṣé (ṣ), Efọ riró, Àdìrẹ, Rọ̀dọ̀, Akpụ, Nkwọ̀bị, Àsùn (underdots are certain, tone
+patterns are for the reviewer). **Plain on purpose, all tagged `uncertain` so
+`node scripts/check-sabi-words-pack.mjs --uncertain` lists them for the native reviewer:** Akwete,
+Abacha (a tone-marked Àbàchà is suggested), Miyan kuka (standard Igbo and Hausa spelling has no
+dot-below or hooked letters; tone is not written in everyday orthography), Garri (loanword; Gàrí would
+not start with GARRI), Isi ewu, Ugu, and the English place names (Ojuelegba, Idumota, Benin City; policy
+call). The checker's `PLAIN_OK` allow-list holds the ones whose hint names Yoruba/Igbo/Hausa/Edo, each
+with its reason. Not done (optional): a `lang:` tag on native words, so the mark rule does not depend on
+the hint text.
+
+**For the reviewer: YAWA** is a Pidgin pack word ("trouble, wahala"); confirm it reads family-friendly.
+Filler-avoid only and still open for the reviewer: AMMO, SLASH, KNIFE, STRIP. The pack checker
 now folds Hausa hooked letters (Ɗ Ɓ Ƙ Ƴ) to their base letter and tone marks/underdots via NFD, then
 requires the display form to start with the word (Yoruba ṣ counts as S or SH), rejects any other
 non-letter character, and requires a mark or hooked letter on the display of every word whose hint
