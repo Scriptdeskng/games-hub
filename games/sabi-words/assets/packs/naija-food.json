@@ -397,19 +397,19 @@
       "word": "EGUSI",
       "hint": "Soup thickened with ground melon seeds",
       "reviewed": false,
-      "tags": ["display:Ẹ̀gúsí", "uncertain"]
+      "tags": ["display:Ẹ̀gúsí", "uncertain", "lang:yo"]
     },
     {
       "word": "AMALA",
       "hint": "Dark yam-flour swallow, often served with a bean soup",
       "reviewed": false,
-      "tags": ["display:Àmàlà", "uncertain"]
+      "tags": ["display:Àmàlà", "uncertain", "lang:yo"]
     },
     {
       "word": "EBA",
       "hint": "Swallow made by stirring dried cassava flakes in hot water",
       "reviewed": false,
-      "tags": ["display:Èbà", "uncertain"]
+      "tags": ["display:Èbà", "uncertain", "lang:yo"]
     },
     {
       "word": "FUFU",
@@ -420,7 +420,7 @@
       "word": "AKARA",
       "hint": "Fried bean cakes, a breakfast favourite",
       "reviewed": false,
-      "tags": ["display:Àkàrà", "uncertain"]
+      "tags": ["display:Àkàrà", "uncertain", "lang:yo"]
     },
     {
       "word": "MOIMOI",
@@ -449,37 +449,37 @@
       "word": "OGBONO",
       "hint": "Draw soup made from ground wild mango seeds",
       "reviewed": false,
-      "tags": ["display:Ọ̀gbọ̀nọ̀", "uncertain"]
+      "tags": ["display:Ọ̀gbọ̀nọ̀", "uncertain", "lang:yo"]
     },
     {
       "word": "EFORIRO",
       "hint": "Rich Yoruba vegetable soup cooked with peppers and locust beans",
-      "tags": ["display:Efọ riró", "uncertain"],
+      "tags": ["display:Efọ riró", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "EWEDU",
       "hint": "Slippery green jute-leaf soup served with amala",
       "reviewed": false,
-      "tags": ["display:Ẹ̀wẹ́dú", "uncertain"]
+      "tags": ["display:Ẹ̀wẹ́dú", "uncertain", "lang:yo"]
     },
     {
       "word": "GBEGIRI",
       "hint": "Smooth, golden bean soup eaten with amala",
       "reviewed": false,
-      "tags": ["display:Gbẹ̀gìrì", "uncertain"]
+      "tags": ["display:Gbẹ̀gìrì", "uncertain", "lang:yo"]
     },
     {
       "word": "ABACHA",
       "hint": "Igbo cassava salad dressed in palm oil",
-      "tags": ["display:Abacha", "uncertain"],
+      "tags": ["display:Abacha", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {
       "word": "AKPU",
       "hint": "Igbo name for soft fermented cassava swallow",
       "reviewed": false,
-      "tags": ["display:Akpụ", "uncertain"]
+      "tags": ["display:Akpụ", "uncertain", "lang:ig"]
     },
     {
       "word": "BANGA",
@@ -489,26 +489,26 @@
     {
       "word": "OFADA",
       "hint": "Locally grown rice often served with a spicy green stew",
-      "tags": ["display:Ófádà rice", "uncertain"],
+      "tags": ["display:Ófádà rice", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "NKWOBI",
       "hint": "Spicy cow-foot delicacy in palm oil sauce",
       "reviewed": false,
-      "tags": ["display:Nkwọ̀bị", "uncertain"]
+      "tags": ["display:Nkwọ̀bị", "uncertain", "lang:ig"]
     },
     {
       "word": "ISIEWU",
       "hint": "Spicy goat-head delicacy from the east",
-      "tags": ["display:Isi ewu", "uncertain"],
+      "tags": ["display:Isi ewu", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {
       "word": "ASUN",
       "hint": "Peppery grilled goat meat, a party snack",
       "reviewed": false,
-      "tags": ["display:Àsùn", "uncertain"]
+      "tags": ["display:Àsùn", "uncertain", "lang:yo"]
     },
     {
       "word": "KILISHI",
@@ -529,7 +529,7 @@
     {
       "word": "MIYAN",
       "hint": "Hausa word for soup or stew",
-      "tags": ["display:Miyan kuka", "uncertain"],
+      "tags": ["display:Miyan kuka", "uncertain", "lang:ha"],
       "reviewed": false
     },
     {
@@ -558,7 +558,7 @@
     {
       "word": "DANWAKE",
       "hint": "Small northern bean dumplings cooked in a leafy broth",
-      "tags": ["display:Ɗanwake", "uncertain"],
+      "tags": ["display:Ɗanwake", "uncertain", "lang:ha"],
       "reviewed": false
     },
     {
@@ -570,7 +570,7 @@
       "word": "DODO",
       "hint": "Sweet fried plantain slices",
       "reviewed": false,
-      "tags": ["display:Dòdò", "uncertain"]
+      "tags": ["display:Dòdò", "uncertain", "lang:yo"]
     },
     {
       "word": "BOLE",
@@ -605,25 +605,25 @@
     {
       "word": "ASARO",
       "hint": "Yam cooked down into a peppery palm-oil porridge",
-      "tags": ["display:Àsáró", "uncertain"],
+      "tags": ["display:Àsáró", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "EKURU",
       "hint": "Soft, white steamed bean paste eaten with stew",
-      "tags": ["display:Ẹ̀kuru", "uncertain"],
+      "tags": ["display:Ẹ̀kuru", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "OKPA",
       "hint": "Steamed Bambara-nut pudding from Enugu",
-      "tags": ["display:Ọkpa", "uncertain"],
+      "tags": ["display:Ọkpa", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {
       "word": "OHA",
       "hint": "Igbo soup made with ora leaves",
-      "tags": ["display:Ọha soup", "uncertain"],
+      "tags": ["display:Ọha soup", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {
@@ -648,7 +648,7 @@
       "word": "UGU",
       "hint": "Fluted pumpkin leaves, popular in soups",
       "reviewed": false,
-      "tags": ["uncertain"]
+      "tags": ["uncertain", "lang:ig"]
     },
     {
       "word": "UZIZA",
@@ -669,7 +669,7 @@
     {
       "word": "PONMO",
       "hint": "Soft cow skin cooked in stews and soups",
-      "tags": ["display:Pọ̀nmọ̀", "uncertain"],
+      "tags": ["display:Pọ̀nmọ̀", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
@@ -696,19 +696,19 @@
     {
       "word": "ADALU",
       "hint": "Beans and sweet corn cooked together",
-      "tags": ["display:Àdàlù", "uncertain"],
+      "tags": ["display:Àdàlù", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "AGIDI",
       "hint": "Smooth corn pudding set in leaves",
-      "tags": ["display:Àgídí", "uncertain"],
+      "tags": ["display:Àgídí", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "OGI",
       "hint": "Yoruba word for fermented corn porridge",
-      "tags": ["display:Ògì", "uncertain"],
+      "tags": ["display:Ògì", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
@@ -763,13 +763,13 @@
     {
       "word": "TATASHE",
       "hint": "Large red pepper blended for stew base",
-      "tags": ["display:Tátáṣé", "uncertain"],
+      "tags": ["display:Tátáṣé", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "RODO",
       "hint": "Fiery scotch bonnet pepper, Yoruba name",
-      "tags": ["display:Rọ̀dọ̀", "uncertain"],
+      "tags": ["display:Rọ̀dọ̀", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
@@ -785,7 +785,7 @@
     {
       "word": "AGBALUMO",
       "hint": "Orange star-apple fruit, sweet and tangy",
-      "tags": ["display:Agbálùmọ̀", "uncertain"],
+      "tags": ["display:Agbálùmọ̀", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
@@ -818,7 +818,7 @@
     {
       "word": "AKAMU",
       "hint": "Igbo name for corn pap",
-      "tags": ["display:Àkàmù", "uncertain"],
+      "tags": ["display:Àkàmù", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {

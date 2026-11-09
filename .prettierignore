@@ -1,5 +1,6 @@
 node_modules
 dist
+tmp
 dist-e2e
 coverage
 test-results

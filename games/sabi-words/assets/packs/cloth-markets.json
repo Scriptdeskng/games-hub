@@ -391,19 +391,19 @@
       "word": "ADIRE",
       "hint": "Yoruba resist-dyed indigo cloth with patterns",
       "reviewed": false,
-      "tags": ["display:Àdìrẹ", "uncertain"]
+      "tags": ["display:Àdìrẹ", "uncertain", "lang:yo"]
     },
     {
       "word": "ASOOKE",
       "hint": "Hand-woven Yoruba cloth made in narrow strips",
-      "tags": ["display:Aṣọ òkè", "uncertain"],
+      "tags": ["display:Aṣọ òkè", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "AKWETE",
       "hint": "Igbo hand-woven cloth with geometric motifs",
       "reviewed": false,
-      "tags": ["uncertain"]
+      "tags": ["uncertain", "lang:ig"]
     },
     {
       "word": "ANKARA",
@@ -414,31 +414,31 @@
       "word": "GELE",
       "hint": "Folded head tie worn to weddings and parties",
       "reviewed": false,
-      "tags": ["display:Gèlè", "uncertain"]
+      "tags": ["display:Gèlè", "uncertain", "lang:yo"]
     },
     {
       "word": "AGBADA",
       "hint": "Wide, flowing robe worn over a matching outfit",
       "reviewed": false,
-      "tags": ["display:Agbádá", "uncertain"]
+      "tags": ["display:Agbádá", "uncertain", "lang:yo"]
     },
     {
       "word": "BUBA",
       "hint": "Loose Yoruba top worn with a wrapper or trousers",
       "reviewed": false,
-      "tags": ["display:Bùbá", "uncertain"]
+      "tags": ["display:Bùbá", "uncertain", "lang:yo"]
     },
     {
       "word": "IRO",
       "hint": "Wrapper skirt tied at the waist",
       "reviewed": false,
-      "tags": ["display:Ìró", "uncertain"]
+      "tags": ["display:Ìró", "uncertain", "lang:yo"]
     },
     {
       "word": "FILA",
       "hint": "Soft Yoruba cap",
       "reviewed": false,
-      "tags": ["display:Fìlà", "uncertain"]
+      "tags": ["display:Fìlà", "uncertain", "lang:yo"]
     },
     {
       "word": "KUFI",
@@ -448,7 +448,7 @@
     {
       "word": "ASOEBI",
       "hint": "Matching cloth chosen by friends or family for a party",
-      "tags": ["display:Aṣọ ẹbí", "uncertain"],
+      "tags": ["display:Aṣọ ẹbí", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
@@ -521,7 +521,7 @@
       "word": "IROKO",
       "hint": "Strong tropical hardwood used for carving",
       "reviewed": false,
-      "tags": ["display:Ìrókò", "uncertain"]
+      "tags": ["display:Ìrókò", "uncertain", "lang:yo"]
     },
     {
       "word": "WOVEN",

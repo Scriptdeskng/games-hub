@@ -388,17 +388,38 @@
   border-radius: 14px;
   background: rgb(40 8 4 / 0.9);
 }
-/* results (portrait): Play again and Main menu side by side, so the sticky bar is one button tall and
-   the last stat row clears it at rest (QA DEF-21); landscape keeps core's in-flow row */
+/* results: Play again and Main menu side by side in a bar one button tall (56 px, labels never wrap), so
+   the last stat row clears it at rest on a 360x640 phone in English and Pidgin (QA DEF-21, DEF-26);
+   landscape keeps core's in-flow row */
 .ng-results .ng-sticky-actions {
   flex-direction: row;
   gap: 8px;
   max-width: 360px;
+  padding: 4px 0;
 }
-.ng-results .ng-sticky-actions .ng-btn {
+.ng-results .ng-sticky-actions .ng-btn.ng-btn--lg {
   flex: 1;
   min-width: 0;
-  padding-inline: 8px;
+  min-height: 48px;
+  padding: 0 6px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+/* short portrait phones: a tighter banner and tiles so the stat rows fit above the bar */
+@media (max-height: 700px) and (orientation: portrait) {
+  .ng-results {
+    gap: 8px;
+  }
+  .ng-results .ng-results__banner {
+    padding: 12px 12px;
+  }
+  .ng-results .ng-star {
+    width: 32px;
+    height: 32px;
+  }
+  .ng-results .ng-stat {
+    padding: 8px 10px;
+  }
 }
 /* results: the tiles come first, the word slip below them, so SCORE and BEST clear the sticky bar */
 .ng-results {

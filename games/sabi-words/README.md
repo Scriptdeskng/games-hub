@@ -111,16 +111,22 @@ ASSIST, CASSAVA, STITCH, SUBSTITUTE). No shipped word IS an entry.
 `word` stays A-Z; the `display:` tag carries the marks. Added in QA rounds 1 and 2, all tagged `uncertain`:
 Egusi (Ẹ̀gúsí), Amala (Àmàlà), Eba (Èbà), Akara (Àkàrà), Ogbono (Ọ̀gbọ̀nọ̀), Efọ riro, Ewedu (Ẹ̀wẹ́dú),
 Gbegiri (Gbẹ̀gìrì), Dodo (Dòdò), Asaro (Àsáró), Ekuru (Ẹ̀kuru), Ọha soup, Ogi (Ògì), Agbalumo
-(Agbálùmọ̀), Àkàmù, Àgídí, Àdàlù, Tátáshé, Pọ̀nmọ̀, Ọkpa, Ófádà rice, Ɗanwake (Hausa), Ọmọ, Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
+(Agbálùmọ̀), Àkàmù, Àgídí, Àdàlù, Tátáṣé, Pọ̀nmọ̀, Ọkpa, Ófádà rice, Ɗanwake (Hausa), Ọmọ, Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwụ̀, Lagbájá. Pidgin
 hints for DASH and FLEX were reworded (neutral gloss; native review). Round 3 and 4: Tátáṣé (ṣ), Efọ riró, Àdìrẹ, Rọ̀dọ̀, Akpụ, Nkwọ̀bị, Àsùn (underdots are certain, tone
 patterns are for the reviewer). **Plain on purpose, all tagged `uncertain` so
-`node scripts/check-sabi-words-pack.mjs --uncertain` lists them for the native reviewer:** Akwete,
-Abacha (a tone-marked Àbàchà is suggested), Miyan kuka (standard Igbo and Hausa spelling has no
-dot-below or hooked letters; tone is not written in everyday orthography), Garri (loanword; Gàrí would
-not start with GARRI), Isi ewu, Ugu, and the English place names (Ojuelegba, Idumota, Benin City; policy
-call). The checker's `PLAIN_OK` allow-list holds the ones whose hint names Yoruba/Igbo/Hausa/Edo, each
-with its reason. Not done (optional): a `lang:` tag on native words, so the mark rule does not depend on
-the hint text.
+`node scripts/check-sabi-words-pack.mjs --uncertain` lists them for the native reviewer:** Akwete and
+Abacha (standard Igbo spelling has no dot-below letters and tone is not written in everyday
+orthography; a tone-marked Àbàchà is suggested), Miyan kuka (Hausa: no hooked letters, tone and vowel
+length are not written in everyday orthography), Ugu (Igbo ụgụ has dot-below; kept plain as the common
+English spelling, pending the reviewer), Garri (loanword; Gàrí would not start with GARRI), Isi ewu,
+and the English place names (Ojuelegba, Idumota, Benin City; policy call). The checker's `PLAIN_OK`
+allow-list holds the ones whose hint or `lang:` tag marks them native, each with its reason. Native
+words carry a `lang:yo|ig|ha|edo` tag, and the checker requires a mark or hooked letter on their display
+form whether or not the hint names the language (proved on a scratch copy: plain Nkwobi and Asun fail).
+
+**Native-origin loanwords left untagged for the reviewer's worklist** (no marks added; confirm spelling
+and whether a marked display form is wanted): Suya, Zobo, Masa, Kilishi, Owambe, Oya, Shakara, Banga,
+Kobo, Buka, Jara, Gbam, Fufu.
 
 **For the reviewer: YAWA** is a Pidgin pack word ("trouble, wahala"); confirm it reads family-friendly.
 Filler-avoid only and still open for the reviewer: AMMO, SLASH, KNIFE, STRIP. The pack checker

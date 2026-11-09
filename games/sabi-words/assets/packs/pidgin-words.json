@@ -502,13 +502,13 @@
     {
       "word": "OMO",
       "hint": "Child, or a word for \"wow, my friend\"",
-      "tags": ["display:Ọmọ", "uncertain"],
+      "tags": ["display:Ọmọ", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {
       "word": "ODOGWU",
       "hint": "Word for a strong, impressive man",
-      "tags": ["display:Ọ̀dọ̀gwù", "uncertain"],
+      "tags": ["display:Ọ̀dọ̀gwụ̀", "uncertain", "lang:ig"],
       "reviewed": false
     },
     {
@@ -555,7 +555,7 @@
     {
       "word": "LAGBAJA",
       "hint": "An ordinary everyday person",
-      "tags": ["display:Lagbájá", "uncertain"],
+      "tags": ["display:Lagbájá", "uncertain", "lang:yo"],
       "reviewed": false
     },
     {

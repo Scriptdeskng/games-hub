@@ -67,6 +67,7 @@ export function layoutTests(): void {
         }
         for (const [d, win] of [
           ['easy', true],
+          ['medium', true],
           ['hard', true],
           ['hard', false],
         ] as const) {
@@ -76,8 +77,8 @@ export function layoutTests(): void {
           );
           await expectScreen(page, 'results');
           await check(`results ${d} ${win} ${lang}`);
-          if ((page.viewportSize()?.height ?? 999) <= 500)
-            (await stickyOverlaps(page)).forEach((p) => seen.push(`results: ${p}`));
+          // at rest, on every viewport: no stat tile sits under the sticky action bar (QA DEF-26)
+          (await stickyOverlaps(page)).forEach((p) => seen.push(`results ${d} ${win}: ${p}`));
           expect(await inViewport(page.locator('.ng-results__actions .ng-btn').first())).toBe(true);
           await press(page.locator('.ng-results__actions .ng-btn').last());
           await expectScreen(page, 'menu');

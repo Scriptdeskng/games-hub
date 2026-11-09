@@ -633,7 +633,7 @@
     {
       "word": "BENINCITY",
       "hint": "Capital city of Edo State",
-      "tags": ["display:Benin City", "uncertain"],
+      "tags": ["display:Benin City", "uncertain", "lang:edo"],
       "reviewed": false
     },
     {

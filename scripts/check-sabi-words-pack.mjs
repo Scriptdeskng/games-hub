@@ -68,8 +68,12 @@ export const PLAIN_OK = {
 };
 // Every plain-left native word, and every word whose display gained marks, carries the tag `uncertain` so
 // `node scripts/check-sabi-words-pack.mjs --uncertain` lists it for the native reviewer (QA DEF-24).
-// Also kept plain by design and tagged: GARRI (loanword), ISIEWU and UGU (no dot-below letters).
+// Also kept plain by design and tagged: GARRI (loanword), ISIEWU (no dot-below letters) and UGU (Igbo ụgụ has
+// dot-below; kept plain as the common English spelling, pending the reviewer).
 export const PLAIN_TAGGED = ['GARRI', 'ISIEWU', 'UGU'];
+// Native words carry a `lang:yo|ig|ha|edo` tag; the mark rule applies to them even when the hint does not name
+// the language (so stripping the marks from NKWOBI or ASUN fails).
+const LANGS = ['yo', 'ig', 'ha', 'edo'];
 const NAMES_REGION = /\b(Yoruba|Igbo|Hausa|Edo)\b/i;
 export const EMBED_MAX = 4;
 const embedded = [];
@@ -133,11 +137,14 @@ for (const f of files) {
       bad.push(
         `${W}: left plain on purpose, so it must carry the tag "uncertain" for the native reviewer`,
       );
-    if (NAMES_REGION.test(w.hint ?? '') && !PLAIN_OK[W]) {
+    const lang = (w.tags ?? []).find((t) => t.startsWith('lang:'));
+    if (lang && !LANGS.includes(lang.slice(5)))
+      bad.push(`${W}: unknown tag "${lang}" (use lang:yo, lang:ig, lang:ha or lang:edo)`);
+    if ((NAMES_REGION.test(w.hint ?? '') || lang) && !PLAIN_OK[W] && !PLAIN_TAGGED.includes(W)) {
       const shown = disp ? disp.slice(8) : '';
       if (!hasMark(shown))
         bad.push(
-          `${W}: hint names Yoruba/Igbo/Hausa/Edo but the display form has no tone mark, underdot or hooked letter`,
+          `${W}: is a native word (hint names Yoruba/Igbo/Hausa/Edo, or a lang: tag) but the display form has no tone mark, underdot or hooked letter`,
         );
     }
     // a word may be a blocklisted string or contain one of 5+ letters: never. A SHORT blocked string (3 or 4 letters:
