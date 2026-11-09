@@ -1,0 +1,231 @@
+/* Draughts Naija art hooks (asset-designer). Import once from the game: import '../assets/draughts-art.css'.
+   Theme: set gameConfig.theme to 'theme-adire' (Adire Indigo) so .ng-* components match the indigo and terracotta art.
+   Transform and opacity only for motion; prefers-reduced-motion collapses all durations.
+
+   DOM sketch (the rules engine owns the logic, the view only toggles these classes):
+   <div class="dn-stage"></div>                                   full-bleed Arewa wall + indigo cloth table (portrait / landscape)
+   <section class="dn-seat dn-seat--cpu [is-turn]">               one per side; .is-turn shows the talking-drum icon (shape, not colour)
+     <img class="ng-avatar" src="./assets/avatars/falmata.svg" alt=""><span class="dn-seat__name dn-plate">Falmata</span>
+     <i class="dn-turn"></i> <span class="dn-think" hidden><i></i><i></i><i></i></span>      CPU thinking beads (transform only)
+     <div class="dn-tray"><i class="dn-mini dn-mini--dark"></i> ... <span class="dn-plate">x4</span></div>   captured pieces
+   </section>
+   <div class="dn-board" data-n="10" style="--dn-n:10">          data-n 10 or 8 picks the board art; the board is square
+     <div class="dn-grid">                                        CSS grid inset by the frame (14/340 of the width)
+       <button class="dn-sq" style="grid-row:R;grid-column:C" data-r="R-1" data-c="C-1" aria-label="...">   DARK squares only, (r+c) odd, row 0 on top
+         <i class="dn-piece dn-piece--light|dark [dn-piece--king]"></i>                                    optional piece
+         <b class="dn-step">1</b>                                                                         optional, with .is-path
+       </button> ...
+     </div>
+     <div class="dn-lines"> <i class="dn-leg" style="--x;--y;--len;--a"></i> ... <b class="dn-chain">x3</b> </div>   path legs, chain badge
+     <i class="dn-fx dn-fx--ring|ribbons|crown" style="--x;--y"></i>  one-shot effects, remove on animationend
+   </div>
+   Square states (class on .dn-sq):  is-select  is-move  is-path  is-capturable  is-jumped  is-last-from  is-last-to  is-hint  is-illegal
+   Piece states (class on .dn-piece): is-must  is-sliding (needs --dx/--dy in px)  is-crowned  is-taken
+   Every state has its own SHAPE as well as colour (see the table in docs/assets/draughts-naija-brief.md section 2).
+   Layers inside a square: square background = last-move marker, ::before = select/hint ring (under the piece), piece, ::after = move/path/capture mark (over).
+   Square tap area: 31 px at 360 px wide on 10x10 (board = width - 2 x 8 px); the highlight shapes are drawn to fill the whole cell.
+   Fonts: step digits and chain badge use var(--ng-font-display) (Bungee); everything else is UI text from .ng-* classes. */
+
+/* Seats, tray, effects and keyframes live in draughts-art-fx.css (split to keep each file short). */
+@import './draughts-art-fx.css';
+
+:root {
+  --dn-ink: #0f1b4a;
+  --dn-cream: #fff3da;
+  --dn-sand: #f2e1bd;
+  --dn-indigo: #22347f;
+  --dn-terra: #9a4a27;
+  --dn-gold: #e8ae32;
+  --dn-plantain: #f7d348;
+  --dn-n: 10;
+  --dn-max: 520px;
+}
+
+.dn-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: #16235f url('./bg/stage-portrait.svg') center / cover no-repeat;
+}
+@media (orientation: landscape) {
+  .dn-stage {
+    background-image: url('./bg/stage-landscape.svg');
+  }
+}
+
+/* solid cream plate for any text that sits over the art (ink on cream is 15:1) */
+.dn-plate {
+  display: inline-block;
+  padding: 2px 10px;
+  border: 2px solid var(--dn-ink);
+  border-radius: 999px;
+  background: #f4f1e8;
+  color: var(--dn-ink);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---- board ---- */
+.dn-board {
+  position: relative;
+  z-index: 1;
+  width: min(100%, var(--dn-max));
+  aspect-ratio: 1;
+  margin: 0 auto;
+  background: url('./board/board-10.svg') center / 100% 100% no-repeat;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.dn-board[data-n='8'] {
+  background-image: url('./board/board-8.svg');
+}
+.dn-grid {
+  position: absolute;
+  inset: 4.1176%; /* 14 / 340 */
+  display: grid;
+  grid-template: repeat(var(--dn-n), 1fr) / repeat(var(--dn-n), 1fr);
+}
+.dn-sq {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent center / 100% 100% no-repeat;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.dn-sq:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: -3px;
+  z-index: 3;
+}
+.dn-sq::before,
+.dn-sq::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: center / 100% 100% no-repeat;
+  pointer-events: none;
+}
+.dn-sq::before {
+  z-index: 0;
+}
+.dn-sq::after {
+  z-index: 2;
+}
+
+/* ---- pieces (86 percent of the cell; baked shadow in the art) ---- */
+.dn-piece {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 86%;
+  aspect-ratio: 1;
+  background: center / contain no-repeat;
+  pointer-events: none;
+}
+.dn-piece--light {
+  background-image: url('./pieces/man-light.svg');
+}
+.dn-piece--dark {
+  background-image: url('./pieces/man-dark.svg');
+}
+.dn-piece--light.dn-piece--king {
+  background-image: url('./pieces/king-light.svg');
+}
+.dn-piece--dark.dn-piece--king {
+  background-image: url('./pieces/king-dark.svg');
+}
+/* a piece that must capture (mandatory capture): warning-triangle badge on its corner */
+.dn-piece.is-must::after {
+  content: '';
+  position: absolute;
+  right: -8%;
+  top: -8%;
+  width: 40%;
+  aspect-ratio: 1;
+  background: url('./states/piece-must.svg') center / contain no-repeat;
+  animation: dn-must 900ms ease-in-out infinite;
+}
+
+/* ---- square states (every one has its own shape) ---- */
+.dn-sq.is-last-from {
+  background-image: url('./states/sq-last-from.svg');
+}
+.dn-sq.is-last-to {
+  background-image: url('./states/sq-last-to.svg');
+}
+.dn-sq.is-hint::before {
+  background-image: url('./states/sq-hint.svg');
+  animation: dn-pulse 1100ms ease-in-out infinite;
+}
+.dn-sq.is-select::before {
+  background-image: url('./states/sq-select.svg');
+}
+.dn-sq.is-select .dn-piece {
+  transform: translateY(-6%) scale(1.06);
+}
+.dn-sq.is-move::after {
+  background-image: url('./states/sq-move.svg');
+}
+.dn-sq.is-path::after {
+  background-image: url('./states/sq-path.svg');
+}
+.dn-sq.is-capturable::after {
+  background-image: url('./states/sq-capture.svg');
+}
+.dn-sq.is-jumped::after {
+  background-image: url('./states/sq-jumped.svg');
+}
+.dn-sq.is-jumped .dn-piece {
+  opacity: 0.72;
+}
+.dn-sq.is-illegal {
+  outline: 2px dashed var(--dn-cream);
+  outline-offset: -3px;
+  animation: dn-shake 260ms linear;
+}
+/* the step number on a path landing stone: solid gold diamond, ink digits (11:1) */
+.dn-step {
+  position: relative;
+  z-index: 3;
+  font: 400 11px/1 var(--ng-font-display, 'Bungee', sans-serif);
+  color: var(--dn-ink);
+}
+
+/* ---- capture path legs: a dashed gold rope with an arrow head, drawn from the first centre ---- */
+.dn-lines {
+  position: absolute;
+  inset: 4.1176%;
+  z-index: 2;
+  pointer-events: none;
+}
+.dn-leg {
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
+  width: calc(var(--len) * 1px);
+  height: 5px;
+  margin-top: -2.5px;
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--a) * 1deg));
+  background: repeating-linear-gradient(90deg, var(--dn-plantain) 0 7px, var(--dn-ink) 7px 10px);
+  border-radius: 3px;
+  box-shadow: 0 0 0 1.5px var(--dn-ink);
+}
+.dn-leg::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  margin-top: -6px;
+  border: 6px solid transparent;
+  border-left: 9px solid var(--dn-plantain);
+  filter: drop-shadow(0 0 1px var(--dn-ink));
+}

@@ -1,0 +1,175 @@
+{
+  "_readme": "Draughts Naija voice placeholders (silent mp3, ogg null until human delivery). Speaker: the table umpire (neutral voice, not a persona). Shared lines (oya, madalla, e-ku-ise, you-don-win, e-don-do) live in packages/core/assets/audio/voice-manifest.json.",
+  "lines": [
+    {
+      "id": "dn-start",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Oya, make we play!",
+        "en": "Come on, let's play!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-start.mp3",
+        "ogg": null
+      },
+      "emotion": "Bright, quick, rising.",
+      "usedFor": "game start",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-capture",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Chop am!",
+        "en": "Taken!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-capture.mp3",
+        "ogg": null
+      },
+      "emotion": "Short, punchy, a grin in the voice.",
+      "usedFor": "a piece is captured (rotate, sparingly)",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-must",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Capture first o!",
+        "en": "You must capture first!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-must.mp3",
+        "ogg": null
+      },
+      "emotion": "Friendly reminder, never scolding.",
+      "usedFor": "player taps a non-capturing move",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-chain",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Ehen! Jump, jump, jump!",
+        "en": "Jump after jump!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-chain.mp3",
+        "ogg": null
+      },
+      "emotion": "Rising and delighted, three quick beats.",
+      "usedFor": "multi-capture of 3 or more",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-king",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "King don show!",
+        "en": "A king is crowned!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-king.mp3",
+        "ogg": null
+      },
+      "emotion": "Proud announcement, a little drawn out on \"king\".",
+      "usedFor": "a piece is crowned",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-illegal",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "No be that way o.",
+        "en": "Not that way."
+      },
+      "files": {
+        "mp3": "voice/vo-dn-illegal.mp3",
+        "ogg": null
+      },
+      "emotion": "Gentle, kind, quick.",
+      "usedFor": "illegal move (sparingly)",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-last",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Last piece o!",
+        "en": "One piece left!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-last.mp3",
+        "ogg": null
+      },
+      "emotion": "Sharp table call, strong stress on \"last\".",
+      "usedFor": "a side is down to one piece",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-win",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "You be correct player! You don win!",
+        "en": "Well played! You win!"
+      },
+      "files": {
+        "mp3": "voice/vo-dn-win.mp3",
+        "ogg": null
+      },
+      "emotion": "Big, warm, celebratory.",
+      "usedFor": "player wins",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-lose",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "Small small, you go catch am next time.",
+        "en": "Little by little, you'll get it next time."
+      },
+      "files": {
+        "mp3": "voice/vo-dn-lose.mp3",
+        "ogg": null
+      },
+      "emotion": "Kind and encouraging, never pitying.",
+      "usedFor": "player loses",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    },
+    {
+      "id": "dn-draw",
+      "speaker": "umpire",
+      "text": {
+        "pcm": "E be like say we level o.",
+        "en": "Looks like we are level."
+      },
+      "files": {
+        "mp3": "voice/vo-dn-draw.mp3",
+        "ogg": null
+      },
+      "emotion": "Relaxed, a smile, even.",
+      "usedFor": "draw",
+      "status": "placeholder-silent-mp3",
+      "needsNativeReview": true,
+      "_review": true
+    }
+  ]
+}

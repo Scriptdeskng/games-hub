@@ -1,0 +1,232 @@
+/* Draughts Naija art hooks, part 2 (imported by draughts-art.css): seats, tray, chain badge, one-shot effects, keyframes.
+   Transform and opacity only. Text always sits on a solid plate (.dn-plate or the chain badge). */
+
+/* ---- CPU and player seats ---- */
+.dn-seat {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+}
+.dn-seat .ng-avatar {
+  flex: none;
+}
+/* whose turn: a talking-drum (gangan) icon next to the name, plus a gold ring on the avatar. Shape, not just colour. */
+.dn-turn {
+  display: none;
+  width: 28px;
+  height: 28px;
+  background: url('./hud/turn-drum.svg') center / contain no-repeat;
+}
+.dn-seat.is-turn .dn-turn {
+  display: block;
+  animation: dn-beat 800ms ease-in-out infinite;
+}
+.dn-seat.is-turn .ng-avatar {
+  box-shadow:
+    0 0 0 3px var(--dn-ink),
+    0 0 0 6px var(--dn-plantain);
+}
+/* CPU thinking: three beads bounce in turn */
+.dn-think {
+  display: inline-flex;
+  gap: 4px;
+  padding: 6px 8px;
+  border: 2px solid var(--dn-ink);
+  border-radius: 999px;
+  background: #f4f1e8;
+}
+.dn-think[hidden] {
+  display: none;
+}
+.dn-think i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dn-ink);
+  animation: dn-bead 900ms ease-in-out infinite;
+}
+.dn-think i:nth-child(2) {
+  animation-delay: 150ms;
+}
+.dn-think i:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+/* ---- captured tray ---- */
+.dn-tray {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+}
+.dn-mini {
+  display: block;
+  width: 18px;
+  aspect-ratio: 1;
+  background: center / contain no-repeat;
+}
+.dn-mini--light {
+  background-image: url('./pieces/man-light.svg');
+}
+.dn-mini--dark {
+  background-image: url('./pieces/man-dark.svg');
+}
+
+/* ---- multi-capture chain badge: solid ink plate with gold digits ---- */
+.dn-chain {
+  position: absolute;
+  left: 50%;
+  top: -5.5%;
+  z-index: 4;
+  transform: translateX(-50%);
+  padding: 3px 14px;
+  border: 2px solid var(--dn-plantain);
+  border-radius: 999px;
+  background: var(--dn-ink);
+  color: var(--dn-plantain);
+  font: 400 18px/1.3 var(--ng-font-display, 'Bungee', sans-serif);
+  animation: dn-pop 360ms var(--ng-ease-spring, cubic-bezier(0.3, 1.5, 0.5, 1)) both;
+}
+
+/* ---- one-shot effects (no gore): agogo ripple, gele-ribbon burst, crown sparkle. Centre them with --x/--y in px inside .dn-board ---- */
+.dn-fx {
+  position: absolute;
+  left: calc(var(--x, 50) * 1px);
+  top: calc(var(--y, 50) * 1px);
+  z-index: 4;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  background: center / contain no-repeat;
+  pointer-events: none;
+  opacity: 0;
+}
+.dn-fx--ring {
+  background-image: url('./fx/capture-ring.svg');
+  animation: dn-ripple 420ms ease-out both;
+}
+.dn-fx--ribbons {
+  background-image: url('./fx/capture-ribbons.svg');
+  animation: dn-burst 520ms ease-out both;
+}
+.dn-fx--crown {
+  background-image: url('./fx/crown-burst.svg');
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  animation: dn-burst 700ms ease-out both;
+}
+
+/* ---- motion ---- */
+.dn-piece.is-sliding {
+  animation: dn-slide 220ms var(--ng-ease, cubic-bezier(0.2, 0.7, 0.2, 1)) both;
+}
+.dn-piece.is-crowned {
+  animation: dn-crown 520ms var(--ng-ease-spring, cubic-bezier(0.3, 1.5, 0.5, 1)) both;
+}
+.dn-piece.is-taken {
+  animation: dn-take 260ms ease-in both;
+}
+@keyframes dn-slide {
+  from {
+    transform: translate(var(--dx, 0), var(--dy, 0));
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes dn-crown {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes dn-take {
+  to {
+    transform: scale(0.4) rotate(90deg);
+    opacity: 0;
+  }
+}
+@keyframes dn-ripple {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes dn-burst {
+  0% {
+    transform: scale(0.4) rotate(-12deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.35) rotate(12deg);
+    opacity: 0;
+  }
+}
+@keyframes dn-pop {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes dn-pulse {
+  50% {
+    transform: scale(1.08);
+    opacity: 0.75;
+  }
+}
+@keyframes dn-must {
+  50% {
+    transform: scale(1.18);
+  }
+}
+@keyframes dn-beat {
+  50% {
+    transform: scale(1.14);
+  }
+}
+@keyframes dn-bead {
+  40% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes dn-shake {
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dn-fx {
+    display: none;
+  }
+  .dn-sq,
+  .dn-sq::before,
+  .dn-sq::after,
+  .dn-piece,
+  .dn-piece::after,
+  .dn-seat .dn-turn,
+  .dn-think i,
+  .dn-chain {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

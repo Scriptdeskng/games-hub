@@ -1,0 +1,11 @@
+{
+  "include": [
+    "agogo.svg",
+    "icon/menu-mark.svg",
+    "avatars/doosuur.svg",
+    "avatars/falmata.svg",
+    "avatars/damola.svg"
+  ],
+  "dynamic": [],
+  "keep": []
+}

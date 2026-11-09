@@ -58,3 +58,9 @@ Per-game "menu + play" pairs (CULTURAL_GUIDE section 4) will be listed in each g
 |---|---|---|---|---|
 | `ludo-menu-highlife` | Menu loop | Highlife, guitar-led, warm | 45 s loop | 108 BPM; two clean guitars with palm-wine-style picking, bass, claves, shekere, brushed kit |
 | `ludo-play-highlife` | Play loop | Highlife, relaxed two-beat swing | 60 s loop | 112 BPM, I-IV-V, walking bass; leave space for dice (shekere, 3 to 8 kHz) and agogo capture SFX; never tiring over 10 minutes. Fallback: `ng-play-highlife`. Full spec in `naija-ludo-brief.md` section 7 |
+
+## Game-specific slots: Draughts Naija
+| File (placeholder in `games/draughts-naija/assets/audio/music/`) | Slot | Style | Length | Notes |
+|---|---|---|---|---|
+| `draughts-menu-hausa` | Menu loop | Hausa-inspired, unhurried | 45 s loop | 96 BPM; calabash percussion in a rolling 12/8 feel, goje-style bowed-lute melody on D F G A, soft hand-drum bass; no kakaki or ceremonial fanfare |
+| `draughts-play-hausa` | Play loop | Hausa-inspired thinking bed | 60 s loop | 104 BPM; thinner, sparse low-level goje; leave 800 Hz to 2.5 kHz clear on the cue beats (ekwe move, agogo capture); never tiring over 20 minutes. Fallback: `ng-play-hausa`. Full spec in `draughts-naija-brief.md` section 7 |

@@ -122,3 +122,18 @@ Files in `games/sabi-words/assets/audio/voice/vo-<id>.mp3` (silent placeholders)
 | `sw-win` | All the words don show! Well done! `_review` | Every word is found! Well done! | Big, warm, celebratory. | F, 30s | level complete | `vo-sw-win.mp3` |
 | `sw-lose` | No wahala. Make we try am again. `_review` | No problem. Let us try again. | Kind and encouraging, never pitying. | F, 30s | time ran out | `vo-sw-lose.mp3` |
 | `sw-pack` | Which pack you wan play today? `_review` | Which pack do you want to play today? | Curious, friendly. | F, 30s | pack picker opens | `vo-sw-pack.mp3` |
+
+## Game-specific lines: Draughts Naija
+Files in `games/draughts-naija/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Speaker: **the table umpire**, a neutral voice (M or F, 30s to 50s; warm and quick, never sarcastic, no exaggerated accent), so the three CPU personas (Doosuur, Falmata, Damola) need no voice. Same rules as above: every Pidgin line is `_review` for a native check. Shared lines also used: `oya`, `e-don-do`, `you-don-win`, `madalla`.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `dn-start` | Oya, make we play! `_review` | Come on, let's play! | Bright, quick, rising. | any adult | game start | `vo-dn-start.mp3` |
+| `dn-capture` | Chop am! `_review` | Taken! | Short, punchy, a grin in the voice; "chop" is draughts slang for capture. | any adult | capture (sparingly, rotate) | `vo-dn-capture.mp3` |
+| `dn-must` | Capture first o! `_review` | You must capture first! | Friendly reminder, never scolding. | any adult | non-capturing move attempted | `vo-dn-must.mp3` |
+| `dn-chain` | Ehen! Jump, jump, jump! `_review` | Jump after jump! | Rising and delighted, three quick beats. | any adult | multi-capture of 3 or more | `vo-dn-chain.mp3` |
+| `dn-king` | King don show! `_review` | A king is crowned! | Proud announcement, a little drawn out on "king". | any adult | crowning | `vo-dn-king.mp3` |
+| `dn-illegal` | No be that way o. `_review` | Not that way. | Gentle, kind, quick. | any adult | illegal move (sparingly) | `vo-dn-illegal.mp3` |
+| `dn-last` | Last piece o! `_review` | One piece left! | Sharp table call, strong stress on "last". | any adult | a side down to one piece | `vo-dn-last.mp3` |
+| `dn-win` | You be correct player! You don win! `_review` | Well played! You win! | Big, warm, celebratory. | any adult | player wins | `vo-dn-win.mp3` |
+| `dn-lose` | Small small, you go catch am next time. `_review` | Little by little, you'll get it next time. | Kind and encouraging, never pitying. | any adult | player loses | `vo-dn-lose.mp3` |
+| `dn-draw` | E be like say we level o. `_review` | Looks like we are level. | Relaxed, a smile, even. | any adult | draw | `vo-dn-draw.mp3` |

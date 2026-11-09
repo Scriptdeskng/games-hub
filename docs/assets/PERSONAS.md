@@ -238,3 +238,66 @@ One new persona: **Osas**, the guide of Sabi Words. Avatar is a placeholder in `
 | 6 | Let me light the lantern for you. | Make I light lantern for you. | |
 | 7 | The clock is moving o. Five seconds! | Time dey run o. Five seconds! | |
 | 8 | Three stars! Every letter in its place. | Three stars! Every letter dey him place. | `_review: true` |
+
+---
+
+## Added with Draughts Naija
+
+Three new personas, one per difficulty (Easy, Medium, Hard), chosen to fill regional gaps: **Doosuur** (Tiv, Makurdi, Middle Belt), **Falmata** (Kanuri, Maiduguri, North-East) and **Damola** (Yoruba, Abeokuta, campus rival). Avatars are placeholders in `games/draughts-naija/assets/avatars/<id>.svg` (128x128 viewBox, same format as core). Names, regions and **every Pidgin line below** need native confirmation (HUMAN_ASSETS rows 57 to 59): every row is `_review: true`. No Tiv or Kanuri words are used because correct spelling is not certain (HUMAN_ASSETS row 58). Personalities are individual, never ethnic tropes. Malam Sani and Aisha stay in the catalogue but are not Draughts opponents (regional balance). Developer keys `persona.<id>.<n>`.
+
+| Id | Name | Region (home) | Age | Skin token | Headwear / hair | Level |
+|---|---|---|---|---|---|---|
+| `doosuur` | Doosuur | Tiv, Makurdi (Benue, Middle Belt) | 40s | `#4F2E1B` | short natural hair, small gold hoops, plain black-and-white striped shawl | Draughts Easy |
+| `falmata` | Falmata | Kanuri, Maiduguri (Borno, North-East) | 20s | `#855536` | low bun with a pencil, grid-lined shirt, blank ID lanyard | Draughts Medium |
+| `damola` | Damola | Yoruba, Abeokuta (Ogun) | 20s | `#5B3A25` | fade haircut, indigo varsity-style jacket with cream collar stripes, no logo | Draughts Hard |
+
+## Doosuur (`doosuur`)
+**Region:** Tiv, Makurdi, Benue (Middle Belt). 40s. A nurse who plays draughts on her break in the hospital canteen; warm and chatty, a patient teacher of beginners. Never a trade or farming trope.
+**Play style (Easy):** friendly and loose; forgets long diagonals, explains why a move was good, lets small mistakes pass.
+**Colour world:** Northern Earth terracotta.
+**Animation cue:** a warm nod; ekwe click.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Welcome, my dear. Sit down, let's play small. | Welcome, my dear. Sit down, make we play small. | `_review: true` |
+| 2 | Take your time. Nobody is chasing us. | Take your time. Nobody dey run us. | `_review: true` |
+| 3 | Ah, nice move! You saw that one quickly. | Ah, correct move! You see that one fast. | `_review: true` |
+| 4 | Oh! You have taken my piece. Well done. | Oh! You don chop my piece. Well done. | `_review: true` |
+| 5 | Look carefully, there is a jump waiting for you. | Look well o, one jump dey wait you. | `_review: true` |
+| 6 | A king already! Congratulations. | King don show already! Congrats. | `_review: true` |
+| 7 | Hmm, let me think a little. | Hmm, make I think small. | `_review: true` |
+| 8 | Good game, my dear. Let us play again. | Good game, my dear. Make we run am again. | `_review: true` |
+
+## Falmata (`falmata`)
+**Region:** Kanuri, Maiduguri, Borno (North-East). 20s. Final-year engineering student; quick and tactical, counts exchanges out loud, kind in defeat.
+**Play style (Medium):** loves two-for-one trades and quick combinations; sometimes over-trades and leaves a side open.
+**Colour world:** Adire Indigo with sky blue.
+**Animation cue:** taps a pencil on the table; agogo ting.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Let me calculate this one. | Make I calculate this one. | `_review: true` |
+| 2 | Two for one. I like that kind of trade. | Two for one. I like that kind exchange. | `_review: true` |
+| 3 | Your left side is a little open. | Your left side open small. | `_review: true` |
+| 4 | Capture is compulsory, my friend. Those are the rules. | Capture must o, my friend. Na the rule. | `_review: true` |
+| 5 | Nice try. That was close. | Nice try. E nearly work. | `_review: true` |
+| 6 | Ha! You saw my shot coming. | Ha! You see my shot before e land. | `_review: true` |
+| 7 | Crowned! Now I can fly. | I don crown! Now I dey fly. | `_review: true` |
+| 8 | Good game. Same time tomorrow? | Good game. Same time tomorrow? | `_review: true` |
+
+## Damola (`damola`)
+**Region:** Yoruba, Abeokuta, Ogun. 20s. The campus games-society rival: confident and sporting, respects a good move, never smug.
+**Play style (Hard):** solid structure, centre and long-diagonal control, plays for the endgame king.
+**Colour world:** Aso-oke Gold ground with an Adire Indigo jacket.
+**Animation cue:** straightens the jacket; a short drum tap.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Ó dára! Let the better player win. | Ó dára! Make the better player win. | Yoruba `Ó dára` ("it is good"): `_review: true` (native speaker, check tone marks) |
+| 2 | I have been playing this since secondary school. | I don dey play this one since secondary school. | `_review: true` |
+| 3 | That was a clever move. I did not expect it. | That move sharp. I no expect am. | `_review: true` |
+| 4 | Careful. Every piece counts. | Careful. Every piece get im weight. | `_review: true` |
+| 5 | Ah! You have broken my formation. | Ah! You don scatter my formation. | `_review: true` |
+| 6 | Long diagonal, long trouble. | Long diagonal, long wahala. | `_review: true` |
+| 7 | Respect. That was well played. | Respect. You play am well. | `_review: true` |
+| 8 | Another game? The board is still warm. | Another one? Board still dey hot. | `_review: true` |
