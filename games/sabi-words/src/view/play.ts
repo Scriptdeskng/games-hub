@@ -3,7 +3,7 @@ import type { Core } from '@naija/core/boot';
 import { createScope } from '@naija/core/lifecycle';
 import { createLoop } from '@naija/core/loop';
 import { createRng } from '@naija/core/rng';
-import { createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
+import { createModal, createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
 import { OSAS } from '../ai/personas';
 import { playMusic, tenseMusic } from '../audio/music';
 import {
@@ -12,6 +12,7 @@ import {
   STAR_3_FRAC,
   HINT_COST,
   cellFor,
+  fitsBox,
   createRound,
   findWord,
   hintTarget,
@@ -65,7 +66,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   let over = false;
   let lastSec = -1;
   let modal: Modal | null = null;
-  let modalKind: 'pause' | null = null;
+  let modalKind: 'pause' | 'tight' | null = null;
+  let hintBusy = false;
   let clueFor: number | null = null;
   let botIn = test?.bot?.everyMs ?? 0;
 
@@ -110,8 +112,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       board.el,
       h('div', { class: 'sw-play__side' }, [
         words.el,
-        clue,
-        h('div', { class: 'sw-banter' }, [bubble.el]),
+        // one line under the slip: the hint clue stays here, Osas's bubble covers it for 3 s
+        h('div', { class: 'sw-note' }, [clue, h('div', { class: 'sw-banter' }, [bubble.el])]),
       ]),
     ]),
     live,
@@ -162,7 +164,10 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
 
   function hintAction(): void {
-    if (over || modal) return;
+    if (over || modal || hintBusy) return;
+    // one hint per tap sequence: a double tap must not spend twice
+    hintBusy = true;
+    scope.timeout(() => (hintBusy = false), 400);
     const target = hintTarget(s);
     const dry = useHint(s, coinsNow());
     if (target === null || !dry.ok) {
@@ -196,8 +201,8 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
 
   // ---- pause (the game clock only runs while the loop does)
-  function freeze(): void {
-    modalKind = 'pause';
+  function freeze(kind: 'pause' | 'tight'): void {
+    modalKind = kind;
     loop.pause();
     board.lock(true);
     hud.freeze(true);
@@ -211,7 +216,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
   function pause(): void {
     if (over || modal) return;
-    freeze();
+    freeze('pause');
     modal = createPause(core, {
       mount: core.root,
       onResume: thaw,
@@ -232,9 +237,29 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       hint: hintAction,
     });
   });
+  // Rotating mid-round keeps the puzzle and every found word. The cell is re-fitted; if this grid
+  // can no longer get cells of 26 px (a 12x12 on a short landscape phone) the round pauses with a
+  // notice, and carries on by itself when the screen is rotated back.
   scope.on(window, 'resize', () => {
     const box = viewportBox(o.puzzle.words.length);
     board.setCell(cellFor(n, box.w, box.h));
+    const tight = !fitsBox(n, box.w, box.h);
+    if (tight && !modal && !over) {
+      freeze('tight');
+      modal = createModal(core, {
+        title: t('play.tight.title'),
+        body: t('play.tight.body'),
+        mount: core.root,
+        actions: [
+          { label: t('ui.resume'), onClick: thaw },
+          { label: t('ui.quit'), variant: 'ghost', onClick: o.onQuit },
+        ],
+        onDismiss: thaw,
+      });
+    } else if (!tight && modalKind === 'tight') {
+      modal?.close();
+      thaw();
+    }
   });
 
   // ---- the clock

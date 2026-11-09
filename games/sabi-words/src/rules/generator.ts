@@ -113,6 +113,11 @@ function attempt(
   const draw = (): string => (rng.chance(0.55) ? rng.pick([...fillerPool]) : rng.pick([...A]));
   for (let i = 0; i < n * n; i++) if (grid[i] === '') grid[i] = draw();
 
+  const wordCellSets = at.map(
+    (w) => new Set(runCells(n, w.r, w.c, w.dir, w.word.length) as number[]),
+  );
+  const inOneWord = (cells: number[]): boolean =>
+    wordCellSets.some((set) => cells.every((c) => set.has(c)));
   const ownKey = new Map(
     at.map((w) => [
       w.word,
@@ -121,7 +126,14 @@ function attempt(
   );
   for (let iter = 0; iter < REDRAW_CAP; iter++) {
     const letters = grid.join('');
-    const bad: number[][] = scanBlocked(letters, n, blocked);
+    const bad: number[][] = [];
+    for (const cells of scanBlocked(letters, n, blocked)) {
+      // a blocked string made only of placed letters is fine inside ONE accepted pack word (PASS);
+      // across two words it cannot be fixed by redrawing filler: start a new attempt
+      if (cells.every((c) => locked.has(c))) {
+        if (!inOneWord(cells)) return null;
+      } else bad.push(cells);
+    }
     for (const w of at) {
       for (const occ of findWord(letters, n, w.word)) {
         if ([...occ.cells].sort((a, b) => a - b).join(',') !== ownKey.get(w.word)) {
@@ -140,8 +152,7 @@ function attempt(
     }
     for (const cells of bad) {
       const free = cells.filter((cell) => !locked.has(cell));
-      // a bad string made only of placed letters cannot be fixed by redrawing filler: new attempt
-      if (!free.length) return null;
+      if (!free.length) return null; // a duplicate made only of placed letters: new attempt
       const cell = rng.pick(free);
       let next = draw();
       if (next === grid[cell]) next = rng.pick([...A]);
@@ -181,7 +192,20 @@ export function generatePuzzle(input: GenInput): GenResult {
   return { ok: false, reason: 'no valid grid within the attempt cap' };
 }
 
-/** Everything wrong with a puzzle, for tests and for a defensive check of loaded saves. Empty = fine. */
+/** Blocked occurrences that use at least one cell that is not part of a placed word (always a defect). */
+export function blockedOutsideWords(puzzle: Puzzle, blocked: Blocked): number[][] {
+  const n = puzzle.size;
+  const sets = puzzle.words.map((w) => new Set(runCells(n, w.r, w.c, w.dir, w.word.length) ?? []));
+  return scanBlocked(puzzle.letters, n, blocked).filter(
+    (cells) => !sets.some((set) => cells.every((c) => set.has(c))),
+  );
+}
+
+/**
+ * Test helper: everything wrong with a puzzle (empty = fine). A blocked string wholly inside one
+ * placed word (ASS in PASS) is allowed; any other occurrence, or a word that is not found exactly
+ * once, is reported. The app does not call it.
+ */
 export function verifyPuzzle(puzzle: Puzzle, blocklist?: readonly string[]): string[] {
   const n = puzzle.size;
   const problems: string[] = [];
@@ -197,7 +221,27 @@ export function verifyPuzzle(puzzle: Puzzle, blocklist?: readonly string[]): str
     const found = findWord(puzzle.letters, n, w.word);
     if (found.length !== 1) problems.push(`${w.word} appears ${found.length} times`);
   }
-  const hits = scanBlocked(puzzle.letters, n, mergeBlocklist(blocklist));
+  const hits = blockedOutsideWords(puzzle, mergeBlocklist(blocklist));
   if (hits.length) problems.push(`blocked string at ${hits[0]?.join(',')}`);
   return problems;
+}
+
+/**
+ * generatePuzzle, then a few neighbouring seeds, then (rarely) a bigger grid up to the level's own
+ * size, so a valid pack never ends in "words did not load" (one seed in about a hundred fails on a
+ * tight 8x8 with ten words). Deterministic for the same input.
+ */
+export function generateWithFallback(input: GenInput): GenResult {
+  const own = PROFILES[input.difficulty].size;
+  const sizes = [input.size ?? own];
+  while ((sizes[sizes.length - 1] as number) < own)
+    sizes.push((sizes[sizes.length - 1] as number) + 2);
+  let last: GenResult = { ok: false, reason: 'no attempt' };
+  for (const size of sizes) {
+    for (let k = 0; k < 6; k++) {
+      last = generatePuzzle({ ...input, size, seed: (input.seed + k) >>> 0 });
+      if (last.ok) return last;
+    }
+  }
+  return last;
 }

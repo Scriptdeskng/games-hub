@@ -1,0 +1,245 @@
+/* Sabi Words art helpers, part 2 (asset-designer): HUD, pack cards, level banner, fx and keyframes.
+   Imported by words-art.css; see the DOM sketch in that file's header. */
+
+/* ---- HUD ---- */
+.sw-hud {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+}
+.sw-time {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  border: 2px solid var(--sw-ink);
+  border-radius: 999px;
+  background: var(--sw-wall-2);
+  overflow: hidden;
+}
+.sw-time__fill {
+  position: absolute;
+  inset: 0;
+  background: url('./hud/time-strip.svg') left center / auto 100% repeat-x;
+  clip-path: inset(0 calc((1 - var(--sw-p, 1)) * 100%) 0 0 round 999px);
+}
+.sw-time.is-low {
+  border-style: dashed;
+  border-color: var(--sw-plantain);
+  animation: sw-pulse 0.5s ease-in-out infinite;
+}
+.sw-time.is-low::after {
+  content: '';
+  position: absolute;
+  right: 3px;
+  top: -2px;
+  width: 18px;
+  height: 18px;
+  background: url('./hud/time-low.svg') center / contain no-repeat;
+}
+.sw-stars {
+  display: inline-flex;
+  gap: 2px;
+}
+.sw-star {
+  width: 28px;
+  height: 28px;
+  background: url('./hud/star-off.svg') center / contain no-repeat;
+}
+.sw-star.is-on {
+  background-image: url('./hud/star-on.svg');
+  animation: sw-pop 0.4s ease-out both;
+}
+.sw-coins {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font: 800 16px/1 var(--ng-font-ui, system-ui, sans-serif);
+  /* a dark plate: the HUD sits on the cream awning stripe, where cream digits vanish (QA SW-02) */
+  padding: 4px 10px 4px 6px;
+  border-radius: 999px;
+  background: var(--sw-ink);
+  color: var(--sw-cream);
+  box-shadow: 0 0 0 2px var(--sw-gold);
+}
+.sw-hint {
+  width: 48px;
+  height: 48px; /* >= 44 px tap target */
+  padding: 0;
+  border: 0;
+  background: url('./hud/hint-lantern.svg') center / 40px no-repeat;
+  -webkit-tap-highlight-color: transparent;
+}
+.sw-hint:disabled {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.sw-hint:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* ---- pack picker ---- */
+.sw-pack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 84px;
+  padding: 0 16px 0 96px;
+  border: 0;
+  background: url('./ui/pack-card.svg') center / 100% 100% no-repeat;
+  color: var(--sw-ink);
+  text-align: left;
+  font: 800 18px/1.15 var(--ng-font-ui, system-ui, sans-serif);
+  --sw-accent: #d63a1f;
+  -webkit-tap-highlight-color: transparent;
+}
+.sw-pack__i {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  width: 56px;
+  height: 56px;
+  margin-top: -28px;
+  padding: 8px;
+  box-sizing: border-box;
+  color: var(--sw-accent);
+}
+.sw-pack:focus-visible {
+  outline: 3px solid var(--ng-focus, #ffd84d);
+  outline-offset: 2px;
+  border-radius: 16px;
+}
+.sw-pack[disabled] {
+  opacity: 0.55;
+}
+.sw-pack--food {
+  --sw-accent: #b02a12;
+}
+.sw-pack--lagos {
+  --sw-accent: #8a6a00;
+}
+.sw-pack--football {
+  --sw-accent: #0e6b3a;
+}
+.sw-pack--pidgin {
+  --sw-accent: #8c1d3d;
+}
+.sw-pack--states {
+  --sw-accent: #1d3a9e;
+}
+.sw-pack--cloth {
+  --sw-accent: #8a3a10;
+}
+
+/* ---- level banner ---- */
+.sw-banner {
+  position: relative;
+  width: min(340px, 100%);
+  aspect-ratio: 340 / 120;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  background: url('./ui/banner.svg') center / 100% 100% no-repeat;
+  animation: sw-sweep 0.6s ease-out both;
+}
+.sw-banner .sw-stars {
+  gap: 10px;
+}
+.sw-banner .sw-star {
+  width: 44px;
+  height: 44px;
+}
+
+/* ---- fx (one-shot) ---- */
+.sw-fx {
+  position: absolute;
+  pointer-events: none;
+  z-index: 6;
+  background: center / contain no-repeat;
+}
+.sw-fx--found {
+  width: 120px;
+  height: 120px;
+  margin: -60px 0 0 -60px;
+  background-image: url('./fx/found-burst.svg');
+  animation: sw-burst 0.6s ease-out both;
+}
+.sw-fx--hint {
+  width: calc(var(--sw-cell) * 1.5);
+  height: calc(var(--sw-cell) * 1.5);
+  margin: calc(var(--sw-cell) * -0.75) 0 0 calc(var(--sw-cell) * -0.75);
+  background-image: url('./fx/hint-ring.svg');
+  animation: sw-burst 0.9s ease-out both;
+}
+
+/* ---- keyframes (transform and opacity only) ---- */
+@keyframes sw-pulse {
+  50% {
+    transform: scale(1.08);
+  }
+}
+@keyframes sw-shake {
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+@keyframes sw-pop {
+  0% {
+    transform: scale(0.2) rotate(-30deg);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.25) rotate(8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes sw-lane-in {
+  from {
+    opacity: 0;
+    transform: rotate(calc(var(--a) * 1deg)) scaleX(0.2);
+  }
+}
+@keyframes sw-burst {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+@keyframes sw-sweep {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sw-tile,
+  .sw-lane,
+  .sw-trail,
+  .sw-star,
+  .sw-banner,
+  .sw-fx,
+  .sw-time {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

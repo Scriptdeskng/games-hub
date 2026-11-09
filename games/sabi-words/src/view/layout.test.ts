@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fitGrid } from '../rules';
+import { fitGrid, fitsBox } from '../rules';
 import { isWide, playBox } from './layout';
 
 describe('play layout', () => {
@@ -32,5 +32,13 @@ describe('play layout', () => {
     const f = fitGrid('hard', b.w, b.h);
     expect(f.size).toBe(12);
     expect(f.cell).toBeGreaterThanOrEqual(40);
+  });
+  it('a 12x12 round rotated to a short landscape phone no longer fits (the round pauses with a notice)', () => {
+    const portrait = playBox(375, 812, 10);
+    const landscape = playBox(812, 375, 10);
+    expect(fitsBox(12, portrait.w, portrait.h)).toBe(true);
+    expect(fitsBox(12, landscape.w, landscape.h)).toBe(false);
+    expect(fitsBox(10, landscape.w, landscape.h)).toBe(true);
+    expect(fitsBox(8, 100, 100)).toBe(true);
   });
 });

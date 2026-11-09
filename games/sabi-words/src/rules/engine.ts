@@ -144,8 +144,8 @@ export const coinsEarned = (s: GameState): number =>
       ? s.found.length
       : 0;
 
-/** Share of swipes that were words. */
+/** Share of swipes that were words (0 when nothing was swiped). */
 export const accuracy = (s: GameState): number =>
-  s.found.length + s.wrongs === 0 ? 1 : s.found.length / (s.found.length + s.wrongs);
+  s.found.length + s.wrongs === 0 ? 0 : s.found.length / (s.found.length + s.wrongs);
 
 export const elapsedMs = (s: GameState): number => s.durationMs - s.timeLeftMs;

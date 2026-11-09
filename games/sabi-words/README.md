@@ -76,6 +76,42 @@ any word is unreviewed, so nothing goes live until a human has flipped the flags
 validation, or a failed download, shows the friendly "words did not load" screen with Retry; it is
 handled, never a console error.
 
+## Blocklist: how short strings are handled
+
+Every pack carries the same 168-entry `blocklist` (merged with `MIN_BLOCKLIST` in
+`src/rules/blocklist.ts`, same short strings in both: ASS, POO, HOE, TIT, TITS, SLAG, THOT, NIGG,
+KNOB, SHAG, BOOB, BUTT, HOMO, PIMP, SEX, PORN and more). The generator scans every row, column and
+diagonal, both directions, and **redraws filler** for any blocked occurrence that uses at least one
+filler cell. An occurrence made only of placed letters is allowed only inside ONE accepted pack word
+(ASS in PASS or BRASS, TIT in STITCH); where two placed words cross to spell one, the attempt is
+thrown away. A pack word that IS a blocked string, or holds one of 5+ letters, is never picked.
+`scripts/check-sabi-words-pack.mjs` mirrors this (it lists the embedded 3 to 4 letter cases: BRASS,
+STITCH, SUBSTITUTE, PASS, ASSIST, CASSAVA). A regression test builds 200 seeds x 6 packs x 3 sizes
+and asserts a fixed list of vulgar strings never occurs outside a placed word.
+
+**Open decision (cultural reviewers): AKATA and OYINBO** are not blocked. Some readers find them
+derogatory; others use them neutrally. Add them to every pack's `blocklist` (and `MIN_BLOCKLIST`)
+if the reviewers decide so: the generator needs no change.
+
+## Display forms and diacritics (native review)
+
+`word` stays A-Z; the `display:` tag carries the marks. Added in QA round 1 and tagged `uncertain`:
+Egusi (Ẹ̀gúsí), Amala (Àmàlà), Eba (Èbà), Akara (Àkàrà), Ogbono (Ọ̀gbọ̀nọ̀), Efọ riro, Ewedu (Ẹ̀wẹ́dú),
+Gbegiri (Gbẹ̀gìrì), Dodo (Dòdò), Asaro (Àsáró), Ekuru (Ẹ̀kuru), Ọha soup, Ogi (Ògì), Agbalumo
+(Agbálùmọ̀), Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
+hints for DASH and FLEX were reworded (neutral gloss; native review). Not done: Hausa hooked letters
+(Ɗanwake, Ƙ...) because the pack checker needs the display form to start with the plain word;
+English place-name spellings (Ojuelegba, Idumota) stay as is (policy call).
+
+## Rotation and the console
+
+Rotating mid-round keeps the puzzle, found words, hints and the clock. The cell is re-fitted; if the
+current grid can no longer get 26 px cells (12x12 on a short landscape phone) the round pauses with a
+"Tight fit" notice (Continue, or rotate back and it resumes by itself). The floor is 16 px.
+A pack file that is missing makes the **browser** print its own "Failed to load resource: 404" line:
+a check-before-fetch would log the same line, so the game adds nothing and the e2e spec filters only
+that browser text.
+
 ## Test builds
 
 `window.__naijaTest` (test builds only; the production bundle has none of it):

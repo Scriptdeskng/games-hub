@@ -115,32 +115,34 @@
 
 /* ---- play screen ---- */
 .sw-play {
-  gap: 8px;
-  padding-top: max(8px, env(safe-area-inset-top));
+  gap: 6px;
+  padding-top: max(6px, env(safe-area-inset-top));
+  padding-bottom: 6px;
   padding-inline: 8px;
 }
 .sw-play__main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 6px;
   width: 100%;
 }
 .sw-play__side {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
   max-width: 360px;
 }
 .sw-hud {
   width: 100%;
-  min-height: 56px;
-  padding: 4px 4px;
+  gap: 6px;
+  min-height: 48px;
+  padding: 2px 4px;
   box-sizing: border-box;
 }
 .sw-time {
-  min-width: 60px;
+  min-width: 40px;
 }
 .sw-time.is-paused .sw-time__fill {
   opacity: 0.6;
@@ -171,8 +173,11 @@
   text-align: center;
 }
 .sw-stars .sw-star {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
+}
+.sw-coins {
+  padding: 3px 8px 3px 5px;
 }
 .sw-practice {
   position: absolute;
@@ -192,23 +197,65 @@
   max-width: 360px;
   width: 100%;
 }
+/* compact slip: the layout budget in view/layout.ts counts 30 px a row and 24 px of padding */
+.sw-play .sw-words {
+  gap: 4px;
+  padding: 16px 8px 8px;
+}
+.sw-play .sw-word {
+  min-height: 26px;
+  gap: 5px;
+  padding: 0 8px 0 4px;
+  font-size: 13px;
+}
+.sw-play .sw-word__sw,
+.sw-play .sw-word.is-found::after {
+  width: 16px;
+  height: 16px;
+}
 .sw-words--results {
   margin-block: 12px 4px;
 }
+.sw-note {
+  position: relative;
+  min-height: 40px;
+}
 .sw-clue {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  min-height: 1.2em;
   text-align: center;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.2;
 }
+/* Osas's bubble takes the note line for 3 s: it never sits over the word slip or the grid */
 .sw-banter {
-  position: fixed;
-  left: 50%;
-  bottom: max(8px, env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 5;
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
+}
+.sw-banter .ng-bubble {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.sw-banter .ng-banter {
+  max-width: 100%;
+  padding: 3px 10px 3px 4px;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+.sw-banter .ng-banter__avatar {
+  width: 30px;
+  height: 30px;
 }
 .sw-board {
   flex: none;
@@ -217,10 +264,7 @@
   min-width: 0;
 }
 @media (min-aspect-ratio: 6/5) {
-  /* beside the grid there is room: the guide's bubble sits under the word list, not over the board */
-  .sw-banter {
-    position: static;
-    transform: none;
+  .sw-note {
     min-height: 48px;
   }
   .sw-play {
@@ -336,4 +380,19 @@
   .sw-time.is-low {
     animation: none;
   }
+}
+
+/* a solid plate so the settings never sit straight on the table stripe (QA SW-18) */
+.ng-menu .ng-settings {
+  padding: 6px;
+  border-radius: 14px;
+  background: rgb(40 8 4 / 0.9);
+}
+/* results: the tiles come first, the word slip below them, so SCORE and BEST clear the sticky bar */
+.ng-results {
+  padding-bottom: 8px;
+}
+/* the awning is painted across the top: error and results headings start below it */
+.ng-screen.sw-error {
+  padding-top: max(92px, env(safe-area-inset-top));
 }

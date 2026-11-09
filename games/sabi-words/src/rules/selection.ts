@@ -33,6 +33,10 @@ export function fitGrid(difficulty: Difficulty, boxW: number, boxH: number): Fit
   return { size, cell: cellFor(size, boxW, boxH) };
 }
 
+/** Does an n x n grid get cells of at least MIN_CELL_PX in this box? (false after a rotation to a tight screen) */
+export const fitsBox = (n: number, boxW: number, boxH: number): boolean =>
+  n <= 8 || rawCell(n, boxW, boxH) >= MIN_CELL_PX;
+
 const rawCell = (n: number, boxW: number, boxH: number): number =>
   Math.floor(Math.min((boxW - FRAME_PX) / n, (boxH - FRAME_PX) / n, MAX_CELL_PX));
 

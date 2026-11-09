@@ -131,7 +131,7 @@ export function createResultsScreen(core: Core, o: ResultsInfo): Component {
   o.found.forEach((f) => list.markFound(f.index, f.lane));
   list.el.classList.add('sw-words--results');
   const stats = res.el.querySelector('.ng-results__stats');
-  stats?.before(list.el);
+  stats?.after(list.el);
   if (o.note) {
     res.el
       .querySelector('.ng-results__banner')

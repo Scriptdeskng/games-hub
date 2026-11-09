@@ -10,6 +10,7 @@
     "ARSE",
     "ARSEHOLE",
     "ASHAWO",
+    "ASS",
     "ASSHOLE",
     "BADASS",
     "BALLS",
@@ -24,9 +25,11 @@
     "BOKOHARAM",
     "BOMB",
     "BOMBER",
+    "BOOB",
     "BOOBS",
     "BULLSHIT",
     "BUSHMAN",
+    "BUTT",
     "CASINO",
     "CHINK",
     "COCAINE",
@@ -36,6 +39,7 @@
     "CONDOM",
     "COON",
     "CORPSE",
+    "CRAP",
     "CUM",
     "CUNT",
     "DAMN",
@@ -47,6 +51,7 @@
     "ERECTION",
     "FAG",
     "FAGGOT",
+    "FAGS",
     "FATSO",
     "FRAUD",
     "FUCK",
@@ -59,6 +64,8 @@
     "GORE",
     "HEATHEN",
     "HEROIN",
+    "HOE",
+    "HOMO",
     "HOOKER",
     "HORNY",
     "IDIOT",
@@ -69,6 +76,7 @@
     "JACKASS",
     "JACKPOT",
     "JIHAD",
+    "JIZZ",
     "KAFFIR",
     "KAFIR",
     "KIDNAP",
@@ -77,6 +85,7 @@
     "KILL",
     "KILLER",
     "KILLING",
+    "KNOB",
     "LOSER",
     "LOTTO",
     "LUST",
@@ -94,6 +103,7 @@
     "MURDER",
     "NAKED",
     "NEGRO",
+    "NIGG",
     "NIGGA",
     "NIGGER",
     "NUDE",
@@ -105,11 +115,14 @@
     "PDP",
     "PEDO",
     "PENIS",
+    "PIMP",
     "PISS",
     "PISSED",
     "PISTOL",
+    "POO",
     "PORN",
     "PORNO",
+    "PRICK",
     "PROSTITUTE",
     "PUSSY",
     "RAPE",
@@ -123,8 +136,10 @@
     "SEX",
     "SEXUAL",
     "SEXY",
+    "SHAG",
     "SHIT",
     "SHITTY",
+    "SLAG",
     "SLAUGHTER",
     "SLUT",
     "SPASTIC",
@@ -137,12 +152,16 @@
     "TERROR",
     "TERRORIST",
     "TESTICLE",
+    "THOT",
+    "TIT",
+    "TITS",
     "TITTIES",
     "TITTY",
     "TORTURE",
     "TOTO",
     "TRAMADOL",
     "TRANNY",
+    "TURD",
     "TWAT",
     "UGLY",
     "VAGINA",
@@ -159,12 +178,13 @@
     {
       "word": "ADIRE",
       "hint": "Yoruba resist-dyed indigo cloth with patterns",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Adìrẹ", "uncertain"]
     },
     {
       "word": "ASOOKE",
       "hint": "Hand-woven Yoruba cloth made in narrow strips",
-      "tags": ["display:Aso-oke"],
+      "tags": ["display:Aṣọ òkè", "uncertain"],
       "reviewed": false
     },
     {
@@ -180,27 +200,32 @@
     {
       "word": "GELE",
       "hint": "Folded head tie worn to weddings and parties",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Gèlè", "uncertain"]
     },
     {
       "word": "AGBADA",
       "hint": "Wide, flowing robe worn over a matching outfit",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Agbádá", "uncertain"]
     },
     {
       "word": "BUBA",
       "hint": "Loose Yoruba top worn with a wrapper or trousers",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Bùbá", "uncertain"]
     },
     {
       "word": "IRO",
       "hint": "Wrapper skirt tied at the waist",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Ìró", "uncertain"]
     },
     {
       "word": "FILA",
       "hint": "Soft Yoruba cap",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Fìlà", "uncertain"]
     },
     {
       "word": "KUFI",
@@ -210,7 +235,7 @@
     {
       "word": "ASOEBI",
       "hint": "Matching cloth chosen by friends or family for a party",
-      "tags": ["display:Aso ebi"],
+      "tags": ["display:Aṣọ ẹbí", "uncertain"],
       "reviewed": false
     },
     {
@@ -282,7 +307,8 @@
     {
       "word": "IROKO",
       "hint": "Strong tropical hardwood used for carving",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Ìrókò", "uncertain"]
     },
     {
       "word": "WOVEN",

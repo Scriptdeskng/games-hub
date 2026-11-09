@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { instruments } from '../../../../packages/core/src/audio/instruments';
 import { WORDS_CELEBRATION_CUES, wordsSfx } from './sfx';
@@ -61,5 +63,19 @@ describe('wordsSfx', () => {
   it('does not shadow core events', () => {
     for (const k of ['tap', 'select', 'coin', 'fail', 'win', 'lose', 'tick', 'start', 'success'])
       expect(wordsSfx[k], k).toBeUndefined();
+  });
+  it('every cue is played from game code (a defined but silent cue is a defect)', () => {
+    const src = join(__dirname, '..');
+    const files = (dir: string): string[] =>
+      readdirSync(dir).flatMap((f) => {
+        const p = join(dir, f);
+        return statSync(p).isDirectory() ? files(p) : [p];
+      });
+    const code = files(src)
+      .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts') && !f.endsWith('audio/sfx.ts'))
+      .map((f) => readFileSync(f, 'utf8'))
+      .join('\n');
+    const silent = Object.keys(wordsSfx).filter((name) => !code.includes(`'${name}'`));
+    expect(silent).toEqual([]);
   });
 });

@@ -26,12 +26,9 @@ export interface Board {
   /** rejected swipe: shake, dashed outline */
   markWrong(from: number, to: number): void;
   hint(cell: number): void;
-  clearHint(cells: number[]): void;
   clearSelection(): void;
   /** while true (paused, finished) every input is ignored */
   lock(on: boolean): void;
-  focus(): void;
-  readonly selectionLength: number;
 }
 
 interface LaneRec {
@@ -281,9 +278,6 @@ export function createBoard(o: BoardOptions): Board {
 
   return {
     el,
-    get selectionLength() {
-      return sel.length;
-    },
     setCell(px) {
       if (px === cell) return;
       cell = px;
@@ -331,14 +325,10 @@ export function createBoard(o: BoardOptions): Board {
       tiles[at]?.classList.add('is-hint');
       fx('hint', at);
     },
-    clearHint(cells) {
-      for (const i of cells) tiles[i]?.classList.remove('is-hint');
-    },
     clearSelection,
     lock(on) {
       locked = on;
       if (on) clearSelection();
     },
-    focus: () => tiles[cursor]?.focus({ preventScroll: true }),
   };
 }

@@ -53,7 +53,9 @@ for (const c of ['food', 'lagos', 'football', 'pidgin', 'states', 'cloth', 'lock
   ok(sprite.includes(`id="pack-${c}"`), `pack symbol pack-${c}`);
 const pats = [1, 2, 3, 4, 5, 6].map((i) => readFileSync(join(A, 'lanes', `pat-${i}.svg`), 'utf8'));
 ok(new Set(pats).size === 6, 'six distinct lane patterns (colour is never the only cue)');
-const css = readFileSync(join(A, 'words-art.css'), 'utf8');
+const css =
+  readFileSync(join(A, 'words-art.css'), 'utf8') +
+  readFileSync(join(A, 'words-art-ui.css'), 'utf8'); // words-art.css @imports the second part
 const urls = [...css.matchAll(/url\('?\.\/([^')]+)'?\)/g)].map((m) => m[1]);
 ok(
   urls.length > 10 && urls.every((u) => existsSync(join(A, u))),

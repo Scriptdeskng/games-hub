@@ -1,24 +1,41 @@
 import { validateWordPack } from '@naija/core/content';
 import { describe, expect, it } from 'vitest';
 import { scanBlocked } from './blocklist';
-import { MIN_BLOCKLIST, mergeBlocklist, containsBlocked } from './blocklist';
+import { MIN_BLOCKLIST, mergeBlocklist, unsafeWord } from './blocklist';
 import { DIFFICULTIES, PROFILES } from './config';
-import { generatePuzzle, verifyPuzzle, MAX_ATTEMPTS } from './generator';
+import {
+  MAX_ATTEMPTS,
+  blockedOutsideWords,
+  generatePuzzle,
+  generateWithFallback,
+  verifyPuzzle,
+} from './generator';
 import { PACKS_ON_DISK, toyPack } from './fixtures';
 import { findWord } from './solver';
 
 const packs = PACKS_ON_DISK;
+/** A fixed list of vulgar strings, independent of any shipped blocklist (QA SW-01). */
+const NASTY = mergeBlocklist([
+  ...'ASS POO HOE TIT TITS SLAG THOT NIGG KNOB SHAG BOOB BUTT HOMO PIMP TWAT WANK PRICK JIZZ PISS CRAP TURD SEX SEXY PORN FAG FAGS DYKE SPIC KIKE GOOK RAPE YANSH FUCK SHIT CUNT DICK COCK BITCH SLUT WHORE PENIS ARSE'.split(
+    ' ',
+  ),
+]);
 
 describe('generator over every shipped pack', () => {
   it('has six packs that validate', () => {
     expect(packs).toHaveLength(6);
     for (const p of packs) expect(validateWordPack(p).ok, p.id).toBe(true);
   });
-  it('the built-in blocklist never removes a real pack word', () => {
+  it('the built-in and pack blocklists never remove a real pack word', () => {
     const b = mergeBlocklist(undefined);
-    for (const p of packs)
-      for (const w of p.words) expect(containsBlocked(w.word.toUpperCase(), b), w.word).toBe(false);
-    expect(MIN_BLOCKLIST.length).toBeGreaterThan(10);
+    for (const p of packs) {
+      const own = mergeBlocklist(p.blocklist);
+      for (const w of p.words) {
+        expect(unsafeWord(w.word.toUpperCase(), b), w.word).toBe(false);
+        expect(unsafeWord(w.word.toUpperCase(), own), w.word).toBe(false);
+      }
+    }
+    expect(MIN_BLOCKLIST.length).toBeGreaterThan(40);
   });
   for (const p of packs) {
     for (const d of DIFFICULTIES) {
@@ -32,6 +49,8 @@ describe('generator over every shipped pack', () => {
           expect(pz.size).toBe(prof.size);
           expect(pz.words).toHaveLength(prof.words);
           expect(verifyPuzzle(pz, p.blocklist), `seed ${seed}`).toEqual([]);
+          // QA SW-01 regression: none of these ever appears except inside a placed word (PASS, BRASS)
+          expect(blockedOutsideWords(pz, NASTY), `seed ${seed}`).toEqual([]);
           for (const w of pz.words) {
             expect(findWord(pz.letters, pz.size, w.word)).toHaveLength(1);
             expect(prof.dirs).toContain(w.dir);
@@ -106,12 +125,12 @@ describe('generator behaviour', () => {
       'IMO',
       'DELTA',
       'RIVERS',
-      'XFUCKX',
+      'XFUCKERX',
     ];
     for (let seed = 1; seed <= 20; seed++) {
       const r = generatePuzzle({ pack: toyPack(words), difficulty: 'easy', seed });
       if (!r.ok) throw new Error('gen');
-      expect(r.puzzle.words.map((w) => w.word)).not.toContain('XFUCKX');
+      expect(r.puzzle.words.map((w) => w.word)).not.toContain('XFUCKERX');
     }
   });
   it('refuses a pack with too few usable words, and never throws', () => {
@@ -167,5 +186,92 @@ describe('generator behaviour', () => {
     for (const w of r.puzzle.words) expect(w.hint.length).toBeGreaterThan(0);
     const names = r.puzzle.words.map((w) => w.display);
     expect(names).toEqual([...names].sort((a, b) => a.localeCompare(b, 'en')));
+  });
+});
+
+describe('short blocked strings and pack words (QA SW-01)', () => {
+  const words = [
+    'PASS',
+    'BRASS',
+    'CLASS',
+    'SHOES',
+    'BUTTON',
+    'LAGOS',
+    'ABUJA',
+    'KANO',
+    'ENUGU',
+    'OSUN',
+    'ONDO',
+    'BENUE',
+    'YOBE',
+    'ABIA',
+    'DELTA',
+    'RIVERS',
+  ];
+  it('ASS may appear inside PASS and friends but never through a filler letter', () => {
+    let inside = 0;
+    for (let seed = 1; seed <= 150; seed++) {
+      const r = generatePuzzle({ pack: toyPack(words), difficulty: 'hard', seed, size: 12 });
+      if (!r.ok) throw new Error('gen');
+      expect(blockedOutsideWords(r.puzzle, mergeBlocklist(undefined)), `seed ${seed}`).toEqual([]);
+      const placed = r.puzzle.words.map((w) => w.word);
+      if (placed.includes('PASS') || placed.includes('BRASS') || placed.includes('CLASS')) inside++;
+    }
+    expect(inside).toBeGreaterThan(20);
+  });
+  it('a pack word that is, or holds, a long blocked string is never picked; short ones are allowed', () => {
+    const b = mergeBlocklist(['LAGOSX']);
+    expect(unsafeWord('PASS', b)).toBe(false);
+    expect(unsafeWord('BUTTON', b)).toBe(false);
+    expect(unsafeWord('ASS', b)).toBe(true);
+    expect(unsafeWord('XLAGOSXY', b)).toBe(true);
+    expect(unsafeWord('YXSOGAL', b)).toBe(true);
+  });
+  it('two placed words crossing so that they spell a blocked string is rejected, not shipped', () => {
+    for (let seed = 1; seed <= 100; seed++) {
+      const r = generatePuzzle({ pack: toyPack(words), difficulty: 'easy', seed });
+      if (!r.ok) continue;
+      expect(blockedOutsideWords(r.puzzle, mergeBlocklist(undefined))).toEqual([]);
+    }
+  });
+});
+
+describe('generateWithFallback (QA WARN-3)', () => {
+  it('football-terms at Hard 8x8 builds for 300 seeds', () => {
+    const pack = packs.find((p) => p.id === 'football-terms')!;
+    for (let seed = 1; seed <= 300; seed++) {
+      const r = generateWithFallback({ pack, difficulty: 'hard', seed, size: 8 });
+      expect(r.ok, `seed ${seed}`).toBe(true);
+      if (r.ok) expect(verifyPuzzle(r.puzzle, pack.blocklist)).toEqual([]);
+    }
+  });
+  it('steps up to a bigger grid when a small one cannot hold the words, and is deterministic', () => {
+    const long = [
+      'ABCDEFGH',
+      'IJKLMNOP',
+      'QRSTUVWX',
+      'YZABCDEF',
+      'GHIJKLMN',
+      'OPQRSTUV',
+      'WXYZABCD',
+      'EFGHIJKL',
+      'MNOPQRST',
+      'UVWXYZAB',
+      'CDEFGHIJ',
+      'KLMNOPQR',
+    ];
+    const a = generateWithFallback({ pack: toyPack(long), difficulty: 'hard', seed: 3, size: 8 });
+    const b = generateWithFallback({ pack: toyPack(long), difficulty: 'hard', seed: 3, size: 8 });
+    expect(a).toEqual(b);
+    expect(a.ok).toBe(true);
+    if (a.ok) expect(a.puzzle.size).toBeGreaterThanOrEqual(8);
+  });
+  it('reports a pack with too few words instead of throwing', () => {
+    const r = generateWithFallback({
+      pack: toyPack(['LAGOS', 'KANO']),
+      difficulty: 'easy',
+      seed: 1,
+    });
+    expect(r.ok).toBe(false);
   });
 });

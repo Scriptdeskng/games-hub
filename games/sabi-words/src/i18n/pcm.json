@@ -24,10 +24,22 @@
     "text": "Pick one of di six word packs for menu. Daily Puzzle na di same one for everybody today: your first try na im count, di next ones na practice. Press P to pause.",
     "_review": true
   },
-  "menu.hint": "{size}x{size} grid, {words} words, {min} min, {dirs}.",
-  "menu.dirs.easy": "go right and go down",
-  "menu.dirs.medium": "6 directions",
-  "menu.dirs.hard": "all 8 directions",
+  "menu.hint": {
+    "text": "{size}x{size} grid, {words} words, {min} min, {dirs}.",
+    "_review": true
+  },
+  "menu.dirs.easy": {
+    "text": "go right and go down",
+    "_review": true
+  },
+  "menu.dirs.medium": {
+    "text": "6 directions",
+    "_review": true
+  },
+  "menu.dirs.hard": {
+    "text": "all 8 directions",
+    "_review": true
+  },
   "menu.pack": {
     "text": "Word pack: {name}. Change pack",
     "_review": true
@@ -44,7 +56,10 @@
     "text": "Today Puzzle",
     "_review": true
   },
-  "menu.dailyNew": "New puzzle every day.",
+  "menu.dailyNew": {
+    "text": "New puzzle every day.",
+    "_review": true
+  },
   "menu.dailyUsed": {
     "text": "Today puzzle don start. If you play again, na practice.",
     "_review": true
@@ -59,38 +74,62 @@
   },
   "menu.howto": "How to play",
   "menu.coins": "Coins: {n}",
-  "pack.naija-food.name": "Naija Food",
+  "pack.naija-food.name": {
+    "text": "Naija Food",
+    "_review": true
+  },
   "pack.naija-food.desc": {
     "text": "Soup, swallow and small chops",
     "_review": true
   },
-  "pack.lagos-places.name": "Lagos Places",
+  "pack.lagos-places.name": {
+    "text": "Lagos Places",
+    "_review": true
+  },
   "pack.lagos-places.desc": {
     "text": "Areas, markets and beaches for Lagos",
     "_review": true
   },
-  "pack.football-terms.name": "Football Terms",
+  "pack.football-terms.name": {
+    "text": "Football Terms",
+    "_review": true
+  },
   "pack.football-terms.desc": {
     "text": "Words from football",
     "_review": true
   },
-  "pack.pidgin-words.name": "Pidgin Words",
+  "pack.pidgin-words.name": {
+    "text": "Pidgin Words",
+    "_review": true
+  },
   "pack.pidgin-words.desc": {
     "text": "Everyday street talk",
     "_review": true
   },
-  "pack.states-capitals.name": "States and Capitals",
+  "pack.states-capitals.name": {
+    "text": "States and Capitals",
+    "_review": true
+  },
   "pack.states-capitals.desc": {
     "text": "All 36 states and Abuja",
     "_review": true
   },
-  "pack.cloth-markets.name": "Cloth and Markets",
+  "pack.cloth-markets.name": {
+    "text": "Cloth and Markets",
+    "_review": true
+  },
   "pack.cloth-markets.desc": {
     "text": "Cloth, tailor and market",
     "_review": true
   },
-  "play.tile": "{letter}, row {row}, column {col}",
-  "play.grid": "Letter grid",
+  "play.tile": {
+    "text": "{letter}, row {row}, column {col}",
+    "_review": true
+  },
+  "play.grid": {
+    "text": "Letter grid",
+    "_review": true
+  },
   "play.words": {
     "text": "Words wey you go find",
     "_review": true
@@ -99,8 +138,14 @@
     "text": "Hint: light di lantern ({cost} coins)",
     "_review": true
   },
-  "play.timeLeft": "{s} seconds remain",
-  "play.clue": "Clue: {hint}",
+  "play.timeLeft": {
+    "text": "{s} seconds remain",
+    "_review": true
+  },
+  "play.clue": {
+    "text": "Clue: {hint}",
+    "_review": true
+  },
   "play.sr.start": {
     "text": "Start dey {letter}. Go di last letter, press Enter.",
     "_review": true
@@ -109,7 +154,10 @@
     "text": "E no dey for straight line. Pick another letter.",
     "_review": true
   },
-  "play.sr.found": "don find",
+  "play.sr.found": {
+    "text": "don find",
+    "_review": true
+  },
   "play.sr.wordFound": {
     "text": "You find {word}. {left} remain.",
     "_review": true
@@ -118,7 +166,10 @@
     "text": "You don already find dat word.",
     "_review": true
   },
-  "play.sr.wrong": "No be word. Try again.",
+  "play.sr.wrong": {
+    "text": "No be word. Try again.",
+    "_review": true
+  },
   "play.sr.noHint": {
     "text": "Every word don get lantern.",
     "_review": true
@@ -127,8 +178,14 @@
     "text": "Hint cost {cost} coins. Finish puzzle make you win more.",
     "_review": true
   },
-  "hud.coins": "{n} coins",
-  "hud.practice": "Practice",
+  "hud.coins": {
+    "text": "{n} coins",
+    "_review": true
+  },
+  "hud.practice": {
+    "text": "Practice",
+    "_review": true
+  },
   "results.words": {
     "text": "Words found",
     "_review": true
@@ -137,7 +194,10 @@
     "text": "Time used",
     "_review": true
   },
-  "results.accuracy": "Accuracy",
+  "results.accuracy": {
+    "text": "How correct you be",
+    "_review": true
+  },
   "results.coins": {
     "text": "Coins won",
     "_review": true
@@ -174,16 +234,40 @@
     "text": "Hints wey you use",
     "_review": true
   },
-  "stats.coins": "Coins",
-  "stats.best": "Best by level",
-  "stats.packs": "By pack",
-  "stats.none": "nothing yet",
-  "stats.bestLine": "{score} points, {stars} of 3 stars, fastest {time}",
-  "stats.packLine": "{plays} played, {wins} won",
-  "error.retry": "Try again",
-  "error.pack.title": "Di words no load",
+  "stats.coins": {
+    "text": "Coins wey you get",
+    "_review": true
+  },
+  "stats.best": {
+    "text": "Best score for each level",
+    "_review": true
+  },
+  "stats.packs": {
+    "text": "For each pack",
+    "_review": true
+  },
+  "stats.none": {
+    "text": "nothing yet",
+    "_review": true
+  },
+  "stats.bestLine": {
+    "text": "{score} points, {stars} of 3 stars, fastest {time}",
+    "_review": true
+  },
+  "stats.packLine": {
+    "text": "{plays} played, {wins} won",
+    "_review": true
+  },
+  "error.retry": {
+    "text": "Try am again",
+    "_review": true
+  },
+  "error.pack.title": {
+    "text": "Di words no load",
+    "_review": true
+  },
   "error.pack.body": {
-    "text": "Check your data or network, then try again. Nothing lost.",
+    "text": "Check your data or your network, then try am again. Nothing don loss.",
     "_review": true
   },
   "persona.osas.name": "Osas",
@@ -199,13 +283,22 @@
     "text": "E dey there! You see am!",
     "_review": true
   },
-  "persona.osas.4": "That one long o. Well done!",
+  "persona.osas.4": {
+    "text": "That one long o. Well done!",
+    "_review": true
+  },
   "persona.osas.5": {
     "text": "No be word, but you try. Swipe again.",
     "_review": true
   },
-  "persona.osas.6": "Make I light lantern for you.",
-  "persona.osas.7": "Time dey run o. Five seconds!",
+  "persona.osas.6": {
+    "text": "Make I light lantern for you.",
+    "_review": true
+  },
+  "persona.osas.7": {
+    "text": "Time dey run o. Five seconds!",
+    "_review": true
+  },
   "persona.osas.8": {
     "text": "Three stars! Every letter dey him place.",
     "_review": true
@@ -224,6 +317,14 @@
   },
   "sw.banter.lose.2": {
     "text": "E near reach. Rest small, try another puzzle.",
+    "_review": true
+  },
+  "play.tight.title": {
+    "text": "E no too fit",
+    "_review": true
+  },
+  "play.tight.body": {
+    "text": "Dis grid small for wide screen, so letters go tiny. Turn your phone back, or continue.",
     "_review": true
   }
 }

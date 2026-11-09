@@ -147,7 +147,7 @@ describe('stars, score and coins', () => {
   });
   it('accuracy is words over swipes', () => {
     let s = make();
-    expect(accuracy(s)).toBe(1);
+    expect(accuracy(s)).toBe(0); // nothing swiped yet: no "100%" for a round with no swipes
     s = { ...select(s, ...ends(s, 0)).state, wrongs: 1 };
     expect(accuracy(s)).toBe(0.5);
   });

@@ -8,7 +8,7 @@
 | ayo-olopon | 1 | PASS (round 1, minors fixed) | game 108.8 KB / 3 MB; core 26.1 KB / 60 | exact Ayo rule variant and toggles (incl. `starver` end rule) need a Nigerian player; 71+ pcm `_review` lines; Yoruba/Hausa words; Efe/Malam Sani regional-mapping cultural review; Hard-vs-Hard 4.5% move-cap draws; music/voice/hero art placeholders; real-device test of Hard AI cost |
 | naija-whot | 1 | PASS (round 3) | game 115.6 KB / 3 MB; core 26.2 KB / 60 | rules sign-off: `calmLate` default ON (after turn 240 a 2/5/14 is a plain card), Lagos defaults, finishOnSpecial, marketAgain, stack cap; Hard-vs-Easy margin thin for cautious mirror (lower bound ~79%); 95 pcm `_review` lines; Igbo/Hausa/Yoruba words; music/voice/hero art placeholders; real-device test |
 | sabi-quiz | 2 | PASS (QA round 3; all gates green; release blocked until fact-check) | game 25.7 KB / 3 MB | fact-check of 300 questions (all reviewed:false, 58 tagged `uncertain`); pcm `_review` lines (62); Yoruba/Igbo/Hausa words; host (Etim) vs guide (Aisha); Daily device-local rule; core pcm labels 'Easy Easy'/'Hard Well Well' |
-| sabi-words | 2 | not started | | |
+| sabi-words | 2 | QA round 1 FAIL, fixes in progress (round 2 pending) | game 116 KB / 3 MB | pcm `_review` lines (all Pidgin); Yoruba/Igbo/Hausa/Edo diacritics on 25 display forms (tagged `uncertain`); AKATA and OYINBO blocklist decision; DASH and FLEX hints; coin economy values; reviewed:false words (release gated by `packs:release-check`); real-device test of 12x12 tiles; placeholder music, voice and art |
 | draughts-naija | 2 | not started | | |
 | penalty-king | 2 | not started | | |
 | danfo-dash | 3 | not started | | |

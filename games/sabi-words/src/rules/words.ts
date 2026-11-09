@@ -1,5 +1,5 @@
 import type { WordEntry, WordPack } from '@naija/core/content';
-import { containsBlocked, type Blocked } from './blocklist';
+import { unsafeWord, type Blocked } from './blocklist';
 import { reverse } from './grid';
 
 /** Letters of a pack word as the grid uses them: uppercase A-Z. */
@@ -23,7 +23,7 @@ export function eligibleWords(
   return pack.words.filter((e) => {
     const w = gridWord(e);
     if (!/^[A-Z]+$/.test(w) || w.length < minLen || w.length > maxLen) return false;
-    if (seen.has(w) || containsBlocked(w, blocked)) return false;
+    if (seen.has(w) || unsafeWord(w, blocked)) return false;
     seen.add(w);
     return true;
   });

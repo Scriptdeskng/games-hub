@@ -81,5 +81,7 @@
   "sw.banter.win.1": "Neat work! Every word is in its place.",
   "sw.banter.win.2": "Well done! My signboards are not this tidy.",
   "sw.banter.lose.1": "No wahala. Look again and the words will show.",
-  "sw.banter.lose.2": "Almost there. Take a breath and try another puzzle."
+  "sw.banter.lose.2": "Almost there. Take a breath and try another puzzle.",
+  "play.tight.title": "Tight fit",
+  "play.tight.body": "This grid is small on a wide screen, so the letters would be tiny. Rotate your phone back, or continue."
 }

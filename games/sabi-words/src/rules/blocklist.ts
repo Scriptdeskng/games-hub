@@ -30,7 +30,47 @@ export const MIN_BLOCKLIST: readonly string[] = [
   'TERRORIST',
   'KILLER',
   'MURDER',
+  // short vulgar strings (QA SW-01): the generator keeps every one of them out of the filler
+  'ASS',
+  'POO',
+  'HOE',
+  'TIT',
+  'TITS',
+  'SLAG',
+  'THOT',
+  'NIGG',
+  'KNOB',
+  'SHAG',
+  'BOOB',
+  'BUTT',
+  'HOMO',
+  'PIMP',
+  'TWAT',
+  'WANK',
+  'PRICK',
+  'JIZZ',
+  'PISS',
+  'CRAP',
+  'TURD',
+  'SEX',
+  'SEXY',
+  'PORN',
+  'FAG',
+  'FAGS',
+  'DYKE',
+  'SPIC',
+  'KIKE',
+  'GOOK',
+  'RAPE',
+  'YANSH',
 ];
+
+/**
+ * Blocked strings of this many letters or fewer may sit INSIDE a pack word (ASS in PASS, TIT in
+ * STITCH): pack words are reviewed by a human, and the generator refuses every occurrence that
+ * uses a filler letter. Longer ones may not: a word containing one is never picked.
+ */
+export const EMBED_MAX = 4;
 
 /** Uppercase A-Z only, 3 or more letters; anything else in a list is ignored. */
 export function normalizeBlocklist(list: readonly string[] | undefined): string[] {
@@ -58,6 +98,19 @@ export function mergeBlocklist(packList: readonly string[] | undefined): Blocked
   }
   const lengths = [...new Set([...all].map((w) => w.length))].sort((a, b) => a - b);
   return { all, lengths };
+}
+
+/**
+ * A pack word the grid must not use: it IS a blocked string, or it contains one longer than
+ * EMBED_MAX letters (forwards or backwards). Short blocked strings inside a word are allowed.
+ */
+export function unsafeWord(word: string, b: Blocked): boolean {
+  if (b.all.has(word)) return true;
+  for (const len of b.lengths) {
+    if (len <= EMBED_MAX) continue;
+    for (let i = 0; i + len <= word.length; i++) if (b.all.has(word.substr(i, len))) return true;
+  }
+  return false;
 }
 
 /** Does `text` contain a blocked string, forwards or backwards? */

@@ -10,6 +10,7 @@
     "ARSE",
     "ARSEHOLE",
     "ASHAWO",
+    "ASS",
     "ASSHOLE",
     "BADASS",
     "BALLS",
@@ -24,9 +25,11 @@
     "BOKOHARAM",
     "BOMB",
     "BOMBER",
+    "BOOB",
     "BOOBS",
     "BULLSHIT",
     "BUSHMAN",
+    "BUTT",
     "CASINO",
     "CHINK",
     "COCAINE",
@@ -36,6 +39,7 @@
     "CONDOM",
     "COON",
     "CORPSE",
+    "CRAP",
     "CUM",
     "CUNT",
     "DAMN",
@@ -47,6 +51,7 @@
     "ERECTION",
     "FAG",
     "FAGGOT",
+    "FAGS",
     "FATSO",
     "FRAUD",
     "FUCK",
@@ -59,6 +64,8 @@
     "GORE",
     "HEATHEN",
     "HEROIN",
+    "HOE",
+    "HOMO",
     "HOOKER",
     "HORNY",
     "IDIOT",
@@ -69,6 +76,7 @@
     "JACKASS",
     "JACKPOT",
     "JIHAD",
+    "JIZZ",
     "KAFFIR",
     "KAFIR",
     "KIDNAP",
@@ -77,6 +85,7 @@
     "KILL",
     "KILLER",
     "KILLING",
+    "KNOB",
     "LOSER",
     "LOTTO",
     "LUST",
@@ -94,6 +103,7 @@
     "MURDER",
     "NAKED",
     "NEGRO",
+    "NIGG",
     "NIGGA",
     "NIGGER",
     "NUDE",
@@ -105,11 +115,14 @@
     "PDP",
     "PEDO",
     "PENIS",
+    "PIMP",
     "PISS",
     "PISSED",
     "PISTOL",
+    "POO",
     "PORN",
     "PORNO",
+    "PRICK",
     "PROSTITUTE",
     "PUSSY",
     "RAPE",
@@ -123,8 +136,10 @@
     "SEX",
     "SEXUAL",
     "SEXY",
+    "SHAG",
     "SHIT",
     "SHITTY",
+    "SLAG",
     "SLAUGHTER",
     "SLUT",
     "SPASTIC",
@@ -137,12 +152,16 @@
     "TERROR",
     "TERRORIST",
     "TESTICLE",
+    "THOT",
+    "TIT",
+    "TITS",
     "TITTIES",
     "TITTY",
     "TORTURE",
     "TOTO",
     "TRAMADOL",
     "TRANNY",
+    "TURD",
     "TWAT",
     "UGLY",
     "VAGINA",
@@ -165,17 +184,20 @@
     {
       "word": "EGUSI",
       "hint": "Soup thickened with ground melon seeds",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Ẹ̀gúsí", "uncertain"]
     },
     {
       "word": "AMALA",
       "hint": "Dark yam-flour swallow, often served with a bean soup",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Àmàlà", "uncertain"]
     },
     {
       "word": "EBA",
       "hint": "Swallow made by stirring dried cassava flakes in hot water",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Èbà", "uncertain"]
     },
     {
       "word": "FUFU",
@@ -185,7 +207,8 @@
     {
       "word": "AKARA",
       "hint": "Fried bean cakes, a breakfast favourite",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Àkàrà", "uncertain"]
     },
     {
       "word": "MOIMOI",
@@ -213,23 +236,26 @@
     {
       "word": "OGBONO",
       "hint": "Draw soup made from ground wild mango seeds",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Ọ̀gbọ̀nọ̀", "uncertain"]
     },
     {
       "word": "EFORIRO",
       "hint": "Rich Yoruba vegetable soup cooked with peppers and locust beans",
-      "tags": ["display:Efo riro"],
+      "tags": ["display:Efọ riro", "uncertain"],
       "reviewed": false
     },
     {
       "word": "EWEDU",
       "hint": "Slippery green jute-leaf soup served with amala",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Ẹ̀wẹ́dú", "uncertain"]
     },
     {
       "word": "GBEGIRI",
       "hint": "Smooth, golden bean soup eaten with amala",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Gbẹ̀gìrì", "uncertain"]
     },
     {
       "word": "ABACHA",
@@ -328,7 +354,8 @@
     {
       "word": "DODO",
       "hint": "Sweet fried plantain slices",
-      "reviewed": false
+      "reviewed": false,
+      "tags": ["display:Dòdò", "uncertain"]
     },
     {
       "word": "BOLE",
@@ -363,13 +390,13 @@
     {
       "word": "ASARO",
       "hint": "Yam cooked down into a peppery palm-oil porridge",
-      "tags": ["display:Asaro", "uncertain"],
+      "tags": ["display:Àsáró", "uncertain"],
       "reviewed": false
     },
     {
       "word": "EKURU",
       "hint": "Soft, white steamed bean paste eaten with stew",
-      "tags": ["display:Ekuru", "uncertain"],
+      "tags": ["display:Ẹ̀kuru", "uncertain"],
       "reviewed": false
     },
     {
@@ -381,7 +408,7 @@
     {
       "word": "OHA",
       "hint": "Igbo soup made with ora leaves",
-      "tags": ["display:Oha soup", "uncertain"],
+      "tags": ["display:Ọha soup", "uncertain"],
       "reviewed": false
     },
     {
@@ -465,7 +492,7 @@
     {
       "word": "OGI",
       "hint": "Yoruba word for fermented corn porridge",
-      "tags": ["display:Ogi"],
+      "tags": ["display:Ògì", "uncertain"],
       "reviewed": false
     },
     {
@@ -542,7 +569,7 @@
     {
       "word": "AGBALUMO",
       "hint": "Orange star-apple fruit, sweet and tangy",
-      "tags": ["display:Agbalumo"],
+      "tags": ["display:Agbálùmọ̀", "uncertain"],
       "reviewed": false
     },
     {

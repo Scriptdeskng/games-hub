@@ -201,14 +201,30 @@ export function flowTests(): void {
     }) => {
       await openGame(page, SLUG);
       await startRound(page, 'Easy');
-      for (let k = 0; k < 2; k++) await press(page.locator('.sw-hint'));
-      await expect.poll(async () => (await round(page)).hintsUsed).toBe(2);
+      for (let k = 0; k < 2; k++) {
+        await press(page.locator('.sw-hint'));
+        await expect.poll(async () => (await round(page)).hintsUsed).toBe(k + 1);
+        await page.waitForTimeout(450); // past the 400 ms double-tap guard
+      }
       expect((await appState(page)).progress.coins).toBe(0);
       await expect(page.locator('.sw-hint')).toBeDisabled();
       // two words, two different lanterns in the engine (two words can share a first letter's tile)
       const hinted = (await round(page)).hinted;
       expect(new Set(hinted).size).toBe(2);
       expect(await page.locator('.sw-tile.is-hint').count()).toBeGreaterThanOrEqual(1);
+    });
+
+    test('a double tap on the hint spends once (400 ms guard)', async ({ page }) => {
+      await openGame(page, SLUG);
+      await startRound(page, 'Easy');
+      const coins = (await appState(page)).progress.coins;
+      // two clicks in one task: deterministic, no wall-clock race
+      await page.locator('.sw-hint').evaluate((el: HTMLElement) => {
+        el.click();
+        el.click();
+      });
+      await expect.poll(async () => (await round(page)).hintsUsed).toBe(1);
+      expect((await appState(page)).progress.coins).toBe(coins - 10);
     });
   });
 }

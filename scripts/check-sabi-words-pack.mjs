@@ -5,8 +5,8 @@
 //  - word: uppercase A-Z only, 3 to 12 letters (spaces, hyphens, apostrophes and diacritics stripped)
 //  - tag "display:<text>" (optional) carries the pretty form; its letters, uppercased, must START with `word` (qualifiers like "rice" or "Market" may follow)
 //  - every word has a plain-English hint (<= 90 chars) that does not contain the word itself
-//  - every pack has the SAME blocklist (A-Z, 3 to 20 letters), and NO word contains a blocklisted string,
-//    forwards or backwards (otherwise the puzzle could never be generated)
+//  - every pack has the SAME blocklist (A-Z, 3 to 20 letters); no word IS a blocklisted string or contains one of 5+
+//    letters, forwards or backwards. Shorter ones (3 to 4 letters) may sit inside a word: the generator guards them.
 //  - minimum word counts per pack, no duplicates, every word reviewed:false until a human flips it
 // Usage: node scripts/check-sabi-words-pack.mjs [--release] [--uncertain]
 //   --release    also FAILS while any word has reviewed:false (human fact and language review pending)
@@ -30,6 +30,8 @@ export const MIN_WORDS = {
   'cloth-markets': 50,
 };
 const FORM = /^[A-Z]{3,12}$/;
+export const EMBED_MAX = 4;
+const embedded = [];
 const rev = (s) => [...s].reverse().join('');
 let fail = 0;
 const ok = (c, m) => {
@@ -86,8 +88,17 @@ for (const f of files) {
       if (!letters.startsWith(W))
         bad.push(`${W}: display "${disp.slice(8)}" does not start with the word`);
     }
-    for (const b of block)
-      if (W.includes(b) || rev(W).includes(b)) bad.push(`${W}: contains blocklisted "${b}"`);
+    // a word may be a blocklisted string or contain one of 5+ letters: never. A SHORT blocked string (3 or 4 letters:
+    // ASS in PASS, TIT in STITCH, BUTT in BUTTON) may sit inside a reviewed pack word; the generator then refuses
+    // every occurrence of it that uses a filler letter (games/sabi-words/src/rules/generator.ts), so it can only ever
+    // appear inside the word itself. Those embedded cases are listed so the reviewer sees them.
+    for (const b of block) {
+      const hit = W.includes(b) || rev(W).includes(b);
+      if (!hit) continue;
+      if (b.length >= EMBED_MAX + 1 || W === b || W === rev(b))
+        bad.push(`${W}: contains blocklisted "${b}"`);
+      else embedded.push(`${id}: ${W} contains "${b}"`);
+    }
     if (w.reviewed !== false) bad.push(`${W}: reviewed must be false until a human flips it`);
     else unreviewed++;
     if ((w.tags ?? []).includes('uncertain')) uncertain.push(`${id}: ${W}`);
@@ -97,6 +108,10 @@ for (const f of files) {
     `${id}: ${p.words.length} words, ${block.length} blocklisted${bad.length ? '\n  - ' + bad.slice(0, 20).join('\n  - ') : ''}`,
   );
 }
+console.log(
+  `short blocked strings embedded in pack words (allowed, generator-guarded): ${embedded.length}`,
+);
+if (LIST_U) console.log(embedded.join('\n'));
 console.log(`words with reviewed:false: ${unreviewed}; tagged uncertain: ${uncertain.length}`);
 if (LIST_U) console.log(uncertain.join('\n'));
 if (RELEASE && unreviewed > 0) {

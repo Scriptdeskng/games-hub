@@ -20,10 +20,10 @@ describe('Sabi Words copy', () => {
       }
     }
   });
-  it('persona.osas.1 to 8 are all there, and the lines the brief marks uncertain are flagged', () => {
+  it('persona.osas.1 to 8 are all there, and every Pidgin line is flagged', () => {
     for (let n = 1; n <= 8; n++) expect(E[`persona.osas.${n}`], `osas ${n}`).toBeDefined();
-    for (const n of [1, 2, 3, 5, 8]) expect(review(P[`persona.osas.${n}`]), `pcm ${n}`).toBe(true);
-    for (const n of [4, 6, 7]) expect(review(P[`persona.osas.${n}`]), `pcm ${n}`).toBe(false);
+    // QA SW-12: every Pidgin line is flagged for a native speaker
+    for (let n = 1; n <= 8; n++) expect(review(P[`persona.osas.${n}`]), `pcm ${n}`).toBe(true);
     expect(text(E['persona.osas.1'])).toContain('Kóyo');
   });
   it('every pack has a name and a description in both languages', () => {

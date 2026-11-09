@@ -33,7 +33,3 @@ export function findWord(letters: string, n: number, word: string): Occurrence[]
   }
   return out;
 }
-
-/** Occurrences of every word: `result[i]` belongs to `words[i]`. */
-export const solveAll = (letters: string, n: number, words: readonly string[]): Occurrence[][] =>
-  words.map((w) => findWord(letters, n, w));

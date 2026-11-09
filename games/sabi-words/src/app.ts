@@ -15,7 +15,7 @@ import {
   elapsedMs,
   finishDaily,
   fitGrid,
-  generatePuzzle,
+  generateWithFallback,
   recordRound,
   score,
   spendCoins,
@@ -40,6 +40,7 @@ import { mountSprite } from './view/dom';
 import { viewportBox } from './view/layout';
 import { createHowToScreen, createMenuScreen, createPacksScreen } from './view/menu';
 import { createPlay, type Play } from './view/play';
+import { createResultCues } from './view/resultcues';
 import { clock, createPackError, createResultsScreen, createStatsScreen } from './view/screens';
 
 export type { AutoplayOptions, TestApi };
@@ -70,6 +71,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
   let waiters: ((s: GameState) => void)[] = [];
   let ctx = { practice: false, mode: 'classic' as Mode };
   const auto = newAutoStats();
+  const cues = createResultCues(core);
   /** packs fetched so far; owned by this app instance, gone with it */
   const packs = new Map<string, WordPack>();
   const tasks = new Map<string, Promise<WordPack | null>>();
@@ -80,6 +82,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
   };
   const show = (id: string, c: Component, again: (() => void) | null): void => {
     rerender = again;
+    cues.stop();
     host.show(id, c);
   };
   core.scope.add(core.i18n.onChange(() => rerender?.()));
@@ -161,11 +164,8 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     // the Daily is the same grid for everybody, so it never steps down for a small screen
     const box = viewportBox(PROFILES[d].words);
     const size = mode === 'daily' ? PROFILES.medium.size : fitGrid(d, box.w, box.h).size;
-    for (let k = 0; k < 6; k++) {
-      const r = generatePuzzle({ pack, difficulty: d, seed: seed + k, size });
-      if (r.ok) return r.puzzle;
-    }
-    return null;
+    const r = generateWithFallback({ pack, difficulty: d, seed, size });
+    return r.ok ? r.puzzle : null;
   }
 
   /** Get the pack (with a retry screen on failure), build a puzzle, start a round. */
@@ -321,6 +321,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
       );
     };
     render();
+    if (!practice) cues.play({ stars: win ? st : 0, coins });
   }
 
   // Test-only: `__NAIJA_TEST__` is false in production builds, so this whole function (and the
@@ -381,6 +382,7 @@ export function createApp(core: Core, initial: Progress, initialDaily: DailyReco
     showMenu,
     destroy() {
       abandonRound();
+      cues.stop();
       host.destroy();
       unmountSprite();
       rerender = null;
