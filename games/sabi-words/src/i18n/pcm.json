@@ -72,8 +72,14 @@
     "text": "My scores",
     "_review": true
   },
-  "menu.howto": "How to play",
-  "menu.coins": "Coins: {n}",
+  "menu.howto": {
+    "text": "How to play",
+    "_review": true
+  },
+  "menu.coins": {
+    "text": "Coins: {n}",
+    "_review": true
+  },
   "pack.naija-food.name": {
     "text": "Naija Food",
     "_review": true
@@ -324,7 +330,7 @@
     "_review": true
   },
   "play.tight.body": {
-    "text": "Dis grid small for wide screen, so letters go tiny. Turn your phone back, or continue.",
+    "text": "Dis grid need bigger screen make e readable. Turn your phone back or make window big: di round go continue by imself, nothing go loss.",
     "_review": true
   }
 }

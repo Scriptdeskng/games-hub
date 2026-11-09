@@ -207,9 +207,29 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     board.lock(true);
     hud.freeze(true);
   }
+  /** can the grid get cells of at least 26 px in the window as it is right now? */
+  const fits = (): boolean => {
+    const box = viewportBox(o.puzzle.words.length);
+    return fitsBox(n, box.w, box.h);
+  };
+  /**
+   * The round never runs with cells under 26 px. The notice has only Quit (no "continue anyway"):
+   * rotate the phone back or enlarge the window and it closes itself and the clock carries on.
+   */
+  function showTight(): void {
+    freeze('tight');
+    modal = createModal(core, {
+      title: t('play.tight.title'),
+      body: t('play.tight.body'),
+      mount: core.root,
+      actions: [{ label: t('ui.quit'), onClick: o.onQuit }],
+    });
+  }
   function thaw(): void {
     modal = null;
     modalKind = null;
+    // every road back to running (Resume, Escape, the notice closing) comes through here: re-check
+    if (!over && !fits()) return showTight();
     hud.freeze(false);
     board.lock(false);
     if (!over) loop.resume();
@@ -237,26 +257,16 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       hint: hintAction,
     });
   });
-  // Rotating mid-round keeps the puzzle and every found word. The cell is re-fitted; if this grid
-  // can no longer get cells of 26 px (a 12x12 on a short landscape phone) the round pauses with a
-  // notice, and carries on by itself when the screen is rotated back.
+  // Rotating mid-round keeps the puzzle and every found word. The cell is re-fitted; while the
+  // grid cannot get 26 px cells (a 12x12 on a short landscape phone) the round stays paused behind
+  // the notice, whether it was running or already paused, and carries on by itself when it fits.
   scope.on(window, 'resize', () => {
     const box = viewportBox(o.puzzle.words.length);
     board.setCell(cellFor(n, box.w, box.h));
-    const tight = !fitsBox(n, box.w, box.h);
-    if (tight && !modal && !over) {
-      freeze('tight');
-      modal = createModal(core, {
-        title: t('play.tight.title'),
-        body: t('play.tight.body'),
-        mount: core.root,
-        actions: [
-          { label: t('ui.resume'), onClick: thaw },
-          { label: t('ui.quit'), variant: 'ghost', onClick: o.onQuit },
-        ],
-        onDismiss: thaw,
-      });
-    } else if (!tight && modalKind === 'tight') {
+    if (over) return;
+    const ok = fitsBox(n, box.w, box.h);
+    if (!ok && !modal) showTight();
+    else if (ok && modalKind === 'tight') {
       modal?.close();
       thaw();
     }
@@ -328,6 +338,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
       core.audio.playSfx('gridIn');
       core.audio.playMusic(playMusic);
       loop.start();
+      if (!fits()) showTight(); // e.g. a Daily on a very small window: wait for room
     },
     destroy() {
       modal?.close();

@@ -1,69 +1,15 @@
 import { allLines, reverse } from './grid';
+import minList from './min-blocklist.json';
 
 /**
- * Built-in minimum blocklist, merged with the pack's own `blocklist`. Uppercase A-Z, long enough
- * that a real pack word never contains one (a test proves it for every shipped pack). The packs
- * carry the full 149-entry list; this is the floor that holds even for a pack with no list.
+ * Built-in minimum blocklist (`min-blocklist.json`, the same 291 strings as every pack's own
+ * `blocklist`; the pack checker keeps them in step), merged with the pack's list. Uppercase A-Z.
+ * Over-blocking is harmless: a blocked string that uses a filler letter only makes the generator
+ * redraw that letter. It covers vulgar, sexual, slur, drug, gambling and violence terms in English
+ * and Pidgin. Contested entries (GAY, ORAL, BET, GUN, COKE, DRUG, HEMP, AKATA, OLODO, SHEGE,
+ * OYINBO) are filler-avoid only: humans decide whether any should be hard-blocked as pack words.
  */
-export const MIN_BLOCKLIST: readonly string[] = [
-  'FUCK',
-  'FUCKER',
-  'SHIT',
-  'BITCH',
-  'CUNT',
-  'PENIS',
-  'VAGINA',
-  'NIGGER',
-  'NIGGA',
-  'WHORE',
-  'SLUT',
-  'PUSSY',
-  'RAPIST',
-  'PEDO',
-  'FAGGOT',
-  'RETARD',
-  'DILDO',
-  'NAZI',
-  'HITLER',
-  'BOKOHARAM',
-  'ENDSARS',
-  'TERRORIST',
-  'KILLER',
-  'MURDER',
-  // short vulgar strings (QA SW-01): the generator keeps every one of them out of the filler
-  'ASS',
-  'POO',
-  'HOE',
-  'TIT',
-  'TITS',
-  'SLAG',
-  'THOT',
-  'NIGG',
-  'KNOB',
-  'SHAG',
-  'BOOB',
-  'BUTT',
-  'HOMO',
-  'PIMP',
-  'TWAT',
-  'WANK',
-  'PRICK',
-  'JIZZ',
-  'PISS',
-  'CRAP',
-  'TURD',
-  'SEX',
-  'SEXY',
-  'PORN',
-  'FAG',
-  'FAGS',
-  'DYKE',
-  'SPIC',
-  'KIKE',
-  'GOOK',
-  'RAPE',
-  'YANSH',
-];
+export const MIN_BLOCKLIST: readonly string[] = minList;
 
 /**
  * Blocked strings of this many letters or fewer may sit INSIDE a pack word (ASS in PASS, TIT in

@@ -30,6 +30,19 @@ export const MIN_WORDS = {
   'cloth-markets': 50,
 };
 const FORM = /^[A-Z]{3,12}$/;
+// the game's built-in floor (src/rules/min-blocklist.json): every pack carries the same list, and the
+// generator merges both, so a word holding a 5+ letter entry of either would be dropped at run time
+const MIN_LIST = JSON.parse(
+  readFileSync(join(ROOT, 'games', 'sabi-words', 'src', 'rules', 'min-blocklist.json'), 'utf8'),
+);
+// Hooked Hausa letters have no Unicode decomposition: map them to their base letter by name, so a display
+// form like "Ɗanwake" is compared to the plain word DANWAKE. Everything else must decompose to A-Z.
+const HOOKED = { Ɗ: 'D', ɗ: 'd', Ɓ: 'B', ɓ: 'b', Ƙ: 'K', ƙ: 'k', Ƴ: 'Y', ƴ: 'y' };
+export const plainForm = (text) =>
+  text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '') // tone marks and underdots (combining marks)
+    .replace(/[ƊɗƁɓƘƙƳƴ]/g, (c) => HOOKED[c]);
 export const EMBED_MAX = 4;
 const embedded = [];
 const rev = (s) => [...s].reverse().join('');
@@ -57,6 +70,8 @@ for (const f of files) {
   if (block.length < 100) bad.push(`blocklist has ${block.length} entries, need >= 100`);
   if (block.some((b) => !/^[A-Z]{3,20}$/.test(b)))
     bad.push('blocklist entries must be A-Z, 3 to 20');
+  if (JSON.stringify(block) !== JSON.stringify(MIN_LIST))
+    bad.push('blocklist differs from src/rules/min-blocklist.json (they must be identical)');
   if (firstBlock === null) firstBlock = JSON.stringify(block);
   else if (JSON.stringify(block) !== firstBlock) bad.push('blocklist differs from the other packs');
   const seen = new Set();
@@ -79,20 +94,19 @@ for (const f of files) {
       bad.push(`${W}: hint contains the word`);
     const disp = (w.tags ?? []).find((t) => t.startsWith('display:'));
     if (disp) {
-      const letters = disp
-        .slice(8)
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .toUpperCase()
-        .replace(/[^A-Z]/g, '');
-      if (!letters.startsWith(W))
+      const shown = plainForm(disp.slice(8));
+      const bare = shown.replace(/[ '’-]/g, '');
+      const odd = bare.match(/[^A-Za-z]/);
+      if (odd)
+        bad.push(`${W}: display "${disp.slice(8)}" has an unsupported character "${odd[0]}"`);
+      else if (!bare.toUpperCase().startsWith(W))
         bad.push(`${W}: display "${disp.slice(8)}" does not start with the word`);
     }
     // a word may be a blocklisted string or contain one of 5+ letters: never. A SHORT blocked string (3 or 4 letters:
     // ASS in PASS, TIT in STITCH, BUTT in BUTTON) may sit inside a reviewed pack word; the generator then refuses
     // every occurrence of it that uses a filler letter (games/sabi-words/src/rules/generator.ts), so it can only ever
     // appear inside the word itself. Those embedded cases are listed so the reviewer sees them.
-    for (const b of block) {
+    for (const b of new Set([...block, ...MIN_LIST])) {
       const hit = W.includes(b) || rev(W).includes(b);
       if (!hit) continue;
       if (b.length >= EMBED_MAX + 1 || W === b || W === rev(b))

@@ -78,9 +78,10 @@ handled, never a console error.
 
 ## Blocklist: how short strings are handled
 
-Every pack carries the same 168-entry `blocklist` (merged with `MIN_BLOCKLIST` in
-`src/rules/blocklist.ts`, same short strings in both: ASS, POO, HOE, TIT, TITS, SLAG, THOT, NIGG,
-KNOB, SHAG, BOOB, BUTT, HOMO, PIMP, SEX, PORN and more). The generator scans every row, column and
+Every pack carries the same 291-entry `blocklist`, identical to `src/rules/min-blocklist.json` (the
+built-in floor, `MIN_BLOCKLIST`); the pack checker enforces that. It was widened in QA round 2 to a
+systematic sweep of vulgar, sexual, slur, drug, gambling and violence terms in English and Pidgin
+(ANAL, CLIT, MILF, JEW, WOP, DAGO, GYP, SLOT, DICE, ODDS, WAGER, POKER, DRUG, WEED, KILL, ...). The generator scans every row, column and
 diagonal, both directions, and **redraws filler** for any blocked occurrence that uses at least one
 filler cell. An occurrence made only of placed letters is allowed only inside ONE accepted pack word
 (ASS in PASS or BRASS, TIT in STITCH); where two placed words cross to spell one, the attempt is
@@ -89,25 +90,34 @@ thrown away. A pack word that IS a blocked string, or holds one of 5+ letters, i
 STITCH, SUBSTITUTE, PASS, ASSIST, CASSAVA). A regression test builds 200 seeds x 6 packs x 3 sizes
 and asserts a fixed list of vulgar strings never occurs outside a placed word.
 
-**Open decision (cultural reviewers): AKATA and OYINBO** are not blocked. Some readers find them
-derogatory; others use them neutrally. Add them to every pack's `blocklist` (and `MIN_BLOCKLIST`)
-if the reviewers decide so: the generator needs no change.
+**Filler-avoid only (humans decide):** GAY, ORAL, BET, GUN, COKE, DRUG, HEMP, AKATA, OLODO, SHEGE and
+OYINBO (and OYIBO) are in the list so they never appear through a filler letter. Because the rule
+only acts on filler, over-blocking is harmless (one letter is redrawn). They are NOT hard-blocked as
+pack words: reviewers decide whether any should also be refused as a pack word (add it, 5+ letters,
+or an exact entry, to the pack checker's hard rule). Shipped words that embed one of the short
+entries are listed by `node scripts/check-sabi-words-pack.mjs --uncertain` (BALOGUN, OGUN, ENUGU,
+OGBETE for GUN and BET; KEEPER for PEE; TRAFFIC for FART; JAPA for JAP; OSUN for OSU; PASS, BRASS,
+ASSIST, CASSAVA, STITCH, SUBSTITUTE). No shipped word IS an entry.
 
 ## Display forms and diacritics (native review)
 
-`word` stays A-Z; the `display:` tag carries the marks. Added in QA round 1 and tagged `uncertain`:
+`word` stays A-Z; the `display:` tag carries the marks. Added in QA rounds 1 and 2, all tagged `uncertain`:
 Egusi (Ẹ̀gúsí), Amala (Àmàlà), Eba (Èbà), Akara (Àkàrà), Ogbono (Ọ̀gbọ̀nọ̀), Efọ riro, Ewedu (Ẹ̀wẹ́dú),
 Gbegiri (Gbẹ̀gìrì), Dodo (Dòdò), Asaro (Àsáró), Ekuru (Ẹ̀kuru), Ọha soup, Ogi (Ògì), Agbalumo
-(Agbálùmọ̀), Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
-hints for DASH and FLEX were reworded (neutral gloss; native review). Not done: Hausa hooked letters
-(Ɗanwake, Ƙ...) because the pack checker needs the display form to start with the plain word;
-English place-name spellings (Ojuelegba, Idumota) stay as is (policy call).
+(Agbálùmọ̀), Àkàmù, Àgídí, Àdàlù, Tátáshé, Pọ̀nmọ̀, Ọkpa, Ófádà rice, Ɗanwake (Hausa), Ọmọ, Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
+hints for DASH and FLEX were reworded (neutral gloss; native review). Left plain on purpose: Garri, Rodo and Nkwobi (no confident form: Gàrí/Gàrrí would not start with the
+word GARRI), and the English place-name spellings (Ojuelegba, Idumota; policy call). The pack checker
+now folds Hausa hooked letters (Ɗ Ɓ Ƙ Ƴ) to their base letter and tone marks/underdots via NFD, then
+requires the display form to start with the word, and rejects any other non-letter character.
 
 ## Rotation and the console
 
 Rotating mid-round keeps the puzzle, found words, hints and the clock. The cell is re-fitted; if the
-current grid can no longer get 26 px cells (12x12 on a short landscape phone) the round pauses with a
-"Tight fit" notice (Continue, or rotate back and it resumes by itself). The floor is 16 px.
+current grid can no longer get 26 px cells (12x12 on a short landscape phone) the round pauses behind a
+"Tight fit" notice with only Quit. It never runs below 26 px, whether it was running or already paused:
+every road back to play (Resume included) re-checks the fit, and rotating back (or enlarging the
+window) closes the notice and the clock carries on by itself. The cell floor is 16 px, used only
+while the notice is up.
 A pack file that is missing makes the **browser** print its own "Failed to load resource: 404" line:
 a check-before-fetch would log the same line, so the game adds nothing and the e2e spec filters only
 that browser text.

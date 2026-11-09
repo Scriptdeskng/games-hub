@@ -15,11 +15,14 @@ import { findWord } from './solver';
 
 const packs = PACKS_ON_DISK;
 /** A fixed list of vulgar strings, independent of any shipped blocklist (QA SW-01). */
-const NASTY = mergeBlocklist([
-  ...'ASS POO HOE TIT TITS SLAG THOT NIGG KNOB SHAG BOOB BUTT HOMO PIMP TWAT WANK PRICK JIZZ PISS CRAP TURD SEX SEXY PORN FAG FAGS DYKE SPIC KIKE GOOK RAPE YANSH FUCK SHIT CUNT DICK COCK BITCH SLUT WHORE PENIS ARSE'.split(
-    ' ',
-  ),
-]);
+const NASTY = mergeBlocklist(
+  `ASS POO HOE TIT TITS SLAG THOT NIGG KNOB SHAG BOOB BUTT HOMO PIMP TWAT WANK PRICK JIZZ PISS CRAP TURD
+  SEX SEXY PORN FAG FAGS DYKE SPIC KIKE GOOK RAPE YANSH FUCK SHIT CUNT DICK COCK BITCH SLUT WHORE PENIS ARSE
+  ANAL JEW WOP GYP DAGO CLIT MILF SEMEN BOOTY ORAL GAY BET SLOT DICE ODDS STAKE WAGER POKER GUN COKE DRUG
+  HEMP AKATA OLODO SHEGE OYINBO OYIBO NEGRO SAMBO WETBACK HONKY JAP SPAZ LESBO TRANNY INCEST ORGY ORGASM
+  WEED DOPE METH HEROIN OPIUM CANNABIS JACKPOT ROULETTE BOOKIE PUNTER GAMBLE LOTTERY GUNS KILL GORE STAB
+  NYASH MUMU OLOSHO IDIOT MORON STUPID VOMIT POOP FART`.split(/\s+/),
+);
 
 describe('generator over every shipped pack', () => {
   it('has six packs that validate', () => {
@@ -227,12 +230,27 @@ describe('short blocked strings and pack words (QA SW-01)', () => {
     expect(unsafeWord('XLAGOSXY', b)).toBe(true);
     expect(unsafeWord('YXSOGAL', b)).toBe(true);
   });
-  it('two placed words crossing so that they spell a blocked string is rejected, not shipped', () => {
-    for (let seed = 1; seed <= 100; seed++) {
-      const r = generatePuzzle({ pack: toyPack(words), difficulty: 'easy', seed });
-      if (!r.ok) continue;
-      expect(blockedOutsideWords(r.puzzle, mergeBlocklist(undefined))).toEqual([]);
+  it('two placed words that meet so that together they spell a blocked string never ship (constructed pack)', () => {
+    // blocklist QZX; the words AQZ and XBC placed end to end in one line would spell QZX with letters
+    // that are all "placed": redrawing filler cannot fix that, so the generator must discard the attempt
+    const six = ['AQZ', 'XBC', 'MNO', 'PDE', 'FGH', 'IJL'];
+    const block = mergeBlocklist(['QZX']);
+    let retried = 0;
+    for (let seed = 1; seed <= 600; seed++) {
+      const r = generatePuzzle({ pack: toyPack(six, ['QZX']), difficulty: 'easy', seed, size: 6 });
+      if (!r.ok) throw new Error('gen');
+      if (r.attempts > 1) retried++;
+      expect(r.puzzle.words.map((w) => w.word).sort(), `seed ${seed}`).toEqual([...six].sort());
+      expect(blockedOutsideWords(r.puzzle, block), `seed ${seed}`).toEqual([]);
     }
+    expect(retried).toBeGreaterThan(0); // the meeting did happen: those attempts were thrown away
+  });
+  it('the contested strings are in the built-in list as filler-avoid entries', () => {
+    const all = mergeBlocklist(undefined).all;
+    for (const w of 'GAY ORAL BET GUN COKE DRUG HEMP AKATA OLODO SHEGE OYINBO ANAL JEW WOP GYP DAGO CLIT MILF SEMEN BOOTY SLOT DICE ODDS STAKE WAGER POKER'.split(
+      ' ',
+    ))
+      expect(all.has(w), w).toBe(true);
   });
 });
 

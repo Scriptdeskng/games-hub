@@ -172,58 +172,87 @@ export function layoutTests(): void {
       }
     });
 
-    test('rotating mid-round keeps the puzzle and every found word; a grid that no longer fits pauses with a notice', async ({
+    const cellOf = (page: import('@playwright/test').Page): Promise<number> =>
+      page
+        .locator('.sw-tile')
+        .first()
+        .evaluate((e) => e.getBoundingClientRect().width + 4);
+    const PORTRAIT = { width: 375, height: 812 };
+    const LANDSCAPE = { width: 812, height: 375 };
+
+    test('rotating a running Hard round: it pauses behind a notice with only Quit, keeps everything, and resumes by itself when it fits again', async ({
       page,
     }) => {
       test.setTimeout(120_000);
-      await page.setViewportSize({ width: 375, height: 812 });
+      await page.setViewportSize(PORTRAIT);
       await openGame(page, SLUG);
       const r0 = await startRound(page, 'Hard');
       expect(r0.puzzle.size).toBe(12);
       await swipeWord(page, 0);
       const coins = (await appState(page)).progress.coins;
-      const cellOf = (): Promise<number> =>
-        page
-          .locator('.sw-tile')
-          .first()
-          .evaluate((e) => e.getBoundingClientRect().width + 4);
-      expect(await cellOf()).toBeGreaterThanOrEqual(26);
+      expect(await cellOf(page)).toBeGreaterThanOrEqual(26);
 
-      // portrait to a short landscape phone: 12x12 cannot get 26 px cells, so the round pauses
-      await page.setViewportSize({ width: 812, height: 375 });
-      await expect(page.getByRole('dialog')).toBeVisible();
-      await expect(page.getByRole('dialog')).toContainText('Tight fit');
+      await page.setViewportSize(LANDSCAPE);
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toContainText('Tight fit');
+      // no way to play on at a tiny grid: the only button is Quit
+      await expect(dialog.getByRole('button')).toHaveCount(1);
+      await expect(dialog.getByRole('button', { name: 'Quit' })).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(dialog).toBeVisible();
       const frozen = (await round(page)).timeLeftMs;
       await page.waitForTimeout(400);
       const held = await round(page);
       expect(held.timeLeftMs).toBe(frozen);
-      // nothing regenerated, nothing lost
       expect(held.puzzle.letters).toBe(r0.puzzle.letters);
       expect(held.puzzle.size).toBe(12);
       expect(held.found).toHaveLength(1);
       await expect(page.locator('.sw-tile')).toHaveCount(144);
-      await expect(page.locator('.sw-tile.is-found').first()).toBeVisible();
       expect((await appState(page)).progress.coins).toBe(coins);
 
-      // Continue plays on at the best fit
-      await press(page.getByRole('button', { name: 'Resume' }));
-      await expect(page.getByRole('dialog')).toHaveCount(0);
+      // rotating back closes the notice and the clock carries on, at a comfortable size
+      await page.setViewportSize(PORTRAIT);
+      await expect(dialog).toHaveCount(0);
       await expect.poll(async () => (await round(page)).timeLeftMs).toBeLessThan(frozen);
-      expect(await cellOf()).toBeGreaterThanOrEqual(16);
-
-      // rotating back restores a comfortable grid and the round carries on without a dialog
-      await page.setViewportSize({ width: 375, height: 812 });
-      await expect(page.getByRole('dialog')).toHaveCount(0);
-      await expect.poll(cellOf).toBeGreaterThanOrEqual(26);
+      await expect.poll(() => cellOf(page)).toBeGreaterThanOrEqual(26);
       expect((await round(page)).found).toHaveLength(1);
+    });
 
-      // rotate again, then back while the notice is open: it closes itself and the clock resumes
-      await page.setViewportSize({ width: 812, height: 375 });
-      await expect(page.getByRole('dialog')).toBeVisible();
-      await page.setViewportSize({ width: 375, height: 812 });
-      await expect(page.getByRole('dialog')).toHaveCount(0);
-      const t1 = (await round(page)).timeLeftMs;
-      await expect.poll(async () => (await round(page)).timeLeftMs).toBeLessThan(t1);
+    test('pause, rotate, Resume: the round does not run on a tiny grid; the notice appears and clears when it fits', async ({
+      page,
+    }) => {
+      test.setTimeout(120_000);
+      await page.setViewportSize(PORTRAIT);
+      await openGame(page, SLUG);
+      await startRound(page, 'Hard');
+      await press(page.getByRole('button', { name: 'Pause' }));
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText('Game paused');
+      const frozen = (await round(page)).timeLeftMs;
+
+      await page.setViewportSize(LANDSCAPE);
+      await expect(dialog).toContainText('Game paused'); // the pause dialog stays
+      await press(page.getByRole('button', { name: 'Resume' }));
+      // not running: the Tight-fit notice took over, the clock is still frozen
+      await expect(dialog).toContainText('Tight fit');
+      await expect(dialog.getByRole('button')).toHaveCount(1);
+      await page.waitForTimeout(400);
+      expect((await round(page)).timeLeftMs).toBe(frozen);
+
+      await page.setViewportSize(PORTRAIT);
+      await expect(dialog).toHaveCount(0);
+      await expect.poll(async () => (await round(page)).timeLeftMs).toBeLessThan(frozen);
+      await expect.poll(() => cellOf(page)).toBeGreaterThanOrEqual(26);
+
+      // pause, rotate and rotate back before Resume: Resume simply resumes
+      await press(page.getByRole('button', { name: 'Pause' }));
+      const f2 = (await round(page)).timeLeftMs;
+      await page.setViewportSize(LANDSCAPE);
+      await page.setViewportSize(PORTRAIT);
+      await press(page.getByRole('button', { name: 'Resume' }));
+      await expect(dialog).toHaveCount(0);
+      await expect.poll(async () => (await round(page)).timeLeftMs).toBeLessThan(f2);
     });
 
     test('a Medium round rotates without a notice (10x10 still gets 26 px cells)', async ({
