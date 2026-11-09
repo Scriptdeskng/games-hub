@@ -17,7 +17,7 @@
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
     "i18n:check": "node scripts/i18n-check.mjs",
-    "packs:check": "node scripts/pack-check.mjs",
+    "packs:check": "node scripts/pack-check.mjs && node scripts/check-sabi-words-pack.mjs",
     "packs:release-check": "node scripts/pack-check.mjs --release",
     "test": "vitest run",
     "build": "node scripts/build-all.mjs",
