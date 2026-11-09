@@ -164,9 +164,7 @@
     {
       "word": "ASOOKE",
       "hint": "Hand-woven Yoruba cloth made in narrow strips",
-      "tags": [
-        "display:Aso-oke"
-      ],
+      "tags": ["display:Aso-oke"],
       "reviewed": false
     },
     {
@@ -212,9 +210,7 @@
     {
       "word": "ASOEBI",
       "hint": "Matching cloth chosen by friends or family for a party",
-      "tags": [
-        "display:Aso ebi"
-      ],
+      "tags": ["display:Aso ebi"],
       "reviewed": false
     },
     {
@@ -235,9 +231,7 @@
     {
       "word": "DYEPIT",
       "hint": "Deep pit where cloth turns blue",
-      "tags": [
-        "display:Dye pit"
-      ],
+      "tags": ["display:Dye pit"],
       "reviewed": false
     },
     {
@@ -313,44 +307,31 @@
     {
       "word": "BALOGUN",
       "hint": "Giant market district on Lagos Island",
-      "tags": [
-        "display:Balogun Market"
-      ],
+      "tags": ["display:Balogun Market"],
       "reviewed": false
     },
     {
       "word": "KURMI",
       "hint": "Old and famous market in Kano",
-      "tags": [
-        "display:Kurmi Market",
-        "uncertain"
-      ],
+      "tags": ["display:Kurmi Market", "uncertain"],
       "reviewed": false
     },
     {
       "word": "WUSE",
       "hint": "Large market district in Abuja",
-      "tags": [
-        "display:Wuse Market"
-      ],
+      "tags": ["display:Wuse Market"],
       "reviewed": false
     },
     {
       "word": "OGBETE",
       "hint": "Busy open market in Enugu",
-      "tags": [
-        "display:Ogbete Market",
-        "uncertain"
-      ],
+      "tags": ["display:Ogbete Market", "uncertain"],
       "reviewed": false
     },
     {
       "word": "ARIARIA",
       "hint": "Big market in Aba known for leather and clothes",
-      "tags": [
-        "display:Ariaria Market",
-        "uncertain"
-      ],
+      "tags": ["display:Ariaria Market", "uncertain"],
       "reviewed": false
     },
     {
@@ -421,9 +402,7 @@
     {
       "word": "HEADTIE",
       "hint": "Cloth wrapped around the head",
-      "tags": [
-        "display:Head tie"
-      ],
+      "tags": ["display:Head tie"],
       "reviewed": false
     },
     {

@@ -189,9 +189,7 @@
     {
       "word": "FREEKICK",
       "hint": "Kick awarded after a foul, taken where it happened",
-      "tags": [
-        "display:Free kick"
-      ],
+      "tags": ["display:Free kick"],
       "reviewed": false
     },
     {
@@ -212,9 +210,7 @@
     {
       "word": "GOALKEEPER",
       "hint": "Last line of defence between the posts",
-      "tags": [
-        "display:Goalkeeper"
-      ],
+      "tags": ["display:Goalkeeper"],
       "reviewed": false
     },
     {
@@ -260,9 +256,7 @@
     {
       "word": "GOALPOST",
       "hint": "Upright of the goal frame",
-      "tags": [
-        "display:Goalpost"
-      ],
+      "tags": ["display:Goalpost"],
       "reviewed": false
     },
     {
@@ -283,17 +277,13 @@
     {
       "word": "YELLOWCARD",
       "hint": "Warning shown by the referee",
-      "tags": [
-        "display:Yellow card"
-      ],
+      "tags": ["display:Yellow card"],
       "reviewed": false
     },
     {
       "word": "REDCARD",
       "hint": "Sending-off card",
-      "tags": [
-        "display:Red card"
-      ],
+      "tags": ["display:Red card"],
       "reviewed": false
     },
     {
@@ -304,33 +294,25 @@
     {
       "word": "HALFTIME",
       "hint": "Break between the two halves",
-      "tags": [
-        "display:Half time"
-      ],
+      "tags": ["display:Half time"],
       "reviewed": false
     },
     {
       "word": "FULLTIME",
       "hint": "The final whistle",
-      "tags": [
-        "display:Full time"
-      ],
+      "tags": ["display:Full time"],
       "reviewed": false
     },
     {
       "word": "KICKOFF",
       "hint": "The kick that starts each half",
-      "tags": [
-        "display:Kick-off"
-      ],
+      "tags": ["display:Kick-off"],
       "reviewed": false
     },
     {
       "word": "THROWIN",
       "hint": "Two-handed throw to restart play from the side",
-      "tags": [
-        "display:Throw-in"
-      ],
+      "tags": ["display:Throw-in"],
       "reviewed": false
     },
     {
@@ -356,33 +338,25 @@
     {
       "word": "HATTRICK",
       "hint": "Three goals by one player in a game",
-      "tags": [
-        "display:Hat-trick"
-      ],
+      "tags": ["display:Hat-trick"],
       "reviewed": false
     },
     {
       "word": "CLEANSHEET",
       "hint": "A match where the goalkeeper lets nothing in",
-      "tags": [
-        "display:Clean sheet"
-      ],
+      "tags": ["display:Clean sheet"],
       "reviewed": false
     },
     {
       "word": "EXTRATIME",
       "hint": "Extra thirty minutes in a knockout match",
-      "tags": [
-        "display:Extra time"
-      ],
+      "tags": ["display:Extra time"],
       "reviewed": false
     },
     {
       "word": "SHOOTOUT",
       "hint": "Penalty kicks that decide a drawn game",
-      "tags": [
-        "display:Shoot-out"
-      ],
+      "tags": ["display:Shoot-out"],
       "reviewed": false
     },
     {
@@ -438,9 +412,7 @@
     {
       "word": "SHINGUARD",
       "hint": "Protection worn under the socks",
-      "tags": [
-        "display:Shin guard"
-      ],
+      "tags": ["display:Shin guard"],
       "reviewed": false
     },
     {

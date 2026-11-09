@@ -1,108 +1,33 @@
-.ng-play {
-  gap: var(--ng-s-3);
+/* Sabi Words: layout around the art hooks in assets/words-art.css (.sw-*). Transform/opacity only. */
+.ng-screen {
+  /* the fixed .sw-stage backdrop sits behind the content but above the app background */
+  isolation: isolate;
 }
-.arena {
-  position: relative;
-  flex: 1;
+.ng-menu__footer {
+  margin-top: 0;
+  padding-top: 0;
+  display: grid;
+  gap: var(--ng-s-2);
   width: 100%;
-  min-height: 240px;
-  border-radius: var(--ng-r-lg);
-  background: rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
+  justify-items: stretch;
 }
-.arena:focus-visible {
-  outline: 3px solid var(--ng-focus);
-  outline-offset: 2px;
+/* hints and titles that can land on the awning or the floor stripe get a dark pill */
+.ng-menu__footer > .hint {
+  justify-self: center;
+  padding: 2px var(--ng-s-3);
+  border-radius: var(--ng-r-pill);
+  background: rgb(40 8 4 / 0.85);
+  color: var(--ng-ink);
 }
-.target {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--size);
-  height: var(--size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
+.ng-menu > .hint {
+  align-self: center;
+  padding: 2px var(--ng-s-3);
+  border-radius: var(--ng-r-pill);
+  background: rgb(40 8 4 / 0.7);
 }
-.target.is-on {
-  opacity: 1;
-  pointer-events: auto;
-}
-.target.is-hit,
-.target.is-gone {
-  pointer-events: none;
-}
-.target__in {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-.target img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.target__ring {
-  position: absolute;
-  inset: -4px;
-  border: 3px solid var(--ng-accent);
-  border-radius: 50%;
-  opacity: 0.9;
-}
-.target.is-on .target__in {
-  animation: bell-in 180ms var(--ng-ease-spring) both;
-}
-.target.is-on .target__ring {
-  animation: bell-ring var(--life) linear both;
-}
-.target.is-hit .target__in {
-  animation: bell-hit 200ms var(--ng-ease) both;
-}
-.target.is-gone .target__in {
-  animation: bell-gone 180ms linear both;
-}
-.target.is-hit .target__ring,
-.target.is-gone .target__ring {
-  animation: none;
-  opacity: 0;
-}
-@keyframes bell-in {
-  from {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-}
-@keyframes bell-ring {
-  from {
-    transform: scale(1.25);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.85);
-    opacity: 0.3;
-  }
-}
-@keyframes bell-hit {
-  to {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes bell-gone {
-  to {
-    transform: scale(0.6);
-    opacity: 0;
-  }
+/* the awning is painted across the top of the stage: keep titles below it */
+.ng-screen:not(.sw-play) {
+  padding-top: max(62px, env(safe-area-inset-top));
 }
 .menu-art {
   width: min(40vw, 150px);
@@ -114,18 +39,301 @@
   text-align: center;
   font-weight: 700;
 }
-@media (prefers-reduced-motion: reduce) {
-  .target.is-on .target__ring {
-    animation: none;
+.ng-menu .hint {
+  font-size: 0.8125rem;
+}
+.sw-menu-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ng-s-2);
+  width: 100%;
+}
+.sw-menu-row .ng-btn {
+  min-width: 0;
+}
+.sw-pack__t {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.sw-pack__t small {
+  font-weight: 600;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.sw-packs,
+.sw-stats {
+  gap: var(--ng-s-3);
+}
+.sw-packlist {
+  display: grid;
+  gap: var(--ng-s-2);
+  width: 100%;
+  max-width: 360px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sw-pack[aria-pressed='true'] {
+  outline: 4px solid var(--ng-focus, #f7d348);
+  outline-offset: -4px;
+  border-radius: 16px;
+}
+.sw-statlist {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sw-stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  font-size: 0.875rem;
+}
+.sw-stat b {
+  text-align: right;
+}
+.sw-stats__h {
+  margin: 4px 0 0;
+  width: 100%;
+  max-width: 360px;
+  font-size: 1rem;
+}
+.sw-error {
+  gap: var(--ng-s-4);
+  justify-content: center;
+  text-align: center;
+}
+
+/* ---- play screen ---- */
+.sw-play {
+  gap: 8px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  padding-inline: 8px;
+}
+.sw-play__main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+}
+.sw-play__side {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+}
+.sw-hud {
+  width: 100%;
+  min-height: 56px;
+  padding: 4px 4px;
+  box-sizing: border-box;
+}
+.sw-time {
+  min-width: 60px;
+}
+.sw-time.is-paused .sw-time__fill {
+  opacity: 0.6;
+}
+.sw-coin {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--sw-ink);
+  border-radius: 50%;
+  background: var(--sw-gold);
+  box-shadow: inset 0 0 0 3px var(--sw-plantain);
+}
+.sw-hint {
+  position: relative;
+  flex: none;
+}
+.sw-hint__cost {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  min-width: 18px;
+  padding: 1px 3px;
+  border-radius: 9px;
+  background: var(--sw-ink);
+  color: var(--sw-cream);
+  font: 800 11px/14px var(--ng-font-ui, system-ui, sans-serif);
+  text-align: center;
+}
+.sw-stars .sw-star {
+  width: 22px;
+  height: 22px;
+}
+.sw-practice {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 8px;
+  border-radius: 8px;
+  background: var(--sw-plantain);
+  color: var(--sw-ink);
+  font: 800 11px/16px var(--ng-font-ui, system-ui, sans-serif);
+}
+.sw-hud {
+  position: relative;
+}
+.sw-words {
+  max-width: 360px;
+  width: 100%;
+}
+.sw-words--results {
+  margin-block: 12px 4px;
+}
+.sw-clue {
+  margin: 0;
+  min-height: 1.2em;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+.sw-banter {
+  position: fixed;
+  left: 50%;
+  bottom: max(8px, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+}
+.sw-board {
+  flex: none;
+}
+.sw-tile {
+  min-width: 0;
+}
+@media (min-aspect-ratio: 6/5) {
+  /* beside the grid there is room: the guide's bubble sits under the word list, not over the board */
+  .sw-banter {
+    position: static;
+    transform: none;
+    min-height: 48px;
+  }
+  .sw-play {
+    max-width: 980px;
+  }
+  .sw-play__main {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+  }
+  .sw-play__side {
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+    padding-top: 14px;
   }
 }
-@media (max-height: 500px) and (orientation: landscape) {
+@media (max-height: 700px) {
+  .ng-settings {
+    gap: 6px;
+  }
+  .ng-settings .ng-btn {
+    padding: 6px 8px;
+    font-size: 0.8125rem;
+  }
+}
+@media (max-height: 880px) {
   .menu-art {
     display: none;
   }
+  .ng-menu__tag {
+    display: none;
+  }
 }
-@media (max-height: 700px) and (orientation: portrait) {
+@media (max-height: 700px) {
   .menu-art {
-    width: 72px;
+    display: none;
+  }
+  .ng-menu {
+    gap: var(--ng-s-2);
+  }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .ng-screen:not(.sw-play) {
+    padding-top: 28px;
+    padding-bottom: 6px;
+  }
+  /* results: banner and tiles then the buttons fit above the fold; the word slip waits below them */
+  .ng-screen.ng-results {
+    padding-top: 22px;
+    padding-bottom: 6px;
+  }
+  .ng-results .ng-results__title {
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+  .ng-results .ng-star {
+    width: 28px;
+    height: 28px;
+  }
+  .ng-results > .ng-banter {
+    padding: 4px 12px;
+    font-size: 0.8125rem;
+  }
+  .ng-results > .sw-words--results {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    max-width: 520px;
+    justify-self: center;
+  }
+  /* menu in two columns: pack, level and its hint on the left, the buttons on the right */
+  .ng-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto 1fr;
+    align-content: center;
+    align-items: center;
+    column-gap: var(--ng-s-5);
+    row-gap: 4px;
+    max-width: 760px;
+  }
+  .ng-menu > .ng-h {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  .ng-menu > #menu-pack {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ng-menu > .ng-field {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .ng-menu > .hint {
+    grid-column: 1;
+    grid-row: 4;
+  }
+  .ng-menu__list {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+  }
+  .ng-menu__footer {
+    grid-column: 2;
+    grid-row: 4 / span 2;
+    align-self: start;
+  }
+  .ng-menu__footer > .hint {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sw-time.is-low {
+    animation: none;
   }
 }

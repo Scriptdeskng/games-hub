@@ -1,169 +1,312 @@
+import { createBanter, createBubbleView, type Banter, type Persona } from '@naija/core/ai-kit';
 import type { Core } from '@naija/core/boot';
-import { createInput } from '@naija/core/input';
 import { createScope } from '@naija/core/lifecycle';
 import { createLoop } from '@naija/core/loop';
-import { button, createHud, createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
+import { createRng } from '@naija/core/rng';
+import { createPause, h, type Component, type Modal } from '@naija/core/ui-kit';
+import { OSAS } from '../ai/personas';
+import { playMusic, tenseMusic } from '../audio/music';
 import {
-  PROFILES,
-  createGame,
-  hit,
-  missTap,
-  oldestTarget,
+  LOW_TIME_S,
+  STAR_2_FRAC,
+  STAR_3_FRAC,
+  HINT_COST,
+  cellFor,
+  createRound,
+  findWord,
+  hintTarget,
+  select,
   tick,
-  type Difficulty,
+  unfound,
+  useHint,
+  wordCells,
   type GameState,
+  type Puzzle,
 } from '../rules';
-import { createArena } from './arena';
+import { createBoard } from './board';
+import { createHud } from './hud';
+import { handleKey } from './keys';
+import { viewportBox } from './layout';
+import { createWordList } from './wordlist';
 
 export interface PlayOptions {
-  difficulty: Difficulty;
-  seed: number;
-  onScore(state: GameState): void;
-  onEnd(state: GameState): void;
+  puzzle: Puzzle;
+  /** a replay of the Daily after the scored attempt: shown as "Practice" */
+  practice?: boolean;
+  /** coins in the wallet right now */
+  coins(): number;
+  /** pay for a hint: the coins left, or null when the player cannot afford it */
+  spend(cost: number): number | null;
+  onScore(s: GameState): void;
+  onEnd(s: GameState): void;
   onRestart(): void;
   onQuit(): void;
+  /** test builds only */
+  test?: { tempo?: number; clockMs?: number; bot?: { win: boolean; everyMs: number } };
 }
 
 export interface Play extends Component {
-  getState(): GameState;
-  /** Replace the state (autoplay fast-forward). Ends the round if the state is final. */
-  setState(s: GameState): void;
+  snapshot(): GameState;
   start(): void;
-  /** Test hook: hit the oldest bell every ~200 ms in real time (drives the real render loop). */
-  setBot?: (on: boolean) => void;
+  /** test builds only: solve (win) or run the clock out (lose) instantly, then finish */
+  fastForward?: (win: boolean) => GameState;
 }
 
 export function createPlay(core: Core, o: PlayOptions): Play {
   const scope = createScope();
-  const profile = PROFILES[o.difficulty];
-  let state = createGame(o.difficulty, o.seed);
-  let modal: Modal | null = null;
+  const { t } = core;
+  // test-build options only: in production `test` is undefined and nothing below reads it
+  const test = __NAIJA_TEST__ ? o.test : undefined;
+  const tempo = test?.tempo && test.tempo > 0 ? test.tempo : 1;
+  const n = o.puzzle.size;
+  let s = createRound(o.puzzle);
+  if (__NAIJA_TEST__ && test?.clockMs)
+    s = { ...s, durationMs: test.clockMs, timeLeftMs: test.clockMs };
   let over = false;
-  let lastSecond = -1;
-  let bot = false;
-  let botTicks = 0;
+  let lastSec = -1;
+  let modal: Modal | null = null;
+  let modalKind: 'pause' | null = null;
+  let clueFor: number | null = null;
+  let botIn = test?.bot?.everyMs ?? 0;
 
-  const hud = createHud([
-    { id: 'score', label: core.t('hud.score'), value: '0' },
-    { id: 'time', label: core.t('hud.time'), value: String(Math.ceil(profile.durationMs / 1000)) },
-    { id: 'goal', label: core.t('hud.goal'), value: `0/${profile.goal}` },
-    { id: 'combo', label: core.t('hud.combo'), value: '0' },
-  ]);
-  const pauseBtn = button(core, scope, {
-    label: core.t('ui.pause'),
-    icon: 'pause',
-    ariaLabel: core.t('ui.pause'),
-    variant: 'icon',
-    onClick: () => pause(),
-  });
-  hud.addControl(pauseBtn);
-
-  const arena = createArena(core, {
-    sizePx: profile.sizePx,
-    lifetimeMs: profile.lifetimeMs,
-    maxTargets: profile.maxTargets,
-    src: './assets/agogo.svg',
-  });
-
-  const paint = (): void => {
-    hud.set('score', state.score);
-    const sec = Math.ceil(state.timeLeftMs / 1000);
-    hud.set('time', sec);
-    hud.set('goal', `${state.hits}/${profile.goal}`);
-    hud.set('combo', state.combo);
-    arena.sync(state.targets);
-    if (sec !== lastSecond) {
-      lastSecond = sec;
-      if (sec > 0 && sec <= 5 && state.status === 'playing') core.audio.playSfx('tick');
-    }
-  };
-
-  const apply = (next: GameState): void => {
-    const prev = state;
-    state = next;
-    if (next.hits > prev.hits) {
-      core.audio.playSfx('coin', { pitch: 1 + Math.min(next.combo, 8) * 0.06, key: 'hit' });
-      o.onScore(next);
-    } else if (next.misses > prev.misses && next.combo === 0 && prev.combo > 0) {
-      core.audio.playSfx('fail', { gain: 0.6, key: 'miss' });
-    }
-    paint();
-    if (next.status !== 'playing' && !over) {
-      over = true;
-      loop.stop();
-      o.onEnd(next);
-    }
-  };
-
-  const loop = createLoop({
-    update: (dt) => {
-      apply(tick(state, dt * 1000));
-      if (__NAIJA_TEST__ && bot && !over && ++botTicks % 12 === 0) {
-        const id = oldestTarget(state);
-        if (id !== null) apply(hit(state, id));
-      }
+  const live = h('p', { class: 'ng-sr', role: 'status', 'aria-live': 'polite' });
+  const bubble = createBubbleView(scope, { name: (p) => t(p.nameKey), ms: 3000 });
+  const banter: Banter = createBanter({
+    t,
+    rng: createRng((o.puzzle.seed ^ 0x5eed) >>> 0),
+    show: (line) => {
+      bubble.show(line);
+      core.audio.playSfx('hostIn');
     },
-    perf: core.perf,
-    onHidden: () => pause(),
+    chance: { found: 0.4, long: 1, wrong: 0.35, hint: 1, low: 1, star3: 1 },
   });
+  const say = (event: string, force = false, p: Persona = OSAS): void =>
+    void banter.say(p, event, { force });
 
-  const resume = (): void => {
+  const hud = createHud(core, scope, {
+    practice: o.practice === true,
+    onPause: () => pause(),
+    onHint: () => hintAction(),
+  });
+  const words = createWordList(o.puzzle.words, t);
+  const clue = h('p', { class: 'sw-clue', 'aria-live': 'polite' });
+  const board = createBoard({
+    puzzle: o.puzzle,
+    cell: cellFor(n, viewportBox(o.puzzle.words.length).w, viewportBox(o.puzzle.words.length).h),
+    scope,
+    t,
+    announce: (text) => (live.textContent = text),
+    onSelect: (len) =>
+      core.audio.playSfx(len === 1 ? 'letterTap' : 'letterSwipe', {
+        pitch: 1 + Math.min(0.4, 0.04 * (len - 1)),
+      }),
+    onSubmit: (from, to) => apply(from, to),
+  });
+  board.el.querySelector('.sw-tile')?.setAttribute('data-autofocus', '');
+  const el = h('section', { class: 'ng-screen ng-play sw-play', 'aria-label': t('game.title') }, [
+    h('div', { class: 'sw-stage' }),
+    hud.el,
+    h('div', { class: 'sw-play__main' }, [
+      board.el,
+      h('div', { class: 'sw-play__side' }, [
+        words.el,
+        clue,
+        h('div', { class: 'sw-banter' }, [bubble.el]),
+      ]),
+    ]),
+    live,
+  ]);
+
+  const coinsNow = (): number => o.coins();
+  function syncHint(): void {
+    hud.setHint(!over && coinsNow() >= HINT_COST && hintTarget(s) !== null);
+  }
+
+  // ---- one place where a swipe is judged
+  function apply(from: number, to: number): void {
+    if (over || modal) return board.clearSelection();
+    const r = select(s, from, to);
+    s = r.state;
+    if (r.result === 'found' && r.word !== undefined) {
+      const w = o.puzzle.words[r.word]!;
+      const f = s.found[s.found.length - 1]!;
+      board.markFound(wordCells(s, r.word), f.lane);
+      words.markFound(r.word, f.lane);
+      if (clueFor === r.word) {
+        clue.textContent = '';
+        clueFor = null;
+      }
+      core.audio.playSfx(w.word.length >= 8 ? 'wordFoundLong' : 'wordFound');
+      live.textContent = t('play.sr.wordFound', {
+        word: w.display,
+        left: s.puzzle.words.length - s.found.length,
+      });
+      if (s.status === 'won') say('star3', true);
+      else say(w.word.length >= 8 ? 'long' : 'found', w.word.length >= 8);
+      o.onScore(s);
+      syncHint();
+      if (s.status === 'won') finish();
+    } else if (r.result === 'repeat') {
+      board.clearSelection();
+      core.audio.playSfx('selectionClear');
+      live.textContent = t('play.sr.repeat');
+    } else if (r.result === 'wrong') {
+      board.markWrong(from, to);
+      core.audio.playSfx('wordWrong');
+      live.textContent = t('play.sr.wrong');
+      say('wrong');
+    } else {
+      board.clearSelection();
+      core.audio.playSfx('selectionClear');
+    }
+  }
+
+  function hintAction(): void {
+    if (over || modal) return;
+    const target = hintTarget(s);
+    const dry = useHint(s, coinsNow());
+    if (target === null || !dry.ok) {
+      core.audio.playSfx('selectionClear');
+      live.textContent = t(target === null ? 'play.sr.noHint' : 'play.sr.poor', {
+        cost: HINT_COST,
+      });
+      return;
+    }
+    const left = o.spend(dry.cost);
+    if (left === null) return;
+    s = dry.state;
+    board.hint(dry.cell as number);
+    const w = o.puzzle.words[dry.word as number]!;
+    clueFor = dry.word as number;
+    clue.textContent = t('play.clue', { hint: w.hint || w.display });
+    core.audio.playSfx('hint');
+    core.audio.playSfx('coinSpend');
+    hud.setCoins(left);
+    say('hint', true);
+    syncHint();
+  }
+
+  function finish(): void {
+    if (over) return;
+    over = true;
+    loop.stop();
+    board.lock(true);
+    syncHint();
+    o.onEnd(s);
+  }
+
+  // ---- pause (the game clock only runs while the loop does)
+  function freeze(): void {
+    modalKind = 'pause';
+    loop.pause();
+    board.lock(true);
+    hud.freeze(true);
+  }
+  function thaw(): void {
     modal = null;
+    modalKind = null;
+    hud.freeze(false);
+    board.lock(false);
     if (!over) loop.resume();
-  };
+  }
   function pause(): void {
     if (over || modal) return;
-    loop.pause();
+    freeze();
     modal = createPause(core, {
       mount: core.root,
-      onResume: resume,
+      onResume: thaw,
       onRestart: o.onRestart,
       onQuit: o.onQuit,
     });
   }
-
-  const hitOldest = (e: KeyboardEvent): void => {
-    e.preventDefault(); // Space must not also click a focused button
-    if (modal || over) return;
-    const id = oldestTarget(state);
-    if (id !== null) apply(hit(state, id));
-  };
-  const togglePause = (): void => {
-    if (modal) {
-      modal.close();
-      resume();
-    } else pause();
-  };
-  const input = createInput(arena.el, {
-    keys: { ' ': hitOldest, ArrowDown: hitOldest, p: togglePause, Escape: togglePause },
+  scope.on(window, 'keydown', (e: KeyboardEvent) => {
+    if (over) return;
+    handleKey(e, {
+      togglePause() {
+        if (modalKind === 'pause') {
+          modal?.close();
+          thaw();
+        } else if (!modal) pause();
+      },
+      blocked: () => modal !== null,
+      hint: hintAction,
+    });
   });
-  arena.onHit((id) => {
-    if (!modal && !over) apply(hit(state, id));
-  });
-  arena.onEmptyTap(() => {
-    if (!modal && !over) apply(missTap(state));
+  scope.on(window, 'resize', () => {
+    const box = viewportBox(o.puzzle.words.length);
+    board.setCell(cellFor(n, box.w, box.h));
   });
 
-  const el = h('section', { class: 'ng-screen ng-play', 'aria-label': core.t('game.title') }, [
-    hud.el,
-    arena.el,
-  ]);
-  paint();
+  // ---- the clock
+  const loop = createLoop({
+    update: (dt) => step((dt * 1000) / tempo),
+    perf: core.perf,
+    onHidden: () => pause(),
+  });
+
+  function step(dtMs: number): void {
+    if (over) return;
+    s = tick(s, dtMs);
+    const sec = Math.ceil(s.timeLeftMs / 1000);
+    const frac = s.timeLeftMs / s.durationMs;
+    hud.setTime(frac, sec);
+    if (sec !== lastSec) {
+      lastSec = sec;
+      hud.setStars(frac >= STAR_3_FRAC ? 3 : frac >= STAR_2_FRAC ? 2 : 1);
+      if (sec <= LOW_TIME_S && s.status === 'playing') {
+        hud.setLow(true);
+        core.audio.playSfx(sec === 1 ? 'timerLast' : 'timerLow');
+        if (sec === LOW_TIME_S) {
+          core.audio.playMusic(tenseMusic);
+          say('low', true);
+        }
+      }
+    }
+    if (s.status === 'lost') {
+      hud.setLow(false);
+      return finish();
+    }
+    if (__NAIJA_TEST__ && test?.bot && test.bot.win && !over) {
+      botIn -= dtMs;
+      if (botIn <= 0) {
+        botIn = test.bot.everyMs;
+        solveOne();
+      }
+    }
+  }
+
+  /** Test builds only: find the next word the way a perfect player would (exhaustive solver). */
+  function solveOne(): void {
+    const i = unfound(s)[0];
+    if (i === undefined) return;
+    const occ = findWord(o.puzzle.letters, n, o.puzzle.words[i]!.word)[0];
+    if (occ) apply(occ.cells[0] as number, occ.cells[occ.cells.length - 1] as number);
+  }
+  const fastForward = (win: boolean): GameState => {
+    if (win) while (!over && unfound(s).length) solveOne();
+    else {
+      s = tick(s, s.durationMs);
+      finish();
+    }
+    return s;
+  };
+
+  hud.setCoins(coinsNow());
+  syncHint();
+  say(createRng(o.puzzle.seed ^ 0xabc).chance(0.3) ? 'ready' : 'start', true);
 
   return {
     el,
-    getState: () => state,
-    setState: apply,
-    ...(__NAIJA_TEST__ ? { setBot: (on: boolean) => void (bot = on) } : {}),
+    snapshot: () => s,
+    ...(__NAIJA_TEST__ ? { fastForward } : {}),
     start() {
-      core.audio.playSfx('start');
+      core.audio.playSfx('gridIn');
+      core.audio.playMusic(playMusic);
       loop.start();
     },
     destroy() {
       modal?.close();
       loop.destroy();
-      input.destroy();
-      arena.destroy();
       scope.destroy();
     },
   };

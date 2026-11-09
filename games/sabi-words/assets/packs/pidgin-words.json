@@ -264,37 +264,25 @@
     {
       "word": "JOOR",
       "hint": "Word added to a request, as in \"please, now\"",
-      "tags": [
-        "display:Joor",
-        "uncertain"
-      ],
+      "tags": ["display:Joor", "uncertain"],
       "reviewed": false
     },
     {
       "word": "OMO",
       "hint": "Child, or a word for \"wow, my friend\"",
-      "tags": [
-        "display:Omo",
-        "uncertain"
-      ],
+      "tags": ["display:Omo", "uncertain"],
       "reviewed": false
     },
     {
       "word": "ODOGWU",
       "hint": "Word for a strong, impressive man",
-      "tags": [
-        "display:Odogwu",
-        "uncertain"
-      ],
+      "tags": ["display:Odogwu", "uncertain"],
       "reviewed": false
     },
     {
       "word": "SHEBI",
       "hint": "Word that means \"is it not so?\" at the start of a question",
-      "tags": [
-        "display:Shebi",
-        "uncertain"
-      ],
+      "tags": ["display:Shebi", "uncertain"],
       "reviewed": false
     },
     {
@@ -305,9 +293,7 @@
     {
       "word": "CARRYGO",
       "hint": "Keep going, or take it away",
-      "tags": [
-        "display:Carry go"
-      ],
+      "tags": ["display:Carry go"],
       "reviewed": false
     },
     {
@@ -318,36 +304,25 @@
     {
       "word": "GBOSA",
       "hint": "Shout of loud approval",
-      "tags": [
-        "display:Gbosa",
-        "uncertain"
-      ],
+      "tags": ["display:Gbosa", "uncertain"],
       "reviewed": false
     },
     {
       "word": "JAPA",
       "hint": "To travel abroad to live",
-      "tags": [
-        "display:Japa"
-      ],
+      "tags": ["display:Japa"],
       "reviewed": false
     },
     {
       "word": "KASALA",
       "hint": "Confusion or trouble",
-      "tags": [
-        "display:Kasala",
-        "uncertain"
-      ],
+      "tags": ["display:Kasala", "uncertain"],
       "reviewed": false
     },
     {
       "word": "LAGBAJA",
       "hint": "An ordinary everyday person",
-      "tags": [
-        "display:Lagbaja",
-        "uncertain"
-      ],
+      "tags": ["display:Lagbaja", "uncertain"],
       "reviewed": false
     },
     {
@@ -368,17 +343,13 @@
     {
       "word": "SMALLSMALL",
       "hint": "Little by little",
-      "tags": [
-        "display:Small small"
-      ],
+      "tags": ["display:Small small"],
       "reviewed": false
     },
     {
       "word": "WELLWELL",
       "hint": "Very carefully or very much",
-      "tags": [
-        "display:Well well"
-      ],
+      "tags": ["display:Well well"],
       "reviewed": false
     },
     {
@@ -394,9 +365,7 @@
     {
       "word": "YAWA",
       "hint": "Trouble or wahala",
-      "tags": [
-        "display:Yawa"
-      ],
+      "tags": ["display:Yawa"],
       "reviewed": false
     },
     {
@@ -417,10 +386,7 @@
     {
       "word": "HABA",
       "hint": "Cry of disbelief, as in \"come on!\"",
-      "tags": [
-        "display:Haba",
-        "uncertain"
-      ],
+      "tags": ["display:Haba", "uncertain"],
       "reviewed": false
     },
     {
@@ -431,19 +397,13 @@
     {
       "word": "SEF",
       "hint": "Even or also",
-      "tags": [
-        "display:Sef",
-        "uncertain"
-      ],
+      "tags": ["display:Sef", "uncertain"],
       "reviewed": false
     },
     {
       "word": "KAI",
       "hint": "Cry of surprise or pain",
-      "tags": [
-        "display:Kai",
-        "uncertain"
-      ],
+      "tags": ["display:Kai", "uncertain"],
       "reviewed": false
     },
     {
@@ -479,9 +439,7 @@
     {
       "word": "PALAVA",
       "hint": "Noisy argument or fuss",
-      "tags": [
-        "display:Palava"
-      ],
+      "tags": ["display:Palava"],
       "reviewed": false
     },
     {
@@ -497,18 +455,13 @@
     {
       "word": "GBEGE",
       "hint": "Big trouble or big event",
-      "tags": [
-        "display:Gbege",
-        "uncertain"
-      ],
+      "tags": ["display:Gbege", "uncertain"],
       "reviewed": false
     },
     {
       "word": "WELLDONE",
       "hint": "Word of praise",
-      "tags": [
-        "display:Well done"
-      ],
+      "tags": ["display:Well done"],
       "reviewed": false
     },
     {
@@ -519,17 +472,13 @@
     {
       "word": "TRAFFIC",
       "hint": "Go-slow on the road",
-      "tags": [
-        "display:Traffic"
-      ],
+      "tags": ["display:Traffic"],
       "reviewed": false
     },
     {
       "word": "GOSLOW",
       "hint": "Long, slow traffic jam",
-      "tags": [
-        "display:Go-slow"
-      ],
+      "tags": ["display:Go-slow"],
       "reviewed": false
     },
     {
@@ -540,9 +489,7 @@
     {
       "word": "KEKE",
       "hint": "Three-wheeler taxi",
-      "tags": [
-        "display:Keke"
-      ],
+      "tags": ["display:Keke"],
       "reviewed": false
     },
     {
@@ -553,9 +500,7 @@
     {
       "word": "BUSSTOP",
       "hint": "Place where the conductor shouts the destination",
-      "tags": [
-        "display:Bus stop"
-      ],
+      "tags": ["display:Bus stop"],
       "reviewed": false
     },
     {
@@ -591,25 +536,19 @@
     {
       "word": "FINEBOY",
       "hint": "Handsome young man",
-      "tags": [
-        "display:Fine boy"
-      ],
+      "tags": ["display:Fine boy"],
       "reviewed": false
     },
     {
       "word": "FINEGIRL",
       "hint": "Beautiful young woman",
-      "tags": [
-        "display:Fine girl"
-      ],
+      "tags": ["display:Fine girl"],
       "reviewed": false
     },
     {
       "word": "GREETING",
       "hint": "Polite words you owe elders when you meet",
-      "tags": [
-        "display:Greeting"
-      ],
+      "tags": ["display:Greeting"],
       "reviewed": false
     },
     {

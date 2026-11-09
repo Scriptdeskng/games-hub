@@ -1,143 +1,151 @@
-import { createRng } from '@naija/core/rng';
-import { BASE_POINTS, COMBO_BONUS, COMBO_BONUS_CAP, PROFILES, type Difficulty } from './config';
+import {
+  COINS_PER_STAR,
+  COINS_WIN,
+  HINT_COST,
+  LANES,
+  PROFILES,
+  STAR_2_FRAC,
+  STAR_3_FRAC,
+  WORD_PTS,
+  type Difficulty,
+} from './config';
+import type { Puzzle } from './generator';
+import { lineCells, cellIndex, reverse, runCells } from './grid';
 
-/** A bell on screen. x and y are fractions (0..1) of the free arena space. */
-export interface Target {
-  id: number;
-  x: number;
-  y: number;
-  /** remaining life (ms) */
-  ttlMs: number;
+export interface FoundWord {
+  /** index into puzzle.words */
+  index: number;
+  /** cloth lane 1..6, cycling in finding order */
+  lane: number;
+  /** clock time left when it was found */
+  leftMs: number;
 }
 
-export type Status = 'playing' | 'won' | 'lost';
-
-/** Fully serializable game state (JSON-safe). */
 export interface GameState {
+  puzzle: Puzzle;
   difficulty: Difficulty;
-  seed: number;
-  /** RNG state, so a save restores the exact same future */
-  rng: number;
-  status: Status;
+  status: 'playing' | 'won' | 'lost';
+  durationMs: number;
   timeLeftMs: number;
-  spawnInMs: number;
-  nextId: number;
-  targets: Target[];
-  score: number;
-  hits: number;
-  misses: number;
-  combo: number;
-  bestCombo: number;
+  found: FoundWord[];
+  /** words with a lantern ring on their first letter (cleared words drop out of play, kept here) */
+  hinted: number[];
+  hintsUsed: number;
+  /** swipes that were not a word */
+  wrongs: number;
 }
 
-export function createGame(difficulty: Difficulty, seed: number): GameState {
-  const p = PROFILES[difficulty];
+export function createRound(puzzle: Puzzle): GameState {
+  const durationMs = PROFILES[puzzle.difficulty].durationMs;
   return {
-    difficulty,
-    seed,
-    rng: createRng(seed).getState(),
+    puzzle,
+    difficulty: puzzle.difficulty,
     status: 'playing',
-    timeLeftMs: p.durationMs,
-    spawnInMs: 300,
-    nextId: 1,
-    targets: [],
-    score: 0,
-    hits: 0,
-    misses: 0,
-    combo: 0,
-    bestCombo: 0,
+    durationMs,
+    timeLeftMs: durationMs,
+    found: [],
+    hinted: [],
+    hintsUsed: 0,
+    wrongs: 0,
   };
 }
 
-const finish = (s: GameState): GameState =>
-  s.hits >= PROFILES[s.difficulty].goal
-    ? { ...s, status: 'won' }
-    : s.timeLeftMs <= 0
-      ? { ...s, status: 'lost', timeLeftMs: 0, targets: [] }
-      : s;
-
-/** Advance time by dtMs: bells age and expire (a miss), new bells spawn, the clock runs. */
-export function tick(s: GameState, rawDtMs: number): GameState {
-  if (s.status !== 'playing') return s;
-  // negative or NaN time can never add seconds to the clock
-  const dtMs = rawDtMs > 0 ? rawDtMs : 0;
-  const p = PROFILES[s.difficulty];
-  const rng = createRng(0);
-  rng.setState(s.rng);
-
-  let targets = s.targets;
-  let misses = s.misses;
-  let combo = s.combo;
-  if (targets.length) {
-    const aged = targets.map((t) => ({ ...t, ttlMs: t.ttlMs - dtMs }));
-    const alive = aged.filter((t) => t.ttlMs > 0);
-    if (alive.length !== aged.length) {
-      misses += aged.length - alive.length;
-      combo = 0;
-    }
-    targets = alive;
-  }
-
-  let spawnInMs = s.spawnInMs - dtMs;
-  let nextId = s.nextId;
-  // never leave the arena empty for long: an empty arena respawns on the next tick
-  if (targets.length === 0 && spawnInMs > 120) spawnInMs = 120;
-  if (spawnInMs <= 0) {
-    if (targets.length < p.maxTargets) {
-      targets = [...targets, { id: nextId++, x: rng.next(), y: rng.next(), ttlMs: p.lifetimeMs }];
-    }
-    spawnInMs += p.spawnGapMs * rng.range(0.8, 1.2);
-    if (spawnInMs < 0) spawnInMs = p.spawnGapMs;
-  }
-
-  return finish({
-    ...s,
-    rng: rng.getState(),
-    timeLeftMs: Math.max(0, s.timeLeftMs - dtMs),
-    spawnInMs,
-    nextId,
-    targets,
-    misses,
-    combo,
-  });
+/** Advance the clock. The round is lost when it reaches zero. */
+export function tick(s: GameState, dtMs: number): GameState {
+  if (s.status !== 'playing' || dtMs <= 0) return s;
+  const timeLeftMs = Math.max(0, s.timeLeftMs - dtMs);
+  return { ...s, timeLeftMs, status: timeLeftMs === 0 ? 'lost' : 'playing' };
 }
 
-/** The player tapped bell `id`. Unknown ids (already vanished) are ignored. */
-export function hit(s: GameState, id: number): GameState {
-  if (s.status !== 'playing' || !s.targets.some((t) => t.id === id)) return s;
-  const combo = s.combo + 1;
-  return finish({
-    ...s,
-    targets: s.targets.filter((t) => t.id !== id),
-    hits: s.hits + 1,
-    combo,
-    bestCombo: Math.max(s.bestCombo, combo),
-    score: s.score + BASE_POINTS + Math.min(s.combo, COMBO_BONUS_CAP) * COMBO_BONUS,
-  });
+export type SelectResult = 'found' | 'repeat' | 'wrong' | 'invalid' | 'closed';
+
+const isFound = (s: GameState, i: number): boolean => s.found.some((f) => f.index === i);
+export const unfound = (s: GameState): number[] =>
+  s.puzzle.words.map((_, i) => i).filter((i) => !isFound(s, i));
+
+/** The cells of a word as placed. */
+export const wordCells = (s: GameState, i: number): number[] => {
+  const w = s.puzzle.words[i]!;
+  return runCells(s.puzzle.size, w.r, w.c, w.dir, w.word.length) as number[];
+};
+
+/**
+ * Judge a swipe or a start/end pair. Reading either way round counts. A word already found is a
+ * harmless 'repeat'; anything else that is not a hidden word is 'wrong' (no penalty but the count).
+ */
+export function select(
+  s: GameState,
+  from: number,
+  to: number,
+): { state: GameState; result: SelectResult; word?: number } {
+  if (s.status !== 'playing') return { state: s, result: 'closed' };
+  const n = s.puzzle.size;
+  const cells = lineCells(n, from, to);
+  if (!cells) return { state: s, result: 'invalid' };
+  const text = cells.map((c) => s.puzzle.letters[c]).join('');
+  const back = reverse(text);
+  const idx = s.puzzle.words.findIndex((w) => w.word === text || w.word === back);
+  if (idx < 0) return { state: { ...s, wrongs: s.wrongs + 1 }, result: 'wrong' };
+  if (isFound(s, idx)) return { state: s, result: 'repeat', word: idx };
+  const found = [
+    ...s.found,
+    { index: idx, lane: (s.found.length % LANES) + 1, leftMs: s.timeLeftMs },
+  ];
+  const won = found.length === s.puzzle.words.length;
+  return {
+    state: { ...s, found, status: won ? 'won' : 'playing' },
+    result: 'found',
+    word: idx,
+  };
 }
 
-/** The player tapped empty space: a miss that breaks the combo. */
-export function missTap(s: GameState): GameState {
-  if (s.status !== 'playing') return s;
-  return { ...s, misses: s.misses + 1, combo: 0 };
+/** Can a hint be given: there is an unfound word without a ring yet. */
+export const hintTarget = (s: GameState): number | null =>
+  s.status === 'playing' ? (unfound(s).find((i) => !s.hinted.includes(i)) ?? null) : null;
+
+/** Light the lantern on the first letter of the first unfound, unhinted word. Costs HINT_COST coins. */
+export function useHint(
+  s: GameState,
+  coins: number,
+): { state: GameState; ok: boolean; word?: number; cell?: number; cost: number } {
+  const word = hintTarget(s);
+  if (word === null || coins < HINT_COST) return { state: s, ok: false, cost: 0 };
+  const w = s.puzzle.words[word]!;
+  return {
+    state: { ...s, hinted: [...s.hinted, word], hintsUsed: s.hintsUsed + 1 },
+    ok: true,
+    word,
+    cell: cellIndex(s.puzzle.size, w.r, w.c),
+    cost: HINT_COST,
+  };
 }
 
-/** The bell that has been waiting longest (lowest ttl), or null. Used by keyboard and autoplay. */
-export function oldestTarget(s: GameState): number | null {
-  let best: Target | null = null;
-  for (const t of s.targets) if (!best || t.ttlMs < best.ttlMs) best = t;
-  return best ? best.id : null;
-}
-
-/** hits / (hits + misses), 0..1 */
-export function accuracy(s: GameState): number {
-  const n = s.hits + s.misses;
-  return n === 0 ? 0 : s.hits / n;
-}
-
-/** 0 = lost, 1 = won, 2 = won with >= 70% accuracy, 3 = also finished with >= 25% time left. */
+/** 3 stars with at least half the clock left, 2 with a fifth, otherwise 1. 0 unless won. */
 export function stars(s: GameState): 0 | 1 | 2 | 3 {
   if (s.status !== 'won') return 0;
-  if (accuracy(s) < 0.7) return 1;
-  return s.timeLeftMs >= PROFILES[s.difficulty].durationMs * 0.25 ? 3 : 2;
+  const f = s.timeLeftMs / s.durationMs;
+  return f >= STAR_3_FRAC ? 3 : f >= STAR_2_FRAC ? 2 : 1;
 }
+
+export const won = (s: GameState): boolean => s.status === 'won';
+
+/** 100 per word, plus points per whole second left on a win (more on harder levels). */
+export function score(s: GameState): number {
+  const bonus =
+    s.status === 'won' ? Math.floor(s.timeLeftMs / 1000) * PROFILES[s.difficulty].timePts : 0;
+  return s.found.length * WORD_PTS + bonus;
+}
+
+/** Cosmetic coins for a finished round: a win pays by level and stars, a loss one coin a word. */
+export const coinsEarned = (s: GameState): number =>
+  s.status === 'won'
+    ? COINS_WIN[s.difficulty] + COINS_PER_STAR * stars(s)
+    : s.status === 'lost'
+      ? s.found.length
+      : 0;
+
+/** Share of swipes that were words. */
+export const accuracy = (s: GameState): number =>
+  s.found.length + s.wrongs === 0 ? 1 : s.found.length / (s.found.length + s.wrongs);
+
+export const elapsedMs = (s: GameState): number => s.durationMs - s.timeLeftMs;

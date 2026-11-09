@@ -169,9 +169,7 @@
     {
       "word": "AKWAIBOM",
       "hint": "South-south state with capital Uyo",
-      "tags": [
-        "display:Akwa Ibom"
-      ],
+      "tags": ["display:Akwa Ibom"],
       "reviewed": false
     },
     {
@@ -202,9 +200,7 @@
     {
       "word": "CROSSRIVER",
       "hint": "South-south state with capital Calabar",
-      "tags": [
-        "display:Cross River"
-      ],
+      "tags": ["display:Cross River"],
       "reviewed": false
     },
     {
@@ -405,17 +401,13 @@
     {
       "word": "BENINCITY",
       "hint": "Capital city of Edo State",
-      "tags": [
-        "display:Benin City"
-      ],
+      "tags": ["display:Benin City"],
       "reviewed": false
     },
     {
       "word": "ADOEKITI",
       "hint": "Capital city of Ekiti State",
-      "tags": [
-        "display:Ado-Ekiti"
-      ],
+      "tags": ["display:Ado-Ekiti"],
       "reviewed": false
     },
     {
@@ -431,9 +423,7 @@
     {
       "word": "BIRNINKEBBI",
       "hint": "Capital city of Kebbi State",
-      "tags": [
-        "display:Birnin Kebbi"
-      ],
+      "tags": ["display:Birnin Kebbi"],
       "reviewed": false
     },
     {
@@ -489,9 +479,7 @@
     {
       "word": "PORTHARCOURT",
       "hint": "Capital city of Rivers State, the Garden City",
-      "tags": [
-        "display:Port Harcourt"
-      ],
+      "tags": ["display:Port Harcourt"],
       "reviewed": false
     },
     {

@@ -4,7 +4,7 @@ export const gameConfig = {
   title: 'Sabi Words',
   version: '0.1.0',
   /** design tokens theme class from packages/core/src/styles/tokens.css */
-  theme: 'theme-naija-green',
+  theme: 'theme-market',
   orientation: 'any',
   defaultDifficulty: 'medium',
 } as const;
