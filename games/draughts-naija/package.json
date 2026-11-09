@@ -1,0 +1,8 @@
+{
+  "name": "@naija-games/draughts-naija",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@naija/core": "*"
+  }
+}

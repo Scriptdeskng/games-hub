@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0b3d22" />
+    <!-- the portal passes ?token= in this page's URL: never leak it as a Referer to subresources -->
+    <meta name="referrer" content="no-referrer" />
+    <link rel="icon" href="data:," />
+    <title>Draughts Naija</title>
+    <style>
+      /* first paint before any JS/CSS arrives: matches the theme background, no white flash */
+      html,
+      body {
+        touch-action: manipulation;
+        margin: 0;
+        background: #0b3d22;
+        color: #fff;
+        font-family: system-ui, sans-serif;
+      }
+      #app {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <noscript>This game needs JavaScript. / Dis game need JavaScript make e work.</noscript>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

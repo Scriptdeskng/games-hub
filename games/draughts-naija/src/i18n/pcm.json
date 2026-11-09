@@ -1,0 +1,40 @@
+{
+  "game.title": "Draughts Naija",
+  "game.tagline": "Hit di bells before dem vanish!",
+  "game.arenaLabel": "Where we dey play",
+  "game.bell": "Agogo bell",
+  "game.hint": "Target: {goal} bells inside {time} seconds",
+  "game.howto.1": {
+    "text": "Golden agogo bells dey pop up for screen. Tap or click each one before e vanish.",
+    "_review": true
+  },
+  "game.howto.2": {
+    "text": "Hit plenty bells before time finish and you go win. Di target dey for top.",
+    "_review": true
+  },
+  "game.howto.3": "Hit bells one after di other to build combo and get more points. If you miss, combo go break.",
+  "game.howto.4": {
+    "text": "If you dey use keyboard, press Space to hit di oldest bell, and press P if you wan pause.",
+    "_review": true
+  },
+  "hud.score": "Score",
+  "hud.time": "Time",
+  "hud.goal": "Bells",
+  "hud.combo": "Combo",
+  "results.accuracy": "How you hit am",
+  "results.combo": "Best combo",
+  "results.level": "Level",
+  "persona.name": "Mama Nkechi",
+  "banter.win.0": {
+    "text": "Well done! Your hand quick pass danfo conductor.",
+    "_review": true
+  },
+  "banter.win.1": "Na so! Come siddon, di jollof don ready.",
+  "banter.win.2": "Sharp sharp! Di bells dey fear you.",
+  "banter.lose.0": "No wahala, try again. Even NEPA dey bring light back.",
+  "banter.lose.1": "Small small, you go get am.",
+  "banter.lose.2": {
+    "text": "Calm down. Di bells no go run anywhere.",
+    "_review": true
+  }
+}

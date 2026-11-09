@@ -34,6 +34,11 @@
       "slug": "sabi-words",
       "title": "Sabi Words",
       "deploy": true
+    },
+    {
+      "slug": "draughts-naija",
+      "title": "Draughts Naija",
+      "deploy": true
     }
   ]
 }
