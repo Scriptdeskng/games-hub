@@ -2,7 +2,7 @@ import { allLines, reverse } from './grid';
 import minList from './min-blocklist.json';
 
 /**
- * Built-in minimum blocklist (`min-blocklist.json`, the same 291 strings as every pack's own
+ * Built-in minimum blocklist (`min-blocklist.json`, the same 374 strings as every pack's own
  * `blocklist`; the pack checker keeps them in step), merged with the pack's list. Uppercase A-Z.
  * Over-blocking is harmless: a blocked string that uses a filler letter only makes the generator
  * redraw that letter. It covers vulgar, sexual, slur, drug, gambling and violence terms in English

@@ -38,11 +38,34 @@ const MIN_LIST = JSON.parse(
 // Hooked Hausa letters have no Unicode decomposition: map them to their base letter by name, so a display
 // form like "Ɗanwake" is compared to the plain word DANWAKE. Everything else must decompose to A-Z.
 const HOOKED = { Ɗ: 'D', ɗ: 'd', Ɓ: 'B', ɓ: 'b', Ƙ: 'K', ƙ: 'k', Ƴ: 'Y', ƴ: 'y' };
-export const plainForm = (text) =>
-  text
-    .normalize('NFD')
+const strip = (t) =>
+  t
     .replace(/[̀-ͯ]/g, '') // tone marks and underdots (combining marks)
     .replace(/[ƊɗƁɓƘƙƳƴ]/g, (c) => HOOKED[c]);
+/**
+ * The plain-letter readings of a display form. Yoruba ṣ (s with an underdot) is English "sh", but a
+ * pack word may spell it S (ASOOKE for Aṣọ òkè) or SH (TATASHE for Tátáṣé), so both readings are
+ * returned and the form passes the prefix rule if either starts with the word.
+ */
+export const plainForms = (text) => {
+  const nfd = text.normalize('NFD');
+  return [strip(nfd), strip(nfd.replace(/s\u0323/g, 'sh').replace(/S\u0323/g, 'Sh'))];
+};
+/** Does the display form carry at least one combining mark (tone mark, underdot) or hooked letter? */
+export const hasMark = (text) =>
+  /[\u0300-\u036f\u018a\u0257\u0181\u0253\u0198\u0199\u01b3\u01b4]/.test(text.normalize('NFD'));
+// Words whose hint names Yoruba, Igbo, Hausa or Edo must carry a mark in their display tag (the cultural
+// guide: "always with correct diacritics"). These stay PLAIN on purpose, each with its reason; a native
+// reviewer decides (they are listed in games/sabi-words/README.md):
+export const PLAIN_OK = {
+  AKWETE: 'Igbo name; no confident tone-marked form (reviewer to supply)',
+  ABACHA: 'Igbo; "Àbàchà" suggested by QA but not confirmed (reviewer)',
+  AKPU: 'Igbo; standard spelling carries no mark we are sure of (reviewer)',
+  MIYAN: 'Hausa; standard orthography has no mark in "miyan kuka"',
+  RODO: 'Yoruba; no confident tone-marked form (reviewer)',
+  BENINCITY: 'English place name (policy call: English spellings of places stay as is)',
+};
+const NAMES_REGION = /\b(Yoruba|Igbo|Hausa|Edo)\b/i;
 export const EMBED_MAX = 4;
 const embedded = [];
 const rev = (s) => [...s].reverse().join('');
@@ -94,13 +117,19 @@ for (const f of files) {
       bad.push(`${W}: hint contains the word`);
     const disp = (w.tags ?? []).find((t) => t.startsWith('display:'));
     if (disp) {
-      const shown = plainForm(disp.slice(8));
-      const bare = shown.replace(/[ '’-]/g, '');
-      const odd = bare.match(/[^A-Za-z]/);
+      const forms = plainForms(disp.slice(8)).map((f) => f.replace(/[ '’-]/g, ''));
+      const odd = forms[0].match(/[^A-Za-z]/);
       if (odd)
         bad.push(`${W}: display "${disp.slice(8)}" has an unsupported character "${odd[0]}"`);
-      else if (!bare.toUpperCase().startsWith(W))
+      else if (!forms.some((f) => f.toUpperCase().startsWith(W)))
         bad.push(`${W}: display "${disp.slice(8)}" does not start with the word`);
+    }
+    if (NAMES_REGION.test(w.hint ?? '') && !PLAIN_OK[W]) {
+      const shown = disp ? disp.slice(8) : '';
+      if (!hasMark(shown))
+        bad.push(
+          `${W}: hint names Yoruba/Igbo/Hausa/Edo but the display form has no tone mark, underdot or hooked letter`,
+        );
     }
     // a word may be a blocklisted string or contain one of 5+ letters: never. A SHORT blocked string (3 or 4 letters:
     // ASS in PASS, TIT in STITCH, BUTT in BUTTON) may sit inside a reviewed pack word; the generator then refuses

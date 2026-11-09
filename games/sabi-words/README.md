@@ -78,10 +78,17 @@ handled, never a console error.
 
 ## Blocklist: how short strings are handled
 
-Every pack carries the same 291-entry `blocklist`, identical to `src/rules/min-blocklist.json` (the
+Every pack carries the same 374-entry `blocklist`, identical to `src/rules/min-blocklist.json` (the
 built-in floor, `MIN_BLOCKLIST`); the pack checker enforces that. It was widened in QA round 2 to a
 systematic sweep of vulgar, sexual, slur, drug, gambling and violence terms in English and Pidgin
-(ANAL, CLIT, MILF, JEW, WOP, DAGO, GYP, SLOT, DICE, ODDS, WAGER, POKER, DRUG, WEED, KILL, ...). The generator scans every row, column and
+(ANAL, CLIT, MILF, JEW, WOP, DAGO, GYP, SLOT, DICE, ODDS, WAGER, POKER, DRUG, WEED, KILL, ...), and in
+QA round 3 with hate-group, slur, sexual and gambling terms (KKK, KLAN, NGGR, TITSY, BINGO, NAZIS, ISIS,
+PORNO, BLACKJACK, ...). Checked in both reading directions in every row, column and diagonal.
+
+**Open decision: the blocklist is only as complete as the list a human has reviewed.** It was written
+in-house and widened over several QA rounds; a native-speaker blocklist review (Pidgin, Yoruba, Igbo,
+Hausa, Edo vulgar words, insults, cult and hate-group names) is a **release gate** (row 47 of
+`docs/assets/HUMAN_ASSETS.md`), together with `npm run packs:release-check`. The generator scans every row, column and
 diagonal, both directions, and **redraws filler** for any blocked occurrence that uses at least one
 filler cell. An occurrence made only of placed letters is allowed only inside ONE accepted pack word
 (ASS in PASS or BRASS, TIT in STITCH); where two placed words cross to spell one, the attempt is
@@ -105,10 +112,16 @@ ASSIST, CASSAVA, STITCH, SUBSTITUTE). No shipped word IS an entry.
 Egusi (Ẹ̀gúsí), Amala (Àmàlà), Eba (Èbà), Akara (Àkàrà), Ogbono (Ọ̀gbọ̀nọ̀), Efọ riro, Ewedu (Ẹ̀wẹ́dú),
 Gbegiri (Gbẹ̀gìrì), Dodo (Dòdò), Asaro (Àsáró), Ekuru (Ẹ̀kuru), Ọha soup, Ogi (Ògì), Agbalumo
 (Agbálùmọ̀), Àkàmù, Àgídí, Àdàlù, Tátáshé, Pọ̀nmọ̀, Ọkpa, Ófádà rice, Ɗanwake (Hausa), Ọmọ, Aṣọ òkè, Aṣọ ẹbí, Adìrẹ, Agbádá, Bùbá, Gèlè, Fìlà, Ìró, Ìrókò, Ọ̀dọ̀gwù, Lagbájá. Pidgin
-hints for DASH and FLEX were reworded (neutral gloss; native review). Left plain on purpose: Garri, Rodo and Nkwobi (no confident form: Gàrí/Gàrrí would not start with the
-word GARRI), and the English place-name spellings (Ojuelegba, Idumota; policy call). The pack checker
+hints for DASH and FLEX were reworded (neutral gloss; native review). Corrected in round 3: Tátáṣé (ṣ, not sh), Efọ riró, Àdìrẹ. Left plain on purpose, for the native
+reviewer: Garri (loanword; a tone-marked form would not start with GARRI), Nkwobi, Isi ewu, Rodo,
+Abacha (QA suggests Àbàchà), Akpu, Akwete, Miyan kuka (Hausa orthography has no mark), and the
+English place-name spellings (Ojuelegba, Idumota; policy call). The checker's `PLAIN_OK` allow-list holds
+the ones whose hint names Yoruba/Igbo/Hausa/Edo, each with its reason. The pack checker
 now folds Hausa hooked letters (Ɗ Ɓ Ƙ Ƴ) to their base letter and tone marks/underdots via NFD, then
-requires the display form to start with the word, and rejects any other non-letter character.
+requires the display form to start with the word (Yoruba ṣ counts as S or SH), rejects any other
+non-letter character, and requires a mark or hooked letter on the display of every word whose hint
+names Yoruba, Igbo, Hausa or Edo unless it is in `PLAIN_OK`. Word-list casing: untagged words are
+Title case, tagged ones show their tag as written (FCT, VAR and NEPA carry tags).
 
 ## Rotation and the console
 

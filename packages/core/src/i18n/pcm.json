@@ -25,8 +25,14 @@
   },
   "ui.loading": "E dey load...",
   "ui.error": "Something don spoil. Abeg reload am.",
-  "difficulty.easy": "Easy Easy",
-  "difficulty.medium": "Normal",
+  "difficulty.easy": {
+    "text": "Easy Easy",
+    "_review": true
+  },
+  "difficulty.medium": {
+    "text": "Normal",
+    "_review": true
+  },
   "difficulty.hard": {
     "text": "Hard Well Well",
     "_review": true
@@ -35,7 +41,10 @@
     "text": "You win! E choke!",
     "_review": true
   },
-  "results.lose": "E nearly be! Try again!",
+  "results.lose": {
+    "text": "E nearly be! Try again!",
+    "_review": true
+  },
   "results.score": "Score",
   "results.best": "Your best",
   "results.newBest": "New record!",
