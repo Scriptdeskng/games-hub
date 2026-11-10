@@ -1,131 +1,355 @@
-.ng-play {
-  gap: var(--ng-s-3);
+/* Penalty King. Naija Green theme (tokens from @naija/core); scene, HUD, banners, bracket and fx come from
+   assets/penalty-art.css (.pk-*). Motion is transform and opacity only. Portrait 360x640 first. */
+
+/* ---------- menu ---------- */
+.pk-menu-art {
+  width: 88px;
+  height: 88px;
 }
-.arena {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 240px;
-  border-radius: var(--ng-r-lg);
-  background: rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
+.pk-menu .ng-h--display {
+  font-size: clamp(1.75rem, 9vw, 2.75rem);
 }
-.arena:focus-visible {
-  outline: 3px solid var(--ng-focus);
-  outline-offset: 2px;
-}
-.target {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--size);
-  height: var(--size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.target.is-on {
-  opacity: 1;
-  pointer-events: auto;
-}
-.target.is-hit,
-.target.is-gone {
-  pointer-events: none;
-}
-.target__in {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-.target img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.target__ring {
-  position: absolute;
-  inset: -4px;
-  border: 3px solid var(--ng-accent);
-  border-radius: 50%;
-  opacity: 0.9;
-}
-.target.is-on .target__in {
-  animation: bell-in 180ms var(--ng-ease-spring) both;
-}
-.target.is-on .target__ring {
-  animation: bell-ring var(--life) linear both;
-}
-.target.is-hit .target__in {
-  animation: bell-hit 200ms var(--ng-ease) both;
-}
-.target.is-gone .target__in {
-  animation: bell-gone 180ms linear both;
-}
-.target.is-hit .target__ring,
-.target.is-gone .target__ring {
-  animation: none;
-  opacity: 0;
-}
-@keyframes bell-in {
-  from {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-}
-@keyframes bell-ring {
-  from {
-    transform: scale(1.25);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.85);
-    opacity: 0.3;
-  }
-}
-@keyframes bell-hit {
-  to {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes bell-gone {
-  to {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-}
-.menu-art {
-  width: min(40vw, 150px);
-  height: auto;
-  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.25));
-}
-.hint {
+.pk-help {
   margin: 0;
   text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+.pk-rivalcard {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-s-2, 8px);
+  max-width: 340px;
+  padding: var(--ng-s-2, 8px) var(--ng-s-3, 12px);
+  border-radius: var(--ng-r-md, 12px);
+  background: var(--pk-plate);
+  color: var(--pk-ink);
+}
+.pk-rival {
+  margin: 0;
+  font-size: var(--ng-fs-sm);
   font-weight: 700;
+  line-height: 1.25;
 }
-@media (prefers-reduced-motion: reduce) {
-  .target.is-on .target__ring {
-    animation: none;
+.pk-rival__face {
+  width: 44px;
+  height: 44px;
+}
+.pk-menu .ng-menu__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 340px;
+}
+.pk-menu .ng-menu__list li {
+  min-width: 0;
+}
+.pk-menu .ng-menu__list li:first-child {
+  grid-column: 1 / -1;
+}
+.pk-menu .ng-menu__list .ng-btn--lg {
+  min-width: 0;
+  padding-inline: var(--ng-s-2);
+  font-size: var(--ng-fs-lg);
+}
+.pk-menu .ng-settings .ng-btn {
+  padding-inline: var(--ng-s-2);
+  white-space: nowrap;
+}
+.pk-menu .ng-seg__txt {
+  font-size: var(--ng-fs-sm);
+}
+@media (max-height: 760px) and (orientation: portrait) {
+  .pk-menu {
+    gap: var(--ng-s-2);
   }
-}
-@media (max-height: 500px) and (orientation: landscape) {
-  .menu-art {
-    display: none;
+  .pk-menu-art {
+    width: 56px;
+    height: 56px;
   }
 }
 @media (max-height: 700px) and (orientation: portrait) {
-  .menu-art {
-    width: 72px;
+  .pk-menu-art,
+  .pk-menu .ng-menu__tag {
+    display: none;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .pk-menu-art,
+  .pk-menu .ng-menu__tag {
+    display: none;
+  }
+  .pk-menu {
+    gap: var(--ng-s-2);
+  }
+}
+
+/* ---------- play screen ---------- */
+.pk-app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* the scene art is placed by the same numbers as the canvas (set from JS on every resize), so sprites and art line up */
+.pk-stage {
+  background-size: var(--pk-bw, cover) var(--pk-bh, auto);
+  background-position: var(--pk-bx, center) var(--pk-by, top);
+  outline: none;
+}
+.pk-canvas {
+  display: block;
+}
+/* the art sets display on the dive grid, curve chip and banner, which would beat the hidden attribute */
+.pk-app [hidden] {
+  display: none !important;
+}
+.pk-hudwrap,
+.pk-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pk-hudwrap {
+  z-index: 3;
+}
+.pk-controls {
+  z-index: 2;
+}
+.pk-hudwrap .ng-btn,
+.pk-dive,
+.pk-dive__zone {
+  pointer-events: auto;
+}
+.pk-hud {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 8px 0;
+}
+.pk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+}
+.pk-bar .ng-btn--icon {
+  background: var(--pk-plate);
+  color: var(--pk-ink);
+}
+.pk-bar .ng-btn--secondary {
+  min-height: 44px;
+}
+.pk-role .pk-plate,
+.pk-phase .pk-plate {
+  font-size: 13px;
+}
+/* a solid plate behind every number and word that sits on art */
+.pk-total {
+  background: transparent;
+}
+/* aim reticle and arrow are placed with transforms from JS, relative to the ball */
+.pk-aim {
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+.pk-aim__reticle {
+  left: 0;
+  top: 0;
+}
+.pk-aim__arrow {
+  opacity: 0.9;
+}
+.pk-power {
+  bottom: 70px;
+}
+.pk-curve {
+  bottom: 70px;
+}
+.pk-dive {
+  top: 330px;
+}
+.pk-dive__zone {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pk-banner {
+  top: 58%;
+  pointer-events: none;
+  padding-right: 4%;
+}
+/* the word wraps inside its plate instead of overflowing it (long Pidgin words, a low landscape screen) */
+.pk-banner__word {
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+  font-size: clamp(16px, 5vw, 28px);
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .pk-banner {
+    width: min(70vw, 300px);
+  }
+  .pk-banner__word {
+    font-size: clamp(14px, 4.4vh, 22px);
+  }
+}
+.pk-fxlayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.pk-persona {
+  position: absolute;
+  z-index: 4;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  pointer-events: none;
+}
+.pk-persona .ng-banter {
+  background: var(--pk-plate);
+  color: var(--pk-ink);
+}
+.pk-app.is-practice .pk-scoreboard {
+  display: none;
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  /* a low screen: the HUD sits at the left, clear of the goal in the middle */
+  .pk-hud {
+    justify-items: start;
+    padding: 6px;
+  }
+  .pk-scoreboard {
+    width: min(100%, 250px);
+  }
+  .pk-bar {
+    justify-content: flex-start;
+    max-width: 250px;
+  }
+  .pk-power {
+    bottom: 56px;
+    height: 150px;
+    right: 8px;
+  }
+  .pk-curve {
+    bottom: 56px;
+  }
+  .pk-persona {
+    left: auto;
+    right: 8px;
+    bottom: 8px;
+    max-width: 300px;
+  }
+}
+@media (hover: none) {
+  .pk-dive__zone:hover {
+    background: none;
+  }
+}
+
+/* ---------- cup bracket and stats ---------- */
+.pk-cupscreen,
+.pk-stats {
+  align-items: center;
+  gap: var(--ng-s-2, 8px);
+}
+.pk-cupline {
+  margin: 0;
+  max-width: 340px;
+  text-align: center;
+  white-space: normal;
+  border-radius: 12px;
+}
+.pk-bracket {
+  /* fit the viewport: the title, summary and two buttons take about 230 px */
+  width: min(100%, 360px, calc((100dvh - 250px) * 360 / 420));
+  min-width: 260px;
+  container-type: inline-size;
+}
+/* slot contents scale with the bracket (cqw = 1% of its width) so a code never spills out of its slot */
+.pk-bslot {
+  gap: 3px;
+  gap: 1.1cqw;
+  padding: 0 3px;
+  padding: 0 1.1cqw;
+}
+.pk-bslot .pk-crest {
+  width: 21px;
+  height: 21px;
+  width: 6.4cqw;
+  height: 6.4cqw;
+}
+.pk-bslot .pk-plate {
+  padding: 0 4px;
+  padding: 0 1.3cqw;
+  border-width: 1.5px;
+  font-size: 11px;
+  font-size: 3.3cqw;
+}
+.pk-bslot.is-out {
+  text-decoration: none;
+}
+.pk-trophy {
+  filter: grayscale(0.9) opacity(0.5);
+}
+.pk-trophy[data-won] {
+  filter: none;
+}
+.pk-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-s-2, 8px);
+  width: 100%;
+  max-width: 340px;
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  .pk-cupscreen {
+    max-width: 760px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    column-gap: var(--ng-s-4, 16px);
+    align-content: center;
+    justify-items: center;
+  }
+  .pk-cupscreen > h2 {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .pk-cupscreen > .pk-bracket {
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    /* an explicit width: a percentage of an auto grid column would be zero */
+    width: calc((100dvh - 24px) * 360 / 420);
+    min-width: 0;
+  }
+  .pk-cupscreen > .pk-cupline {
+    grid-column: 2;
+  }
+  .pk-cupscreen > .pk-actions {
+    grid-column: 2;
+    align-self: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pk-aim__arrow {
+    transition: none;
+  }
+}
+
+/* The sticky action bar must never sit on top of a row at rest: on the how-to screen, and on short portrait
+   screens, the bar flows after the content instead of floating over it. */
+[data-screen='howto'] .ng-sticky-actions {
+  position: static;
+  background: none;
+}
+@media (max-height: 760px) and (orientation: portrait) {
+  [data-screen='results'] .ng-sticky-actions {
+    position: static;
+    background: none;
   }
 }

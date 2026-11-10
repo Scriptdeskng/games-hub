@@ -1,34 +1,154 @@
 /* Penalty King HUD controls: aim, power, curve, dive zones, banners. Part of penalty-art.css. */
-.pk-aim { position: absolute; z-index: 2; left: 50%; top: 56%; width: 0; height: 0; pointer-events: none; }
-.pk-aim__reticle { position: absolute; width: 64px; height: 64px; margin: -32px 0 0 -32px; background: url('./hud/aim-reticle.svg') center / contain no-repeat; }
-.pk-aim__reticle.is-locked { background-image: url('./hud/aim-reticle-lock.svg'); }
-.pk-aim__arrow { position: absolute; width: 40px; height: 136px; left: -20px; bottom: 0; transform-origin: 50% 100%; transform: rotate(var(--a, 0deg)) scaleY(var(--len, 1)); background: url('./hud/aim-arrow.svg') center / 100% 100% no-repeat; }
+.pk-aim {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 56%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.pk-aim__reticle {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  background: url('./hud/aim-reticle.svg') center / contain no-repeat;
+}
+.pk-aim__reticle.is-locked {
+  background-image: url('./hud/aim-reticle-lock.svg');
+}
+.pk-aim__arrow {
+  position: absolute;
+  width: 40px;
+  height: 136px;
+  left: -20px;
+  bottom: 0;
+  transform-origin: 50% 100%;
+  transform: rotate(var(--a, 0deg)) scaleY(var(--len, 1));
+  background: url('./hud/aim-arrow.svg') center / 100% 100% no-repeat;
+}
 
 /* power meter: --p 0..1 reveals the fill from the bottom (translate, never height) */
-.pk-power { position: absolute; z-index: 2; right: 10px; bottom: 90px; width: 40px; height: 200px; }
-.pk-power__fill, .pk-power__frame { position: absolute; inset: 0; background: center / 100% 100% no-repeat; }
-.pk-power__fill { background-image: url('./hud/power-fill.svg'); clip-path: inset(calc((1 - var(--p, 0)) * 100%) 0 0 0); }
-.pk-power__frame { background-image: url('./hud/power-frame.svg'); }
-.pk-power__label { position: absolute; right: 46px; top: 8px; white-space: nowrap; }
+.pk-power {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 90px;
+  width: 40px;
+  height: 200px;
+}
+.pk-power__fill,
+.pk-power__frame {
+  position: absolute;
+  inset: 0;
+  background: center / 100% 100% no-repeat;
+}
+.pk-power__fill {
+  background-image: url('./hud/power-fill.svg');
+  clip-path: inset(calc((1 - var(--p, 0)) * 100%) 0 0 0);
+}
+.pk-power__frame {
+  background-image: url('./hud/power-frame.svg');
+}
+.pk-power__label {
+  position: absolute;
+  right: 46px;
+  top: 8px;
+  white-space: nowrap;
+}
 
-.pk-curve { position: absolute; z-index: 2; left: 10px; bottom: 90px; display: grid; justify-items: center; gap: 4px; }
-.pk-curve__icon { width: 48px; height: 48px; background: url('./hud/curve-none.svg') center / contain no-repeat; }
-.pk-curve[data-curve='-1'] .pk-curve__icon { background-image: url('./hud/curve-left.svg'); }
-.pk-curve[data-curve='1'] .pk-curve__icon { background-image: url('./hud/curve-right.svg'); }
+.pk-curve {
+  position: absolute;
+  z-index: 2;
+  left: 10px;
+  bottom: 90px;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.pk-curve__icon {
+  width: 48px;
+  height: 48px;
+  background: url('./hud/curve-none.svg') center / contain no-repeat;
+}
+.pk-curve[data-curve='-1'] .pk-curve__icon {
+  background-image: url('./hud/curve-left.svg');
+}
+.pk-curve[data-curve='1'] .pk-curve__icon {
+  background-image: url('./hud/curve-right.svg');
+}
 
 /* dive zones: six real buttons over the goal opening; the arrow in each cell shows the direction (shape, not colour) */
-.pk-dive { position: absolute; z-index: 2; left: 50%; width: min(86vw, 360px); aspect-ratio: 3 / 1; transform: translateX(-50%); display: grid; grid-template: 1fr 1fr / repeat(3, 1fr); background: url('./hud/dive-grid.svg') center / 100% 100% no-repeat; }
-.pk-dive__zone { min-height: 44px; background: none; border: 0; border-radius: 8px; color: transparent; }
-.pk-dive__zone:focus-visible { outline: 3px solid var(--ng-focus); }
-.pk-dive__zone.is-pick { outline: 3px dashed var(--pk-gold); outline-offset: -3px; }
+.pk-dive {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  width: min(86vw, 360px);
+  aspect-ratio: 3 / 1;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template: 1fr 1fr / repeat(3, 1fr);
+  background: url('./hud/dive-grid.svg') center / 100% 100% no-repeat;
+}
+.pk-dive__zone {
+  min-height: 44px;
+  background: none;
+  border: 0;
+  border-radius: 8px;
+  color: transparent;
+}
+.pk-dive__zone:focus-visible {
+  outline: 3px solid var(--ng-focus);
+}
+.pk-dive__zone.is-pick {
+  outline: 3px dashed var(--pk-gold);
+  outline-offset: -3px;
+}
 
 /* result banners: art plate with a solid centre; the word sits on the plate (cream on a deep plate, 7:1 or better) */
-.pk-banner { position: absolute; z-index: 5; left: 50%; top: 34%; width: min(92vw, 360px); aspect-ratio: 320 / 96; transform: translateX(-50%); display: grid; place-items: center; padding-left: 28%; background: center / 100% 100% no-repeat; animation: pk-banner-in 360ms var(--ng-ease-spring, ease-out) both; }
-.pk-banner--goal { background-image: url('./banners/result-goal.svg'); }
-.pk-banner--saved { background-image: url('./banners/result-saved.svg'); }
-.pk-banner--miss { background-image: url('./banners/result-miss.svg'); }
-.pk-banner--post { background-image: url('./banners/result-post.svg'); }
-.pk-banner--sudden { background-image: url('./banners/banner-sudden.svg'); }
-.pk-banner--round { background-image: url('./banners/banner-round.svg'); }
-.pk-banner__word { font-family: var(--ng-font-display); font-size: clamp(20px, 6vw, 30px); color: var(--pk-cream); text-transform: uppercase; letter-spacing: .02em; }
-@keyframes pk-banner-in { from { transform: translateX(-50%) scale(.6); opacity: 0; } }
+.pk-banner {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  top: 34%;
+  width: min(92vw, 360px);
+  aspect-ratio: 320 / 96;
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  padding-left: 28%;
+  background: center / 100% 100% no-repeat;
+  animation: pk-banner-in 360ms var(--ng-ease-spring, ease-out) both;
+}
+.pk-banner--goal {
+  background-image: url('./banners/result-goal.svg');
+}
+.pk-banner--saved {
+  background-image: url('./banners/result-saved.svg');
+}
+.pk-banner--miss {
+  background-image: url('./banners/result-miss.svg');
+}
+.pk-banner--post {
+  background-image: url('./banners/result-post.svg');
+}
+.pk-banner--sudden {
+  background-image: url('./banners/banner-sudden.svg');
+}
+.pk-banner--round {
+  background-image: url('./banners/banner-round.svg');
+}
+.pk-banner__word {
+  font-family: var(--ng-font-display);
+  font-size: clamp(20px, 6vw, 30px);
+  color: var(--pk-cream);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+@keyframes pk-banner-in {
+  from {
+    transform: translateX(-50%) scale(0.6);
+    opacity: 0;
+  }
+}

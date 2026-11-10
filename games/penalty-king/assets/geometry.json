@@ -37,17 +37,8 @@
   "scoreboard": {
     "w": 340,
     "h": 92,
-    "rows": [
-      34,
-      66
-    ],
-    "slotX": [
-      148,
-      180,
-      212,
-      244,
-      276
-    ],
+    "rows": [34, 66],
+    "slotX": [148, 180, 212, 244, 276],
     "totalX": 314,
     "slotR": 13
   },
@@ -56,43 +47,13 @@
     "h": 420,
     "slotW": 82,
     "slotH": 34,
-    "cols": [
-      4,
-      106,
-      208
-    ],
+    "cols": [4, 106, 208],
     "winnerX": 304,
-    "r1": [
-      51,
-      97,
-      143,
-      189,
-      235,
-      281,
-      327,
-      373
-    ],
-    "r2": [
-      74,
-      166,
-      258,
-      350
-    ],
-    "r3": [
-      120,
-      304
-    ],
+    "r1": [51, 97, 143, 189, 235, 281, 327, 373],
+    "r2": [74, 166, 258, 350],
+    "r3": [120, 304],
     "win": 212,
-    "order": [
-      "lanterns",
-      "sparks",
-      "drifters",
-      "comets",
-      "harriers",
-      "embers",
-      "blazers",
-      "bells"
-    ]
+    "order": ["lanterns", "sparks", "drifters", "comets", "harriers", "embers", "blazers", "bells"]
   },
   "teams": [
     {
@@ -182,23 +143,14 @@
     "horizon": 230,
     "goalLine": 316,
     "goalW": 180,
-    "spot": [
-      180,
-      510
-    ],
+    "spot": [180, 510],
     "boxFront": 369,
     "areaFront": 570,
-    "arc": [
-      170,
-      100
-    ],
+    "arc": [170, 100],
     "boxHalf": 0.62,
     "goalH": 60,
     "goalSpriteScale": 1,
-    "goalSpriteOrigin": [
-      60,
-      236
-    ],
+    "goalSpriteOrigin": [60, 236],
     "keeperScaleAtGoal": 0.46,
     "unitsPerMetre": 24.6
   },
@@ -208,20 +160,14 @@
     "horizon": 108,
     "goalLine": 180,
     "goalW": 200,
-    "spot": [
-      320,
-      292
-    ],
+    "spot": [320, 292],
     "boxFront": 225,
     "areaFront": 338,
     "arc": null,
     "boxHalf": 0.62,
     "goalH": 66.7,
     "goalSpriteScale": 1.1,
-    "goalSpriteOrigin": [
-      186.7,
-      91.1
-    ],
+    "goalSpriteOrigin": [186.7, 91.1],
     "keeperScaleAtGoal": 0.5111111111111112,
     "unitsPerMetre": 27.3
   }

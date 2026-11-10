@@ -1,18 +1,29 @@
 import '@naija/core/ui-kit';
+import '@naija/core/ai-kit';
+import '../assets/penalty-art.css';
 import './style.css';
 import { boot } from '@naija/core/boot';
 import { imageTask, runLoader } from '@naija/core/loader';
 import { gameConfig } from '../game.config';
 import { createApp } from './app';
+import { penaltySfx } from './audio/sfx';
 import en from './i18n/en.json';
 import pcm from './i18n/pcm.json';
 import { emptyProgress, sanitizeProgress } from './rules';
-import { gameSfx } from './sfx';
 
 const root = document.getElementById('app') as HTMLElement;
 const core = boot({ slug: gameConfig.slug, root, locales: { en, pcm } });
-core.audio.registerSfx(gameSfx);
+// core's own cues (tap, select, back, win, lose ...) stay registered; the penalty cues are added on top
+core.audio.registerSfx(penaltySfx);
 root.classList.add(gameConfig.theme);
+
+/** Art needed on the first screens, preloaded behind the loader. */
+const PRELOAD = [
+  './assets/icon/menu-mark.svg',
+  './assets/avatars/ozavize.svg',
+  './assets/avatars/ndako.svg',
+  './assets/avatars/hamman.svg',
+];
 
 async function main(): Promise<void> {
   let progress = emptyProgress();
@@ -21,7 +32,7 @@ async function main(): Promise<void> {
     t: core.t,
     scope: core.scope,
     tasks: [
-      imageTask('./assets/agogo.svg'),
+      ...PRELOAD.map((u) => imageTask(u)),
       {
         run: async () => {
           progress = sanitizeProgress(await core.portal.loadProgress(emptyProgress()));

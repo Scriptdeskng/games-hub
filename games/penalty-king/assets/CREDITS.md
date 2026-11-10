@@ -2,24 +2,24 @@
 
 All art is **made in-repo by the asset-designer (Claude)** from basic shapes and paths. Licence: project-owned (same as the repository). No traced, copied or downloaded artwork; no real clubs, badges, kits, players, stadiums, brands, logos or people. Generators: `scripts/gen-penalty-king-art.mjs` (with `penalty-king-common`, `-figures`, `-scenes`, `-props`, `-hud`, `-crests`, `-people`); checker: `scripts/check-penalty-king-art.mjs`. Brief: `docs/assets/penalty-king-brief.md`. SVGs are not run through svgo (not installed); the whole folder is about 88 KB gzip.
 
-| Path | What | Made by | Licence |
-| --- | --- | --- | --- |
-| `scene/{community,stadium}-{portrait,landscape}.svg`, `scene/crowd-cheer.svg` | perspective pitch and backdrop for a dusk community pitch and a floodlit stadium (generic crowd, patterned ad boards, no text) | asset-designer, in-repo | project-owned |
-| `goal/goal-back.svg`, `goal-front.svg`, `goal-front-wood.svg` | goal net (akwete diamond lattice), painted and timber frames | asset-designer, in-repo | project-owned |
-| `ball/ball.svg`, `ball-shadow.svg` | plain ball (no brand pattern) and shadow | asset-designer, in-repo | project-owned |
-| `keeper/keeper-{dark,mid,light}.svg` | 3x3 keeper sprite sheets (9 poses) | asset-designer, in-repo | project-owned |
-| `striker/striker-<team>.svg` (8) | 3x3 striker sprite sheets in each invented team's kit (9 poses) | asset-designer, in-repo | project-owned |
-| `teams/crest-<team>.svg`, `teams/kit-<team>.svg` (16) | invented crests and kit icons for 8 invented teams | asset-designer, in-repo | project-owned |
-| `hud/*.svg` (31) | aim, power, curve, dive zones, phase chips, role icons, kick-result dots, badges | asset-designer, in-repo | project-owned |
-| `banners/*.svg` (6), `scoreboard/board-frame.svg`, `cup/bracket-8.svg`, `cup/trophy.svg` | result banners, scoreboard, 8-team bracket, trophy | asset-designer, in-repo | project-owned |
-| `fx/*.svg` (6) | net bulge, ribbon burst, save ring, post clang, dust, floodlight glow | asset-designer, in-repo | project-owned |
-| `icon/menu-mark.svg`, `avatars/{ozavize,ndako,hamman}.svg` | menu mark and CPU persona busts (placeholders for an illustrator) | asset-designer, in-repo | project-owned |
-| `thumb/thumb-512x512.svg`, `thumb-1024x500.svg` | portal thumbnail sources (placeholders, no text) | asset-designer, in-repo | project-owned |
-| `geometry.json` | scene geometry, sprite cells, slot positions for the canvas and DOM | asset-designer | project-owned |
-| `penalty-art.css`, `penalty-art-hud.css`, `penalty-art-fx.css` | `.pk-*` hooks and keyframes | asset-designer | project-owned |
-| `audio/music/penalty-*-chant.mp3`, `audio/voice/vo-pk-*.mp3` (17), `audio/voice-manifest.json` | silent placeholders (copied from the Ludo silent file) and manifest | asset-designer | project-owned |
-| `ship.json` | include list of runtime art | asset-designer | project-owned |
-| `agogo.svg` | scaffold template art, delete when the real UI replaces the scaffold | template | project-owned |
-| `../src/audio/sfx.ts`, `sfx.test.ts`, `music.ts` | synth cue map `penaltySfx` and stand-in music | asset-designer | project-owned |
+| Path                                                                                           | What                                                                                                                           | Made by                 | Licence       |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------- | ------------- |
+| `scene/{community,stadium}-{portrait,landscape}.svg`, `scene/crowd-cheer.svg`                  | perspective pitch and backdrop for a dusk community pitch and a floodlit stadium (generic crowd, patterned ad boards, no text) | asset-designer, in-repo | project-owned |
+| `goal/goal-back.svg`, `goal-front.svg`, `goal-front-wood.svg`                                  | goal net (akwete diamond lattice), painted and timber frames                                                                   | asset-designer, in-repo | project-owned |
+| `ball/ball.svg`, `ball-shadow.svg`                                                             | plain ball (no brand pattern) and shadow                                                                                       | asset-designer, in-repo | project-owned |
+| `keeper/keeper-{dark,mid,light}.svg`                                                           | 3x3 keeper sprite sheets (9 poses)                                                                                             | asset-designer, in-repo | project-owned |
+| `striker/striker-<team>.svg` (8)                                                               | 3x3 striker sprite sheets in each invented team's kit (9 poses)                                                                | asset-designer, in-repo | project-owned |
+| `teams/crest-<team>.svg`, `teams/kit-<team>.svg` (16)                                          | invented crests and kit icons for 8 invented teams                                                                             | asset-designer, in-repo | project-owned |
+| `hud/*.svg` (31)                                                                               | aim, power, curve, dive zones, phase chips, role icons, kick-result dots, badges                                               | asset-designer, in-repo | project-owned |
+| `banners/*.svg` (6), `scoreboard/board-frame.svg`, `cup/bracket-8.svg`, `cup/trophy.svg`       | result banners, scoreboard, 8-team bracket, trophy                                                                             | asset-designer, in-repo | project-owned |
+| `fx/*.svg` (6)                                                                                 | net bulge, ribbon burst, save ring, post clang, dust, floodlight glow                                                          | asset-designer, in-repo | project-owned |
+| `icon/menu-mark.svg`, `avatars/{ozavize,ndako,hamman}.svg`                                     | menu mark and CPU persona busts (placeholders for an illustrator)                                                              | asset-designer, in-repo | project-owned |
+| `thumb/thumb-512x512.svg`, `thumb-1024x500.svg`                                                | portal thumbnail sources (placeholders, no text)                                                                               | asset-designer, in-repo | project-owned |
+| `geometry.json`                                                                                | scene geometry, sprite cells, slot positions for the canvas and DOM                                                            | asset-designer          | project-owned |
+| `penalty-art.css`, `penalty-art-hud.css`, `penalty-art-fx.css`                                 | `.pk-*` hooks and keyframes                                                                                                    | asset-designer          | project-owned |
+| `audio/music/penalty-*-chant.mp3`, `audio/voice/vo-pk-*.mp3` (17), `audio/voice-manifest.json` | silent placeholders (copied from the Ludo silent file) and manifest                                                            | asset-designer          | project-owned |
+| `ship.json`                                                                                    | include list of runtime art                                                                                                    | asset-designer          | project-owned |
+| `agogo.svg`                                                                                    | scaffold template art, delete when the real UI replaces the scaffold                                                           | template                | project-owned |
+| `../src/audio/sfx.ts`, `sfx.test.ts`, `music.ts`                                               | synth cue map `penaltySfx` and stand-in music                                                                                  | asset-designer          | project-owned |
 
 Fonts: none added (shared Nunito and Bungee, see `packages/core/assets/CREDITS.md`, OFL). Third-party items: none. Sounds are synthesized at runtime by `@naija/core/audio`.

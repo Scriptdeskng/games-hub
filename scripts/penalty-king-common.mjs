@@ -67,17 +67,119 @@ export const contrast = (a, b) => {
  * teams stay distinguishable in greyscale. Kit colour pairs avoid red/white, blue/white, green/white and other familiar pairs.
  */
 export const TEAMS = [
-  { id: 'lanterns', name: 'Lagoon Lanterns', short: 'LAG', city: 'Lagos (the lagoon, evening lights)', zone: 'South-West', shirt: '#0E7C86', trim: '#FFC933', shorts: '#08454E', pattern: 'sash', skin: '#5B3A25', hair: 'low' },
-  { id: 'sparks', name: 'Sahel Sparks', short: 'SAH', city: 'Sokoto and Katsina (the Sahel edge)', zone: 'North-West', shirt: '#E8AE32', trim: '#4B1A55', shorts: '#4B1A55', pattern: 'hoops', skin: '#855536', hair: 'bun' },
-  { id: 'drifters', name: 'Delta Drifters', short: 'DEL', city: 'Yenagoa and Port Harcourt (creeks, canoes)', zone: 'South-South', shirt: '#FF7A63', trim: '#14264F', shorts: '#14264F', pattern: 'chevron', skin: '#3B2314', hair: 'twists' },
-  { id: 'comets', name: 'Capital Comets', short: 'CAP', city: 'Abuja (wide roads, a monolith on the skyline)', zone: 'North-Central (FCT)', shirt: '#2C2C31', trim: '#B6E04A', shorts: '#1D1D20', pattern: 'halves', skin: '#6B3F26', hair: 'low' },
-  { id: 'harriers', name: 'Highland Harriers', short: 'HIG', city: 'Jos and the Plateau highlands', zone: 'North-Central', shirt: '#B4532A', trim: '#FFF3DA', shorts: '#7A3A20', pattern: 'yoke', skin: '#A06A44', hair: 'headband' },
-  { id: 'embers', name: 'Eastern Embers', short: 'EAS', city: 'Enugu, Owerri and Aba (the forge and the market)', zone: 'South-East', shirt: '#8C1D3D', trim: '#F8B6A0', shorts: '#5E1228', pattern: 'band', skin: '#4A2C1A', hair: 'low' },
-  { id: 'blazers', name: 'Basin Blazers', short: 'BAS', city: 'Maiduguri and the Lake Chad basin', zone: 'North-East', shirt: '#C2185B', trim: '#FFD1E3', shorts: '#7A0F3B', pattern: 'quarters', skin: '#7B4A2E', hair: 'bun' },
-  { id: 'bells', name: 'Brass City Bells', short: 'BRA', city: 'Benin City (brass casting heritage)', zone: 'South-South (Edo)', shirt: '#3B2A78', trim: '#E4702A', shorts: '#241A4D', pattern: 'pin', skin: '#5E3822', hair: 'cornrow' },
+  {
+    id: 'lanterns',
+    name: 'Lagoon Lanterns',
+    short: 'LAG',
+    city: 'Lagos (the lagoon, evening lights)',
+    zone: 'South-West',
+    shirt: '#0E7C86',
+    trim: '#FFC933',
+    shorts: '#08454E',
+    pattern: 'sash',
+    skin: '#5B3A25',
+    hair: 'low',
+  },
+  {
+    id: 'sparks',
+    name: 'Sahel Sparks',
+    short: 'SAH',
+    city: 'Sokoto and Katsina (the Sahel edge)',
+    zone: 'North-West',
+    shirt: '#E8AE32',
+    trim: '#4B1A55',
+    shorts: '#4B1A55',
+    pattern: 'hoops',
+    skin: '#855536',
+    hair: 'bun',
+  },
+  {
+    id: 'drifters',
+    name: 'Delta Drifters',
+    short: 'DEL',
+    city: 'Yenagoa and Port Harcourt (creeks, canoes)',
+    zone: 'South-South',
+    shirt: '#FF7A63',
+    trim: '#14264F',
+    shorts: '#14264F',
+    pattern: 'chevron',
+    skin: '#3B2314',
+    hair: 'twists',
+  },
+  {
+    id: 'comets',
+    name: 'Capital Comets',
+    short: 'CAP',
+    city: 'Abuja (wide roads, a monolith on the skyline)',
+    zone: 'North-Central (FCT)',
+    shirt: '#2C2C31',
+    trim: '#B6E04A',
+    shorts: '#1D1D20',
+    pattern: 'halves',
+    skin: '#6B3F26',
+    hair: 'low',
+  },
+  {
+    id: 'harriers',
+    name: 'Highland Harriers',
+    short: 'HIG',
+    city: 'Jos and the Plateau highlands',
+    zone: 'North-Central',
+    shirt: '#B4532A',
+    trim: '#FFF3DA',
+    shorts: '#7A3A20',
+    pattern: 'yoke',
+    skin: '#A06A44',
+    hair: 'headband',
+  },
+  {
+    id: 'embers',
+    name: 'Eastern Embers',
+    short: 'EAS',
+    city: 'Enugu, Owerri and Aba (the forge and the market)',
+    zone: 'South-East',
+    shirt: '#8C1D3D',
+    trim: '#F8B6A0',
+    shorts: '#5E1228',
+    pattern: 'band',
+    skin: '#4A2C1A',
+    hair: 'low',
+  },
+  {
+    id: 'blazers',
+    name: 'Basin Blazers',
+    short: 'BAS',
+    city: 'Maiduguri and the Lake Chad basin',
+    zone: 'North-East',
+    shirt: '#C2185B',
+    trim: '#FFD1E3',
+    shorts: '#7A0F3B',
+    pattern: 'quarters',
+    skin: '#7B4A2E',
+    hair: 'bun',
+  },
+  {
+    id: 'bells',
+    name: 'Brass City Bells',
+    short: 'BRA',
+    city: 'Benin City (brass casting heritage)',
+    zone: 'South-South (Edo)',
+    shirt: '#3B2A78',
+    trim: '#E4702A',
+    shorts: '#241A4D',
+    pattern: 'pin',
+    skin: '#5E3822',
+    hair: 'cornrow',
+  },
 ];
 /** Neutral goalkeeper kit worn by whoever keeps goal (no team uses cyan); sleeves long. */
-export const KEEPER = { shirt: '#59C8E8', trim: '#0B1F14', shorts: '#0B1F14', pattern: 'yoke', hair: 'low' };
+export const KEEPER = {
+  shirt: '#59C8E8',
+  trim: '#0B1F14',
+  shorts: '#0B1F14',
+  pattern: 'yoke',
+  hair: 'low',
+};
 export const KEEPER_SKINS = { dark: '#4F2E1B', mid: '#855536', light: '#A8744C' };
 export const teamById = Object.fromEntries(TEAMS.map((t) => [t.id, t]));
 
@@ -90,24 +192,35 @@ export const shirtPattern = (kind, c, w, h) => {
     x1 = w / 2 + 3,
     y0 = -h / 2 - 2,
     y1 = h / 2 + 2;
-  const R = (x, y, ww, hh) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(ww)}" height="${f1(hh)}" fill="${c}"/>`;
+  const R = (x, y, ww, hh) =>
+    `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(ww)}" height="${f1(hh)}" fill="${c}"/>`;
   switch (kind) {
     case 'sash':
       return `<path d="M${f1(x0)} ${f1(y0)}h${f1(w * 0.42)}L${f1(x1)} ${f1(y1)}h${f1(-w * 0.42)}z" fill="${c}"/>`;
     case 'hoops':
       return [-0.32, -0.04, 0.24].map((k) => R(x0, k * h, w + 6, h * 0.13)).join('');
     case 'chevron':
-      return [0, 0.26].map((k) => `<path d="M${f1(x0)} ${f1(-h * 0.2 + k * h)}L0 ${f1(h * 0.04 + k * h)}L${f1(x1)} ${f1(-h * 0.2 + k * h)}" fill="none" stroke="${c}" stroke-width="${f1(h * 0.14)}"/>`).join('');
+      return [0, 0.26]
+        .map(
+          (k) =>
+            `<path d="M${f1(x0)} ${f1(-h * 0.2 + k * h)}L0 ${f1(h * 0.04 + k * h)}L${f1(x1)} ${f1(-h * 0.2 + k * h)}" fill="none" stroke="${c}" stroke-width="${f1(h * 0.14)}"/>`,
+        )
+        .join('');
     case 'halves':
       return R(0, y0, x1, h + 4);
     case 'yoke':
       return R(x0, y0, w + 6, h * 0.32);
     case 'band':
-      return R(x0, -h * 0.14, w + 6, h * 0.28) + `<path d="M0 ${f1(-h * 0.14)}l${f1(w * 0.12)} ${f1(h * 0.14)}l${f1(-w * 0.12)} ${f1(h * 0.14)}l${f1(-w * 0.12)} ${f1(-h * 0.14)}z" fill="none" stroke="${INK}" stroke-width="1.4"/>`;
+      return (
+        R(x0, -h * 0.14, w + 6, h * 0.28) +
+        `<path d="M0 ${f1(-h * 0.14)}l${f1(w * 0.12)} ${f1(h * 0.14)}l${f1(-w * 0.12)} ${f1(h * 0.14)}l${f1(-w * 0.12)} ${f1(-h * 0.14)}z" fill="none" stroke="${INK}" stroke-width="1.4"/>`
+      );
     case 'quarters':
       return R(x0, y0, w / 2 + 3, h / 2 + 2) + R(0, 0, x1, y1);
     case 'pin':
-      return [-0.36, -0.12, 0.12, 0.36].map((k) => R(k * w - w * 0.04, y0, w * 0.08, h + 4)).join('');
+      return [-0.36, -0.12, 0.12, 0.36]
+        .map((k) => R(k * w - w * 0.04, y0, w * 0.08, h + 4))
+        .join('');
     default:
       return '';
   }

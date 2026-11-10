@@ -43,7 +43,7 @@
     {
       "slug": "penalty-king",
       "title": "Penalty King",
-      "deploy": true
+      "deploy": false
     }
   ]
 }

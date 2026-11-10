@@ -11,7 +11,8 @@ const bust = ({ bg, skin, shirt, hair, extra = '', title, beard = '' }) =>
     `<title>${title}</title><path fill="${bg}" d="M0 0h128v128H0z"/><circle cx="64" cy="62" r="50" fill="#fff" opacity=".2"/><path fill="${shirt}" d="M8 128c0-28 26-38 56-38s56 10 56 38Z"/><rect width="20" height="24" x="54" y="74" fill="${skin}" rx="7"/><path fill="#000" opacity=".15" d="M54 82h20v6q-10 6-20 0z"/>${hair.back ?? ''}<ellipse cx="64" cy="58" rx="24" ry="28" fill="${skin}"/>${beard}${hair.front ?? ''}<ellipse cx="54" cy="58" rx="4.2" ry="3.8" fill="#fff"/><circle cx="54" cy="58.4" r="2.5" fill="#1a0f0a"/><circle cx="55" cy="57.4" r=".9" fill="#fff"/><ellipse cx="74" cy="58" rx="4.2" ry="3.8" fill="#fff"/><circle cx="74" cy="58.4" r="2.5" fill="#1a0f0a"/><circle cx="75" cy="57.4" r=".9" fill="#fff"/><path d="M48 49q6-5 12-1m8 0q6-4 12 1" fill="none" stroke="#1a0f0a" stroke-width="3" stroke-linecap="round"/><path d="M58 72q6 6 12 0" fill="none" stroke="#7a2a1a" stroke-width="3" stroke-linecap="round"/>${extra}`,
     ' width="128" height="128"',
   );
-const glove = (x, y) => `<circle cx="${x}" cy="${y}" r="11" fill="${GOLD}" stroke="${INK}" stroke-width="3"/><path d="M${x - 5} ${y + 5}V${y - 3}M${x} ${y + 5}V${y - 5}M${x + 5} ${y + 5}V${y - 3}" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>`;
+const glove = (x, y) =>
+  `<circle cx="${x}" cy="${y}" r="11" fill="${GOLD}" stroke="${INK}" stroke-width="3"/><path d="M${x - 5} ${y + 5}V${y - 3}M${x} ${y + 5}V${y - 5}M${x + 5} ${y + 5}V${y - 3}" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>`;
 
 // Ozavize: Ebira, Okene (Kogi), 40s. A physiotherapist who keeps goal in a community league: warm, chatty, dives early.
 // Keeper top in the neutral keeper cyan, gold gloves held up, short natural hair with an aso-oke strip headband.
@@ -58,22 +59,124 @@ export const AVATARS = { ozavize, ndako, hamman };
 
 // Commentator lines (speaker: the pitch commentator, an invented generic voice; NOT modelled on any real commentator). All Pidgin `_review`.
 export const VOICE = [
-  { id: 'pk-start', pcm: 'Oya, penalty time!', en: 'Come on, penalty time!', note: 'Bright, quick, rising on "time".', used: 'shootout start' },
-  { id: 'pk-goal', pcm: 'Goal! E don enter!', en: "Goal! It's in!", note: 'Long, rising "Goooal", then a delighted "E don enter".', used: 'player or CPU scores (rotate with shared `goal`)' },
-  { id: 'pk-rocket', pcm: 'Chai! Na rocket be that!', en: 'Wow! What a rocket!', note: 'Impressed, big, short.', used: 'a goal from a hard, sweet-spot shot' },
-  { id: 'pk-saved', pcm: 'Keeper don save am! Wetin be that!', en: 'The keeper saves it! What a stop!', note: 'Sharp, triumphant, punchy.', used: 'a save (rotate with shared `saved`)' },
-  { id: 'pk-post', pcm: 'E knock the post! So close!', en: 'Off the post! So close!', note: 'A gasp, then a laugh of disbelief.', used: 'ball hits the post or bar' },
-  { id: 'pk-over', pcm: 'E fly pass the bar o!', en: 'Over the bar!', note: 'Rueful, a little drawn out.', used: 'ball goes over' },
-  { id: 'pk-wide', pcm: 'Wide! E miss the goal!', en: 'Wide of the goal!', note: 'Rueful, quick.', used: 'ball goes wide' },
-  { id: 'pk-level', pcm: 'Score don level o!', en: 'The score is level!', note: 'Tense, building.', used: 'scores level after five kicks' },
-  { id: 'pk-sudden', pcm: 'Sudden death! No room for mistake!', en: 'Sudden death! No room for error!', note: 'Low and tense, a pause before "No room".', used: 'sudden death begins' },
-  { id: 'pk-qf', pcm: 'Quarter-final! Make we go!', en: 'Quarter-final! Here we go!', note: 'Announcing, upbeat.', used: 'cup quarter-final starts' },
-  { id: 'pk-sf', pcm: 'Semi-final! Only four teams remain!', en: 'Semi-final! Only four teams remain!', note: 'Rising, a little awe.', used: 'cup semi-final starts' },
-  { id: 'pk-final', pcm: 'Na the final be this!', en: 'This is the final!', note: 'Big, slow, dramatic.', used: 'cup final starts' },
-  { id: 'pk-advance', pcm: 'You don waka enter next round!', en: 'You are through to the next round!', note: 'Warm, celebratory.', used: 'bracket advance' },
-  { id: 'pk-win', pcm: 'You don win! Penalty King!', en: 'You win! Penalty King!', note: 'Big, warm, celebratory.', used: 'shootout won' },
-  { id: 'pk-champion', pcm: 'Champion! Na your own cup!', en: 'Champions! The cup is yours!', note: 'The biggest line in the game: long, proud, rising.', used: 'cup won' },
-  { id: 'pk-lose', pcm: 'No vex. Next time go better.', en: 'Tough one. Next time will be better.', note: 'Kind and encouraging, never pitying.', used: 'shootout lost' },
-  { id: 'pk-knockout', pcm: 'Cup run don end. You go try again.', en: 'Your cup run ends here. Try again.', note: 'Gentle, steady, encouraging.', used: 'knocked out of the cup' },
+  {
+    id: 'pk-start',
+    pcm: 'Oya, penalty time!',
+    en: 'Come on, penalty time!',
+    note: 'Bright, quick, rising on "time".',
+    used: 'shootout start',
+  },
+  {
+    id: 'pk-goal',
+    pcm: 'Goal! E don enter!',
+    en: "Goal! It's in!",
+    note: 'Long, rising "Goooal", then a delighted "E don enter".',
+    used: 'player or CPU scores (rotate with shared `goal`)',
+  },
+  {
+    id: 'pk-rocket',
+    pcm: 'Chai! Na rocket be that!',
+    en: 'Wow! What a rocket!',
+    note: 'Impressed, big, short.',
+    used: 'a goal from a hard, sweet-spot shot',
+  },
+  {
+    id: 'pk-saved',
+    pcm: 'Keeper don save am! Wetin be that!',
+    en: 'The keeper saves it! What a stop!',
+    note: 'Sharp, triumphant, punchy.',
+    used: 'a save (rotate with shared `saved`)',
+  },
+  {
+    id: 'pk-post',
+    pcm: 'E knock the post! So close!',
+    en: 'Off the post! So close!',
+    note: 'A gasp, then a laugh of disbelief.',
+    used: 'ball hits the post or bar',
+  },
+  {
+    id: 'pk-over',
+    pcm: 'E fly pass the bar o!',
+    en: 'Over the bar!',
+    note: 'Rueful, a little drawn out.',
+    used: 'ball goes over',
+  },
+  {
+    id: 'pk-wide',
+    pcm: 'Wide! E miss the goal!',
+    en: 'Wide of the goal!',
+    note: 'Rueful, quick.',
+    used: 'ball goes wide',
+  },
+  {
+    id: 'pk-level',
+    pcm: 'Score don level o!',
+    en: 'The score is level!',
+    note: 'Tense, building.',
+    used: 'scores level after five kicks',
+  },
+  {
+    id: 'pk-sudden',
+    pcm: 'Sudden death! No room for mistake!',
+    en: 'Sudden death! No room for error!',
+    note: 'Low and tense, a pause before "No room".',
+    used: 'sudden death begins',
+  },
+  {
+    id: 'pk-qf',
+    pcm: 'Quarter-final! Make we go!',
+    en: 'Quarter-final! Here we go!',
+    note: 'Announcing, upbeat.',
+    used: 'cup quarter-final starts',
+  },
+  {
+    id: 'pk-sf',
+    pcm: 'Semi-final! Only four teams remain!',
+    en: 'Semi-final! Only four teams remain!',
+    note: 'Rising, a little awe.',
+    used: 'cup semi-final starts',
+  },
+  {
+    id: 'pk-final',
+    pcm: 'Na the final be this!',
+    en: 'This is the final!',
+    note: 'Big, slow, dramatic.',
+    used: 'cup final starts',
+  },
+  {
+    id: 'pk-advance',
+    pcm: 'You don waka enter next round!',
+    en: 'You are through to the next round!',
+    note: 'Warm, celebratory.',
+    used: 'bracket advance',
+  },
+  {
+    id: 'pk-win',
+    pcm: 'You don win! Penalty King!',
+    en: 'You win! Penalty King!',
+    note: 'Big, warm, celebratory.',
+    used: 'shootout won',
+  },
+  {
+    id: 'pk-champion',
+    pcm: 'Champion! Na your own cup!',
+    en: 'Champions! The cup is yours!',
+    note: 'The biggest line in the game: long, proud, rising.',
+    used: 'cup won',
+  },
+  {
+    id: 'pk-lose',
+    pcm: 'No vex. Next time go better.',
+    en: 'Tough one. Next time will be better.',
+    note: 'Kind and encouraging, never pitying.',
+    used: 'shootout lost',
+  },
+  {
+    id: 'pk-knockout',
+    pcm: 'Cup run don end. You go try again.',
+    en: 'Your cup run ends here. Try again.',
+    note: 'Gentle, steady, encouraging.',
+    used: 'knocked out of the cup',
+  },
 ];
 export { f1, PLANTAIN };

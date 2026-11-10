@@ -1,11 +1,19 @@
 {
   "include": [
-    "agogo.svg",
     "icon/menu-mark.svg",
     "avatars/ozavize.svg",
     "avatars/ndako.svg",
-    "avatars/hamman.svg"
+    "avatars/hamman.svg",
+    "goal/goal-back.svg",
+    "goal/goal-front.svg",
+    "goal/goal-front-wood.svg",
+    "ball/ball.svg",
+    "ball/ball-shadow.svg",
+    "keeper/keeper-dark.svg",
+    "keeper/keeper-mid.svg",
+    "keeper/keeper-light.svg",
+    "striker/striker-*.svg"
   ],
-  "dynamic": [],
+  "dynamic": ["striker/striker-*.svg"],
   "keep": []
 }

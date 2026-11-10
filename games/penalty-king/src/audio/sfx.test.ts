@@ -16,8 +16,22 @@ const voices = (name: string) =>
     .sort();
 
 const PROMISED = [
-  'aimTick', 'aimLock', 'powerTick', 'whistleSub', 'shotStrike', 'netIn', 'postHit', 'saveStop',
-  'dive', 'roundStart', 'crowdGoal', 'crowdGroan', 'suddenDeath', 'bracketAdvance', 'shootoutWin', 'shootoutLose',
+  'aimTick',
+  'aimLock',
+  'powerTick',
+  'whistleSub',
+  'shotStrike',
+  'netIn',
+  'postHit',
+  'saveStop',
+  'dive',
+  'roundStart',
+  'crowdGoal',
+  'crowdGroan',
+  'suddenDeath',
+  'bracketAdvance',
+  'shootoutWin',
+  'shootoutLose',
 ];
 
 describe('penaltySfx', () => {

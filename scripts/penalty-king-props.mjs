@@ -1,6 +1,25 @@
 // Penalty King props: goal (back net and front frame, akwete-diamond net), ball, effects, cheering crowd strip, trophy.
 // Goal sprite = 240 x 96 units for a 180-wide opening (x 30..210, y 20..80); the vanishing point is 6 units above the sprite.
-import { INK, CREAM, GOLD, GOLD2, PLANTAIN, TERRA, TERRA2, TERRA3, OCHRE, ORANGE, WINE, SKY, INDIGO, f1, svg, rng, dots, scallop } from './penalty-king-common.mjs';
+import {
+  INK,
+  CREAM,
+  GOLD,
+  GOLD2,
+  PLANTAIN,
+  TERRA,
+  TERRA2,
+  TERRA3,
+  OCHRE,
+  ORANGE,
+  WINE,
+  SKY,
+  INDIGO,
+  f1,
+  svg,
+  rng,
+  dots,
+  scallop,
+} from './penalty-king-common.mjs';
 
 const VP = [120, -6];
 const toVP = (p, k) => [VP[0] + (p[0] - VP[0]) * k, VP[1] + (p[1] - VP[1]) * k];
@@ -8,7 +27,12 @@ const poly = (pts) => `M${pts.map((p) => p.map(f1).join(' ')).join('L')}z`;
 
 /** Net behind the keeper: rear panel, two side panels, a faint roof, an akwete diamond lattice. */
 export const goalBack = () => {
-  const [a, b, c, d] = [[30, 20], [210, 20], [210, 80], [30, 80]];
+  const [a, b, c, d] = [
+    [30, 20],
+    [210, 20],
+    [210, 80],
+    [30, 80],
+  ];
   const [ra, rb, rc, rd] = [a, b, c, d].map((p) => toVP(p, 0.85));
   const lat = `<pattern id="nt" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M4.5 0 9 4.5 4.5 9 0 4.5z" fill="none" stroke="${CREAM}" stroke-width="1"/></pattern>`;
   return svg(
@@ -28,13 +52,24 @@ export const goalFront = (wood) => {
   const pf = wood ? TERRA : CREAM;
   const bands = wood
     ? ''
-    : [24, 38, 52, 66].map((y) => `<rect x="27.4" y="${y}" width="5.2" height="6" fill="#0B3D22"/><rect x="207.4" y="${y}" width="5.2" height="6" fill="#0B3D22"/>`).join('') +
-      [48, 72, 96, 120, 144, 168, 192].map((x) => `<rect x="${x}" y="17.4" width="6" height="5.2" fill="#0B3D22"/>`).join('');
-  const knots = wood ? `<path d="M30 30v3M30 52v3M210 40v3M210 64v3M70 20h3M150 20h3" stroke="${TERRA3}" stroke-width="1.6" stroke-linecap="round"/>` : '';
+    : [24, 38, 52, 66]
+        .map(
+          (y) =>
+            `<rect x="27.4" y="${y}" width="5.2" height="6" fill="#0B3D22"/><rect x="207.4" y="${y}" width="5.2" height="6" fill="#0B3D22"/>`,
+        )
+        .join('') +
+      [48, 72, 96, 120, 144, 168, 192]
+        .map((x) => `<rect x="${x}" y="17.4" width="6" height="5.2" fill="#0B3D22"/>`)
+        .join('');
+  const knots = wood
+    ? `<path d="M30 30v3M30 52v3M210 40v3M210 64v3M70 20h3M150 20h3" stroke="${TERRA3}" stroke-width="1.6" stroke-linecap="round"/>`
+    : '';
   return svg(
     '0 0 240 96',
     `<rect x="26" y="16" width="188" height="7.4" rx="2" fill="${pf}" stroke="${INK}" stroke-width="2.4"/><rect x="26" y="16" width="7.4" height="66" rx="2" fill="${pf}" stroke="${INK}" stroke-width="2.4"/><rect x="206.6" y="16" width="7.4" height="66" rx="2" fill="${pf}" stroke="${INK}" stroke-width="2.4"/>` +
-      bands + knots + `<path d="M28 80h4M208 80h4" stroke="${INK}" stroke-width="3"/>`,
+      bands +
+      knots +
+      `<path d="M28 80h4M208 80h4" stroke="${INK}" stroke-width="3"/>`,
     ' width="240" height="96"',
   );
 };
@@ -47,43 +82,104 @@ export const ball = () =>
       `<path d="M32 22.5 41.5 32 32 41.5 22.5 32z" fill="${GOLD}" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>` +
       `<path d="M32 22.5V8M32 41.5V56M22.5 32H8M41.5 32H56" stroke="${INK}" stroke-width="2.6" stroke-linecap="round"/>` +
       `<path d="M10 20Q20 24 22.5 32M54 44Q44 40 41.5 32M20 54Q24 44 32 41.5M44 10Q40 20 32 22.5" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round"/>` +
-      dots([[32, 7], [32, 57], [7, 32], [57, 32]], 2.4, INK) +
+      dots(
+        [
+          [32, 7],
+          [32, 57],
+          [7, 32],
+          [57, 32],
+        ],
+        2.4,
+        INK,
+      ) +
       `<path d="M14 14A26 26 0 0 1 30 5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".55"/>`,
     ' width="64" height="64"',
   );
-export const ballShadow = () => svg('0 0 64 24', `<ellipse cx="32" cy="12" rx="28" ry="8" fill="#000" opacity=".35"/><ellipse cx="32" cy="12" rx="16" ry="4.4" fill="#000" opacity=".25"/>`, ' width="64" height="24"');
+export const ballShadow = () =>
+  svg(
+    '0 0 64 24',
+    `<ellipse cx="32" cy="12" rx="28" ry="8" fill="#000" opacity=".35"/><ellipse cx="32" cy="12" rx="16" ry="4.4" fill="#000" opacity=".25"/>`,
+    ' width="64" height="24"',
+  );
 
 // ---------- effects ----------
 /** Net bulge where the ball lands: a lattice of diamonds pushed out in rings (drawn over the net). */
 export const netBulge = () => {
   let o = '';
-  for (const r of [14, 28, 42]) o += `<circle cx="48" cy="48" r="${r}" fill="none" stroke="${INK}" stroke-width="${6 - r / 14}" opacity=".6"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="${CREAM}" stroke-width="${3.4 - r / 22}" stroke-dasharray="${r === 28 ? '6 4' : 'none'}"/>`;
-  for (let i = 0; i < 8; i++) o += `<path d="M48 48 ${f1(48 + 46 * Math.cos((i * Math.PI) / 4))} ${f1(48 + 46 * Math.sin((i * Math.PI) / 4))}" stroke="${CREAM}" stroke-width="1.6" opacity=".7"/>`;
-  return svg('0 0 96 96', o + `<path d="M48 40 56 48 48 56 40 48z" fill="${PLANTAIN}" stroke="${INK}" stroke-width="2"/>`, ' width="96" height="96"');
+  for (const r of [14, 28, 42])
+    o += `<circle cx="48" cy="48" r="${r}" fill="none" stroke="${INK}" stroke-width="${6 - r / 14}" opacity=".6"/><circle cx="48" cy="48" r="${r}" fill="none" stroke="${CREAM}" stroke-width="${3.4 - r / 22}" stroke-dasharray="${r === 28 ? '6 4' : 'none'}"/>`;
+  for (let i = 0; i < 8; i++)
+    o += `<path d="M48 48 ${f1(48 + 46 * Math.cos((i * Math.PI) / 4))} ${f1(48 + 46 * Math.sin((i * Math.PI) / 4))}" stroke="${CREAM}" stroke-width="1.6" opacity=".7"/>`;
+  return svg(
+    '0 0 96 96',
+    o + `<path d="M48 40 56 48 48 56 40 48z" fill="${PLANTAIN}" stroke="${INK}" stroke-width="2"/>`,
+    ' width="96" height="96"',
+  );
 };
 /** Goal: gele-ribbon burst (celebratory, no gore) in aso-oke colours. */
 export const goalRibbons = () => {
-  const cols = [PLANTAIN, ORANGE, SKY, CREAM, OCHRE, '#FF7A63', GOLD2, '#B6E04A', '#F8B6A0', '#59C8E8'];
+  const cols = [
+    PLANTAIN,
+    ORANGE,
+    SKY,
+    CREAM,
+    OCHRE,
+    '#FF7A63',
+    GOLD2,
+    '#B6E04A',
+    '#F8B6A0',
+    '#59C8E8',
+  ];
   const rb = cols
     .map(
       (c, i) =>
         `<g transform="rotate(${i * 36} 100 100)"><path d="M100 70C112 56 98 42 110 26c6-8 15-5 12 3-3 8-12 12-11 28" fill="none" stroke="${INK}" stroke-width="10" stroke-linecap="round"/><path d="M100 70C112 56 98 42 110 26c6-8 15-5 12 3-3 8-12 12-11 28" fill="none" stroke="${c}" stroke-width="6" stroke-linecap="round"/></g>`,
     )
     .join('');
-  return svg('0 0 200 200', `${rb}<path d="${scallop(100, 100, 24, 18, 10)}" fill="${GOLD}" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"/><path d="M100 90 110 100 100 110 90 100z" fill="${CREAM}" stroke="${INK}" stroke-width="1.6"/>`, ' width="200" height="200"');
+  return svg(
+    '0 0 200 200',
+    `${rb}<path d="${scallop(100, 100, 24, 18, 10)}" fill="${GOLD}" stroke="${INK}" stroke-width="3.4" stroke-linejoin="round"/><path d="M100 90 110 100 100 110 90 100z" fill="${CREAM}" stroke="${INK}" stroke-width="1.6"/>`,
+    ' width="200" height="200"',
+  );
 };
 /** Save: a glove star (hand with five fingers is too fiddly; a hexagonal glove-patch with ring and ticks, shape differs from goal). */
 export const saveRing = () => {
-  const tick = Array.from({ length: 12 }, (_, i) => `<path d="M100 14v18" transform="rotate(${i * 30} 100 100)" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M100 14v18" transform="rotate(${i * 30} 100 100)" stroke="${i % 2 ? CREAM : GOLD}" stroke-width="5" stroke-linecap="round"/>`).join('');
-  return svg('0 0 200 200', `${tick}<circle cx="100" cy="100" r="52" fill="none" stroke="${INK}" stroke-width="12"/><circle cx="100" cy="100" r="52" fill="none" stroke="${CREAM}" stroke-width="6" stroke-dasharray="3 8" stroke-linecap="round"/>`, ' width="200" height="200"');
+  const tick = Array.from(
+    { length: 12 },
+    (_, i) =>
+      `<path d="M100 14v18" transform="rotate(${i * 30} 100 100)" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M100 14v18" transform="rotate(${i * 30} 100 100)" stroke="${i % 2 ? CREAM : GOLD}" stroke-width="5" stroke-linecap="round"/>`,
+  ).join('');
+  return svg(
+    '0 0 200 200',
+    `${tick}<circle cx="100" cy="100" r="52" fill="none" stroke="${INK}" stroke-width="12"/><circle cx="100" cy="100" r="52" fill="none" stroke="${CREAM}" stroke-width="6" stroke-dasharray="3 8" stroke-linecap="round"/>`,
+    ' width="200" height="200"',
+  );
 };
 /** Post hit: jagged shock lines and ogene-style rings (a gong clang). */
 export const postClang = () => {
-  const sp = Array.from({ length: 10 }, (_, i) => `<path d="M100 100 ${f1(100 + 30 * Math.cos((i * Math.PI) / 5))} ${f1(100 + 30 * Math.sin((i * Math.PI) / 5))} ${f1(100 + 54 * Math.cos(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 54 * Math.sin(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 84 * Math.cos(((i + 0.1) * Math.PI) / 5))} ${f1(100 + 84 * Math.sin(((i + 0.1) * Math.PI) / 5))}" fill="none" stroke="${INK}" stroke-width="9" stroke-linejoin="round"/><path d="M100 100 ${f1(100 + 30 * Math.cos((i * Math.PI) / 5))} ${f1(100 + 30 * Math.sin((i * Math.PI) / 5))} ${f1(100 + 54 * Math.cos(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 54 * Math.sin(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 84 * Math.cos(((i + 0.1) * Math.PI) / 5))} ${f1(100 + 84 * Math.sin(((i + 0.1) * Math.PI) / 5))}" fill="none" stroke="${i % 2 ? PLANTAIN : CREAM}" stroke-width="4.4" stroke-linejoin="round"/>`).join('');
-  return svg('0 0 200 200', `${sp}<circle cx="100" cy="100" r="18" fill="${GOLD2}" stroke="${INK}" stroke-width="4"/><circle cx="100" cy="100" r="8" fill="${INK}"/>`, ' width="200" height="200"');
+  const sp = Array.from(
+    { length: 10 },
+    (_, i) =>
+      `<path d="M100 100 ${f1(100 + 30 * Math.cos((i * Math.PI) / 5))} ${f1(100 + 30 * Math.sin((i * Math.PI) / 5))} ${f1(100 + 54 * Math.cos(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 54 * Math.sin(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 84 * Math.cos(((i + 0.1) * Math.PI) / 5))} ${f1(100 + 84 * Math.sin(((i + 0.1) * Math.PI) / 5))}" fill="none" stroke="${INK}" stroke-width="9" stroke-linejoin="round"/><path d="M100 100 ${f1(100 + 30 * Math.cos((i * Math.PI) / 5))} ${f1(100 + 30 * Math.sin((i * Math.PI) / 5))} ${f1(100 + 54 * Math.cos(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 54 * Math.sin(((i + 0.5) * Math.PI) / 5))} ${f1(100 + 84 * Math.cos(((i + 0.1) * Math.PI) / 5))} ${f1(100 + 84 * Math.sin(((i + 0.1) * Math.PI) / 5))}" fill="none" stroke="${i % 2 ? PLANTAIN : CREAM}" stroke-width="4.4" stroke-linejoin="round"/>`,
+  ).join('');
+  return svg(
+    '0 0 200 200',
+    `${sp}<circle cx="100" cy="100" r="18" fill="${GOLD2}" stroke="${INK}" stroke-width="4"/><circle cx="100" cy="100" r="8" fill="${INK}"/>`,
+    ' width="200" height="200"',
+  );
 };
-export const dust = () => svg('0 0 80 48', `<g fill="#D49A66" stroke="#8C5230" stroke-width="2"><circle cx="20" cy="30" r="14"/><circle cx="40" cy="22" r="18"/><circle cx="60" cy="30" r="13"/><circle cx="32" cy="36" r="11"/><circle cx="50" cy="36" r="11"/></g>`, ' width="80" height="48"');
-export const floodGlow = () => svg('0 0 256 256', `<defs><radialGradient id="fg"><stop offset="0" stop-color="${PLANTAIN}" stop-opacity=".8"/><stop offset=".45" stop-color="${GOLD}" stop-opacity=".25"/><stop offset="1" stop-color="${GOLD}" stop-opacity="0"/></radialGradient></defs><circle cx="128" cy="128" r="128" fill="url(#fg)"/>`, ' width="256" height="256"');
+export const dust = () =>
+  svg(
+    '0 0 80 48',
+    `<g fill="#D49A66" stroke="#8C5230" stroke-width="2"><circle cx="20" cy="30" r="14"/><circle cx="40" cy="22" r="18"/><circle cx="60" cy="30" r="13"/><circle cx="32" cy="36" r="11"/><circle cx="50" cy="36" r="11"/></g>`,
+    ' width="80" height="48"',
+  );
+export const floodGlow = () =>
+  svg(
+    '0 0 256 256',
+    `<defs><radialGradient id="fg"><stop offset="0" stop-color="${PLANTAIN}" stop-opacity=".8"/><stop offset=".45" stop-color="${GOLD}" stop-opacity=".25"/><stop offset="1" stop-color="${GOLD}" stop-opacity="0"/></radialGradient></defs><circle cx="128" cy="128" r="128" fill="url(#fg)"/>`,
+    ' width="256" height="256"',
+  );
 
 /** Cheering crowd strip (tileable 360 x 96): silhouettes with raised arms, drawn over the stands on a goal. */
 export const crowdCheer = () => {
