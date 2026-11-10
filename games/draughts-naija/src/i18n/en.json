@@ -3,7 +3,7 @@
   "game.tagline": "Think ahead. Take the most!",
   "game.howto.1": "The light (ivory) pieces are yours and start at the bottom. Tap a piece, then tap a marked square to move it. You can drag it too. Pieces move one square diagonally forward.",
   "game.howto.2": "Capture is compulsory. Jump over an enemy piece into the empty square behind it. Men capture forwards and backwards. A piece that can capture shows a warning triangle.",
-  "game.howto.3": "You must take the most pieces you can in one move (the majority rule). Jumps carry on in a chain and the numbered stones show your path. A piece cannot be jumped twice, and captured pieces leave the board only when the whole move is done.",
+  "game.howto.3": "On 10x10 you must take the most pieces you can in one move (the majority rule). On 8x8 this is a switch on the Rules page, on by default. Jumps carry on in a chain and the numbered stones show your path. A piece cannot be jumped twice, and captured pieces leave the board only when the whole move is done.",
   "game.howto.4": "Reach the far row to become a king. On 10x10 a king flies along a diagonal, any distance, and captures from far away. A man that passes the far row in the middle of a capture and keeps jumping is not crowned.",
   "game.howto.5": "If several captures end on the same square, tap the numbered stone where the paths part to choose one.",
   "game.howto.6": "You win when the other side has no pieces or no move. The same position three times, or 25 moves each with only kings and no capture, is a draw.",

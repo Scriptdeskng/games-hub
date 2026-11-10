@@ -100,7 +100,7 @@ export function createTestKit(h: KitHost): TestApi {
     if (opts.realtime) {
       const base = h.seed() ?? h.nextSeed();
       const ended = h.waitForEnd();
-      h.start(d, { seed: base, test: { tempo: 0.2, player: humanPlayer(win, base) } });
+      h.start(d, { seed: base, test: { tempo: 0.15, player: humanPlayer(win, base) } });
       const stall = window.setTimeout(() => {
         const p = h.play();
         log.rescues.push({ round: log.rounds, plies: p ? p.snapshot().plies : -1 });

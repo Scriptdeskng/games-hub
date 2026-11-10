@@ -44,7 +44,14 @@ export function createFlow(o: FlowOptions): Flow {
   const thinker = createThinker(o.scope, () => fast);
 
   const gate = async (): Promise<void> => {
-    while (paused && !dead) await new Promise<void>((r) => waiters.push(r));
+    while (paused && !dead) {
+      // paused with no dialog can only be a lost resume: never hold the game for it
+      if (!modal) {
+        resume();
+        break;
+      }
+      await new Promise<void>((r) => waiters.push(r));
+    }
     if (dead) await never;
   };
   function resume(): void {

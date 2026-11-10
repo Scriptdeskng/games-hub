@@ -19,8 +19,6 @@ export const DRAUGHTS_CELEBRATION_CUES = [
   'matchLose',
   'matchDraw',
 ] as const;
-/** Cues that exist only if the feature ships. The game has no undo, so the `undo` cue was deleted; nothing is optional now. */
-export const DRAUGHTS_OPTIONAL_CUES = [] as readonly string[];
 
 export const draughtsSfx: SfxMap = {
   /** Board laid out for a new game: dry shekere shuffle and a low wood knock (pieces set down). */

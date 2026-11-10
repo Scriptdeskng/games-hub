@@ -1,5 +1,5 @@
 import { createRng } from '@naija/core/rng';
-import { other, sideOf, type Cells, type Side } from '../rules/board';
+import { other, type Cells, type Side } from '../rules/board';
 import type { Rules } from '../rules/config';
 import { applyToCells, generateMoves, pieceAfter, type Move } from '../rules/movegen';
 import { evaluate } from './eval';
@@ -252,6 +252,3 @@ export function searchBest(
   result.nodes = nodes;
   return result;
 }
-
-/** Which side a root move belongs to (handy for tests). */
-export const moverOf = (board: Cells, m: Move): Side => sideOf(board[m.from] as number);

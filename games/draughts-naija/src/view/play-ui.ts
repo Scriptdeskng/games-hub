@@ -70,10 +70,9 @@ export function createPlayUi(o: PlayUiOptions): PlayUi {
 
   const status = h('p', { class: 'dn-status dn-plate', role: 'status', 'aria-live': 'polite' });
   const bubble = createBubbleView(scope, { name: () => o.cpuName });
-  const msg = h('div', { class: 'dn-msg' }, [
-    status,
-    h('div', { class: 'dn-bubblehost' }, [bubble.el]),
-  ]);
+  const msg = h('div', { class: 'dn-msg' }, [status]);
+  // the banter bubble has a row of its own: it never covers the status plate
+  const bubbleRow = h('div', { class: 'dn-bubblehost' }, [bubble.el]);
 
   const board = createBoard({
     size: o.size,
@@ -88,6 +87,7 @@ export function createPlayUi(o: PlayUiOptions): PlayUi {
     hud.el,
     cpu.el,
     msg,
+    bubbleRow,
     wrap,
     you.el,
   ]);

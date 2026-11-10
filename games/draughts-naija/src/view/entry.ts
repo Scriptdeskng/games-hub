@@ -88,11 +88,13 @@ export function tap(e: Entry, sq: number): TapResult {
       entry: e,
     };
   }
-  if (sq === e.from) {
+  // Destinations and numbered stones come FIRST: a circuit capture ends on its own start square,
+  // so the piece's square can be the very square the move is played on.
+  const next = e.cands.filter((m) => (e.at >= 0 ? m.path[e.at] === sq : m.to === sq));
+  if (next.length === 0 && sq === e.from) {
     return { kind: 'deselect', entry: { ...e, from: null, cands: [], at: -1 } };
   }
-  if (e.at < 0 && canMove) return { kind: 'select', entry: select(e, sq) };
-  const next = e.cands.filter((m) => (e.at >= 0 ? m.path[e.at] === sq : m.to === sq));
+  if (next.length === 0 && e.at < 0 && canMove) return { kind: 'select', entry: select(e, sq) };
   if (next.length === 0) {
     if (canMove) return { kind: 'select', entry: select(e, sq) };
     const mustTake = (e.moves[0]?.caps.length ?? 0) > 0;

@@ -212,8 +212,8 @@
   isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
-  grid-template-areas: 'hud' 'cpu' 'msg' 'board' 'you';
+  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+  grid-template-areas: 'hud' 'cpu' 'msg' 'bub' 'board' 'you';
   align-items: center;
   justify-items: center;
   gap: 4px;
@@ -224,7 +224,7 @@
   padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom));
   overflow: hidden;
   /* the square the board gets (the width is the limit in portrait, the height in landscape) */
-  --dn-side: min(100%, 520px, calc(100dvh - 250px));
+  --dn-side: min(100%, 520px, calc(100dvh - 294px));
 }
 /* the backdrop covers the whole window, whatever the screen's max width */
 .dn-play .dn-stage {
@@ -298,12 +298,13 @@
   border-radius: 14px;
 }
 .dn-bubblehost {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -10px;
-  z-index: 5;
+  grid-area: bub;
+  width: 100%;
+  min-height: 44px;
   pointer-events: none;
+}
+.dn-bubblehost .ng-bubble {
+  min-height: 44px;
 }
 .dn-boardwrap {
   grid-area: board;
@@ -332,10 +333,11 @@
 @media (orientation: landscape) and (min-aspect-ratio: 11/10) {
   .dn-play {
     grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
-    grid-template-rows: auto auto 1fr auto;
+    grid-template-rows: auto auto auto 1fr auto;
     grid-template-areas:
       'cpu board hud'
       'msg board .'
+      'bub board .'
       '. board .'
       '. board you';
     align-items: start;
@@ -344,6 +346,7 @@
   }
   .dn-seat--cpu,
   .dn-msg,
+  .dn-bubblehost,
   .dn-hud,
   .dn-seat:not(.dn-seat--cpu) {
     max-width: none;
@@ -357,5 +360,22 @@
   }
   .dn-hud {
     flex-wrap: wrap;
+  }
+}
+
+/* The sticky action bar must never sit on top of a row at rest (QA m2, m3): on the rules screen and on
+   short portrait screens the bar flows after the content instead of floating over it. */
+.dn-rules .ng-sticky-actions {
+  position: static;
+  background: none;
+}
+[data-screen='howto'] .ng-sticky-actions {
+  position: static;
+  background: none;
+}
+@media (max-height: 760px) and (orientation: portrait) {
+  [data-screen='results'] .ng-sticky-actions {
+    position: static;
+    background: none;
   }
 }

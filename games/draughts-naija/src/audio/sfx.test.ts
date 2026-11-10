@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { instruments } from '../../../../packages/core/src/audio/instruments';
 import { menuMusic, playMusic } from './music';
-import { DRAUGHTS_CELEBRATION_CUES, DRAUGHTS_OPTIONAL_CUES, draughtsSfx } from './sfx';
+import { DRAUGHTS_CELEBRATION_CUES, draughtsSfx } from './sfx';
 
 const steps = (c: unknown) =>
   (Array.isArray(c) ? c : [c]) as { voice: string; when?: number; gain?: number; pitch?: number }[];
@@ -119,8 +119,7 @@ describe('draughtsSfx', () => {
     const silent = Object.keys(draughtsSfx).filter((name) => !code.includes(`'${name}'`));
     expect(silent).toEqual([]);
   });
-  it('has no optional cues left and no undo cue', () => {
-    expect(DRAUGHTS_OPTIONAL_CUES).toEqual([]);
+  it('has no undo cue (the game has no undo)', () => {
     expect(draughtsSfx.undo).toBeUndefined();
   });
 });

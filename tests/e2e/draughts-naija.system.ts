@@ -186,6 +186,7 @@ export function systemTests(): void {
     }) => {
       await openGame(page, SLUG, '?lang=pcm&token=tok_abc123xyz');
       await expect(page.locator('.dn-opponent')).toContainText('You dey play against');
+      expect(await page.evaluate(() => document.documentElement.lang)).toBe('pcm');
       await page.evaluate(() => window.__naijaTest!.autoplay({ win: true, size: 8 }));
       await expectScreen(page, 'results');
       await page.reload();

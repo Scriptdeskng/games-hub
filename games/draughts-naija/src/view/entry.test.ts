@@ -116,4 +116,55 @@ describe('move entry', () => {
     expect(r.kind).toBe('play');
     expect(DARK).toBe(1);
   });
+
+  it('a move that ends on its own start square is played by tapping that square (circuit capture)', () => {
+    const circuit = mv(63, [45, 67, 85, 63], [54, 56, 76, 74]);
+    const e = startEntry([circuit], [63]);
+    expect(e.from).toBe(63); // auto-selected
+    expect(targets(e)).toEqual([63]);
+    expect(tap(e, 63)).toEqual({ kind: 'play', move: circuit });
+    // with another piece able to move, select first, then tap the same square again
+    const other = mv(70, [61], [65]);
+    const two = startEntry([circuit, other], [63, 70]);
+    const sel = tap(two, 63);
+    expect(sel.kind).toBe('select');
+    if (sel.kind !== 'select') return;
+    expect(tap(sel.entry, 63)).toEqual({ kind: 'play', move: circuit });
+  });
+  it('a plain tap on the selected piece still puts it back when nothing ends there', () => {
+    const e = startEntry([mv(63, [45], [54]), mv(70, [61], [65])], [63, 70]);
+    const sel = tap(e, 63);
+    if (sel.kind !== 'select') throw new Error('expected select');
+    expect(tap(sel.entry, 63).kind).toBe('deselect');
+  });
+  it('a numbered stone on the start square is tapped like any other stone', () => {
+    // two circuits from 63 that end on 63 and part after the first jump (different capture sets)
+    const a = mv(63, [45, 67, 85, 63], [54, 56, 76, 74]);
+    const b = mv(63, [41, 67, 85, 63], [52, 56, 76, 74]);
+    const e = startEntry([a, b], [63]);
+    const r = tap(e, 63); // both end on the start square: the paths part at the first stone
+    if (r.kind !== 'step') throw new Error('expected step');
+    expect(targets(r.entry)).toEqual([45, 41]);
+    // a path whose middle stone is the start square itself
+    const c = mv(63, [45, 63, 85], [54, 56, 76]);
+    const d = mv(63, [41, 63, 85], [52, 56, 76]);
+    const s0 = tap(startEntry([c, d], [63]), 85);
+    if (s0.kind !== 'step') throw new Error('expected step');
+    const s1 = tap(s0.entry, 45);
+    expect(s1).toEqual({ kind: 'play', move: c });
+    const e2 = startEntry(
+      [
+        mv(63, [45, 63, 83], [54, 56, 74]),
+        mv(63, [45, 63, 85], [54, 56, 76]),
+        mv(63, [41, 63, 85], [52, 56, 76]),
+      ],
+      [63],
+    );
+    const a1 = tap(e2, 85);
+    if (a1.kind !== 'step') throw new Error('expected step');
+    const a2 = tap(a1.entry, 45);
+    if (a2.kind === 'play') return;
+    expect(a2.kind).toBe('step');
+    if (a2.kind === 'step') expect(tap(a2.entry, 63).kind).toBe('play'); // the stone on the origin
+  });
 });

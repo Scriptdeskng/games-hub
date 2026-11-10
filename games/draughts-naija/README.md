@@ -44,8 +44,8 @@ Medium) or Damola (Yoruba, Abeokuta: Hard). No pass-and-play, no second human, n
 | Medium (Falmata) | 5         | 4 000    | 6%                 | 0.7 to 1.1 s |
 | Hard (Damola)    | 14        | 40 000   | 0%                 | 0.8 to 1.2 s |
 
-The search runs in a Web Worker while the persona "thinks"; the move is shown after the longer of the two. Main-thread
-fallback: 1 500 nodes. The measured numbers (win rates, think times) are in the hand-off report; regenerate the
+Hard is limited by its node budget, not by its depth cap: the mean depth reached is about 5.6 plies (the cap of 14 is only reached in sparse endgames). The search runs in a Web Worker while the persona "thinks"; the move is shown after the longer of the two. Main-thread
+fallback: 1 500 nodes. A game-level watchdog (`view/cpu-turn.ts`, 8 s wall clock, paused while the pause dialog is open) cancels a CPU turn that has not produced a move and plays a fallback search, so the game cannot stall on "is thinking". The measured numbers (win rates, think times) are in the hand-off report; regenerate the
 full-budget rates with `DN_RATES=1 npx vitest run games/draughts-naija/src/ai/sim.test.ts`.
 
 ## Not shipped

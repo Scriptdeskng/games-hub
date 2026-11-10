@@ -13,7 +13,6 @@
  * up; dark (iroko) starts at the top and moves down.
  */
 export type Size = 10 | 8;
-export const SIZES: readonly Size[] = [10, 8];
 
 /** What the player can change on the Rules screen (saved with the progress). */
 export interface RuleToggles {
@@ -49,8 +48,6 @@ export const makeRules = (size: Size, t: Readonly<RuleToggles> = DEFAULT_TOGGLES
   cpuStarts: t.cpuStarts,
 });
 
-/** Men per side at the start. */
-export const menPerSide = (size: Size): number => (size === 10 ? 20 : 12);
 /** Rows of men per side at the start. */
 export const startRows = (size: Size): number => (size === 10 ? 4 : 3);
 

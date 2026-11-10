@@ -9,6 +9,7 @@ import {
   createAiClient,
   decide,
   decisionSeed,
+  FALLBACK_NODES,
   personaById,
   type AiClient,
   type AiStats,
@@ -28,6 +29,7 @@ import {
 } from '../rules/engine';
 import type { Move } from '../rules/movegen';
 import { createAnimator } from './animate';
+import { bounded, chooseCpuMove } from './cpu-turn';
 import { createHuman, type Human } from './play-human';
 import { createPlayUi, type PlayUi } from './play-ui';
 
@@ -69,7 +71,7 @@ export interface Play extends Component {
   start(): void;
   snapshot(): GameState;
   stats(): PlayStats;
-  ai(): AiStats & { mode: string };
+  ai(): AiStats & { mode: string; phase: string; watchdog: number };
   /** the CPU's answer times so far, ms (for the perf report) */
   thinkTimes(): readonly number[];
 }
@@ -95,6 +97,9 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   const thinks: number[] = [];
   let over = false;
   let lastCpuCapture = false;
+  /** which await the turn is in (test trace) and how often the watchdog had to step in */
+  let phase = 'idle';
+  let watchdogHits = 0;
 
   const ui: PlayUi = createPlayUi({
     ctx: core,
@@ -213,7 +218,11 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     } else stats.lost += rec.caps.length;
     ui.board.setMarks('last-from', []);
     ui.board.setMarks('last-to', []);
-    await anim.playMove(rec, state);
+    phase = 'play:movie';
+    // a movie that cannot finish must not hold the game: after the bound the board is set from the rules
+    if ((await bounded(scope, () => flow.modalOpen, anim.playMove(rec, state))) === 'timeout') {
+      ui.board.render(state);
+    }
     ui.board.setMarks('last-from', [rec.from]);
     ui.board.setMarks('last-to', [rec.to]);
     sync();
@@ -263,18 +272,32 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     // "thinking" ticks: quiet, about every 600 ms, at most six
     let ticks = 0;
     const stopTicks = scope.interval(() => ticks++ < 6 && !flow.modalOpen && sfx('thinkTick'), 600);
-    const req = client.request(state, o.difficulty);
-    const [thought] = await flow.alive(Promise.all([req.result, flow.sleep(delay)]));
+    const choice = await flow.alive(
+      chooseCpuMove({
+        scope,
+        request: () => client.request(state, o.difficulty),
+        sleep: (ms) => flow.sleep(ms),
+        delay,
+        modalOpen: () => flow.modalOpen,
+        fallback: () =>
+          decide(state, o.difficulty, decisionSeed(state.seed, state.plies), FALLBACK_NODES).move,
+        onPhase: (p) => void (phase = p),
+      }),
+    );
     stopTicks();
     ui.cpu.setThinking(false);
-    if (!thought) return;
-    thinks.push(Math.round(thought.ms));
+    if (!choice) return;
+    if (choice.via === 'watchdog') watchdogHits++;
+    if (choice.thought) thinks.push(Math.round(choice.thought.ms));
+    phase = 'cpu:gate';
     await flow.gate();
     // the answer is checked against the rules: a corrupt reply can never reach the board
     const move =
-      findMove(state, thought.move) ??
+      findMove(state, choice.move) ??
       decide(state, 'easy', decisionSeed(state.seed, state.plies), 100).move;
+    phase = 'cpu:play';
     await play(move);
+    phase = 'idle';
   }
 
   async function run(): Promise<void> {
@@ -309,7 +332,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     el: ui.el,
     snapshot: () => state,
     stats: () => stats,
-    ai: () => ({ ...client.stats, mode: client.mode }),
+    ai: () => ({ ...client.stats, mode: client.mode, phase, watchdog: watchdogHits }),
     thinkTimes: () => thinks,
     start() {
       void run();

@@ -5,8 +5,7 @@ import type { GameState } from '../rules/engine';
 import type { Move } from '../rules/movegen';
 import { centreOf, leg, metricsFor, type Metrics } from './geometry';
 
-export type MarkKind =
-  'select' | 'move' | 'capturable' | 'hint' | 'last-from' | 'last-to' | 'illegal';
+export type MarkKind = 'select' | 'move' | 'capturable' | 'hint' | 'last-from' | 'last-to';
 export type FxKind = 'ring' | 'ribbons' | 'crown';
 
 export interface BoardOptions {

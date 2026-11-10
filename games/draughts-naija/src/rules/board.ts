@@ -26,7 +26,6 @@ export const isDarkIndex = (i: number, n: number): boolean =>
 /** The side a piece belongs to (the cell must not be empty). */
 export const sideOf = (v: number): Side => (v > 0 ? LIGHT : DARK);
 export const isKing = (v: number): boolean => v === LIGHT_KING || v === DARK_KING;
-export const manOf = (side: Side): number => (side === LIGHT ? LIGHT_MAN : DARK_MAN);
 export const kingOf = (side: Side): number => (side === LIGHT ? LIGHT_KING : DARK_KING);
 /** The row where a man of `side` is crowned. */
 export const crownRow = (side: Side, n: number): number => (side === LIGHT ? 0 : n - 1);

@@ -5,6 +5,7 @@ export { searchBest, type SearchOptions, type SearchResult } from './search';
 export {
   createAiClient,
   type AiClient,
+  type AiRequestHandle,
   type AiStats,
   type Thought,
   type WorkerLike,

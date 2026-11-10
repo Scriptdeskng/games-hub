@@ -99,7 +99,7 @@ Core voices only (ekwe, agogo, ogene, udu, shekere, talking drum, kakaki-goje fa
 | A side has one piece left | talking-drum squeeze up and a high ting | `lastPiece` | |
 | Control returns to the player | talking-drum up glide | `yourTurn` | guide: talking drum for turn start |
 | Hint | high udu bloop and agogo ting | `hint` | |
-| Undo (if offered) | falling talking drum and a low ekwe | `undo` | delete the cue if there is no undo |
+| ~~Undo~~ | (removed: the game ships no undo, so the `undo` cue was deleted from `sfx.ts` and its tests) | n/a | n/a |
 | CPU thinking (about every 600 ms, max 6) | low shekere bead tick | `thinkTick` | very quiet |
 | Board size, level or persona chosen | ekwe click and a low agogo ting | `modePick` | |
 | Persona banter bubble | ekwe and a high agogo ting | `personaIn` | |
@@ -152,7 +152,7 @@ Avoid list: no sacred or shrine symbols, no religious symbols (Doosuur wears a s
 
 ## 11. Requests to the senior-developer
 1. `gameConfig.theme` to `theme-adire`; import `../assets/draughts-art.css`; keep `./assets/ship.json` (the build checks it). Delete the scaffold `src/sfx.ts`, `assets/agogo.svg` and the `agogo.svg` entry in `ship.json` when the real UI replaces the scaffold.
-2. Register `draughtsSfx` (and `softSfx` for the quiet mix); play every cue (the unit test enforces it once wired). Use `captureHop` with a pitch ramp (+6 percent per hop, cap +36 percent), `thinkTick` at about 600 ms while the CPU thinks, `pieceMove` versus `cpuMove` by side. If undo is not offered, delete `undo` from `sfx.ts`, the test list and `DRAUGHTS_OPTIONAL_CUES`. Music: import `menuMusic` and `playMusic` from `src/audio/music.ts`.
+2. Register `draughtsSfx` (and `softSfx` for the quiet mix); play every cue (the unit test enforces it once wired). Use `captureHop` with a pitch ramp (+6 percent per hop, cap +36 percent), `thinkTick` at about 600 ms while the CPU thinks, `pieceMove` versus `cpuMove` by side. Done: the game has no undo, so `undo` and `DRAUGHTS_OPTIONAL_CUES` were deleted. Music: import `menuMusic` and `playMusic` from `src/audio/music.ts`.
 3. Render only dark squares as buttons (`(r + c)` odd, row 0 on top); inline `grid-row` and `grid-column`; set `data-n` and `--dn-n`. Draw state classes from the engine's legal-move data; never use only a colour change.
 4. Board sizing: `width: min(100%, var(--dn-max))` is square; on short landscape screens also cap it by height (for example `min(100%, calc(100dvh - 220px))`).
 5. Mandatory capture: add `is-must` to pieces that must capture and show a text toast (`t('...')`) with `mustCapture`; show the maximum-capture path with `is-path` + `.dn-step` + `.dn-leg` and `is-jumped`.
