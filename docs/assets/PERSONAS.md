@@ -301,3 +301,64 @@ Three new personas, one per difficulty (Easy, Medium, Hard), chosen to fill regi
 | 6 | Long diagonal, long trouble. | Long diagonal, long wahala. | `_review: true` |
 | 7 | Respect. That was well played. | Respect. You play am well. | `_review: true` |
 | 8 | Another game? The board is still warm. | Another one? Board still dey hot. | `_review: true` |
+
+## Added with Penalty King
+
+Three new personas, one per difficulty (Easy, Medium, Hard), each the CPU keeper and striker for that level, chosen from regions the catalogue under-uses: **Ozavize** (Ebira, Okene, North-Central), **Ndako** (Nupe, Bida, North-Central), **Hamman** (Fulani, Yola, North-East). Avatars are placeholders in `games/penalty-king/assets/avatars/<id>.svg`. Names, regions, occupations and **every Pidgin line below** need native confirmation (HUMAN_ASSETS row 66): every row is `_review: true`. No Ebira, Nupe or Fulani words are used because correct spelling is not certain. Personalities are individual, never ethnic tropes. Chidi stays in the catalogue but is not a Penalty King opponent here (regional balance; the guide's map names him, so the human should confirm). No real club or player names. Developer keys `persona.<id>.<n>`.
+
+| Id | Name | Region (home) | Age | Skin token | Headwear / hair / dress | Level |
+|---|---|---|---|---|---|---|
+| `ozavize` | Ozavize | Ebira, Okene (Kogi, North-Central) | 40s | `#7A4A2D` | short natural hair, aso-oke strip headband, gold hoops, keeper top with gold gloves | Penalty King Easy |
+| `ndako` | Ndako | Nupe, Bida (Niger State, North-Central) | 20s | `#A06A44` | low fade, short beard, orange training bib with a diamond | Penalty King Medium |
+| `hamman` | Hamman | Fulani, Yola (Adamawa, North-East) | 30s | `#47291A` | shaved head, goatee, cream pitch-side coat with lawn-stripe shoulders | Penalty King Hard |
+
+## Ozavize (`ozavize`)
+**Region:** Ebira, Okene, Kogi. 40s. A physiotherapist who keeps goal in a community league: warm, chatty, encouraging.
+**Play style (Easy):** dives early, fooled by a pause; as striker places safely.
+**Colour world:** Naija Green with keeper cyan and gold.
+**Animation cue:** gloves clap together.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Come on, shoot! I will try my best. | Oya, shoot am! I go try my best. | `_review: true` |
+| 2 | Ah! I went the wrong way again. | Ah! I go wrong side again. | `_review: true` |
+| 3 | Nice kick! Even my knees clapped. | Fine kick! Even my knee clap. | `_review: true` |
+| 4 | Breathe first. Then aim. | Breathe first. Then aim am. | `_review: true` |
+| 5 | Saved! Do not worry, it was luck. | I save am! No worry, na luck. | `_review: true` |
+| 6 | Your turn to keep. I will aim for the corner. | Na your turn to keep. I go aim corner. | `_review: true` |
+| 7 | I do this for fun, but I still want to win! | I dey do am for fun, but I still wan win! | `_review: true` |
+| 8 | Good game. Stretch your legs before the next one. | Good game. Stretch your leg before the next one. | `_review: true` |
+
+## Ndako (`ndako`)
+**Region:** Nupe, Bida, Niger State. 20s. A junior surveyor who plays Saturday leagues: measures angles, notices patterns.
+**Play style (Medium):** counts your last three shots and favours that side; as striker varies between two zones.
+**Colour world:** coral with orange bib.
+**Animation cue:** squints and measures with a thumb.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | I measured the corner. Try me. | I don measure the corner. Try me. | `_review: true` |
+| 2 | You like the left side, no? I noticed. | You like left side, abi? I don notice. | `_review: true` |
+| 3 | Two shots, same corner. Interesting. | Two shot, same corner. E dey interest me. | `_review: true` |
+| 4 | Angle plus power. That is all it is. | Angle plus power. Na only that. | `_review: true` |
+| 5 | That one nearly beat me. | E nearly pass me. | `_review: true` |
+| 6 | My turn to shoot. Do not blink. | My turn to shoot. No blink. | `_review: true` |
+| 7 | The post! The pitch is on your side today. | The post! Pitch dey your side today. | `_review: true` |
+| 8 | Well played. I will study that shot tonight. | Well played. I go study that shot tonight. | `_review: true` |
+
+## Hamman (`hamman`)
+**Region:** Fulani, Yola, Adamawa. 30s. A stadium groundsman who knows every bounce of the pitch: calm, sporting, never gloats.
+**Play style (Hard):** reads your run-up and shoulders, late dive with full range; as striker mixes power and placement.
+**Colour world:** teal ground with cream coat and lawn stripes.
+**Animation cue:** brushes a hand across the grass; a short drum tap.
+
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | I know every bump on this pitch. | I sabi every bump for this pitch. | `_review: true` |
+| 2 | Your shoulders told me before your foot did. | Your shoulder don tell me before your leg. | `_review: true` |
+| 3 | Power is nothing without a plan. | Power no be anything without plan. | `_review: true` |
+| 4 | That was a fine strike. Respect. | Na fine strike be that. Respect. | `_review: true` |
+| 5 | Sudden death. Quiet hearts only. | Sudden death. Make heart no shake. | `_review: true` |
+| 6 | I will not gloat. The ball decides. | I no go gloat. Na ball go decide. | `_review: true` |
+| 7 | Bottom left corner. Did I read you right? | Bottom left corner. I read you well? | `_review: true` |
+| 8 | Same time next week? I will cut the grass for you. | Same time next week? I go cut the grass for you. | `_review: true` |

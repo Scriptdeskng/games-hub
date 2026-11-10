@@ -1,0 +1,49 @@
+/* Penalty King crests, kits, bracket, persona and effects. Part of penalty-art.css. */
+.pk-crest, .pk-kit { display: inline-block; width: 28px; height: 28px; background: center / contain no-repeat; }
+.pk-kit { width: 40px; height: 48px; }
+.pk-crest[data-team='lanterns'] { background-image: url('./teams/crest-lanterns.svg'); }
+.pk-crest[data-team='sparks'] { background-image: url('./teams/crest-sparks.svg'); }
+.pk-crest[data-team='drifters'] { background-image: url('./teams/crest-drifters.svg'); }
+.pk-crest[data-team='comets'] { background-image: url('./teams/crest-comets.svg'); }
+.pk-crest[data-team='harriers'] { background-image: url('./teams/crest-harriers.svg'); }
+.pk-crest[data-team='embers'] { background-image: url('./teams/crest-embers.svg'); }
+.pk-crest[data-team='blazers'] { background-image: url('./teams/crest-blazers.svg'); }
+.pk-crest[data-team='bells'] { background-image: url('./teams/crest-bells.svg'); }
+.pk-kit[data-team='lanterns'] { background-image: url('./teams/kit-lanterns.svg'); }
+.pk-kit[data-team='sparks'] { background-image: url('./teams/kit-sparks.svg'); }
+.pk-kit[data-team='drifters'] { background-image: url('./teams/kit-drifters.svg'); }
+.pk-kit[data-team='comets'] { background-image: url('./teams/kit-comets.svg'); }
+.pk-kit[data-team='harriers'] { background-image: url('./teams/kit-harriers.svg'); }
+.pk-kit[data-team='embers'] { background-image: url('./teams/kit-embers.svg'); }
+.pk-kit[data-team='blazers'] { background-image: url('./teams/kit-blazers.svg'); }
+.pk-kit[data-team='bells'] { background-image: url('./teams/kit-bells.svg'); }
+
+/* cup bracket: art 360 x 420, slots placed by --x --y in art units (see geometry.json "bracket") */
+.pk-bracket { position: relative; width: min(100%, 360px); aspect-ratio: 360 / 420; background: url('./cup/bracket-8.svg') center / 100% 100% no-repeat; }
+.pk-bslot { position: absolute; left: calc(var(--x) / 360 * 100%); top: calc((var(--y) - 17) / 420 * 100%); width: calc(82 / 360 * 100%); height: calc(34 / 420 * 100%); display: flex; align-items: center; gap: 4px; padding: 0 4px; font-weight: 800; font-size: 13px; color: var(--pk-ink); }
+.pk-bslot::after { content: ''; position: absolute; right: -8px; top: -8px; width: 20px; height: 20px; background: center / contain no-repeat; }
+.pk-bslot.is-you { outline: 3px dashed var(--pk-gold); outline-offset: 2px; }
+.pk-bslot.is-you::after { background-image: url('./hud/badge-you.svg'); }
+.pk-bslot.is-won::after { background-image: url('./hud/badge-won.svg'); }
+.pk-bslot.is-out { opacity: .6; text-decoration: line-through; }
+.pk-bslot.is-out::after { background-image: url('./hud/badge-out.svg'); }
+.pk-bslot.is-next::after { background-image: url('./hud/badge-next.svg'); }
+.pk-trophy { position: absolute; width: calc(46 / 360 * 100%); aspect-ratio: 96 / 128; background: url('./cup/trophy.svg') center / contain no-repeat; }
+
+.pk-persona { display: flex; align-items: center; gap: 8px; }
+
+/* one-shot effects, placed with --x --y in px; remove on animationend */
+.pk-fx { position: absolute; z-index: 4; left: var(--x); top: var(--y); width: 200px; height: 200px; margin: -100px 0 0 -100px; pointer-events: none; background: center / contain no-repeat; animation: pk-fx 700ms ease-out both; }
+.pk-fx--ribbons { background-image: url('./fx/goal-ribbons.svg'); }
+.pk-fx--save { background-image: url('./fx/save-ring.svg'); }
+.pk-fx--post { background-image: url('./fx/post-clang.svg'); }
+.pk-fx--net { width: 96px; height: 96px; margin: -48px 0 0 -48px; background-image: url('./fx/net-bulge.svg'); }
+.pk-fx--dust { width: 80px; height: 48px; margin: -24px 0 0 -40px; background-image: url('./fx/dust.svg'); }
+.pk-fx--glow { width: 256px; height: 256px; margin: -128px 0 0 -128px; background-image: url('./fx/floodlight-glow.svg'); }
+@keyframes pk-fx { from { transform: scale(.4); opacity: 1; } to { transform: scale(1.3); opacity: 0; } }
+.pk-cheer { position: absolute; z-index: 1; left: 0; right: 0; height: 96px; background: url('./scene/crowd-cheer.svg') repeat-x center bottom / 360px 96px; animation: pk-cheer 900ms ease-out both; }
+@keyframes pk-cheer { from { transform: translateY(40%); opacity: 0; } 30% { opacity: 1; } to { transform: translateY(0); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .pk-fx, .pk-cheer, .pk-banner, .pk-slot.is-next { animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
+  .pk-cheer, .pk-fx--ribbons { display: none; }
+}

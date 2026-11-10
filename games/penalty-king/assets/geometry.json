@@ -1,0 +1,228 @@
+{
+  "_readme": "Scene geometry in scene units. scale(y) = (y - horizon) / (goalLine - horizon). Sprite cells are 128 x 128, anchor = bottom centre (64, 120). Goal sprite 240 x 96 has its 180-wide opening at x 30..210, y 20..80; scale the goal sprite by goalW / 180 and place its opening bottom on goalLine.",
+  "keeperSheet": {
+    "cell": 128,
+    "cols": 3,
+    "order": [
+      "ready",
+      "stand",
+      "dive-low-l",
+      "dive-high-l",
+      "dive-low-r",
+      "dive-high-r",
+      "dive-centre",
+      "save",
+      "beaten"
+    ]
+  },
+  "strikerSheet": {
+    "cell": 128,
+    "cols": 3,
+    "order": [
+      "idle",
+      "run1",
+      "run2",
+      "plant",
+      "strike",
+      "follow",
+      "celebrate",
+      "dejected",
+      "salute"
+    ]
+  },
+  "ball": {
+    "sizeAtGoal": 5.4,
+    "note": "ball sprite 64 px: draw at 5.4 * scale(y) * (goalW / 180) px diameter"
+  },
+  "scoreboard": {
+    "w": 340,
+    "h": 92,
+    "rows": [
+      34,
+      66
+    ],
+    "slotX": [
+      148,
+      180,
+      212,
+      244,
+      276
+    ],
+    "totalX": 314,
+    "slotR": 13
+  },
+  "bracket": {
+    "w": 360,
+    "h": 420,
+    "slotW": 82,
+    "slotH": 34,
+    "cols": [
+      4,
+      106,
+      208
+    ],
+    "winnerX": 304,
+    "r1": [
+      51,
+      97,
+      143,
+      189,
+      235,
+      281,
+      327,
+      373
+    ],
+    "r2": [
+      74,
+      166,
+      258,
+      350
+    ],
+    "r3": [
+      120,
+      304
+    ],
+    "win": 212,
+    "order": [
+      "lanterns",
+      "sparks",
+      "drifters",
+      "comets",
+      "harriers",
+      "embers",
+      "blazers",
+      "bells"
+    ]
+  },
+  "teams": [
+    {
+      "id": "lanterns",
+      "name": "Lagoon Lanterns",
+      "short": "LAG",
+      "shirt": "#0E7C86",
+      "trim": "#FFC933",
+      "shorts": "#08454E",
+      "pattern": "sash",
+      "skin": "#5B3A25"
+    },
+    {
+      "id": "sparks",
+      "name": "Sahel Sparks",
+      "short": "SAH",
+      "shirt": "#E8AE32",
+      "trim": "#4B1A55",
+      "shorts": "#4B1A55",
+      "pattern": "hoops",
+      "skin": "#855536"
+    },
+    {
+      "id": "drifters",
+      "name": "Delta Drifters",
+      "short": "DEL",
+      "shirt": "#FF7A63",
+      "trim": "#14264F",
+      "shorts": "#14264F",
+      "pattern": "chevron",
+      "skin": "#3B2314"
+    },
+    {
+      "id": "comets",
+      "name": "Capital Comets",
+      "short": "CAP",
+      "shirt": "#2C2C31",
+      "trim": "#B6E04A",
+      "shorts": "#1D1D20",
+      "pattern": "halves",
+      "skin": "#6B3F26"
+    },
+    {
+      "id": "harriers",
+      "name": "Highland Harriers",
+      "short": "HIG",
+      "shirt": "#B4532A",
+      "trim": "#FFF3DA",
+      "shorts": "#7A3A20",
+      "pattern": "yoke",
+      "skin": "#A06A44"
+    },
+    {
+      "id": "embers",
+      "name": "Eastern Embers",
+      "short": "EAS",
+      "shirt": "#8C1D3D",
+      "trim": "#F8B6A0",
+      "shorts": "#5E1228",
+      "pattern": "band",
+      "skin": "#4A2C1A"
+    },
+    {
+      "id": "blazers",
+      "name": "Basin Blazers",
+      "short": "BAS",
+      "shirt": "#C2185B",
+      "trim": "#FFD1E3",
+      "shorts": "#7A0F3B",
+      "pattern": "quarters",
+      "skin": "#7B4A2E"
+    },
+    {
+      "id": "bells",
+      "name": "Brass City Bells",
+      "short": "BRA",
+      "shirt": "#3B2A78",
+      "trim": "#E4702A",
+      "shorts": "#241A4D",
+      "pattern": "pin",
+      "skin": "#5E3822"
+    }
+  ],
+  "portrait": {
+    "W": 360,
+    "H": 640,
+    "horizon": 230,
+    "goalLine": 316,
+    "goalW": 180,
+    "spot": [
+      180,
+      510
+    ],
+    "boxFront": 369,
+    "areaFront": 570,
+    "arc": [
+      170,
+      100
+    ],
+    "boxHalf": 0.62,
+    "goalH": 60,
+    "goalSpriteScale": 1,
+    "goalSpriteOrigin": [
+      60,
+      236
+    ],
+    "keeperScaleAtGoal": 0.46,
+    "unitsPerMetre": 24.6
+  },
+  "landscape": {
+    "W": 640,
+    "H": 360,
+    "horizon": 108,
+    "goalLine": 180,
+    "goalW": 200,
+    "spot": [
+      320,
+      292
+    ],
+    "boxFront": 225,
+    "areaFront": 338,
+    "arc": null,
+    "boxHalf": 0.62,
+    "goalH": 66.7,
+    "goalSpriteScale": 1.1,
+    "goalSpriteOrigin": [
+      186.7,
+      91.1
+    ],
+    "keeperScaleAtGoal": 0.5111111111111112,
+    "unitsPerMetre": 27.3
+  }
+}

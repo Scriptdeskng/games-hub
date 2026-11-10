@@ -137,3 +137,25 @@ Files in `games/draughts-naija/assets/audio/voice/vo-<id>.mp3` (silent placehold
 | `dn-win` | You be correct player! You don win! `_review` | Well played! You win! | Big, warm, celebratory. | any adult | player wins | `vo-dn-win.mp3` |
 | `dn-lose` | Small small, you go catch am next time. `_review` | Little by little, you'll get it next time. | Kind and encouraging, never pitying. | any adult | player loses | `vo-dn-lose.mp3` |
 | `dn-draw` | E be like say we level o. `_review` | Looks like we are level. | Relaxed, a smile, even. | any adult | draw | `vo-dn-draw.mp3` |
+
+## Game-specific lines: Penalty King
+Files in `games/penalty-king/assets/audio/voice/vo-<id>.mp3` (silent placeholders) and `assets/audio/voice-manifest.json`. Speaker: **the pitch commentator**, an invented generic voice (M or F, 30s to 50s; warm, quick, family friendly; not modelled on any real commentator; no exaggerated accent). Same rules as above: every Pidgin line is `_review` for a native check. Shared lines also used: `goal`, `saved`, `ready-go`, `chai`, `madalla`, `e-ku-ise`, `you-don-win`, `e-don-do`.
+| ID | Pidgin (pcm) | English (en) | Emotion / direction | Voice | Used for | File |
+|---|---|---|---|---|---|---|
+| `pk-start` | Oya, penalty time! `_review` | Come on, penalty time! | Bright, quick, rising on "time". | any adult | shootout start | `vo-pk-start.mp3` |
+| `pk-goal` | Goal! E don enter! `_review` | Goal! It's in! | Long rising "Goooal", then a delighted "E don enter". | any adult | goal (rotate with `goal`) | `vo-pk-goal.mp3` |
+| `pk-rocket` | Chai! Na rocket be that! `_review` | Wow! What a rocket! | Impressed, big, short. | any adult | hard sweet-spot goal | `vo-pk-rocket.mp3` |
+| `pk-saved` | Keeper don save am! Wetin be that! `_review` | The keeper saves it! What a stop! | Sharp, triumphant, punchy. | any adult | save (rotate with `saved`) | `vo-pk-saved.mp3` |
+| `pk-post` | E knock the post! So close! `_review` | Off the post! So close! | A gasp, then a laugh of disbelief. | any adult | post or bar | `vo-pk-post.mp3` |
+| `pk-over` | E fly pass the bar o! `_review` | Over the bar! | Rueful, a little drawn out. | any adult | over | `vo-pk-over.mp3` |
+| `pk-wide` | Wide! E miss the goal! `_review` | Wide of the goal! | Rueful, quick. | any adult | wide | `vo-pk-wide.mp3` |
+| `pk-level` | Score don level o! `_review` | The score is level! | Tense, building. | any adult | level after five kicks | `vo-pk-level.mp3` |
+| `pk-sudden` | Sudden death! No room for mistake! `_review` | Sudden death! No room for error! | Low and tense, a pause before "No room". | any adult | sudden death | `vo-pk-sudden.mp3` |
+| `pk-qf` | Quarter-final! Make we go! `_review` | Quarter-final! Here we go! | Announcing, upbeat. | any adult | cup QF | `vo-pk-qf.mp3` |
+| `pk-sf` | Semi-final! Only four teams remain! `_review` | Semi-final! Only four teams remain! | Rising, a little awe. | any adult | cup SF | `vo-pk-sf.mp3` |
+| `pk-final` | Na the final be this! `_review` | This is the final! | Big, slow, dramatic. | any adult | cup final | `vo-pk-final.mp3` |
+| `pk-advance` | You don waka enter next round! `_review` | You are through to the next round! | Warm, celebratory. | any adult | bracket advance | `vo-pk-advance.mp3` |
+| `pk-win` | You don win! Penalty King! `_review` | You win! Penalty King! | Big, warm, celebratory. | any adult | shootout won | `vo-pk-win.mp3` |
+| `pk-champion` | Champion! Na your own cup! `_review` | Champions! The cup is yours! | The biggest line: long, proud, rising. | any adult | cup won | `vo-pk-champion.mp3` |
+| `pk-lose` | No vex. Next time go better. `_review` | Tough one. Next time will be better. | Kind and encouraging, never pitying. | any adult | shootout lost | `vo-pk-lose.mp3` |
+| `pk-knockout` | Cup run don end. You go try again. `_review` | Your cup run ends here. Try again. | Gentle, steady, encouraging. | any adult | knocked out of cup | `vo-pk-knockout.mp3` |
