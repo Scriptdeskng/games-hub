@@ -39,6 +39,11 @@
       "slug": "draughts-naija",
       "title": "Draughts Naija",
       "deploy": true
+    },
+    {
+      "slug": "penalty-king",
+      "title": "Penalty King",
+      "deploy": true
     }
   ]
 }
