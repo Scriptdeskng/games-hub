@@ -21,6 +21,8 @@
     "packs:release-check": "node scripts/pack-check.mjs --release",
     "test": "vitest run",
     "build": "node scripts/build-all.mjs",
+    "build:hub": "node scripts/build-hub.mjs",
+    "e2e:hub": "playwright test -c playwright.hub.config.ts",
     "size": "node scripts/size-budget.mjs",
     "e2e": "node scripts/e2e.mjs",
     "e2e:extra": "node scripts/e2e.mjs --extra",

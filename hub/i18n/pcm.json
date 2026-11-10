@@ -1,0 +1,28 @@
+{
+  "hub.title": "Naija Games",
+  "hub.tagline": {
+    "text": "Games wey dem make for Naija. Pick one, play am.",
+    "_review": true
+  },
+  "hub.play": "Play am",
+  "hub.playAria": "Play am: {title}",
+  "hub.thumbAlt": "{title} picture",
+  "hub.lang": "Language",
+  "hub.lang.en": "English",
+  "hub.lang.pcm": "Pidgin",
+  "hub.list": "Games",
+  "hub.cat.board": "Board game",
+  "hub.cat.cards": "Card game",
+  "hub.cat.quiz": "Quiz",
+  "hub.cat.words": "Word game",
+  "hub.footer": {
+    "text": "Na you against di computer for every game. Di game dey save your progress for dis phone.",
+    "_review": true
+  },
+  "hub.notFound.title": "We no see di page",
+  "hub.notFound.text": {
+    "text": "Dis page no dey. Go back to di games.",
+    "_review": true
+  },
+  "hub.notFound.back": "Go back to games"
+}

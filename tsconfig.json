@@ -26,6 +26,7 @@
     "vitest.config.ts",
     "playwright.config.ts",
     "playwright.extra.config.ts",
-    "playwright.perf.config.ts"
+    "playwright.perf.config.ts",
+    "playwright.hub.config.ts"
   ]
 }

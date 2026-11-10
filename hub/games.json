@@ -1,0 +1,85 @@
+{
+  "_comment": "Catalogue for the public hub. Must list exactly the deploy:true games in games/registry.json (checked by `npm run build:hub`). `thumb` is a repo-relative path to the game's own SVG thumbnail. `_review` lists Pidgin lines a human should check.",
+  "games": [
+    {
+      "slug": "snakes-ladders",
+      "title": {
+        "en": "Snakes & Ladders: Lagos Edition",
+        "pcm": "Snakes & Ladders: Lagos Edition"
+      },
+      "description": {
+        "en": "Ride the BRT up the ladders, dodge the go-slow, and race the CPU to square 100.",
+        "pcm": "Enter BRT climb ladder, avoid go-slow, and run reach square 100 before di CPU."
+      },
+      "category": "board",
+      "thumb": "games/snakes-ladders/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "naija-ludo",
+      "title": { "en": "Naija Ludo", "pcm": "Naija Ludo" },
+      "description": {
+        "en": "Roll the die, race your seeds home and send rivals back to the yard.",
+        "pcm": "Roll di die, run your seeds go house, and send person back to yard."
+      },
+      "category": "board",
+      "thumb": "games/naija-ludo/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "ayo-olopon",
+      "title": { "en": "Ayo Olopon", "pcm": "Ayo Olopon" },
+      "description": {
+        "en": "The classic seed-sowing board game. Sow, capture pits and outthink the CPU.",
+        "pcm": "Di old-school ayo game. Drop seeds, carry pits, and use sense beat di CPU."
+      },
+      "category": "board",
+      "thumb": "games/ayo-olopon/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "naija-whot",
+      "title": { "en": "Naija Whot", "pcm": "Naija Whot" },
+      "description": {
+        "en": "Match by shape or number, call your shape and empty your hand first.",
+        "pcm": "Match shape or number, call your shape, make your hand empty first."
+      },
+      "category": "cards",
+      "thumb": "games/naija-whot/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "sabi-quiz",
+      "title": { "en": "Sabi Quiz", "pcm": "Sabi Quiz" },
+      "description": {
+        "en": "Quiz night, Naija style. Test what you know against the clock and a CPU rival.",
+        "pcm": "Quiz night, correct Naija style. Show wetin you sabi against di clock and di CPU."
+      },
+      "category": "quiz",
+      "thumb": "games/sabi-quiz/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "sabi-words",
+      "title": { "en": "Sabi Words", "pcm": "Sabi Words" },
+      "description": {
+        "en": "Swipe across the letters to find hidden Naija words before time runs out.",
+        "pcm": "Swipe for di letters find hidden Naija words before time finish."
+      },
+      "category": "words",
+      "thumb": "games/sabi-words/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    },
+    {
+      "slug": "draughts-naija",
+      "title": { "en": "Draughts Naija", "pcm": "Draughts Naija" },
+      "description": {
+        "en": "Classic draughts against the CPU. Think ahead and capture the most pieces.",
+        "pcm": "Classic draughts against di CPU. Think far and chop di most pieces."
+      },
+      "category": "board",
+      "thumb": "games/draughts-naija/assets/thumb/thumb-512x512.svg",
+      "_review": ["description.pcm"]
+    }
+  ]
+}

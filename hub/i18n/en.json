@@ -1,0 +1,19 @@
+{
+  "hub.title": "Naija Games",
+  "hub.tagline": "Games made in Naija. Pick one and play.",
+  "hub.play": "Play",
+  "hub.playAria": "Play {title}",
+  "hub.thumbAlt": "{title} cover art",
+  "hub.lang": "Language",
+  "hub.lang.en": "English",
+  "hub.lang.pcm": "Pidgin",
+  "hub.list": "Games",
+  "hub.cat.board": "Board game",
+  "hub.cat.cards": "Card game",
+  "hub.cat.quiz": "Quiz",
+  "hub.cat.words": "Word game",
+  "hub.footer": "Every game is you against the computer. Your progress is saved on this phone.",
+  "hub.notFound.title": "Page not found",
+  "hub.notFound.text": "This page does not exist. Go back to the games.",
+  "hub.notFound.back": "Back to games"
+}

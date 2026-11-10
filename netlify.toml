@@ -1,0 +1,10 @@
+# Public hub for https://hub.intelli.page (see docs/DEPLOY_HUB.md).
+# Headers and caching come from dist-hub/_headers, which scripts/build-hub.mjs generates, so this
+# file only says what to build and where. There is deliberately NO catch-all redirect: it would
+# turn a missing /<slug>/chunks/x.js into the hub page and break the games' error handling.
+[build]
+  command = "npm run build:hub"
+  publish = "dist-hub"
+
+[build.environment]
+  NODE_VERSION = "22"

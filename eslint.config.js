@@ -9,6 +9,7 @@ export default tseslint.config(
       'dist/**',
       'tmp/**',
       'dist-e2e/**',
+      'dist-hub/**',
       'coverage/**',
       'node_modules/**',
       'test-results/**',
@@ -43,6 +44,16 @@ export default tseslint.config(
   },
   {
     files: ['packages/core/src/sw/sw-template.js'],
+    languageOptions: { globals: { ...globals.serviceworker, __FILES__: 'readonly' } },
+  },
+  {
+    // the public hub page: plain browser scripts (no bundler), no console, no direct storage use outside try/catch helpers
+    files: ['hub/hub.js'],
+    languageOptions: { sourceType: 'script', globals: { ...globals.browser } },
+    rules: { 'no-console': 'error', eqeqeq: ['error', 'always'] },
+  },
+  {
+    files: ['hub/sw.js'],
     languageOptions: { globals: { ...globals.serviceworker, __FILES__: 'readonly' } },
   },
   prettier,

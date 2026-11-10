@@ -11,6 +11,7 @@ import { ROOT } from './lib.mjs';
 // games expose test members only inside `__NAIJA_TEST__` branches), and `setSeed` / `fastForward`
 // / `liveMoves` / `tempo=` are specific enough to catch a leak of the same family.
 const FORBIDDEN = [
+  'sourceMappingURL',
   '__naijaTest',
   '__NAIJA_TEST__',
   'autoplay',
@@ -19,6 +20,9 @@ const FORBIDDEN = [
   'fastForward',
   'liveMoves',
 ];
+// Also never ship: source-map links, or code that reads the test-only URL params (?tempo= ?clock= ?pack=).
+// (Those params are only read inside `__NAIJA_TEST__` branches, which a production build strips.)
+const FORBIDDEN_PARAM = /\.get\(\s*["'`](tempo|clock|pack)["'`]\s*\)|[?&](tempo|clock|pack)=/;
 const dist = path.resolve(ROOT, process.argv[2] ?? 'dist');
 const walk = (d) =>
   fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => {
@@ -32,12 +36,16 @@ if (!fs.existsSync(dist)) {
 }
 const bad = [];
 let scanned = 0;
+for (const f of walk(dist).filter((f) => f.endsWith('.map'))) {
+  bad.push(`${path.relative(ROOT, f)} is a source map`);
+}
 for (const f of walk(dist).filter((f) => /\.(js|mjs|html|css|json)$/.test(f))) {
   scanned++;
   const text = fs.readFileSync(f, 'utf8');
   for (const word of FORBIDDEN) {
     if (text.includes(word)) bad.push(`${path.relative(ROOT, f)} contains "${word}"`);
   }
+  if (FORBIDDEN_PARAM.test(text)) bad.push(`${path.relative(ROOT, f)} reads a test-only URL param`);
 }
 if (bad.length) {
   console.error('prod-gate FAILED: test-only code shipped in a production bundle:');
