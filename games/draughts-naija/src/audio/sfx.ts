@@ -19,8 +19,8 @@ export const DRAUGHTS_CELEBRATION_CUES = [
   'matchLose',
   'matchDraw',
 ] as const;
-/** Cues that exist only if the feature ships: delete `undo` here and in the map if the game offers no undo. */
-export const DRAUGHTS_OPTIONAL_CUES = ['undo'] as const;
+/** Cues that exist only if the feature ships. The game has no undo, so the `undo` cue was deleted; nothing is optional now. */
+export const DRAUGHTS_OPTIONAL_CUES = [] as readonly string[];
 
 export const draughtsSfx: SfxMap = {
   /** Board laid out for a new game: dry shekere shuffle and a low wood knock (pieces set down). */
@@ -98,11 +98,6 @@ export const draughtsSfx: SfxMap = {
   hint: [
     { voice: 'udu', pitch: 1.5, gain: 0.5 },
     { voice: 'agogoTing', pitch: 1.5, when: 0.08, gain: 0.5 },
-  ],
-  /** Undo (only if the game offers it): a falling drum and a low wood click, like taking a move back. */
-  undo: [
-    { voice: 'talkingDrumDown', pitch: 1.5, gain: 0.3 },
-    { voice: 'ekwe', pitch: 0.77, when: 0.05, gain: 0.5 },
   ],
   /** CPU is thinking (very quiet, about every 600 ms): a low bead tick. */
   thinkTick: { voice: 'shekereTick', pitch: 0.9, gain: 0.3 },

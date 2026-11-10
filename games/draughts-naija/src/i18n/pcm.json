@@ -1,40 +1,390 @@
 {
-  "game.title": "Draughts Naija",
-  "game.tagline": "Hit di bells before dem vanish!",
-  "game.arenaLabel": "Where we dey play",
-  "game.bell": "Agogo bell",
-  "game.hint": "Target: {goal} bells inside {time} seconds",
+  "game.title": {
+    "text": "Draughts Naija",
+    "_review": true
+  },
+  "game.tagline": {
+    "text": "Think far. Chop the most!",
+    "_review": true
+  },
   "game.howto.1": {
-    "text": "Golden agogo bells dey pop up for screen. Tap or click each one before e vanish.",
+    "text": "Di light (ivory) pieces na your own, dem start for bottom. Tap one piece, then tap one marked square make e move. You fit drag am too. Pieces dey waka one square for slant, go front.",
     "_review": true
   },
   "game.howto.2": {
-    "text": "Hit plenty bells before time finish and you go win. Di target dey for top.",
+    "text": "Capture na must. Jump pass enemy piece land for di empty square wey dey behind am. Men fit capture go front and go back. Any piece wey fit capture go get warning triangle.",
     "_review": true
   },
-  "game.howto.3": "Hit bells one after di other to build combo and get more points. If you miss, combo go break.",
+  "game.howto.3": {
+    "text": "You must carry di most pieces wey you fit carry for one move (majority rule). Jumps fit continue like chain, and di numbered stones go show your road. Dem no fit jump one piece two times, and di captured pieces go comot for board only when di whole move don finish.",
+    "_review": true
+  },
   "game.howto.4": {
-    "text": "If you dey use keyboard, press Space to hit di oldest bell, and press P if you wan pause.",
+    "text": "Reach di far row make you turn king. For 10x10, king dey fly for slant, any distance, and e fit capture from far. If man pass di far row for middle of capture and e still dey jump, e no go turn king.",
     "_review": true
   },
-  "hud.score": "Score",
-  "hud.time": "Time",
-  "hud.goal": "Bells",
-  "hud.combo": "Combo",
-  "results.accuracy": "How you hit am",
-  "results.combo": "Best combo",
-  "results.level": "Level",
-  "persona.name": "Mama Nkechi",
-  "banter.win.0": {
-    "text": "Well done! Your hand quick pass danfo conductor.",
+  "game.howto.5": {
+    "text": "If plenty captures end for di same square, tap di numbered stone where di roads separate make you choose one.",
     "_review": true
   },
-  "banter.win.1": "Na so! Come siddon, di jollof don ready.",
-  "banter.win.2": "Sharp sharp! Di bells dey fear you.",
-  "banter.lose.0": "No wahala, try again. Even NEPA dey bring light back.",
-  "banter.lose.1": "Small small, you go get am.",
-  "banter.lose.2": {
-    "text": "Calm down. Di bells no go run anywhere.",
+  "game.howto.6": {
+    "text": "You win when di other side no get piece again or no get move. If di same position show three times, or 25 moves each with only kings and no capture, e be draw.",
+    "_review": true
+  },
+  "game.howto.7": {
+    "text": "Choose 10x10 (international) or 8x8 (short game) for menu. You dey stuck? Tap Hint. For keyboard use arrow keys, Enter, Escape, H for hint and P to pause. Di Rules page get switches for 8x8 and for who go start.",
+    "_review": true
+  },
+  "menu.size": {
+    "text": "Board",
+    "_review": true
+  },
+  "size.10": {
+    "text": "10x10 International",
+    "_review": true
+  },
+  "size.8": {
+    "text": "8x8 Short game",
+    "_review": true
+  },
+  "menu.opponent": {
+    "text": "You dey play against {name}",
+    "_review": true
+  },
+  "menu.rules": {
+    "text": "Rules",
+    "_review": true
+  },
+  "rules.title": {
+    "text": "Rules",
+    "_review": true
+  },
+  "rules.intro": {
+    "text": "10x10 dey always follow di international rules. Di switches below dey change di 8x8 short game and who go start. Di computer dey follow di same rules wey you dey follow.",
+    "_review": true
+  },
+  "rules.draws": {
+    "text": "Draw na: di same position three times, or 25 moves each wey only kings dey move and no capture.",
+    "_review": true
+  },
+  "rules.max": {
+    "text": "8x8: must carry di most pieces",
+    "_review": true
+  },
+  "rules.max.help": {
+    "text": "On: you must play di capture wey carry di most pieces. Off: any capture fit work. For 10x10 na di most dey always count.",
+    "_review": true
+  },
+  "rules.fly": {
+    "text": "8x8: flying kings",
+    "_review": true
+  },
+  "rules.fly.help": {
+    "text": "On: king dey slide and capture from any distance. Off: king dey move one square. For 10x10 kings dey always fly.",
+    "_review": true
+  },
+  "rules.cpuStarts": {
+    "text": "Computer go start first",
+    "_review": true
+  },
+  "rules.cpuStarts.help": {
+    "text": "On: di computer (dark) go make di first move. Off: you (light) go start.",
+    "_review": true
+  },
+  "rules.fast": {
+    "text": "Faster animation",
+    "_review": true
+  },
+  "rules.fast.help": {
+    "text": "Pieces go slide quick and di computer go think about 1.7 times faster.",
+    "_review": true
+  },
+  "legend.select": {
+    "text": "Di piece wey you pick",
+    "_review": true
+  },
+  "legend.move": {
+    "text": "Square wey you fit move go",
+    "_review": true
+  },
+  "legend.path": {
+    "text": "Numbered stone for di capture road",
+    "_review": true
+  },
+  "legend.capturable": {
+    "text": "Piece wey you fit take",
+    "_review": true
+  },
+  "legend.must": {
+    "text": "Dis piece must capture",
+    "_review": true
+  },
+  "legend.last": {
+    "text": "Where di last piece land",
+    "_review": true
+  },
+  "legend.hint": {
+    "text": "Di hint: try dis piece",
+    "_review": true
+  },
+  "player.you": {
+    "text": "You",
+    "_review": true
+  },
+  "board.label": {
+    "text": "Draughts board",
+    "_review": true
+  },
+  "sq.label": {
+    "text": "{name}: {piece}",
+    "_review": true
+  },
+  "piece.none": {
+    "text": "empty",
+    "_review": true
+  },
+  "piece.lightMan": {
+    "text": "your man",
+    "_review": true
+  },
+  "piece.lightKing": {
+    "text": "your king",
+    "_review": true
+  },
+  "piece.darkMan": {
+    "text": "opponent man",
+    "_review": true
+  },
+  "piece.darkKing": {
+    "text": "opponent king",
+    "_review": true
+  },
+  "seat.taken": {
+    "text": "{n} pieces don commot",
+    "_review": true
+  },
+  "toast.heads": {
+    "text": "Open your eye",
+    "_review": true
+  },
+  "hud.moves": {
+    "text": "Moves",
+    "_review": true
+  },
+  "play.yourTurn": {
+    "text": "Na your turn. Tap one piece, then one marked square.",
+    "_review": true
+  },
+  "play.mustCapture": {
+    "text": "You must capture. Carry di most pieces wey you fit carry.",
+    "_review": true
+  },
+  "play.blocked": {
+    "text": "Dat piece no fit move.",
+    "_review": true
+  },
+  "play.pickPiece": {
+    "text": "Tap one of your pieces.",
+    "_review": true
+  },
+  "play.pickPath": {
+    "text": "Tap di numbered stone make you choose your road.",
+    "_review": true
+  },
+  "play.cpuThinking": {
+    "text": "{name} dey think...",
+    "_review": true
+  },
+  "play.youMoved": {
+    "text": "You don move.",
+    "_review": true
+  },
+  "play.cpuMoved": {
+    "text": "{name} don move.",
+    "_review": true
+  },
+  "play.youTook": {
+    "text": "You don chop one piece!",
+    "_review": true
+  },
+  "play.cpuTook": {
+    "text": "{name} don chop one piece.",
+    "_review": true
+  },
+  "play.youChain": {
+    "text": "You don chop {n} pieces for one go!",
+    "_review": true
+  },
+  "play.cpuChain": {
+    "text": "{name} don chop {n} pieces for one go.",
+    "_review": true
+  },
+  "play.hint": {
+    "text": "Hint",
+    "_review": true
+  },
+  "play.hintSay": {
+    "text": "Try {from} go {to}.",
+    "_review": true
+  },
+  "play.nudge": {
+    "text": "Oya, make your move!",
+    "_review": true
+  },
+  "play.end.noPieces": {
+    "text": "No piece remain again. Di game don end.",
+    "_review": true
+  },
+  "play.end.blocked": {
+    "text": "No move remain again. Di game don end.",
+    "_review": true
+  },
+  "play.end.repetition": {
+    "text": "Di same position three times: e be draw.",
+    "_review": true
+  },
+  "play.end.kingMoves": {
+    "text": "25 moves each wey na only kings: e be draw.",
+    "_review": true
+  },
+  "play.end.cap": {
+    "text": "Di game don too long: e be draw.",
+    "_review": true
+  },
+  "results.taken": {
+    "text": "Pieces wey you chop",
+    "_review": true
+  },
+  "results.lost": {
+    "text": "Pieces wey you lose",
+    "_review": true
+  },
+  "results.kings": {
+    "text": "Kings wey you make",
+    "_review": true
+  },
+  "results.moves": {
+    "text": "Your moves",
+    "_review": true
+  },
+  "results.hints": {
+    "text": "Hints wey you use",
+    "_review": true
+  },
+  "results.wins": {
+    "text": "Wins",
+    "_review": true
+  },
+  "results.draw": {
+    "text": "E be draw!",
+    "_review": true
+  },
+  "persona.doosuur.name": {
+    "text": "Doosuur",
+    "_review": true
+  },
+  "persona.falmata.name": {
+    "text": "Falmata",
+    "_review": true
+  },
+  "persona.damola.name": {
+    "text": "Damola",
+    "_review": true
+  },
+  "persona.doosuur.1": {
+    "text": "Welcome, my dear. Sit down, make we play small.",
+    "_review": true
+  },
+  "persona.doosuur.2": {
+    "text": "Take your time. Nobody dey run us.",
+    "_review": true
+  },
+  "persona.doosuur.3": {
+    "text": "Ah, correct move! You see that one fast.",
+    "_review": true
+  },
+  "persona.doosuur.4": {
+    "text": "Oh! You don chop my piece. Well done.",
+    "_review": true
+  },
+  "persona.doosuur.5": {
+    "text": "Look well o, one jump dey wait you.",
+    "_review": true
+  },
+  "persona.doosuur.6": {
+    "text": "King don show already! Congrats.",
+    "_review": true
+  },
+  "persona.doosuur.7": {
+    "text": "Hmm, make I think small.",
+    "_review": true
+  },
+  "persona.doosuur.8": {
+    "text": "Good game, my dear. Make we run am again.",
+    "_review": true
+  },
+  "persona.falmata.1": {
+    "text": "Make I calculate this one.",
+    "_review": true
+  },
+  "persona.falmata.2": {
+    "text": "Two for one. I like that kind exchange.",
+    "_review": true
+  },
+  "persona.falmata.3": {
+    "text": "Your left side open small.",
+    "_review": true
+  },
+  "persona.falmata.4": {
+    "text": "Capture must o, my friend. Na the rule.",
+    "_review": true
+  },
+  "persona.falmata.5": {
+    "text": "Nice try. E nearly work.",
+    "_review": true
+  },
+  "persona.falmata.6": {
+    "text": "Ha! You see my shot before e land.",
+    "_review": true
+  },
+  "persona.falmata.7": {
+    "text": "I don crown! Now I dey fly.",
+    "_review": true
+  },
+  "persona.falmata.8": {
+    "text": "Good game. Same time tomorrow?",
+    "_review": true
+  },
+  "persona.damola.1": {
+    "text": "Ó dára! Make the better player win.",
+    "_review": true
+  },
+  "persona.damola.2": {
+    "text": "I don dey play this one since secondary school.",
+    "_review": true
+  },
+  "persona.damola.3": {
+    "text": "That move sharp. I no expect am.",
+    "_review": true
+  },
+  "persona.damola.4": {
+    "text": "Careful. Every piece get im weight.",
+    "_review": true
+  },
+  "persona.damola.5": {
+    "text": "Ah! You don scatter my formation.",
+    "_review": true
+  },
+  "persona.damola.6": {
+    "text": "Long diagonal, long wahala.",
+    "_review": true
+  },
+  "persona.damola.7": {
+    "text": "Respect. You play am well.",
+    "_review": true
+  },
+  "persona.damola.8": {
+    "text": "Another one? Board still dey hot.",
     "_review": true
   }
 }

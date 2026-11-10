@@ -1,131 +1,361 @@
-.ng-play {
-  gap: var(--ng-s-3);
+/* Draughts Naija. Adire theme (tokens from @naija/core); board, pieces, states and seats come from
+   assets/draughts-art.css (.dn-*). Transform and opacity only for anything that moves.
+   Portrait 360x640 first; landscape and desktop below. */
+
+/* ---------- menu ---------- */
+.dn-menu-art {
+  width: 88px;
+  height: 88px;
 }
-.arena {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 240px;
-  border-radius: var(--ng-r-lg);
-  background: rgba(0, 0, 0, 0.28);
-  overflow: hidden;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
+.dn-menu .ng-h--display {
+  font-size: clamp(1.75rem, 9vw, 2.75rem);
 }
-.arena:focus-visible {
-  outline: 3px solid var(--ng-focus);
-  outline-offset: 2px;
-}
-.target {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: var(--size);
-  height: var(--size);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  opacity: 0;
-  pointer-events: none;
-  will-change: transform;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-.target.is-on {
-  opacity: 1;
-  pointer-events: auto;
-}
-.target.is-hit,
-.target.is-gone {
-  pointer-events: none;
-}
-.target__in {
-  position: absolute;
-  inset: 0;
-  display: block;
-}
-.target img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.target__ring {
-  position: absolute;
-  inset: -4px;
-  border: 3px solid var(--ng-accent);
-  border-radius: 50%;
-  opacity: 0.9;
-}
-.target.is-on .target__in {
-  animation: bell-in 180ms var(--ng-ease-spring) both;
-}
-.target.is-on .target__ring {
-  animation: bell-ring var(--life) linear both;
-}
-.target.is-hit .target__in {
-  animation: bell-hit 200ms var(--ng-ease) both;
-}
-.target.is-gone .target__in {
-  animation: bell-gone 180ms linear both;
-}
-.target.is-hit .target__ring,
-.target.is-gone .target__ring {
-  animation: none;
-  opacity: 0;
-}
-@keyframes bell-in {
-  from {
-    transform: scale(0.3);
-    opacity: 0;
-  }
-}
-@keyframes bell-ring {
-  from {
-    transform: scale(1.25);
-    opacity: 1;
-  }
-  to {
-    transform: scale(0.85);
-    opacity: 0.3;
-  }
-}
-@keyframes bell-hit {
-  to {
-    transform: scale(1.5);
-    opacity: 0;
-  }
-}
-@keyframes bell-gone {
-  to {
-    transform: scale(0.6);
-    opacity: 0;
-  }
-}
-.menu-art {
-  width: min(40vw, 150px);
-  height: auto;
-  filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.25));
-}
-.hint {
+.dn-opponent {
   margin: 0;
   text-align: center;
   font-weight: 700;
+  font-size: var(--ng-fs-sm);
 }
-@media (prefers-reduced-motion: reduce) {
-  .target.is-on .target__ring {
-    animation: none;
+.dn-menu .ng-menu__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 340px;
+}
+.dn-menu .ng-menu__list li {
+  min-width: 0;
+}
+.dn-menu .ng-menu__list li:first-child {
+  grid-column: 1 / -1;
+}
+.dn-menu .ng-menu__list .ng-btn--lg {
+  min-width: 0;
+  padding-inline: var(--ng-s-2);
+  font-size: var(--ng-fs-lg);
+}
+.dn-menu .ng-settings .ng-btn {
+  padding-inline: var(--ng-s-2);
+  white-space: nowrap;
+}
+.dn-menu .ng-seg__txt {
+  font-size: var(--ng-fs-sm);
+}
+@media (max-height: 760px) and (orientation: portrait) {
+  .dn-menu {
+    gap: var(--ng-s-2);
   }
-}
-@media (max-height: 500px) and (orientation: landscape) {
-  .menu-art {
-    display: none;
+  .dn-menu-art {
+    width: 56px;
+    height: 56px;
+  }
+  .dn-menu .ng-seg__opt {
+    min-height: 48px;
   }
 }
 @media (max-height: 700px) and (orientation: portrait) {
-  .menu-art {
-    width: 72px;
+  .dn-menu-art,
+  .dn-menu .ng-menu__tag {
+    display: none;
+  }
+}
+@media (max-height: 500px) and (orientation: landscape) {
+  .dn-menu-art {
+    display: none;
+  }
+  .dn-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--ng-s-5);
+    row-gap: var(--ng-s-2);
+    align-content: center;
+    max-width: 760px;
+  }
+  .dn-menu > .ng-h,
+  .dn-menu > .ng-menu__tag {
+    grid-column: 1 / -1;
+  }
+  .dn-menu > .ng-field,
+  .dn-menu > .dn-opponent {
+    grid-column: 1;
+    max-width: none;
+  }
+  .dn-menu > .ng-menu__list {
+    grid-column: 2;
+    grid-row: 2 / span 4;
+    align-self: center;
+    max-width: none;
+  }
+  .dn-menu > .ng-menu__footer {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .dn-menu .ng-seg__opt {
+    min-height: 44px;
+  }
+}
+
+/* ---------- how to play: the legend is drawn with the real board classes ---------- */
+.dn-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ng-s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dn-legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ng-s-2);
+  font-size: var(--ng-fs-sm);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+.dn-demo {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: var(--dn-indigo);
+  pointer-events: none;
+}
+.dn-demo .dn-piece {
+  width: 80%;
+}
+@media (max-height: 640px) {
+  .dn-demo {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ---------- rules screen ---------- */
+.dn-rules {
+  align-items: stretch;
+  gap: var(--ng-s-3);
+}
+.dn-rules__list {
+  display: grid;
+  gap: var(--ng-s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dn-rules__item {
+  padding: var(--ng-s-3);
+  border-radius: var(--ng-r-md);
+  background: var(--ng-surface);
+  color: var(--ng-ink-s);
+}
+.dn-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ng-s-3);
+  width: 100%;
+  min-height: var(--ng-tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: 800 var(--ng-fs-md) / 1.2 var(--ng-font-ui);
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.dn-switch:focus-visible {
+  outline: 3px solid var(--ng-focus);
+  outline-offset: 2px;
+}
+.dn-switch__txt {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.dn-switch__state {
+  flex: none;
+  min-width: 56px;
+  padding: 6px 10px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-surface-2);
+  box-shadow: inset 0 0 0 2px var(--ng-ink-s-2);
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+.dn-switch[aria-checked='true'] .dn-switch__state {
+  background: var(--ng-good);
+  color: #fff;
+  box-shadow: none;
+}
+.dn-switch[aria-checked='true'] .dn-switch__state::before {
+  content: '';
+  display: inline-block;
+  width: 0.3em;
+  height: 0.55em;
+  margin: 0 0.4em 0.1em 0;
+  border: solid currentColor;
+  border-width: 0 0.15em 0.15em 0;
+  transform: rotate(45deg);
+}
+.dn-rules__help {
+  margin: 0 0 var(--ng-s-1);
+  font-size: var(--ng-fs-sm);
+  color: var(--ng-ink-s-2);
+}
+.dn-rules__note {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ng-fs-sm);
+}
+
+/* ---------- play screen ---------- */
+.dn-play {
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  grid-template-areas: 'hud' 'cpu' 'msg' 'board' 'you';
+  align-items: center;
+  justify-items: center;
+  gap: 4px;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  max-width: min(100%, 1180px);
+  padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom));
+  overflow: hidden;
+  /* the square the board gets (the width is the limit in portrait, the height in landscape) */
+  --dn-side: min(100%, 520px, calc(100dvh - 250px));
+}
+/* the backdrop covers the whole window, whatever the screen's max width */
+.dn-play .dn-stage {
+  position: fixed;
+}
+.dn-hud {
+  grid-area: hud;
+  background: var(--dn-ink);
+  color: var(--dn-cream);
+}
+.dn-hud .ng-hud__label,
+.dn-hud .ng-hud__value {
+  color: var(--dn-cream);
+}
+.dn-hud .ng-btn--secondary {
+  min-height: 44px;
+}
+.dn-seat--cpu {
+  grid-area: cpu;
+}
+.dn-seat:not(.dn-seat--cpu) {
+  grid-area: you;
+}
+.dn-seat {
+  width: 100%;
+  max-width: var(--dn-side);
+  min-width: 0;
+}
+.dn-seat .ng-avatar {
+  width: 44px;
+  height: 44px;
+}
+.dn-seat__col {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.dn-seat__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.dn-seat__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dn-tray {
+  min-height: 20px;
+}
+.dn-tray__count {
+  padding-block: 0;
+  font-size: 12px;
+}
+.dn-msg {
+  grid-area: msg;
+  position: relative;
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  width: 100%;
+  min-height: 30px;
+}
+.dn-status {
+  margin: 0;
+  max-width: 100%;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.3;
+  border-radius: 14px;
+}
+.dn-bubblehost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -10px;
+  z-index: 5;
+  pointer-events: none;
+}
+.dn-boardwrap {
+  grid-area: board;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+}
+.dn-board {
+  width: var(--dn-side);
+  /* a finger drags pieces: the browser must not pan or zoom the page from the board */
+  touch-action: none;
+}
+.dn-sq.is-drag {
+  z-index: 6;
+}
+.dn-sq.is-drag .dn-piece {
+  transition: none;
+}
+.dn-sq.is-select .dn-piece,
+.dn-sq .dn-piece {
+  transition: transform 120ms ease-out;
+}
+
+/* landscape phone and desktop: seats and controls beside the board, the board capped by the height */
+@media (orientation: landscape) and (min-aspect-ratio: 11/10) {
+  .dn-play {
+    grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'cpu board hud'
+      'msg board .'
+      '. board .'
+      '. board you';
+    align-items: start;
+    column-gap: 12px;
+    --dn-side: min(calc(100dvh - 16px), calc(100vw - 340px), 640px);
+  }
+  .dn-seat--cpu,
+  .dn-msg,
+  .dn-hud,
+  .dn-seat:not(.dn-seat--cpu) {
+    max-width: none;
+  }
+  .dn-seat:not(.dn-seat--cpu) {
+    align-self: end;
+  }
+  .dn-boardwrap {
+    align-self: center;
+    width: auto;
+  }
+  .dn-hud {
+    flex-wrap: wrap;
   }
 }

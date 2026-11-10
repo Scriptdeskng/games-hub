@@ -30,7 +30,6 @@ const PROMISED = [
   'lastPiece',
   'yourTurn',
   'hint',
-  'undo',
   'thinkTick',
   'modePick',
   'personaIn',
@@ -94,13 +93,15 @@ describe('draughtsSfx', () => {
       expect(draughtsSfx[k], k).toBeUndefined();
   });
   it('music stand-ins use only core voices', () => {
-    for (const track of [menuMusic, playMusic])
+    for (const track of [menuMusic, playMusic]) {
+      if (track.kind !== 'pattern') throw new Error('the stand-ins are pattern tracks');
       for (const st of track.steps)
         for (const s of st === null ? [] : Array.isArray(st) ? st : [st])
           expect(instruments[s.voice], s.voice).toBeDefined();
+    }
   });
-  // Enforced as soon as the view registers `draughtsSfx` (the scaffold has no draughts UI yet): a defined but silent
-  // cue is a defect. Optional cues (`undo`) may be unused only if the feature does not ship (delete the cue then).
+  // A defined but silent cue is a defect: every cue must be played from game code. There is no undo, so the
+  // `undo` cue was deleted rather than left unused.
   const src = join(__dirname, '..');
   const files = (dir: string): string[] =>
     readdirSync(dir).flatMap((f) => {
@@ -111,14 +112,15 @@ describe('draughtsSfx', () => {
     .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts') && !f.endsWith('audio/sfx.ts'))
     .map((f) => readFileSync(f, 'utf8'))
     .join('\n');
-  it.skipIf(!code.includes('draughtsSfx'))(
-    'every cue is played from game code once the sfx map is wired',
-    () => {
-      const silent = Object.keys(draughtsSfx).filter((name) => !code.includes(`'${name}'`));
-      expect(silent).toEqual([]);
-    },
-  );
-  it('documents which cues are optional', () => {
-    for (const k of DRAUGHTS_OPTIONAL_CUES) expect(draughtsSfx[k], k).toBeDefined();
+  it('is registered by main.ts', () => {
+    expect(code).toContain('registerSfx(draughtsSfx)');
+  });
+  it('every cue is played from game code', () => {
+    const silent = Object.keys(draughtsSfx).filter((name) => !code.includes(`'${name}'`));
+    expect(silent).toEqual([]);
+  });
+  it('has no optional cues left and no undo cue', () => {
+    expect(DRAUGHTS_OPTIONAL_CUES).toEqual([]);
+    expect(draughtsSfx.undo).toBeUndefined();
   });
 });

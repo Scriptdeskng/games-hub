@@ -4,7 +4,7 @@ export const gameConfig = {
   title: 'Draughts Naija',
   version: '0.1.0',
   /** design tokens theme class from packages/core/src/styles/tokens.css */
-  theme: 'theme-naija-green',
+  theme: 'theme-adire',
   orientation: 'any',
   defaultDifficulty: 'medium',
 } as const;

@@ -1,143 +1,192 @@
-import { createRng } from '@naija/core/rng';
-import { BASE_POINTS, COMBO_BONUS, COMBO_BONUS_CAP, PROFILES, type Difficulty } from './config';
+import {
+  DARK,
+  LIGHT,
+  countPieces,
+  initialBoard,
+  isKing,
+  other,
+  positionKey,
+  sideOf,
+  type Side,
+} from './board';
+import { KING_ONLY_PLY_LIMIT, MAX_PLIES, REPETITION_LIMIT, makeRules, type Rules } from './config';
+import { applyToCells, generateMoves, type Move } from './movegen';
 
-/** A bell on screen. x and y are fractions (0..1) of the free arena space. */
-export interface Target {
-  id: number;
-  x: number;
-  y: number;
-  /** remaining life (ms) */
-  ttlMs: number;
+export type EndReason = 'noPieces' | 'blocked' | 'repetition' | 'kingMoves' | 'cap';
+
+/** `winner` null is a draw. */
+export interface GameResult {
+  winner: Side | null;
+  reason: EndReason;
 }
 
-export type Status = 'playing' | 'won' | 'lost';
+/** What happened on the last ply, for the view (sounds, animation, banter, move list). */
+export interface MoveRecord {
+  side: Side;
+  from: number;
+  to: number;
+  path: number[];
+  caps: number[];
+  /** the moved piece was a king before the move */
+  king: boolean;
+  /** a man was crowned by this move */
+  crowned: boolean;
+}
 
-/** Fully serializable game state (JSON-safe). */
+/**
+ * The whole game as plain, serialisable data (it is posted to the AI worker as it is).
+ * Light is the human seat, dark the CPU. `history` counts positions since the last irreversible
+ * move (a man move or a capture), for the threefold-repetition draw.
+ */
 export interface GameState {
-  difficulty: Difficulty;
+  rules: Rules;
+  /** the seed this game was created with (the AI derives its per-move seeds from it) */
   seed: number;
-  /** RNG state, so a save restores the exact same future */
-  rng: number;
-  status: Status;
-  timeLeftMs: number;
-  spawnInMs: number;
-  nextId: number;
-  targets: Target[];
-  score: number;
-  hits: number;
-  misses: number;
-  combo: number;
-  bestCombo: number;
+  board: number[];
+  turn: Side;
+  plies: number;
+  /** consecutive plies in which only a king moved and nothing was captured */
+  kingMoves: number;
+  history: Record<string, number>;
+  /** pieces taken BY each side: [light, dark] */
+  captured: [number, number];
+  /** men crowned by each side */
+  crowned: [number, number];
+  lastMove: MoveRecord | null;
+  result: GameResult | null;
 }
 
-export function createGame(difficulty: Difficulty, seed: number): GameState {
-  const p = PROFILES[difficulty];
+export function createGame(o: { seed: number; rules?: Rules }): GameState {
+  const rules = o.rules ?? makeRules(10);
+  const board = initialBoard(rules.size);
+  const turn: Side = rules.cpuStarts ? DARK : LIGHT;
   return {
-    difficulty,
-    seed,
-    rng: createRng(seed).getState(),
-    status: 'playing',
-    timeLeftMs: p.durationMs,
-    spawnInMs: 300,
-    nextId: 1,
-    targets: [],
-    score: 0,
-    hits: 0,
-    misses: 0,
-    combo: 0,
-    bestCombo: 0,
+    rules,
+    seed: o.seed >>> 0,
+    board,
+    turn,
+    plies: 0,
+    kingMoves: 0,
+    history: { [positionKey(board, turn)]: 1 },
+    captured: [0, 0],
+    crowned: [0, 0],
+    lastMove: null,
+    result: null,
   };
 }
 
-const finish = (s: GameState): GameState =>
-  s.hits >= PROFILES[s.difficulty].goal
-    ? { ...s, status: 'won' }
-    : s.timeLeftMs <= 0
-      ? { ...s, status: 'lost', timeLeftMs: 0, targets: [] }
-      : s;
+/** A game from a diagram (tests, puzzles). The result is evaluated at once (no moves = a loss). */
+export function createFromBoard(o: {
+  board: number[];
+  turn: Side;
+  rules: Rules;
+  seed?: number;
+}): GameState {
+  const s: GameState = {
+    rules: o.rules,
+    seed: (o.seed ?? 1) >>> 0,
+    board: o.board.slice(),
+    turn: o.turn,
+    plies: 0,
+    kingMoves: 0,
+    history: { [positionKey(o.board, o.turn)]: 1 },
+    captured: [0, 0],
+    crowned: [0, 0],
+    lastMove: null,
+    result: null,
+  };
+  s.result = noMovesResult(s);
+  return s;
+}
 
-/** Advance time by dtMs: bells age and expire (a miss), new bells spawn, the clock runs. */
-export function tick(s: GameState, rawDtMs: number): GameState {
-  if (s.status !== 'playing') return s;
-  // negative or NaN time can never add seconds to the clock
-  const dtMs = rawDtMs > 0 ? rawDtMs : 0;
-  const p = PROFILES[s.difficulty];
-  const rng = createRng(0);
-  rng.setState(s.rng);
+export const isOver = (s: GameState): boolean => s.result !== null;
 
-  let targets = s.targets;
-  let misses = s.misses;
-  let combo = s.combo;
-  if (targets.length) {
-    const aged = targets.map((t) => ({ ...t, ttlMs: t.ttlMs - dtMs }));
-    const alive = aged.filter((t) => t.ttlMs > 0);
-    if (alive.length !== aged.length) {
-      misses += aged.length - alive.length;
-      combo = 0;
-    }
-    targets = alive;
-  }
+/** Legal moves of the side to move (empty when the game is over). */
+export const legalMoves = (s: GameState): Move[] =>
+  s.result ? [] : generateMoves(s.board, s.turn, s.rules);
 
-  let spawnInMs = s.spawnInMs - dtMs;
-  let nextId = s.nextId;
-  // never leave the arena empty for long: an empty arena respawns on the next tick
-  if (targets.length === 0 && spawnInMs > 120) spawnInMs = 120;
-  if (spawnInMs <= 0) {
-    if (targets.length < p.maxTargets) {
-      targets = [...targets, { id: nextId++, x: rng.next(), y: rng.next(), ttlMs: p.lifetimeMs }];
-    }
-    spawnInMs += p.spawnGapMs * rng.range(0.8, 1.2);
-    if (spawnInMs < 0) spawnInMs = p.spawnGapMs;
-  }
+const sameMove = (a: Move, b: Pick<Move, 'from' | 'to' | 'caps'>): boolean =>
+  a.from === b.from &&
+  a.to === b.to &&
+  a.caps.length === b.caps.length &&
+  a.caps.every((c) => b.caps.includes(c));
 
-  return finish({
+/** The legal move equal to `m` (same start, end and captured set), or null. */
+export const findMove = (s: GameState, m: Pick<Move, 'from' | 'to' | 'caps'>): Move | null =>
+  legalMoves(s).find((x) => sameMove(x, m)) ?? null;
+
+export const isLegal = (s: GameState, m: Pick<Move, 'from' | 'to' | 'caps'>): boolean =>
+  findMove(s, m) !== null;
+
+/** Does the side to move have to capture this turn? */
+export const mustCaptureNow = (s: GameState): boolean => {
+  const first = legalMoves(s)[0];
+  return !!first && first.caps.length > 0;
+};
+
+function noMovesResult(s: GameState): GameResult | null {
+  if (generateMoves(s.board, s.turn, s.rules).length > 0) return null;
+  const { men, kings } = countPieces(s.board);
+  const left = (men[s.turn] as number) + (kings[s.turn] as number);
+  return { winner: other(s.turn), reason: left === 0 ? 'noPieces' : 'blocked' };
+}
+
+/**
+ * Play a legal move. Throws on an illegal one (the view and the AI only ever send legal moves).
+ * Immutable: returns a new state. The end of the game is decided here: the side to move with no
+ * legal move loses; threefold repetition, the king-only rule and the safety cap are draws.
+ */
+export function applyMove(s: GameState, m: Pick<Move, 'from' | 'to' | 'caps'>): GameState {
+  if (s.result) throw new Error('the game is over');
+  const legal = findMove(s, m);
+  if (!legal) throw new Error(`illegal move ${m.from}->${m.to}`);
+  const n = s.rules.size;
+  const board = s.board.slice();
+  const piece = board[legal.from] as number;
+  const side = sideOf(piece);
+  const king = isKing(piece);
+  const crowned = applyToCells(board, legal, n);
+  const capturing = legal.caps.length > 0;
+  const irreversible = !king || capturing;
+  const turn = other(s.turn);
+  const next: GameState = {
     ...s,
-    rng: rng.getState(),
-    timeLeftMs: Math.max(0, s.timeLeftMs - dtMs),
-    spawnInMs,
-    nextId,
-    targets,
-    misses,
-    combo,
-  });
+    board,
+    turn,
+    plies: s.plies + 1,
+    kingMoves: irreversible ? 0 : s.kingMoves + 1,
+    captured: capturing
+      ? (s.captured.map((c, i) => (i === side ? c + legal.caps.length : c)) as [number, number])
+      : s.captured,
+    crowned: crowned
+      ? (s.crowned.map((c, i) => (i === side ? c + 1 : c)) as [number, number])
+      : s.crowned,
+    lastMove: {
+      side,
+      from: legal.from,
+      to: legal.to,
+      path: legal.path.slice(),
+      caps: legal.caps.slice(),
+      king,
+      crowned,
+    },
+    history: irreversible ? {} : { ...s.history },
+    result: null,
+  };
+  const key = positionKey(board, turn);
+  next.history[key] = (next.history[key] ?? 0) + 1;
+  next.result = noMovesResult(next);
+  if (!next.result) {
+    if (next.history[key] >= REPETITION_LIMIT) next.result = { winner: null, reason: 'repetition' };
+    else if (next.kingMoves >= KING_ONLY_PLY_LIMIT)
+      next.result = { winner: null, reason: 'kingMoves' };
+    else if (next.plies >= MAX_PLIES) next.result = { winner: null, reason: 'cap' };
+  }
+  return next;
 }
 
-/** The player tapped bell `id`. Unknown ids (already vanished) are ignored. */
-export function hit(s: GameState, id: number): GameState {
-  if (s.status !== 'playing' || !s.targets.some((t) => t.id === id)) return s;
-  const combo = s.combo + 1;
-  return finish({
-    ...s,
-    targets: s.targets.filter((t) => t.id !== id),
-    hits: s.hits + 1,
-    combo,
-    bestCombo: Math.max(s.bestCombo, combo),
-    score: s.score + BASE_POINTS + Math.min(s.combo, COMBO_BONUS_CAP) * COMBO_BONUS,
-  });
-}
-
-/** The player tapped empty space: a miss that breaks the combo. */
-export function missTap(s: GameState): GameState {
-  if (s.status !== 'playing') return s;
-  return { ...s, misses: s.misses + 1, combo: 0 };
-}
-
-/** The bell that has been waiting longest (lowest ttl), or null. Used by keyboard and autoplay. */
-export function oldestTarget(s: GameState): number | null {
-  let best: Target | null = null;
-  for (const t of s.targets) if (!best || t.ttlMs < best.ttlMs) best = t;
-  return best ? best.id : null;
-}
-
-/** hits / (hits + misses), 0..1 */
-export function accuracy(s: GameState): number {
-  const n = s.hits + s.misses;
-  return n === 0 ? 0 : s.hits / n;
-}
-
-/** 0 = lost, 1 = won, 2 = won with >= 70% accuracy, 3 = also finished with >= 25% time left. */
-export function stars(s: GameState): 0 | 1 | 2 | 3 {
-  if (s.status !== 'won') return 0;
-  if (accuracy(s) < 0.7) return 1;
-  return s.timeLeftMs >= PROFILES[s.difficulty].durationMs * 0.25 ? 3 : 2;
-}
+/** How many men and kings each side has: handy for HUDs and the evaluation of results. */
+export const pieceCounts = (s: GameState): { light: number; dark: number } => {
+  const { men, kings } = countPieces(s.board);
+  return { light: men[0] + kings[0], dark: men[1] + kings[1] };
+};
