@@ -1,4 +1,4 @@
-# The First 10 Games
+# The Games (10 casual + 1 flagship)
 
 Working titles are provisional. Check names against existing trademarks and app-store
 titles before launch. Do not reuse names, characters or art from other studios' games
@@ -26,6 +26,7 @@ score, streak), and the portal bridge events.
 | 8 | `penalty-king` | Penalty King | Sports / arcade | 2 | M |
 | 9 | `danfo-dash` | Danfo Dash | Endless runner | 3 | L |
 | 10 | `mama-put-match` | Mama Put Match | Match-3 puzzle | 3 | L |
+| 11 | `akoni-dike` | Akọni & Dike | Historical action-adventure (educational) | **NEXT** | XL (14–16 weeks) |
 
 \*S ≈ 1 week, M ≈ 2 weeks, L ≈ 3 weeks for one developer working with Claude Code, including
 tests and QA loops. This assumes the Phase 0 shared core is finished first.
@@ -171,3 +172,26 @@ Ogbete). Goals include score, clear-the-pepper (blockers) and collect-N items.
 **Tech:** DOM or Canvas. Use a deterministic board generator with no starting matches and a
 "no moves → reshuffle" rule. Level data lives in JSON with a small level-editor script in
 `scripts/`.
+
+---
+
+## 11. Akọni & Dike (`akoni-dike`): flagship, **next game to build**
+**Why:** it gives the portal an original, story-driven Nigerian game that also teaches history.
+Nigerian History is now compulsory from Primary 1 to JSS 3.
+
+**What:** a single-player, top-down, real-time action-adventure with two historical campaigns:
+the Yoruba **Kiriji War** (1877–1893) and the Igbo **Ekumeku** resistance (1883–1914).
+Each has a prologue and 6 chapters of 12–15 minutes. The player controls the hero directly
+(strike, dodge, parry, aim, stealth), explores hubs, and commands an AI squad. There is a
+learning layer in every chapter and a classroom mode.
+
+**Full spec (binding):**
+- `docs/games/akoni-dike/SCRIPT.md`: story, guardrails, characters, chapters, gameplay
+- `docs/games/akoni-dike/LEARNING.md`: the education layer, lesson per chapter, classroom mode, accuracy rules
+- `docs/games/akoni-dike/ASSET_BIBLE.md`: period-accurate environments, outfits, props, audio, anachronism checklist
+
+**Size exception (approved):** the initial download is ≤ 3 MB (engine, menus, first playable
+chapter). Each further chapter pack is ≤ 1 MB, loaded on demand and cached offline.
+
+**Open decision:** whether to keep the Moremi prologue. It ships behind
+`features.moremiPrologue` (default off) until the client decides.

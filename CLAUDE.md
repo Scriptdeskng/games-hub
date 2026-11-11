@@ -8,6 +8,8 @@ subscription portal (m.gamesplash.com.ng). Every game ships as a static folder
 Read these before doing any work:
 - `docs/GAMES.md` — the 10 games, their rules and scope
 - `docs/IMPLEMENTATION_PLAN.md` — phases, architecture, Definition of Done
+- `docs/games/akoni-dike/` — SCRIPT, LEARNING and ASSET_BIBLE for the flagship historical
+  game. **It is the next game to build** (see the priority override in the plan).
 - `docs/assets/CULTURAL_GUIDE.md` — the Nigerian visual, sound, music, language and character
   direction. **All assets and effects must follow it.**
 - `.claude/agents/` — the three subagents (senior-developer, asset-designer, qa-reviewer)
@@ -24,7 +26,7 @@ Infinix / Itel / Samsung A-series), often on metered or patchy mobile data.
 
 | Budget | Limit |
 |---|---|
-| Initial download per game (gzip/brotli, all files) | **≤ 3 MB**, target 1.5 MB |
+| Initial download per game (gzip/brotli, all files) | **≤ 3 MB**, target 1.5 MB (`akoni-dike` only: ≤ 3 MB initial + ≤ 1 MB per on-demand chapter pack) |
 | Time to first interactive screen on simulated "Fast 3G" | ≤ 4 s |
 | Frame rate on a 4× CPU-throttled mobile profile | ≥ 50 fps during play |
 | JS heap after 10 minutes of play | no growth trend (no leaks) |

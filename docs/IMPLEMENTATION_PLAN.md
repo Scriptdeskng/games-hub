@@ -47,6 +47,32 @@ Shared core code is bundled into each game. That's acceptable because core must 
 
 ## Phases
 
+> **Priority override (current): `akoni-dike` is the next game to build.** Finish only the
+> game currently in progress to QA PASS, then start `akoni-dike` before any other queued
+> game. The remaining Phase 1–3 games resume afterwards in their original order. See
+> "Phase A" below.
+
+### Phase A: Akọni & Dike (14–16 weeks, runs next)
+Spec: `docs/games/akoni-dike/SCRIPT.md`, `LEARNING.md`, `ASSET_BIBLE.md`.
+1. **A0 (week 1):** asset brief (from ASSET_BIBLE), content JSON schemas for chapters,
+   dialogue, fact, source and quiz items, and the chapter-pack loader and size rules. **Stop
+   for human review.**
+2. **A1 (weeks 2–5):** core additions that the later games reuse:
+   - `@naija/core/loop` (fixed timestep)
+   - `@naija/core/quiz` (Sabi Quiz will reuse it)
+   - `@naija/core/packs` (on-demand chapter packs and offline cache)
+
+   Then the action engine: movement, combat and hit reactions, enemy AI with morale, squad
+   orders, stealth and sight cones, and a set-piece toolkit for duels, aiming, chases and
+   rhythm. **Vertical slice = Kiriji Chapter 1**, fully playable with its learning layer.
+   **Stop for human review.**
+3. **A2 (weeks 5–10):** Kiriji chapters 2–6, the codex, timeline and map, the cutscene system,
+   and classroom mode. **Stop for human review:** historian and cultural review of Kiriji.
+4. **A3 (weeks 10–16):** the Ekumeku prologue and chapters 1–6 (stealth, signals, crowds,
+   branching objectives), skirmish mode, teacher guides and polish. The Moremi prologue gets
+   built only if the client approves it. **Stop for human review:** historian, cultural and
+   JSS-teacher review, plus the learning playtest.
+
 ### Phase 0: foundation (week 1)
 - Monorepo, Vite, TS, ESLint/Prettier, Vitest, Playwright, size-budget script, GitHub Actions.
 - `@naija/core` with every module listed above, plus a **demo game** (`games/_template`)
@@ -96,6 +122,13 @@ Order: **Danfo Dash** → **Mama Put Match**.
   512×512 and 1024×500, category, description).
 
 ## Definition of Done (per game)
+
+`akoni-dike` adds four items to the list below:
+- [ ] Every item in the SCRIPT.md guardrails and the ASSET_BIBLE anachronism checklist passes
+- [ ] No learning content has `reviewed: false` in a release build (the build fails otherwise)
+- [ ] The initial download is ≤ 3 MB and each chapter pack is ≤ 1 MB, with offline replay of cached chapters
+- [ ] Each chapter is playable start to finish on Story difficulty via `__naijaTest.autoplay()`, including its hero moment and knowledge check
+
 
 - [ ] Rules match `GAMES.md`, every rule toggle works, and the rules engine has unit tests for each rule and edge case.
 - [ ] **Single-player only:** exactly one human seat, with every other seat CPU-controlled (or a solo mode vs the game). There's no pass-and-play, player-count picker for humans, hide-hand screen or multiplayer code path.
