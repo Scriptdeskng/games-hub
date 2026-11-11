@@ -34,8 +34,14 @@ export const LOFT = 0.35;
 
 /** The keeper: home position, reach (an ellipse around the hands) and how long a dive takes. */
 export const KEEPER_HOME = { x: 0, y: 1.0 } as const;
-export const REACH_SIDE_X = 1.05;
-export const REACH_CENTRE_X = 1.15;
-export const REACH_Y = 1.0;
+/** a dive covers a box around the hands (arms and body): half-width, and half-height of the high and low rows */
+export const REACH_ZONE_X = 1.2;
+export const REACH_UP_Y = 0.8;
+export const REACH_DOWN_Y = 0.7;
+/** a keeper who stays put covers a smaller ellipse around his home position */
+export const REACH_HOME_X = 1.0;
+export const REACH_HOME_Y = 0.85;
+/** an unfinished dive reaches less: the box is scaled by this much at the start and by 1 when the dive is complete */
+export const REACH_START = 0.4;
 /** a keeper needs this long after a decision to start moving (the human tap lag) */
 export const MOTOR_LAG = 0.06;

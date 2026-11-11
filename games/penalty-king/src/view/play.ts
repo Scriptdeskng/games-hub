@@ -60,6 +60,8 @@ export interface Play extends Component {
 
 /** A CPU or animation phase that has not moved on for this long (wall clock, not paused) is moved on by force. */
 export const WATCHDOG_MS = 8000;
+/** firings that find a kick in progress before the watchdog finishes it (so a dead loop costs a human about 16 s, never his decision) */
+export const STALL_GUARD = 2;
 
 export function createPlay(core: Core, o: PlayOptions): Play {
   const { t } = core;
@@ -71,6 +73,7 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   let began = false;
   let clock = 0;
   let rescues = 0;
+  let blocked = 0;
   let bot: HumanBot | null = null;
   let botWait = 0;
   let botRng = createRng(o.seed ^ 0x600d);
@@ -242,16 +245,25 @@ export function createPlay(core: Core, o: PlayOptions): Play {
   }
 
   // the watchdog: wall clock, so a stalled loop or animation cannot hold the match
-  function armWatchdog(): void {
+  function armWatchdog(fresh = true): void {
+    if (fresh) blocked = 0;
     watchOff();
     watchOff = scope.timeout(() => {
-      if (modal || document.hidden || destroyed) return armWatchdog();
+      if (modal || document.hidden || destroyed) return armWatchdog(false);
       if (rescue()) sync();
-      armWatchdog();
+      armWatchdog(false);
     }, WATCHDOG_MS);
   }
-  function rescue(): boolean {
-    const moved = flow.skip();
+  /**
+   * A kick in progress is never skipped on the first firing (the human's shot, or his dive and the window to make one). If the
+   * same phase is still there after STALL_GUARD firings the loop is dead, so the kick is finished: a committed dive is kept,
+   * an open window is closed and records no dive.
+   */
+  function rescue(force = false): boolean {
+    let moved = flow.skip(force);
+    if (!moved && !force) {
+      if (++blocked >= STALL_GUARD) moved = flow.skip(true);
+    }
     if (moved) rescues++;
     return moved;
   }

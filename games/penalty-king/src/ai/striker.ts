@@ -1,5 +1,5 @@
 import type { Rng } from '@naija/core/rng';
-import { ZONES, ZONE_CENTER, type ShotInput, type Zone } from '../physics';
+import { BALL_R, ZONES, ZONE_CENTER, type ShotInput, type Zone } from '../physics';
 import type { Difficulty } from '../rules/config';
 import type { KickRecord } from '../rules/shootout';
 import { STRIKER } from './profiles';
@@ -57,7 +57,8 @@ export function decideStriker(ctx: StrikerCtx, rng: Rng): ShotInput {
   const curve = uCurve < p.curve ? (uSide < 0.5 ? -0.6 : 0.6) : 0;
   return {
     aimX: a.x + jx * p.jitter,
-    aimY: a.y + jy * p.jitter * 0.7,
+    // never below the ball's radius: a shot is aimed at the ball's centre height, not under the grass
+    aimY: Math.max(BALL_R, a.y + jy * p.jitter * 0.7),
     power: p.powerLo + uPower * (p.powerHi - p.powerLo),
     curve,
   };

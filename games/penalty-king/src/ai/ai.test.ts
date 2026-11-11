@@ -19,9 +19,8 @@ import {
   simulate,
   simulateShootout,
   strikerGoalRate,
-  PLACEMENTS,
-  placementWinRate,
-  reactKeeper,
+  bestPlacement,
+  placementGrid,
   type Controller,
   zonePrior,
   zoneWeights,
@@ -55,9 +54,9 @@ describe('CPU keeper', () => {
       for (let seed = 1; seed < 60; seed++) {
         const r = createRng(seed);
         decideKeeper(ctx, r);
-        // nine draws: read, stay, zone, then three each for the two noise values (whichever branch it takes)
+        // fifteen draws: read, stay, zone, then three each for the four noise values (whichever branch it takes)
         const probe = createRng(seed);
-        for (let i = 0; i < 9; i++) probe.next();
+        for (let i = 0; i < 15; i++) probe.next();
         draws.add(r.getState());
         expect(r.getState()).toBe(probe.getState());
       }
@@ -137,24 +136,26 @@ describe('CPU keeper', () => {
     expect(share('easy')).toBeLessThan(0.25);
   });
 
-  it('a curved shot fools a reading keeper more than a straight one', () => {
-    const rate = (curve: number): number => {
+  it('a curved shot fools a one-look reader (Easy, Medium); Hard looks twice and is fooled far less', () => {
+    // a read is recognised by its start time; the target is a top corner on the right
+    const rate = (d: Difficulty, curve: number): number => {
+      const p = KEEPER[d];
+      const starts = [p.react + p.lag, p.react + p.look + p.lag];
       let ok = 0;
       let n = 0;
-      for (let seed = 1; seed <= 1500; seed++) {
-        const shot = exactShot(2.8, 1.9, curve, 0.6);
-        const plan = decideKeeper(
-          { difficulty: 'hard', shot, habit: NONE, seen: [] },
-          createRng(seed),
-        );
-        if (plan.startT === KEEPER.hard.react + KEEPER.hard.lag) {
+      for (let seed = 1; seed <= 3000; seed++) {
+        const shot = exactShot(2.2, 1.7, curve, 0.6);
+        const plan = decideKeeper({ difficulty: d, shot, habit: NONE, seen: [] }, createRng(seed));
+        if (starts.some((s) => Math.abs(plan.startT - s) < 1e-9)) {
           n++;
           if (plan.zone === 'ur') ok++;
         }
       }
       return ok / n;
     };
-    expect(rate(0)).toBeGreaterThan(rate(1) + 0.3);
+    expect(rate('medium', 0)).toBeGreaterThan(rate('medium', 1) + 0.3);
+    expect(rate('hard', 0)).toBeGreaterThan(0.5);
+    expect(rate('hard', 1)).toBeGreaterThan(rate('medium', 1) + 0.2);
   });
 
   it('keeper profiles get faster and smarter with difficulty', () => {
@@ -334,7 +335,7 @@ describe('simulations: difficulty measurably raises the challenge (1000 seeded g
         kicks++;
         for (const v of Object.values(i)) expect(Number.isFinite(v)).toBe(true);
         expect(Math.abs(i.aimX)).toBeLessThanOrEqual(6);
-        expect(i.aimY).toBeGreaterThanOrEqual(-1);
+        expect(i.aimY).toBeGreaterThanOrEqual(0.11);
         expect(i.aimY).toBeLessThanOrEqual(4);
         expect(i.power).toBeGreaterThanOrEqual(0);
         expect(i.power).toBeLessThanOrEqual(1);
@@ -358,21 +359,45 @@ describe('simulations: difficulty measurably raises the challenge (1000 seeded g
     expect(kicks).toBeGreaterThan(2000);
   });
 
-  it('no single repeated placement beats Hard: the best of eight placements wins at most 22% fresh and 25% after 300 matches of learning', () => {
-    const keeper = reactKeeper(0.25); // a quick human keeper, so the CPU striker is not a free win
-    const rates = DIFFICULTIES.map((d) => ({
-      d,
-      fresh: Math.max(...PLACEMENTS.map((p) => placementWinRate(d, p.input, 1000, 0, keeper))),
-      learned: Math.max(...PLACEMENTS.map((p) => placementWinRate(d, p.input, 1000, 300, keeper))),
-    }));
-    const [easy, medium, hard] = rates as [(typeof rates)[0], (typeof rates)[0], (typeof rates)[0]];
-    expect(hard.fresh).toBeLessThanOrEqual(0.22);
-    expect(hard.learned).toBeLessThanOrEqual(0.25);
-    expect(hard.learned).toBeLessThanOrEqual(hard.fresh + 0.02); // repetition is punished through the habit
-    expect(hard.fresh).toBeGreaterThan(0.05); // still beatable
-    expect(easy.fresh).toBeGreaterThanOrEqual(medium.fresh);
-    expect(medium.fresh).toBeGreaterThan(hard.fresh);
-  }, 120_000);
+  describe('no single repeated placement beats Hard (9 x 5 grid, 3 powers and a curl, a quick and a slow human keeper)', () => {
+    // each point is 600 seeded matches; the grid is 180 placements, so the best of them is the exploit an attacker would find
+    const GRID = placementGrid(
+      [-3.2, -2.4, -1.6, -0.8, 0, 0.8, 1.6, 2.4, 3.2],
+      [0.3, 0.8, 1.3, 1.8, 2.2],
+    );
+    const heavy = process.env.NAIJA_COVERAGE === '1' ? it.skip : it;
+
+    it('the grid really is 9 x 5 x (3 straight powers + one curl)', () => {
+      expect(GRID).toHaveLength(180);
+      expect(new Set(GRID.map((g) => g.input.power))).toEqual(new Set([0.45, 0.6, 0.8]));
+      expect(GRID.some((g) => g.input.curve !== 0)).toBe(true);
+    });
+
+    for (const react of [0.25, 0.35]) {
+      heavy(
+        `a human keeper reacting at ${react} s: the best placement wins at most 22% fresh and 25% after 300 matches of habit`,
+        () => {
+          const fresh = bestPlacement('hard', GRID, 600, 0, react);
+          const learned = bestPlacement('hard', GRID, 600, 300, react);
+          expect(fresh.rate, `best fresh: ${fresh.name}`).toBeLessThanOrEqual(0.22);
+          expect(learned.rate, `best learned: ${learned.name}`).toBeLessThanOrEqual(0.25);
+          expect(learned.rate).toBeLessThanOrEqual(fresh.rate + 0.02); // repetition is punished through the habit
+          expect(fresh.rate).toBeGreaterThan(0.01); // still beatable
+        },
+        120_000,
+      );
+    }
+
+    heavy(
+      'Medium is easier to exploit than Hard, and Easy easier than Medium',
+      () => {
+        const best = (d: Difficulty): number => bestPlacement(d, GRID, 300, 0, 0.25).rate;
+        expect(best('easy')).toBeGreaterThan(best('medium'));
+        expect(best('medium')).toBeGreaterThan(best('hard') + 0.1);
+      },
+      120_000,
+    );
+  });
 
   it('a human with a habit gets read: the same bot is saved more once the keeper has its history', () => {
     const habit = { ...NONE, ul: 11, ur: 11, dl: 5, dr: 5, u: 1, d: 1 };

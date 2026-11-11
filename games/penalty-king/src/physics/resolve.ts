@@ -30,7 +30,9 @@ export function resolveKick(shot: Shot, plan: KeeperPlan): Resolution {
   const impact = impactOf(shot.tx, shot.ty);
   let outcome: KickOutcome;
   if (impact === 'in') {
-    outcome = inReach(keeper, plan.zone, shot.tx, Math.max(shot.ty, BALL_R)) ? 'saved' : 'goal';
+    outcome = inReach(keeper, plan.zone, shot.tx, Math.max(shot.ty, BALL_R), keeper.p)
+      ? 'saved'
+      : 'goal';
   } else if (impact === 'post' || impact === 'bar') outcome = 'post';
   else outcome = 'miss';
   return { outcome, impact, keeper };

@@ -66,19 +66,50 @@
     height: 56px;
   }
 }
+@media (max-height: 860px) {
+  /* keep the buttons and the settings row on the first screen of a tall phone too */
+  .pk-menu-art {
+    display: none;
+  }
+}
 @media (max-height: 700px) and (orientation: portrait) {
-  .pk-menu-art,
   .pk-menu .ng-menu__tag {
     display: none;
   }
 }
-@media (max-height: 500px) and (orientation: landscape) {
+@media (max-height: 520px) and (orientation: landscape) {
+  /* two columns: the choices on the left, the rival and the buttons on the right, so Play is on the first screen */
+  .pk-menu {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: var(--ng-s-4, 16px);
+    row-gap: var(--ng-s-2, 8px);
+    align-content: center;
+    align-items: start;
+    max-width: 760px;
+  }
   .pk-menu-art,
-  .pk-menu .ng-menu__tag {
+  .pk-menu .ng-menu__tag,
+  .pk-menu .pk-help {
     display: none;
   }
-  .pk-menu {
-    gap: var(--ng-s-2);
+  .pk-menu > h1 {
+    grid-column: 1 / -1;
+  }
+  .pk-menu > .ng-field {
+    grid-column: 1;
+  }
+  .pk-menu > .pk-rivalcard {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .pk-menu > .ng-menu__list {
+    grid-column: 2;
+    grid-row: 3 / span 2;
+    max-width: none;
+  }
+  .pk-menu > .ng-menu__footer {
+    grid-column: 1 / -1;
   }
 }
 

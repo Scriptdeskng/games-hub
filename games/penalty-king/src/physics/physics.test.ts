@@ -255,11 +255,65 @@ describe('keeper save-zone geometry', () => {
     }
   });
 
-  it('a perfect corner beats a keeper who guessed the right zone; a stay-at-home keeper saves the chest', () => {
-    expect(resolveKick(exact(3.45, 2.2, 0.6), early('ur')).outcome).toBe('goal');
-    expect(resolveKick(exact(-3.45, 0.2, 0.6), early('dl')).outcome).toBe('goal');
+  it('a stay-at-home keeper saves the chest, not the corners; a completed dive to the right zone saves every corner', () => {
     expect(resolveKick(exact(0.3, 1.0, 0.6), { zone: null, startT: 0 }).outcome).toBe('saved');
     expect(resolveKick(exact(2.5, 1.0, 0.6), { zone: null, startT: 0 }).outcome).toBe('goal');
+    for (const [x, y, z] of [
+      [3.45, 2.2, 'ur'],
+      [-3.45, 2.2, 'ul'],
+      [3.45, 0.15, 'dr'],
+      [-3.45, 0.15, 'dl'],
+    ] as const)
+      expect(resolveKick(exact(x, y, 0.6), early(z)).outcome, `${z} corner`).toBe('saved');
+  });
+
+  it('only a fast ball to an extreme corner beats a keeper who guessed right but has not finished his dive', () => {
+    const fast = (x: number, y: number): Shot => exact(x, y, 0.9);
+    expect(resolveKick(fast(3.45, 2.2), { zone: 'ur', startT: 0.1 }).outcome).toBe('goal');
+    expect(resolveKick(fast(-3.45, 0.15), { zone: 'dl', startT: 0.1 }).outcome).toBe('goal');
+    // the same ball, a little inside, or the same corner with a slow ball, is saved
+    expect(resolveKick(fast(2.9, 1.9), { zone: 'ur', startT: 0.1 }).outcome).toBe('saved');
+    expect(resolveKick(exact(3.45, 2.2, 0.3), { zone: 'ur', startT: 0.1 }).outcome).toBe('saved');
+  });
+
+  it('the six dive boxes cover the whole goal mouth: a dense 0.1 m sweep finds no point that no zone can reach', () => {
+    const uncovered: string[] = [];
+    for (let xi = -35; xi <= 35; xi++)
+      for (let yi = 1; yi <= 23; yi++) {
+        const x = xi / 10;
+        const y = Math.max(yi / 10, BALL_R);
+        if (!ZONES.some((z) => inReach(ZONE_CENTER[z], z, x, y, 1))) uncovered.push(`(${x}, ${y})`);
+      }
+    expect(uncovered, `uncovered points: ${uncovered.slice(0, 20).join(' ')}`).toEqual([]);
+    // the edges themselves: the post-side ball and the ground ball
+    for (const [x, y] of [
+      [3.55, 0.11],
+      [-3.55, 0.11],
+      [3.55, 2.33],
+      [-3.55, 2.33],
+      [1.2, 1.0],
+      [-1.27, 1.0],
+      [1.27, 1.0],
+    ] as const)
+      expect(
+        ZONES.some((z) => inReach(ZONE_CENTER[z], z, x, y, 1)),
+        `(${x}, ${y})`,
+      ).toBe(true);
+  });
+
+  it('neighbouring zones overlap or touch (no seam between the middle and the sides, or between the rows)', () => {
+    for (let y = 0.11; y <= 2.33; y += 0.01) {
+      const mid = ['u', 'd'].some((z) => inReach(ZONE_CENTER[z as Zone], z as Zone, 1.2, y));
+      const side = ['ur', 'dr'].some((z) => inReach(ZONE_CENTER[z as Zone], z as Zone, 1.2, y));
+      expect(mid && side, `y ${y.toFixed(2)}`).toBe(true);
+    }
+    for (const x of [-3.5, -2.4, 0, 2.4, 3.5]) {
+      const up = ['ul', 'u', 'ur'].some((z) => inReach(ZONE_CENTER[z as Zone], z as Zone, x, 1.1));
+      const down = ['dl', 'd', 'dr'].some((z) =>
+        inReach(ZONE_CENTER[z as Zone], z as Zone, x, 1.1),
+      );
+      expect(up && down, `x ${x}`).toBe(true);
+    }
   });
 
   it('timing matters: a late dive reaches less, and a very late one does not move', () => {
@@ -294,11 +348,16 @@ describe('keeper save-zone geometry', () => {
     expect(keeperPose({ zone: 'u', startT: 0 }, NaN)).toMatchObject({ x: 0, y: 1 });
   });
 
-  it('reach is an ellipse: wider for a centre keeper than a diving one', () => {
+  it('reach: a box that grows as the dive completes; a keeper who stays covers a smaller ellipse', () => {
+    const c = ZONE_CENTER.ur;
+    expect(inReach(c, 'ur', c.x + 1.15, c.y + 0.7)).toBe(true);
+    expect(inReach(c, 'ur', c.x + 1.3, c.y)).toBe(false);
+    expect(inReach(c, 'ur', c.x + 1.15, c.y, 0)).toBe(false); // a dive that has not started reaches little
+    expect(inReach(c, 'ur', c.x + 0.4, c.y, 0)).toBe(true);
     const k = { x: 0, y: 1 };
-    expect(inReach(k, 'u', 1.1, 1)).toBe(true);
-    expect(inReach(k, 'ul', 1.1, 1)).toBe(false);
-    expect(inReach(k, null, 0, 1.9)).toBe(true);
+    expect(inReach(k, null, 0.9, 1)).toBe(true);
+    expect(inReach(k, null, 1.2, 1)).toBe(false);
+    expect(inReach(k, null, 0, 1.8)).toBe(true);
     expect(inReach(k, null, 0, 2.2)).toBe(false);
   });
 });

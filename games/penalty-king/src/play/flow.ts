@@ -97,10 +97,12 @@ export interface Flow {
   /** the human's dive (when the human is the keeper, from the whistle until a quarter second after the strike) */
   dive(zone: Zone): boolean;
   /**
-   * watchdog: move the match on by force, whatever phase it is stuck in. Returns false when it did nothing: it never
-   * decides for a human (a human who is to shoot, or a human keeper who may still dive).
+   * Watchdog: move the match on. Returns false when it did nothing. Without `force` it never touches a kick in progress
+   * (the run-up and the flight always involve the human: his committed shot, or his dive and the window to make one), and
+   * never makes a human shoot. With `force` (the caller has seen the stall outlast its guard) it finishes the kick: a human
+   * keeper's committed dive is used as it is, and an open window is closed (the kick records no dive).
    */
-  skip(): boolean;
+  skip(force?: boolean): boolean;
   state(): Shootout;
   practice(): PracticeStats;
   /** the human may act now */
@@ -331,13 +333,14 @@ export function createFlow(o: FlowOptions): Flow {
       humanKeeps &&
       plan === null &&
       (frame.phase === 'runup' || (frame.phase === 'flight' && frame.t <= T.window)),
-    skip() {
-      // the watchdog never resolves a human's own kick or dive by timeout
-      if (f.canShoot() || f.canDive()) return false;
+    skip(force = false) {
+      if (f.canShoot()) return false; // a human who is thinking is never forced to shoot
       if (frame.phase === 'done' && doneSent) return false;
+      const kickInProgress = frame.phase === 'runup' || frame.phase === 'flight';
+      if (kickInProgress && !force) return false;
       advancePhase();
-      if (frame.phase === 'runup' && !f.canDive()) advancePhase();
-      if (frame.phase === 'flight' && !f.canDive()) advancePhase();
+      if (frame.phase === 'runup' && force) advancePhase();
+      if (frame.phase === 'flight' && force) advancePhase();
       poseNow();
       return true;
     },

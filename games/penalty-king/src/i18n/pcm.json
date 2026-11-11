@@ -146,7 +146,6 @@
   "results.goals": { "text": "Goals", "_review": true },
   "results.saves": { "text": "Saves", "_review": true },
   "results.sweet": { "text": "Sweet goals", "_review": true },
-  "results.kicks": { "text": "Kicks", "_review": true },
   "results.vs": { "text": "{you} v {opp}", "_review": true },
   "stats.title": { "text": "Your stats", "_review": true },
   "stats.plays": { "text": "Shootouts", "_review": true },

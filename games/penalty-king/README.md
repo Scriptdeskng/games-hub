@@ -28,8 +28,10 @@ remaining kicks`), for either side.
   Flight time is 11 m over 13 + 17 x power m/s (0.85 s down to 0.37 s). Scatter grows with a harder hit and with curve.
 - A curve bows the ball sideways mid-flight (`sin`) and brings it back to the aim line at the goal plane.
 - Wood is a no-goal: within 0.17 m (post radius + ball radius) of a post or the bar it is a `post` outcome; further out is wide
-  or over. A save needs the ball inside the keeper's elliptical reach where his hands are when it arrives; the dive takes
-  0.30 to 0.46 s, so a late dive reaches less.
+  or over. A save needs the ball inside the keeper's reach box (half-width 1.2 m, half-height 0.8 m up, 0.7 m down)
+  around his hands when it arrives. The six boxes together cover the whole goal mouth (a test sweeps it on a 0.1 m grid and lists any
+  uncovered point). A dive takes 0.30 to 0.46 s and its reach grows from 40% to 100% as it completes, so a late dive, or a fast ball to an
+  extreme corner, can still beat a keeper who guessed right. A keeper who stays put covers a small ellipse.
 
 ## Input (`src/input/`)
 
@@ -52,12 +54,13 @@ zone from a weighted table with an anti-repeat penalty, then power, curve and ji
 | Level          | react | read | bias | guess start | stay | striker corner x | repeat penalty |
 | -------------- | ----- | ---- | ---- | ----------- | ---- | ---------------- | -------------- |
 | Easy (Ozavize) | 0.30  | 0.20 | 0    | +0.10 s     | 20%  | 2.5 m            | none           |
-| Medium (Ndako) | 0.20  | 0.30 | 0.6  | +0.07 s     | 4%   | 2.75 m           | x0.5           |
-| Hard (Hamman)  | 0.12  | 0.33 | 0.7  | +0.04 s     | 0%   | 3.25 m           | x0.35          |
+| Medium (Ndako) | 0.20  | 0.20 | 0.6  | +0.07 s     | 4%   | 2.8 m            | x0.5           |
+| Hard (Hamman)  | 0.12  | 0.33 | 0.95 | +0.04 s     | 0%   | 3.25 m           | x0.35          |
 
-Simulation numbers (1000 seeded shootouts each, `src/ai/ai.test.ts`) are in the hand-off report. The side zones' hands end at x = +-2.45 m
-(reach 1.05 m), so a ball at the post is coverable. A regression test runs eight single-placement probes (outer low posts, inner posts, top
-corners, centre) against a quick human keeper: the best one wins at most 22% of matches against Hard fresh and 25% after 300 matches of learned habit.
+A CPU keeper must also survive an attacker who repeats one placement. `src/ai/ai.test.ts` runs a 9 x 5 grid of placements (three
+powers and a curl each, 180 in all) against Hard with a human keeper reacting at 0.25 s and at 0.35 s: the best single placement wins
+at most 22% of matches fresh and 25% after 300 matches of learned habit. Hard looks twice at the ball (so it can tell a curl from a
+straight shot), commits early to an outer ball, and weights what it has seen this match heavily.
 
 ## Code map
 

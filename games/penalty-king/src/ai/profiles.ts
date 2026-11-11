@@ -21,20 +21,46 @@ export interface KeeperProfile {
   guessStart: number;
   /** chance that it does not dive at all */
   stay: number;
+  /** seconds after `react` of a second look (0: one look, a straight-line guess); two looks tell a curl from a straight ball */
+  look: number;
+  /** how much one shot seen in this match counts in its picture of where the human shoots */
+  seenWeight: number;
 }
 
 export const KEEPER: Readonly<Record<Difficulty, KeeperProfile>> = {
-  easy: { react: 0.3, lag: 0.06, noise: 0.5, read: 0.2, bias: 0, guessStart: 0.1, stay: 0.2 },
+  easy: {
+    react: 0.3,
+    lag: 0.06,
+    noise: 0.5,
+    read: 0.2,
+    bias: 0,
+    guessStart: 0.1,
+    stay: 0.2,
+    look: 0,
+    seenWeight: 1.5,
+  },
   medium: {
     react: 0.2,
     lag: 0.04,
     noise: 0.3,
-    read: 0.3,
+    read: 0.2,
     bias: 0.6,
     guessStart: 0.07,
     stay: 0.04,
+    look: 0,
+    seenWeight: 1.5,
   },
-  hard: { react: 0.12, lag: 0.03, noise: 0.15, read: 0.33, bias: 0.7, guessStart: 0.04, stay: 0 },
+  hard: {
+    react: 0.12,
+    lag: 0.03,
+    noise: 0.15,
+    read: 0.33,
+    bias: 0.95,
+    guessStart: 0.04,
+    stay: 0,
+    look: 0.1,
+    seenWeight: 4,
+  },
 };
 
 /** How a CPU striker aims: which zones, how close to the post, how hard, and how much it varies. */
@@ -69,7 +95,7 @@ export const STRIKER: Readonly<Record<Difficulty, StrikerProfile>> = {
   },
   medium: {
     weights: { ul: 2.2, u: 1, ur: 2.2, dl: 1.6, d: 0.8, dr: 1.6 },
-    sideX: 2.75,
+    sideX: 2.8,
     lowY: 0.4,
     highY: 1.95,
     powerLo: 0.45,
@@ -85,8 +111,8 @@ export const STRIKER: Readonly<Record<Difficulty, StrikerProfile>> = {
     highY: 2.0,
     powerLo: 0.52,
     powerHi: 0.78,
-    jitter: 0.08,
-    curve: 0.45,
+    jitter: 0.05,
+    curve: 0.6,
     repeatPenalty: 0.35,
   },
 };

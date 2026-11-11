@@ -2,9 +2,12 @@ import {
   GOAL_H,
   GOAL_HALF_W,
   KEEPER_HOME,
-  REACH_CENTRE_X,
-  REACH_SIDE_X,
-  REACH_Y,
+  REACH_DOWN_Y,
+  REACH_HOME_X,
+  REACH_HOME_Y,
+  REACH_START,
+  REACH_UP_Y,
+  REACH_ZONE_X,
 } from './constants';
 
 /** The six dive zones of the 3 x 2 grid: up-left, up, up-right, down-left, down, down-right. */
@@ -13,12 +16,12 @@ export type Zone = (typeof ZONES)[number];
 
 /** Where the keeper's hands end up for each zone (metres on the goal plane). */
 export const ZONE_CENTER: Readonly<Record<Zone, { x: number; y: number }>> = {
-  ul: { x: -2.45, y: 1.8 },
-  u: { x: 0, y: 1.85 },
-  ur: { x: 2.45, y: 1.8 },
-  dl: { x: -2.45, y: 0.55 },
-  d: { x: 0, y: 0.55 },
-  dr: { x: 2.45, y: 0.55 },
+  ul: { x: -2.4, y: 1.75 },
+  u: { x: 0, y: 1.75 },
+  ur: { x: 2.4, y: 1.75 },
+  dl: { x: -2.4, y: 0.6 },
+  d: { x: 0, y: 0.6 },
+  dr: { x: 2.4, y: 0.6 },
 };
 
 /** Seconds a dive takes to reach its zone. */
@@ -70,17 +73,30 @@ export function keeperPoseInto(plan: KeeperPlan, t: number, out: KeeperPose): Ke
 export const keeperPose = (plan: KeeperPlan, t: number): KeeperPose =>
   keeperPoseInto(plan, t, { x: 0, y: 0, p: 0 });
 
-/** Is the point (x, y) inside the keeper's reach when his hands are at `k`? An ellipse, wider for a centre keeper. */
+/** how far the dive has got, eased (the same curve the keeper moves on) */
+export const diveEase = easeOut;
+
+/**
+ * Is the point (x, y) inside the keeper's reach when his hands are at `k`? A dive covers a box around the hands: its
+ * half-width is the same for every zone, so neighbouring zones touch and the six boxes together cover the whole goal mouth
+ * (a test sweeps the goal on a 0.1 m grid). An unfinished dive (`p` < 1, the linear progress) reaches less, so a fast
+ * ball to an extreme corner can still beat a keeper who guessed right. A keeper who stays put covers a small ellipse.
+ */
 export function inReach(
   k: { x: number; y: number },
   zone: Zone | null,
   x: number,
   y: number,
+  p = 1,
 ): boolean {
-  const rx = zone === null || zone === 'u' || zone === 'd' ? REACH_CENTRE_X : REACH_SIDE_X;
-  const dx = (x - k.x) / rx;
-  const dy = (y - k.y) / REACH_Y;
-  return dx * dx + dy * dy <= 1;
+  if (zone === null || !isZone(zone)) {
+    const dx = (x - k.x) / REACH_HOME_X;
+    const dy = (y - k.y) / REACH_HOME_Y;
+    return dx * dx + dy * dy <= 1;
+  }
+  const f = REACH_START + (1 - REACH_START) * easeOut(Math.min(1, Math.max(0, p)));
+  const ry = zone === 'u' || zone === 'ul' || zone === 'ur' ? REACH_UP_Y : REACH_DOWN_Y;
+  return Math.abs(x - k.x) <= REACH_ZONE_X * f + 1e-9 && Math.abs(y - k.y) <= ry * f + 1e-9;
 }
 
 /** The dive zone nearest to a point on the goal plane (used by the AI and by the stats). */

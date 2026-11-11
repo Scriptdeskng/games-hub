@@ -191,6 +191,7 @@ export const reactKeeper =
     };
   };
 
+/** Eight named placements (kept for quick checks and the README). */
 export const PLACEMENTS: readonly { name: string; input: ShotInput }[] = [
   { name: 'outer low post left', input: { aimX: -3.2, aimY: 0.5, power: 0.6, curve: 0 } },
   { name: 'outer low post right', input: { aimX: 3.2, aimY: 0.5, power: 0.6, curve: 0 } },
@@ -223,4 +224,41 @@ export function placementWinRate(
   for (let i = 1; i <= games; i++)
     if (simulateShootout({ seed: i, difficulty: d, human: bot, habit }).winner === 0) w++;
   return w / games;
+}
+
+/** A full grid of single placements: `xs` x `ys`, power {0.45, 0.6, 0.8} straight, plus one curved variant (power 0.6, curve 0.6). */
+export function placementGrid(
+  xs: readonly number[],
+  ys: readonly number[],
+): { name: string; input: ShotInput }[] {
+  const out: { name: string; input: ShotInput }[] = [];
+  for (const x of xs)
+    for (const y of ys)
+      for (const [power, curve] of [
+        [0.45, 0],
+        [0.6, 0],
+        [0.8, 0],
+        [0.6, 0.6],
+      ] as const)
+        out.push({
+          name: `x${x} y${y} p${power} c${curve}`,
+          input: { aimX: x, aimY: y, power, curve },
+        });
+  return out;
+}
+
+/** The best (highest win rate) single placement of a grid against a rival, with the keeper reacting at `react` seconds. */
+export function bestPlacement(
+  d: Difficulty,
+  grid: readonly { name: string; input: ShotInput }[],
+  games: number,
+  learn: number,
+  react: number,
+): { name: string; rate: number } {
+  let best = { name: '', rate: -1 };
+  for (const g of grid) {
+    const rate = placementWinRate(d, g.input, games, learn, reactKeeper(react));
+    if (rate > best.rate) best = { name: g.name, rate };
+  }
+  return best;
 }

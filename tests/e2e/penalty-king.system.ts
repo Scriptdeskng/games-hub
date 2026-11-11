@@ -193,6 +193,36 @@ export function systemTests(): void {
       expect(await counters(page)).toEqual(base);
     });
 
+    test('five replays and six pause cycles leave the listener, timer and frame counters as they were at a fresh menu', async ({
+      page,
+    }) => {
+      test.setTimeout(90_000);
+      const watch = watchErrors(page);
+      await openGame(page, SLUG, REAL);
+      const base = await counters(page);
+      for (let i = 0; i < 5; i++) {
+        await page.evaluate((s) => {
+          window.__naijaTest!.setSeed(s);
+          return window.__naijaTest!.autoplay({ mode: 'quick', difficulty: 'easy', win: true });
+        }, i + 1);
+        await expectScreen(page, 'results');
+        await press(page.getByRole('button', { name: 'Play again' }));
+        await expectScreen(page, 'play');
+      }
+      for (let i = 0; i < 6; i++) {
+        await press(page.getByRole('button', { name: 'Pause' }));
+        await expect(page.getByRole('dialog')).toBeVisible();
+        await press(page.getByRole('button', { name: 'Resume' }));
+        await expect(page.getByRole('dialog')).toHaveCount(0);
+      }
+      await press(page.getByRole('button', { name: 'Pause' }));
+      await press(page.getByRole('button', { name: 'Quit' }));
+      await expectScreen(page, 'menu');
+      await page.waitForTimeout(1500);
+      expect(await counters(page)).toEqual(base);
+      expect(watch.errors).toEqual([]);
+    });
+
     test('screen readers hear every kick, the canvas is named, and each scoreboard shape has a name', async ({
       page,
     }) => {
