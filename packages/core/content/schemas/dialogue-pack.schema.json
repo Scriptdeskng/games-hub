@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naija-games/schemas/dialogue-pack.schema.json",
+  "title": "DialoguePack",
+  "type": "object",
+  "required": ["version", "kind", "id", "campaign", "chapter", "scenes"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "kind": {
+      "const": "dialogue"
+    },
+    "campaign": {
+      "enum": ["kiriji", "ekumeku", "moremi-prologue"]
+    },
+    "chapter": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/scene"
+      },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "loc": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        }
+      }
+    },
+    "scene": {
+      "type": "object",
+      "required": ["id", "tag", "lines"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/line"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "line": {
+      "type": "object",
+      "required": ["id", "speaker", "text", "langs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "speaker": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "text": {
+          "$ref": "#/$defs/loc"
+        },
+        "langs": {
+          "type": "array",
+          "items": {
+            "enum": ["en", "pcm", "yo", "ig", "ha"]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "glossary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "uniqueItems": true
+        },
+        "native_review": {
+          "type": "boolean"
+        },
+        "fictional": {
+          "type": "boolean"
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "langs": {
+                "contains": {
+                  "const": "yo"
+                }
+              }
+            },
+            "required": ["langs"]
+          },
+          "then": {
+            "required": ["native_review"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "langs": {
+                "contains": {
+                  "const": "ig"
+                }
+              }
+            },
+            "required": ["langs"]
+          },
+          "then": {
+            "required": ["native_review"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "langs": {
+                "contains": {
+                  "const": "ha"
+                }
+              }
+            },
+            "required": ["langs"]
+          },
+          "then": {
+            "required": ["native_review"]
+          }
+        }
+      ]
+    }
+  }
+}

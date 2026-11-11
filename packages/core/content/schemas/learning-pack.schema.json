@@ -1,0 +1,591 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naija-games/schemas/learning-pack.schema.json",
+  "title": "LearningPack",
+  "type": "object",
+  "required": [
+    "version",
+    "kind",
+    "id",
+    "campaign",
+    "chapter",
+    "facts",
+    "sources",
+    "twoSides",
+    "pins",
+    "checks"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "kind": {
+      "const": "learning"
+    },
+    "campaign": {
+      "enum": ["kiriji", "ekumeku", "moremi-prologue"]
+    },
+    "chapter": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fact"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "twoSides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/twoSides"
+      }
+    },
+    "pins": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pin"
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    }
+  },
+  "$defs": {
+    "loc140": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        }
+      }
+    },
+    "loc200": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "loc220": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 220
+        }
+      }
+    },
+    "loc80": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "loc60": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        }
+      }
+    },
+    "dateRange": {
+      "type": "object",
+      "required": ["start"],
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "$ref": "#/$defs/histDate"
+        },
+        "end": {
+          "$ref": "#/$defs/histDate"
+        },
+        "circa": {
+          "type": "boolean"
+        },
+        "sourcesDisagree": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      }
+    },
+    "histDate": {
+      "type": "object",
+      "required": ["year"],
+      "additionalProperties": false,
+      "properties": {
+        "year": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 1950
+        },
+        "month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "day": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 31
+        }
+      }
+    },
+    "fact": {
+      "type": "object",
+      "required": ["id", "trigger", "text", "tag", "source", "reviewedBy", "reviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "trigger": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "text": {
+          "$ref": "#/$defs/loc140"
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        },
+        "sourceRef": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "id",
+        "title",
+        "author",
+        "when",
+        "why",
+        "citation",
+        "codex",
+        "tag",
+        "source",
+        "reviewedBy",
+        "reviewed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "when": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "why": {
+          "$ref": "#/$defs/loc200"
+        },
+        "citation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 300
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "codex": {
+          "type": "object",
+          "required": ["shelf", "slot"],
+          "additionalProperties": false,
+          "properties": {
+            "shelf": {
+              "enum": ["documents", "books", "objects", "oral-history"]
+            },
+            "slot": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 99
+            }
+          }
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "twoSides": {
+      "type": "object",
+      "required": ["id", "event", "sides", "tag", "source", "reviewedBy", "reviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "event": {
+          "$ref": "#/$defs/loc80"
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        },
+        "sides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "account", "basis"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "account": {
+                "$ref": "#/$defs/loc220"
+              },
+              "basis": {
+                "enum": ["oral", "written", "official-report", "tradition"]
+              }
+            }
+          },
+          "minItems": 2,
+          "maxItems": 3
+        }
+      }
+    },
+    "pin": {
+      "type": "object",
+      "required": ["id", "kind", "label", "date", "tag", "source", "reviewedBy", "reviewed"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "kind": {
+          "enum": ["timeline", "map", "both"]
+        },
+        "label": {
+          "$ref": "#/$defs/loc60"
+        },
+        "date": {
+          "$ref": "#/$defs/dateRange"
+        },
+        "tag": {
+          "enum": ["History", "Legend", "Story"]
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        },
+        "place": {
+          "type": "object",
+          "required": ["name", "x", "y"],
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            },
+            "x": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "y": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": ["map", "both"]
+              }
+            },
+            "required": ["kind"]
+          },
+          "then": {
+            "required": ["place"]
+          }
+        }
+      ]
+    },
+    "check": {
+      "type": "object",
+      "required": [
+        "id",
+        "category",
+        "difficulty",
+        "q",
+        "options",
+        "answer",
+        "explanation",
+        "source",
+        "reviewedBy",
+        "reviewed"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        },
+        "difficulty": {
+          "enum": ["easy", "medium", "hard"]
+        },
+        "q": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 140
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true
+        },
+        "answer": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewedBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -159,3 +159,35 @@ Files in `games/penalty-king/assets/audio/voice/vo-<id>.mp3` (silent placeholder
 | `pk-champion` | Champion! Na your own cup! `_review` | Champions! The cup is yours! | The biggest line: long, proud, rising. | any adult | cup won | `vo-pk-champion.mp3` |
 | `pk-lose` | No vex. Next time go better. `_review` | Tough one. Next time will be better. | Kind and encouraging, never pitying. | any adult | shootout lost | `vo-pk-lose.mp3` |
 | `pk-knockout` | Cup run don end. You go try again. `_review` | Your cup run ends here. Try again. | Gentle, steady, encouraging. | any adult | knocked out of cup | `vo-pk-knockout.mp3` |
+
+## Game-specific lines: Akọni & Dike
+Files in `games/akoni-dike/assets/packs/shared-kiriji/audio/voice/vo-ak-<id>.mp3` and `shared-ekumeku/audio/voice/vo-ek-<id>.mp3` (silent placeholders) plus `voice-manifest.json`. **Only battle and stealth barks are recorded; all story text is read on screen.** Same rules as above: Nigerian voice actors, Yoruba and Igbo by native speakers who confirm spelling and tone marks, never TTS, never a faked accent; each line <= 1.2 s, 3 takes (neutral, brighter, softer); the rival side speaks in the same respectful register as the heroes; **Company constables speak plain neutral English with no ethnic accent signal**. Every Pidgin line is `_review`; every Yoruba or Igbo line is `_review` and tagged for native review; `(native speaker to supply)` means the line is not guessed. Full direction: `docs/assets/akoni-dike-brief/05-audio-music-voice.md` section 5.
+| ID | Speaker | English | Pidgin (pcm) | Yoruba or Igbo | Direction | Used for |
+|---|---|---|---|---|---|---|
+| `ak-move` | Bisi or ally | Move out! | Oya, move! `_review` | n/a | brisk | Follow, Charge |
+| `ak-lets-go` | ally | Let's go! | n/a | `Ẹ jẹ́ ká lọ!` (yo) `_review` | rising, shared | Charge |
+| `ak-hold` | ally | Hold the line! | Hold am there! `_review` | `Ẹ dúró!` (yo, proposed) `_review` | firm | Hold |
+| `ak-careful` | ally | Careful! | Abeg, careful! `_review` | `Ẹ ṣọ́ra!` (yo, proposed) `_review` | alert | enemy tell |
+| `ak-akin-show` | Akin | Let me show them! | Make I show dem! `_review` | n/a | proud, playful | long-shot ability |
+| `ak-akin-heard` | Akin | They will hear us! | Dem go hear us! `_review` | n/a | proud | after the crack |
+| `ak-akin-see` | Akin | I see him! | I don see am! `_review` | n/a | quick | target marked |
+| `ak-drummer` | drummer | Listen! | n/a | `Ẹ gbọ́!` (yo, proposed) `_review` | short call | before the rally |
+| `ak-bisi-steady` | Bisi | Steady. | Steady. | n/a | low, calm | Hunter's Eye |
+| `ak-bisi-up` | Bisi | I'm still standing. | I still dey stand. `_review` | n/a | grit | recovery |
+| `ak-rival-hold` | rival captain | Hold your ground! | n/a | `Ẹ dúró ṣinṣin!` (yo, proposed) `_review` | disciplined, respectful | rival group |
+| `ak-rival-yield` | rival | Enough. I yield. | Enough. I don yield. `_review` | `Ó tó.` (yo, proposed) `_review` | dignified | disarmed rival |
+| `ak-peace` | messenger | Lower your weapons. | Put your weapon down. `_review` | `Ẹ fi ohun ìjà sílẹ̀.` (yo, proposed) `_review` | calm, clear | Kiriji 6 |
+| `ak-moremi-torch` | Moremi (flagged) | Light the torches! | n/a | `Ẹ tan iná!` (yo, proposed) `_review` | commanding, warm | prologue |
+| `ek-whisper` | Nkem | Ekumeku. | n/a | `Ekumeku.` (ig) `_review` | **whispered only** | stealth |
+| `ek-go` | Nkem or ally | Go! | Oya, move! `_review` | `Gaa!` (ig, proposed) `_review` | low, urgent | Ekumeku orders |
+| `ek-hide` | ally | Hide! | Hide, hide! `_review` | `Zoonụ!` (ig, proposed) `_review` | hushed | stealth |
+| `ek-quiet` | ally | Quiet. | Make una quiet. `_review` | `Mee nwayọọ.` (ig, proposed) `_review` | hushed | stealth |
+| `ek-now` | Nkem | Now! | Now now! `_review` | `Ugbu a!` (ig, proposed) `_review` | sharp | ambush |
+| `ek-okeke-ring` | Okeke | Let them hear it! | Make dem hear am! `_review` | (native speaker to supply) | joker's confidence | ogene reveal |
+| `ek-ada-here` | Ada | Over here! | Oya, look this side! `_review` | `Lee ebe a!` (ig, proposed) `_review` | draws attention, never a haggling cry | distraction |
+| `ek-child` | Nkem | I've got you. | I don carry you. `_review` | (native speaker to supply) | gentle | Ekumeku 4 carry |
+| `ek-con-halt` | constable | Halt! Who goes there? | n/a | n/a | flat, procedural | patrol |
+| `ek-con-search` | constable | Search the barns! | n/a | n/a | procedural | search |
+| `ek-con-here` | constable | Over here! | n/a | n/a | alert | spotted |
+| `ek-con-back` | Captain Harrow | Column, withdraw. | n/a | n/a | composed | Ekumeku 5 finale |
+Shared lines also used: `oya`, `e-ku-ise`, `o-di-mma`, `no-wahala`, `no-shaking`.

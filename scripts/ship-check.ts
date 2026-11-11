@@ -12,6 +12,14 @@
  * One way (existing): code names a literal `./assets/x` that is not shipped -> build fails.
  * The other way (this file): a shipped file that no built code mentions, and that is neither
  * `dynamic` nor `keep`, fails the build: dead weight on a metered connection.
+ *
+ * DESIGN NOTE (Phase A1, not implemented): chapter packs. `akoni-dike` packs live in `packs/chNN/`
+ * outside `assets/`, so `checkShipped` does not see them. A sibling check, `checkPacks(declared,
+ * shipped, manifests)`, will apply the same two-way rule per pack: every file in `packs/chNN/` must be
+ * listed by that pack's `pack.<hash>.json`, and every listed file must exist with the recorded size
+ * and sha-256. A pack file is "referenced" by its manifest, not by the code, and the manifest by a
+ * literal path in the generated catalogue, which keeps the dead-weight guarantee without `dynamic`
+ * globs. See docs/games/akoni-dike/ARCHITECTURE.md.
  */
 export interface ShipConfig {
   include: string[];

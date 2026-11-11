@@ -48,6 +48,30 @@ function assertNoDeadAssets(outDir: string, ship: ShipConfig): void {
   }
 }
 
+/*
+ * DESIGN NOTES (not implemented, Phase A1): per-chapter packs for `akoni-dike`.
+ * Full design: docs/games/akoni-dike/ARCHITECTURE.md, sections "Pack build" and "Service worker".
+ *
+ * 1. Declaration: games/akoni-dike/packs.json (read by scripts/size-lib.mjs, the same file the size
+ *    budget uses). Folder convention `packs/chNN/` at the game root, NOT under `assets/`, so the
+ *    `ship.json` include globs (relative to assets/) and the `./assets/...` literal check do not touch it.
+ * 2. closeBundle gets a pack step, run after the normal asset copy: for each declared pack, assemble
+ *    content JSON + art + audio into `dist/<slug>/packs/chNN/`, name files `<name>.<sha256-8>.<ext>`,
+ *    write `packs/chNN/pack.<hash>.json` (file list, byte sizes, sha-256 of every file, schema
+ *    version, `engine` compatibility) and emit the catalogue (`id -> literal ./packs/chNN/pack.<hash>.json`)
+ *    as a generated module the loader imports, so the built JS names each pack by a literal path.
+ * 3. The service-worker precache list (`files` below) MUST exclude `packs/**`, and the version hash
+ *    must NOT include pack bytes: otherwise install would download every chapter (blowing the
+ *    3 MB first-download promise) and any pack edit would invalidate the whole game cache.
+ *    Packs get their own cache (`naija-packs-<slug>-v1`, see sw-template.js notes), because the
+ *    per-version cache above is deleted on every activate.
+ * 4. Build fails if: a declared pack folder is empty, a file sits in packs/ that no pack manifest
+ *    lists (dead weight, same two-way rule as assertNoDeadAssets), a pack manifest lists a missing
+ *    file, a hash does not match, or a pack is over budget (shared evaluateGame in size-lib.mjs).
+ * 5. Release mode (NAIJA_RELEASE=1) refuses to build while any content item has reviewed:false
+ *    (scripts/build-all.mjs runs the content gate first).
+ */
+
 /**
  * - Splits everything under packages/core into one `core-*.js/css` chunk so size-budget can
  *   measure the shared core separately from game code.

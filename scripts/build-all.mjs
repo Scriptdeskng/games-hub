@@ -1,6 +1,9 @@
 // Usage: node scripts/build-all.mjs [--test] [--only slug,slug]
 // Default: production build of every game into dist/<slug>/.
 // --test: non-production mode (keeps window.__naijaTest) into dist-e2e/<slug>/ for Playwright.
+// Content gate: before building, games/akoni-dike/content is checked (no-op while it does not exist).
+// NAIJA_RELEASE=1 makes that a RELEASE build: any learning item with reviewed:false fails the build.
+// Without it (dev/preview builds) unreviewed items are only reported.
 import { build } from 'vite';
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
@@ -14,6 +17,10 @@ const games = listGames().filter((g) => !only || only.includes(g));
 if (!games.length) {
   console.error('No games to build.');
   process.exit(1);
+}
+if (!only || only.includes('akoni-dike')) {
+  const gate = spawnSync('node', ['scripts/content-check.mjs'], { cwd: ROOT, stdio: 'inherit' });
+  if (gate.status) process.exit(gate.status);
 }
 process.env.NAIJA_OUT = test ? 'dist-e2e' : 'dist';
 

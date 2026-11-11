@@ -362,3 +362,120 @@ Three new personas, one per difficulty (Easy, Medium, Hard), each the CPU keeper
 | 6 | I will not gloat. The ball decides. | I no go gloat. Na ball go decide. | `_review: true` |
 | 7 | Bottom left corner. Did I read you right? | Bottom left corner. I read you well? | `_review: true` |
 | 8 | Same time next week? I will cut the grass for you. | Same time next week? I go cut the grass for you. | `_review: true` |
+
+## Added with Akọni & Dike
+
+Story characters for the history action-adventure `akoni-dike`. They are **not CPU opponents in the board-game sense**: the player is the only human, and the opposition is the game's enemy groups; **Balogun Aderemi** and **Captain Harrow** appear as rival boss fights. Avatars are planned placeholders in `games/akoni-dike/assets/packs/chNN/portraits/<id>.svg` (512x256, two expressions); a human illustrator replaces them (HUMAN_ASSETS row 69). Full cultural brief: `docs/assets/akoni-dike-brief.md`. Rules: personalities are individual, never ethnic tropes; **no character is a villain people**; colonial forces carry no ethnic label; every Yoruba, Igbo and Pidgin line is `_review: true` and needs native review (diacritics included). Dialogue shown in the game is read on screen; the lines below are **banter seeds** for the museum Q&A and in-battle comments (not voiced). Proverb-style lines are **invented for the story and labelled Story**, never presented as traditional proverbs. Developer keys `persona.<id>.<n>`. Skin tokens are within `#3B2314` to `#A8744C`.
+
+| Id | Name | Region and role | Age | Skin token | Outfit (from ASSET_BIBLE) | Campaign |
+|---|---|---|---|---|---|---|
+| `moremi` | Moremi (legend, flagged) | Ile-Ife, queen; prologue hero | adult | `#4A2C1A` | royal wrapper, beaded crown or ornament (original design), torch and staff | Prologue (default off) |
+| `bisi` | Bisi | Imesi-Ile; hunter's daughter, scout to field commander; hero | 19 | `#7A4A2D` | hunter's buba and sokoto, leather pouch, bow, short sword, later the Saro rifle; unlock: aso-oke war sash | Kiriji |
+| `akin` | Akin | Ijesa marksman; companion | 20s `[D]` | `#4A2C1A` | buba, fila cap, breech-loading rifle, powder horn | Kiriji |
+| `iya-morenike` | Iya Morenike | elder trader and strategist | elder | `#6B3F26` | adire wrapper and gele, trader's calabashes | Kiriji |
+| `aderemi` | Balogun Aderemi (fictional) | the Ibadan rival; boss | adult `[D]` | `#3B2314` | chief's dress with the rival accent colour (design device, not a historical claim) | Kiriji 5 |
+| `nkem` | Nkem | otu okorobia fighter, later cell leader; hero | 18 (young in prologue, old in epilogue) | `#8A5A3A` | wrapper, machete, dane gun; unlock only after `[H-18]`: okpu agụ cap | Ekumeku |
+| `ada` | Ada | market trader who runs the messenger network | adult `[D]` | `#5E3822` | market wrapper and head-tie, baskets | Ekumeku |
+| `okeke` | Okeke | the ogene signaller and joker | adult `[D]` | `#94613D` | wrapper, ogene and striker | Ekumeku |
+| `nwaka` | Ogbuefi Nwaka | titled elder, the moral voice | elder | `#47291A` | titled man's attire (original design, no sacred regalia) | Ekumeku |
+| `harrow` | Captain Harrow (fictional) | the methodical Company officer; boss | adult `[D]` | to be decided with the historian (open question 9) | generic period officer uniform, no insignia | Ekumeku 5 |
+| `mr-adewale` | Mr Adewale | museum guide, Kiriji war site | adult | `#5A3520` | modern shirt, school-trip lanyard | Kiriji frame |
+| `mrs-okonkwo` | Mrs Okonkwo | museum guide, Anioma heritage museum | adult | `#6E4128` | modern dress, school-trip lanyard | Ekumeku frame |
+
+### Bisi (`bisi`)
+**Region:** Imesi-Ile. 19. Quick, practical, dry humour; a hunter's daughter who learns to command. **Voice:** F, 20s, Yoruba speaker; low and steady. **Colour world:** Adire Indigo with laterite and gold. **Animation cue:** adjusts the bow string.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | I know these paths. Follow me. | I sabi this road. Follow me. | `_review: true` |
+| 2 | Fear is loud. I would rather be quick. | Fear dey make noise. I prefer to dey quick. | `_review: true` |
+| 3 | Not bad. The hills taught me better, though. | E no bad. But the hills teach me pass that one. | `_review: true` |
+
+### Akin (`akin`)
+**Region:** Ijesa. Proud marksman who uses Pidgin banter; never a braggart at others' expense. **Voice:** M, 20s to 30s, Yoruba speaker. **Colour world:** indigo with gold. **Animation cue:** taps the powder horn.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Did you see that shot? That is how we do it. | You see that shot? Na so we dey do am. | `_review: true` |
+| 2 | Please do not touch my powder horn. | Abeg, no touch my powder horn. | `_review: true` |
+| 3 | Let me tell you, this rifle has character. | Make I tell you, this rifle get character. | `_review: true` |
+
+### Iya Morenike (`iya-morenike`)
+**Region:** an elder trader and strategist who speaks in proverbs: her role is **strategist and mentor, not a haggler**. **Voice:** F, 50s to 60s, Yoruba speaker; warm, unhurried. **Colour world:** adire wrapper, gele in gold. **Animation cue:** a slow nod. Seed lines are **Story, invented**, not traditional proverbs; a native speaker may offer real proverbs.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Slowly, my child. A rushed load spills. | Slowly, my pikin. Rush load dey spill. | `_review: true` |
+| 2 | A calm voice carries farther than a loud one. | Calm voice dey travel pass loud one. | `_review: true` |
+| 3 | Eat first. Plans taste better on a full stomach. | Chop first. Plan dey sweet when belle full. | `_review: true` |
+
+### Balogun Aderemi (`aderemi`)
+**Fictional.** Honourable, capable, **never a cartoon**; the rival is brave and the real antagonist is overreach and endless war. The name needs a collision check `[H-27]`. **Voice:** M, 30s to 40s, Yoruba speaker; measured and respectful. **Animation cue:** a deliberate bow.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Well struck. | Well struck. | |
+| 2 | I have met brave people on both sides of this war. | I don meet brave people for both sides of this war. | `_review: true` |
+| 3 | Rest your arm, Bisi. We both need it. | Rest your arm, Bisi. Both of us need am. | `_review: true` |
+
+### Nkem (`nkem`)
+**Region:** Anioma (town unspecified `[H-28]`). 18; calm, watchful, few words. **Voice:** M, 20s, Igbo speaker. **Colour world:** forest green with ochre. **Animation cue:** a finger to the lips. Whispers "Ekumeku" only.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Move like the forest. Nobody hears it. | Waka like forest. Nobody dey hear am. | `_review: true` |
+| 2 | Careful. The ground tells everything. | Careful. Ground dey talk everything. | `_review: true` |
+| 3 | Back before the lantern burns low. | I go come back before lantern low. | `_review: true` |
+
+### Ada (`ada`)
+**Region:** Anioma market town. A **network leader and tactician**, not a comic trader; no haggling lines. **Voice:** F, 30s to 40s, Igbo speaker; calm and quick. **Colour world:** ochre and night blue. **Animation cue:** adjusts the head-tie.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Look at the crowd. Nobody is looking at us. | Look the crowd. Nobody dey look us. | `_review: true` |
+| 2 | Walk slowly. Carry it like it is only yam. | Waka slow. Carry am like say na only yam. | `_review: true` |
+| 3 | Eyes up. We are almost through. | Eye up. We don almost pass. | `_review: true` |
+
+### Okeke (`okeke`)
+**Region:** Anioma. The ogene signaller and joker: humour from timing and self-mockery, never about others. **Voice:** M, 20s to 30s, Igbo speaker. **Colour world:** ochre and bronze-brown. **Animation cue:** taps the ogene with the striker.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | My ogene talks more than the soldiers. | My ogene dey talk pass the soldiers. | `_review: true` |
+| 2 | Wait for the third bell. | Wait for the third bell. | |
+| 3 | If I miss a beat, blame the wind. | If I miss beat, blame the wind. | `_review: true` |
+
+### Ogbuefi Nwaka (`nwaka`)
+**Region:** Anioma elder, the moral voice. **Voice:** M, 60s, Igbo speaker; slow and dignified. **Colour world:** forest green and cream. **Animation cue:** a raised hand, palm open. Attire avoids sacred regalia `[H-19]`.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Patience is also a weapon. | Patience too na weapon. | `_review: true` |
+| 2 | A fence is built with many hands. | Na plenty hand dey build fence. | `_review: true` |
+| 3 | Teach the young to remember. | Teach the young ones make dem remember. | `_review: true` |
+
+### Captain Harrow (`harrow`)
+**Fictional.** The Company's methodical officer: composed, capable, not a cartoon, with no ethnic label on him or his men. Interim portrait: a uniform and helmet silhouette (open question 9). **Voice:** M, neutral English, composed. **Animation cue:** consults a notebook. English only.
+| # | en | flags |
+|---|---|---|
+| 1 | Every road has a pattern. I will find yours. | |
+| 2 | Report. Briefly. | |
+| 3 | The map and the forest do not agree. | |
+
+### Mr Adewale (`mr-adewale`) and Mrs Okonkwo (`mrs-okonkwo`)
+Modern museum guides who open each chapter with "Let me tell you what happened here" `[LE]` and answer students' questions after it. Warm, clear, patient, never lecturing; each ends with the knowledge check on the tablet ("it never blocks you"). Display names stay as written; marks to confirm (`Adéwálé`, `Ọkọnkwọ`). **Voice:** not voiced (all story text is on screen).
+| # | Speaker | en | pcm | flags |
+|---|---|---|---|---|
+| 1 | Mr Adewale | Let me tell you what happened here. | Make I tell una wetin happen for here. | `_review: true` |
+| 2 | Mr Adewale | Good question! Let us look at the source. | Good question! Make we check the source. | `_review: true` |
+| 3 | Mrs Okonkwo | Come closer, everyone. Let me tell you what happened here. | Come near, everybody. Make I tell una wetin happen for here. | `_review: true` |
+| 4 | Mrs Okonkwo | History is a conversation. Ask me anything. | History na conversation. Ask me anything. | `_review: true` |
+
+### Moremi (`moremi`, flagged, behind `features.moremiPrologue`)
+**Legend** (tagged Legend on every panel). Calm and resolute; the story says "Fear is a cloak. Cloaks burn." **Voice:** F, 30s to 40s, Yoruba speaker; one bark in the first release. Ife-spirit face, original drawing.
+| # | en | pcm | flags |
+|---|---|---|---|
+| 1 | Torches up. | Torch up. | `_review: true` |
+| 2 | Stay together. | Stay together. | |
+
+### Historical cameos (Story and History tags; no banter)
+Drawn with dignity from descriptions, not traced, heritage-body check required before release (HUMAN_ASSETS row 75). **Their lines in the game are fictional and labelled so.** Only the lines in `SCRIPT.md` are used.
+| Figure | Role in the game | Fictional line (from SCRIPT) |
+|---|---|---|
+| Ogedengbe | commander-in-chief of the Ekitiparapo; 3 scenes | "You know the hills. Then the hills are yours." |
+| Fabunmi | the Ekiti prince who steps aside for Ogedengbe | "A crown is lighter than a broken people. Lead them." |
+| Latoosa | named in a ch05 codex card (Aare; died in camp in 1885 per SCRIPT); on-screen use pending (open question 16) | none |
+| Samuel Johnson | the peacemaker in Kiriji 6 | "There are more of you in graves than in these camps. Let the living go home." |
+| Charles Phillips | named with Johnson in the 1886 treaty lesson | none |

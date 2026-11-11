@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://naija-games/schemas/glossary-pack.schema.json",
+  "title": "GlossaryPack",
+  "type": "object",
+  "required": ["version", "kind", "id", "campaign", "terms"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+    },
+    "kind": {
+      "const": "glossary"
+    },
+    "campaign": {
+      "enum": ["kiriji", "ekumeku", "moremi-prologue", "shared"]
+    },
+    "terms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "term",
+          "language",
+          "definition",
+          "diacriticChecked",
+          "source",
+          "reviewedBy",
+          "reviewed"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          },
+          "term": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          },
+          "language": {
+            "enum": ["en", "pcm", "yo", "ig", "ha"]
+          },
+          "definition": {
+            "$ref": "#/$defs/loc160"
+          },
+          "diacriticChecked": {
+            "type": "boolean"
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewedBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "loc160": {
+      "type": "object",
+      "required": ["en"],
+      "additionalProperties": false,
+      "properties": {
+        "en": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "pcm": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "yo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "ig": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "ha": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      }
+    }
+  }
+}

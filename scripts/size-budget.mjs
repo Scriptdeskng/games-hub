@@ -1,7 +1,10 @@
-// Usage: node scripts/size-budget.mjs [dist-dir]
-// Compresses (gzip -9 and brotli q11) every file under dist/<slug> and enforces:
+// Usage: node scripts/size-budget.mjs [dist-dir] [--root <repo-root>]
+// Compresses (gzip -9 and brotli q11) every file under dist/<slug> and enforces (see size-lib.mjs):
 //   - each game's total gzip <= 3 MB   (target 1.5 MB is reported as a warning)
 //   - the shared core <= 60 KB gzip
+//   - EXCEPTION, `akoni-dike` only (approved): initial download <= 3 MB plus each DECLARED chapter
+//     pack (games/akoni-dike/packs.json, folder packs/chNN/) <= 1 MB. Every other game keeps the
+//     plain 3 MB total, even if it has a folder called `packs`.
 // "Core" = the `core-*.js` and `core-*.css` chunks that vite.config.ts splits out of every
 // game build (everything under packages/core: boot, loader, audio synth, i18n runtime, ui-kit JS
 // and its CSS). Fonts and images referenced from core CSS are counted in the game total but not
@@ -10,13 +13,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';
 import { ROOT } from './lib.mjs';
+import { evaluateGame, readPackManifest } from './size-lib.mjs';
 
-const MB = 1024 * 1024;
-const GAME_LIMIT = 3 * MB;
-const GAME_TARGET = 1.5 * MB;
-const CORE_LIMIT = 60 * 1024;
-
-const dist = path.resolve(ROOT, process.argv[2] ?? 'dist');
+const argv = process.argv.slice(2);
+const rootIdx = argv.indexOf('--root');
+const root = rootIdx >= 0 ? path.resolve(argv[rootIdx + 1]) : ROOT;
+const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--root');
+const dist = path.resolve(ROOT, positional[0] ?? 'dist');
 if (!fs.existsSync(dist)) {
   console.error(`size: ${dist} not found. Run npm run build first.`);
   process.exit(1);
@@ -40,31 +43,42 @@ for (const slug of fs
   const base = path.join(dist, slug);
   const rows = walk(base).map((f) => {
     const buf = fs.readFileSync(f);
-    return { file: path.relative(base, f), raw: buf.length, gzip: gz(buf), brotli: br(buf) };
+    return {
+      file: path.relative(base, f).split(path.sep).join('/'),
+      raw: buf.length,
+      gzip: gz(buf),
+      brotli: br(buf),
+    };
   });
   const sum = (arr, k) => arr.reduce((s, r) => s + r[k], 0);
-  const core = rows.filter((r) => /(^|\/)core-[^/]*\.(js|css)$/.test(r.file));
   console.log(`\n${slug}`);
   console.log('  file'.padEnd(46) + '     raw      gzip    brotli');
-  for (const r of rows.sort((a, b) => b.gzip - a.gzip)) {
+  for (const r of [...rows].sort((a, b) => b.gzip - a.gzip)) {
     console.log(`  ${r.file.padEnd(42)}${kb(r.raw)}${kb(r.gzip)}${kb(r.brotli)}`);
   }
   const total = { raw: sum(rows, 'raw'), gzip: sum(rows, 'gzip'), brotli: sum(rows, 'brotli') };
   console.log(`  ${'TOTAL (KB)'.padEnd(42)}${kb(total.raw)}${kb(total.gzip)}${kb(total.brotli)}`);
-  const coreGz = sum(core, 'gzip');
-  const problems = [];
-  if (total.gzip > GAME_LIMIT) problems.push(`game total ${kb(total.gzip).trim()} KB > 3 MB`);
-  if (coreGz > CORE_LIMIT) problems.push(`core ${kb(coreGz).trim()} KB > 60 KB`);
-  if (total.gzip > GAME_TARGET) console.log('  warning: above the 1.5 MB target');
-  if (!core.length) console.log('  warning: no core-*.js chunk found, core budget not measured');
-  console.log(
-    `  core (gzip): ${kb(coreGz).trim()} KB / 60 KB   game total (gzip): ${kb(total.gzip).trim()} KB / 3072 KB`,
-  );
-  if (problems.length) {
-    failed = true;
-    console.log(`  FAIL: ${problems.join('; ')}`);
+  const ev = evaluateGame({ slug, rows, manifest: readPackManifest(root, slug) });
+  for (const w of ev.warnings) console.log(`  warning: ${w}`);
+  if (ev.packGame) {
+    console.log(
+      `  core (gzip): ${kb(ev.coreGz).trim()} KB / 60 KB   initial (gzip): ${kb(ev.initial).trim()} KB / 3072 KB   packs: ${ev.packs.length}`,
+    );
+    for (const p of ev.packs) {
+      console.log(
+        `    pack ${p.id}: ${kb(p.gzip).trim()} KB / ${(p.limit / 1024).toFixed(0)} KB (${p.files} file(s))`,
+      );
+    }
+  } else {
+    console.log(
+      `  core (gzip): ${kb(ev.coreGz).trim()} KB / 60 KB   game total (gzip): ${kb(ev.total).trim()} KB / 3072 KB`,
+    );
   }
-  summary.push({ slug, total: total.gzip, coreGz, brotli: total.brotli });
+  if (ev.problems.length) {
+    failed = true;
+    console.log(`  FAIL: ${ev.problems.join('; ')}`);
+  }
+  summary.push({ slug, total: total.gzip, coreGz: ev.coreGz, brotli: total.brotli });
 }
 
 console.log('\nSummary (gzip KB)');
