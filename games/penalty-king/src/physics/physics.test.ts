@@ -256,8 +256,8 @@ describe('keeper save-zone geometry', () => {
   });
 
   it('a perfect corner beats a keeper who guessed the right zone; a stay-at-home keeper saves the chest', () => {
-    expect(resolveKick(exact(3.35, 2.1, 0.6), early('ur')).outcome).toBe('goal');
-    expect(resolveKick(exact(-3.35, 0.2, 0.6), early('dl')).outcome).toBe('goal');
+    expect(resolveKick(exact(3.45, 2.2, 0.6), early('ur')).outcome).toBe('goal');
+    expect(resolveKick(exact(-3.45, 0.2, 0.6), early('dl')).outcome).toBe('goal');
     expect(resolveKick(exact(0.3, 1.0, 0.6), { zone: null, startT: 0 }).outcome).toBe('saved');
     expect(resolveKick(exact(2.5, 1.0, 0.6), { zone: null, startT: 0 }).outcome).toBe('goal');
   });

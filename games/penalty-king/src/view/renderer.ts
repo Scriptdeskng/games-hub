@@ -38,7 +38,7 @@ const DIVE_CELL: Readonly<Record<Zone, number>> = {
 };
 
 /** The striker's run-up: from back left to beside the ball (metres across, progress along the shot). */
-const RUN_FROM = { x: -2.5, s: -0.07 };
+const RUN_FROM = { x: -3.0, s: -0.07 };
 const RUN_TO = { x: -0.6, s: -0.01 };
 
 export interface DrawInfo {

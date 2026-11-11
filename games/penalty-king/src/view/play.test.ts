@@ -116,7 +116,7 @@ describe('play screen (jsdom, no canvas)', () => {
   });
 
   describe('watchdog', () => {
-    it('moves a stalled CPU or animation phase on by force (the loop never ran)', () => {
+    it('moves a stalled CPU or animation phase on by force (the loop never ran), but waits for a human keeper', () => {
       const { play } = make({ first: 1 });
       // freeze the render loop: only the wall-clock timers run
       vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
@@ -127,21 +127,12 @@ describe('play screen (jsdom, no canvas)', () => {
       expect(play.snapshot().phase).toBe('ready');
       vi.advanceTimersByTime(WATCHDOG_MS);
       expect(play.snapshot().watchdog).toBe(2);
-      expect(play.snapshot().state.kicks).toHaveLength(1);
-      expect(play.snapshot().phase).toBe('result');
-      play.destroy();
-    });
-
-    it('never forces a human to shoot, does not fire while paused or hidden, and rescue() can be called directly', () => {
-      const { play } = make({ first: 0 });
-      vi.spyOn(window, 'requestAnimationFrame').mockImplementation(() => 0);
-      begin(play);
-      play.rescue(); // intro -> ready (human to shoot)
-      expect(play.snapshot().phase).toBe('ready');
-      const before = play.snapshot().watchdog;
+      expect(play.snapshot().phase).toBe('runup'); // the human keeper may still dive
       vi.advanceTimersByTime(WATCHDOG_MS * 3);
-      expect(play.snapshot().phase).toBe('ready');
-      expect(play.snapshot().watchdog).toBe(before);
+      expect(play.snapshot().watchdog).toBe(2);
+      expect(play.snapshot().phase).toBe('runup');
+      expect(play.snapshot().state.kicks).toHaveLength(0);
+      expect(play.rescue()).toBe(false);
       play.destroy();
     });
 

@@ -229,12 +229,3 @@ export const PATTERNS = ['sash', 'hoops', 'chevron', 'halves', 'yoke', 'band', '
 
 /** T-shirt silhouette (64 units wide) used by kit icons and crest-sized jerseys. */
 export const SHIRT_PATH = 'M19 6 27 3Q32 9 37 3L45 6 60 18 53 28 46 23V54H18V23L11 28 4 18z';
-export const kitIcon = (t, uid) =>
-  svg(
-    '0 0 64 76',
-    `<defs><clipPath id="c${uid}"><path d="${SHIRT_PATH}"/></clipPath></defs>` +
-      `<path d="M19 56h26l5 17H34l-2-8-2 8H14z" fill="${t.shorts}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>` +
-      `<path d="${SHIRT_PATH}" fill="${t.shirt}"/><g clip-path="url(#c${uid})"><g transform="translate(32 30)">${shirtPattern(t.pattern, t.trim, 28, 50)}</g></g>` +
-      `<path d="${SHIRT_PATH}" fill="none" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>` +
-      `<path d="M27 3Q32 9 37 3" fill="none" stroke="${t.trim}" stroke-width="2.6" stroke-linecap="round"/>`,
-  );

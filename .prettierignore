@@ -15,3 +15,9 @@ MASTER_PROMPT.md
 CLAUDE.md
 .claude
 dist-hub
+
+# user-supplied kit originals (not project files)
+docs copy/
+CLAUDE copy.md
+MASTER_PROMPT copy.md
+CHANGE_REQUEST_AKONI_DIKE.md

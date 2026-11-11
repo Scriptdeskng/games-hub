@@ -42,18 +42,22 @@ remaining kicks`), for either side.
 
 ## AI (`src/ai/`)
 
-The CPU keeper never sees the true trajectory. Each kick it either GUESSES before the strike (the zone is drawn from the
-human's saved habit plus this match, `bias` blends it with a uniform guess) or READS the ball's real position at its reaction
-time and extrapolates a straight line, so a curve fools it. The CPU striker draws a zone from a weighted table with an
-anti-repeat penalty, then power, curve and jitter. Both are pure functions of the shootout so far (`aiRng(seed, kick, salt)`).
+The CPU keeper does not know where the shot will end up, but it is not blind. Each kick it either GUESSES before the strike (the zone
+is drawn from the human's saved habit plus this match; `bias` blends it with a uniform guess) or READS: it uses the ball's TRUE
+position at its reaction time (`react` seconds after the strike, via the same flight function the view draws) and extrapolates a
+straight line, so a curved shot fools it. Nothing later in the flight, and not the scatter-free aim, is used. The CPU striker draws a
+zone from a weighted table with an anti-repeat penalty, then power, curve and jitter. Both are pure functions of the shootout so far
+(`aiRng(seed, kick, salt)`).
 
 | Level          | react | read | bias | guess start | stay | striker corner x | repeat penalty |
 | -------------- | ----- | ---- | ---- | ----------- | ---- | ---------------- | -------------- |
-| Easy (Ozavize) | 0.30  | 0.20 | 0    | +0.14 s     | 20%  | 1.7 m            | none           |
-| Medium (Ndako) | 0.18  | 0.50 | 0.6  | +0.07 s     | 4%   | 2.95 m           | x0.5           |
-| Hard (Hamman)  | 0.12  | 0.25 | 0.7  | +0.04 s     | 0%   | 3.25 m           | x0.35          |
+| Easy (Ozavize) | 0.30  | 0.20 | 0    | +0.10 s     | 20%  | 2.5 m            | none           |
+| Medium (Ndako) | 0.20  | 0.30 | 0.6  | +0.07 s     | 4%   | 2.75 m           | x0.5           |
+| Hard (Hamman)  | 0.12  | 0.33 | 0.7  | +0.04 s     | 0%   | 3.25 m           | x0.35          |
 
-Simulation numbers (1000 seeded shootouts each, `src/ai/ai.test.ts`) are in the hand-off report.
+Simulation numbers (1000 seeded shootouts each, `src/ai/ai.test.ts`) are in the hand-off report. The side zones' hands end at x = +-2.45 m
+(reach 1.05 m), so a ball at the post is coverable. A regression test runs eight single-placement probes (outer low posts, inner posts, top
+corners, centre) against a quick human keeper: the best one wins at most 22% of matches against Hard fresh and 25% after 300 matches of learned habit.
 
 ## Code map
 

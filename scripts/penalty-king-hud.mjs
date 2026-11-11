@@ -10,7 +10,6 @@ import {
   GREEN,
   GREEN2,
   LEAF,
-  WINE,
   TERRA2,
   INDIGO2,
   ORANGE,
@@ -64,13 +63,6 @@ export const HUD = {
         oln('M10 74 20 66 30 74', 3, CREAM),
       ' width="40" height="136"',
     ),
-  'aim-grid': () => {
-    let o = '';
-    for (let c = 0; c < 3; c++)
-      for (let r = 0; r < 2; r++)
-        o += `<rect x="${2 + c * 59}" y="${2 + r * 29}" width="57" height="27" rx="3" fill="none" stroke="${CREAM}" stroke-width="1.6" stroke-dasharray="5 4" opacity=".9"/>`;
-    return svg('0 0 180 60', o, ' width="180" height="60"');
-  },
   // tap-to-dive zones: arrows point where the keeper goes (shape = direction); each cell has a plate so arrows read on any scene
   'dive-grid': () => {
     const A = {
@@ -133,20 +125,6 @@ export const HUD = {
         shp('M40 20 28 10V30z', PLANTAIN, 2.4) +
         oln('M8 44H18', 3, CREAM, ' stroke-dasharray="2 5"'),
       48,
-    ),
-  'curve-dial': () =>
-    svg(
-      '0 0 128 44',
-      oln('M10 38A54 30 0 0 1 118 38', 5, CREAM) +
-        [0, 1, 2, 3, 4]
-          .map((i) => {
-            const a = Math.PI * (1 + i / 4);
-            return `<circle cx="${f1(64 + 54 * Math.cos(a))}" cy="${f1(38 + 30 * Math.sin(a))}" r="${i === 2 ? 5.4 : 3.4}" fill="${i === 2 ? PLANTAIN : CREAM}" stroke="${INK}" stroke-width="1.8"/>`;
-          })
-          .join('') +
-        shp('M3 40 13 33V47z', PLANTAIN, 2) +
-        shp('M125 40 115 33V47z', PLANTAIN, 2),
-      ' width="128" height="44"',
     ),
   // phase chips: aim (reticle), power (bars), curve (hook arrow), go (ball with motion lines)
   'phase-aim': () =>
@@ -220,25 +198,6 @@ export const HUD = {
       shp(scallop(24, 24, 22, 14, 8), PLANTAIN, 2.6) +
         `<path d="M24 12V27" stroke="${INK}" stroke-width="4.4" stroke-linecap="round"/><circle cx="24" cy="35" r="2.8" fill="${INK}"/>`,
       48,
-    ),
-  // round chips: quarter (quarter disc), semi (half disc), final (full disc with a diamond)
-  'chip-qf': () =>
-    icon(
-      `<circle cx="20" cy="20" r="17" fill="none" stroke="${CREAM}" stroke-width="2.4" stroke-dasharray="3 4"/>` +
-        shp('M20 20V3A17 17 0 0 1 37 20z', PLANTAIN, 2.4),
-      40,
-    ),
-  'chip-sf': () =>
-    icon(
-      `<circle cx="20" cy="20" r="17" fill="none" stroke="${CREAM}" stroke-width="2.4" stroke-dasharray="3 4"/>` +
-        shp('M3 20A17 17 0 0 1 37 20z', PLANTAIN, 2.4),
-      40,
-    ),
-  'chip-final': () =>
-    icon(
-      `<circle cx="20" cy="20" r="17" fill="${PLANTAIN}" stroke="${INK}" stroke-width="2.6"/>` +
-        shp('M20 9 29 20 20 31 11 20z', WINE, 2.2),
-      40,
     ),
   // cup bracket state badges (20 x 20)
   'badge-won': () =>

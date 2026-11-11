@@ -174,7 +174,7 @@ export function createApp(core: Core, initial: Progress): App {
       habit: progress.habit,
       venue,
       intro: t(round ? `round.${round}` : m === 'practice' ? 'round.practice' : 'round.quick'),
-      tempo: __NAIJA_TEST__ ? (extra.tempo ?? urlTempo) : undefined,
+      ...(__NAIJA_TEST__ ? { tempo: extra.tempo ?? urlTempo } : {}),
       onKick: (s) => core.portal.emit('score', { score: liveScore(s, difficulty) }),
       onEnd: finishMatch,
       onQuit: showMenu,

@@ -72,21 +72,22 @@ export function systemTests(): void {
       test.setTimeout(60_000);
       const watch = watchErrors(page);
       await openGame(page, SLUG, REAL);
-      await page.evaluate((s) => window.__naijaTest!.setSeed(s), seedFor(1));
+      await page.evaluate((s) => window.__naijaTest!.setSeed(s), seedFor(0));
       await startFromMenu(page, 'Quick match');
-      await waitRound(page, (r) => r.phase === 'ready' || r.phase === 'runup');
+      await waitHumanShot(page);
       // freeze every animation frame from now on: only wall-clock timers keep running
       await page.evaluate(() => {
         window.requestAnimationFrame = (() => 0) as never;
       });
+      // the human shoots; the run-up, the flight and the result then depend on a loop that no longer runs
+      await swipe(page, { dx: 30, dy: -150, ms: 70 });
       const before = await round(page);
+      expect(before.state.kicks).toHaveLength(0);
       await expect
         .poll(async () => (await round(page)).watchdog, { timeout: 25_000, intervals: [500] })
         .toBeGreaterThan(before.watchdog);
       const after = await round(page);
-      expect(after.state.kicks.length + (after.phase === 'result' ? 1 : 0)).toBeGreaterThan(
-        before.state.kicks.length,
-      );
+      expect(after.state.kicks.length).toBeGreaterThan(before.state.kicks.length);
       expect(watch.errors).toEqual([]);
     });
 

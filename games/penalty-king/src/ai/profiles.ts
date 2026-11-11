@@ -2,8 +2,8 @@ import type { Difficulty } from '../rules/config';
 import type { Zone } from '../physics';
 
 /**
- * How a CPU keeper decides. It never sees the true trajectory: it either GUESSES before it can see
- * anything (weighted by the human's favourite corners, `bias`) or READS the ball's real position at
+ * How a CPU keeper decides. It does not know where the shot will end: it either GUESSES before it can see
+ * anything (weighted by the human's favourite corners, `bias`) or READS the ball's TRUE position at
  * `react` seconds after the strike and extrapolates a straight line (so a curve fools it).
  */
 export interface KeeperProfile {
@@ -24,17 +24,17 @@ export interface KeeperProfile {
 }
 
 export const KEEPER: Readonly<Record<Difficulty, KeeperProfile>> = {
-  easy: { react: 0.3, lag: 0.06, noise: 0.5, read: 0.2, bias: 0, guessStart: 0.14, stay: 0.2 },
+  easy: { react: 0.3, lag: 0.06, noise: 0.5, read: 0.2, bias: 0, guessStart: 0.1, stay: 0.2 },
   medium: {
-    react: 0.18,
+    react: 0.2,
     lag: 0.04,
     noise: 0.3,
-    read: 0.5,
+    read: 0.3,
     bias: 0.6,
     guessStart: 0.07,
     stay: 0.04,
   },
-  hard: { react: 0.12, lag: 0.03, noise: 0.15, read: 0.25, bias: 0.7, guessStart: 0.04, stay: 0 },
+  hard: { react: 0.12, lag: 0.03, noise: 0.15, read: 0.33, bias: 0.7, guessStart: 0.04, stay: 0 },
 };
 
 /** How a CPU striker aims: which zones, how close to the post, how hard, and how much it varies. */
@@ -57,24 +57,24 @@ export interface StrikerProfile {
 
 export const STRIKER: Readonly<Record<Difficulty, StrikerProfile>> = {
   easy: {
-    weights: { ul: 1, u: 1.5, ur: 1, dl: 1.5, d: 3, dr: 1.5 },
-    sideX: 1.7,
+    weights: { ul: 1.5, u: 1, ur: 1.5, dl: 2, d: 1, dr: 2 },
+    sideX: 2.5,
     lowY: 0.6,
     highY: 1.5,
-    powerLo: 0.15,
-    powerHi: 0.55,
+    powerLo: 0.45,
+    powerHi: 0.72,
     jitter: 0.45,
     curve: 0,
     repeatPenalty: 1,
   },
   medium: {
     weights: { ul: 2.2, u: 1, ur: 2.2, dl: 1.6, d: 0.8, dr: 1.6 },
-    sideX: 2.95,
+    sideX: 2.75,
     lowY: 0.4,
     highY: 1.95,
     powerLo: 0.45,
-    powerHi: 0.74,
-    jitter: 0.15,
+    powerHi: 0.7,
+    jitter: 0.2,
     curve: 0.15,
     repeatPenalty: 0.5,
   },
@@ -86,7 +86,7 @@ export const STRIKER: Readonly<Record<Difficulty, StrikerProfile>> = {
     powerLo: 0.52,
     powerHi: 0.78,
     jitter: 0.08,
-    curve: 0.3,
+    curve: 0.45,
     repeatPenalty: 0.35,
   },
 };

@@ -1,14 +1,9 @@
 /* Penalty King crests, kits, bracket, persona and effects. Part of penalty-art.css. */
-.pk-crest,
-.pk-kit {
+.pk-crest {
   display: inline-block;
   width: 28px;
   height: 28px;
   background: center / contain no-repeat;
-}
-.pk-kit {
-  width: 40px;
-  height: 48px;
 }
 .pk-crest[data-team='lanterns'] {
   background-image: url('./teams/crest-lanterns.svg');
@@ -33,30 +28,6 @@
 }
 .pk-crest[data-team='bells'] {
   background-image: url('./teams/crest-bells.svg');
-}
-.pk-kit[data-team='lanterns'] {
-  background-image: url('./teams/kit-lanterns.svg');
-}
-.pk-kit[data-team='sparks'] {
-  background-image: url('./teams/kit-sparks.svg');
-}
-.pk-kit[data-team='drifters'] {
-  background-image: url('./teams/kit-drifters.svg');
-}
-.pk-kit[data-team='comets'] {
-  background-image: url('./teams/kit-comets.svg');
-}
-.pk-kit[data-team='harriers'] {
-  background-image: url('./teams/kit-harriers.svg');
-}
-.pk-kit[data-team='embers'] {
-  background-image: url('./teams/kit-embers.svg');
-}
-.pk-kit[data-team='blazers'] {
-  background-image: url('./teams/kit-blazers.svg');
-}
-.pk-kit[data-team='bells'] {
-  background-image: url('./teams/kit-bells.svg');
 }
 
 /* cup bracket: art 360 x 420, slots placed by --x --y in art units (see geometry.json "bracket") */
@@ -155,12 +126,6 @@
   height: 48px;
   margin: -24px 0 0 -40px;
   background-image: url('./fx/dust.svg');
-}
-.pk-fx--glow {
-  width: 256px;
-  height: 256px;
-  margin: -128px 0 0 -128px;
-  background-image: url('./fx/floodlight-glow.svg');
 }
 @keyframes pk-fx {
   from {

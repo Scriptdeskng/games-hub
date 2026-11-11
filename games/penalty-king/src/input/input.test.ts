@@ -117,6 +117,56 @@ describe('swipe to shot', () => {
       expect(swipeToShot(t, F)).toBeNull();
   });
 
+  it('a sample that is not a number cancels the swipe, and so does one time stamp for every sample', () => {
+    for (const bad of [NaN, Infinity]) {
+      const a = line(0, -140, 100);
+      a.xs[3] = bad;
+      expect(analyseSwipe(a, F).verdict).toBe('empty');
+      const b = line(0, -140, 100);
+      b.ts[2] = bad;
+      expect(analyseSwipe(b, F).verdict).toBe('empty');
+      const c = line(0, -140, 100);
+      c.ys[5] = bad;
+      expect(analyseSwipe(c, F).verdict).toBe('empty');
+    }
+    expect(
+      analyseSwipe(
+        swipe([
+          [180, 510, 5],
+          [180, 400, 5],
+          [180, 300, 5],
+        ]),
+        F,
+      ).verdict,
+    ).toBe('empty');
+    expect(
+      swipeToShot(
+        swipe([
+          [180, 510, 0],
+          [180, 300, 0],
+        ]),
+        F,
+      ),
+    ).toBeNull();
+  });
+
+  it('two samples a frame apart are not an instant kick: power needs a real flick, and a 1 ms swipe is capped by the minimum window', () => {
+    const t = swipe([
+      [180, 510, 0],
+      [180, 360, 1],
+    ]);
+    expect(flickSpeed(t)).toBeLessThan(10); // 150 px over at least 16 ms, never 150 px over 1 ms
+    expect(flickSpeed(t)).toBeCloseTo(150 / 16, 5);
+    const slow = analyseSwipe(
+      swipe([
+        [180, 510, 0],
+        [180, 400, 500],
+      ]),
+      F,
+    );
+    expect(slow.input.power).toBeLessThan(0.15);
+  });
+
   it('the track buffer never grows: extra points overwrite the last slot and the end stays current', () => {
     const t = createTrack();
     for (let i = 0; i < TRACK_CAP * 3; i++) pushPoint(t, 180, 510 - i, i);

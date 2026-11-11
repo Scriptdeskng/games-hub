@@ -51,7 +51,7 @@ export interface Play extends Component {
   start(): void;
   snapshot(): PlaySnapshot;
   /** the watchdog's action, also callable by a test */
-  rescue(): void;
+  rescue(): boolean;
   /** test builds only: a scripted human plays the match in real time */
   setBot?: (bot: HumanBot | null) => void;
   /** test builds only: finish the round at once */
@@ -246,16 +246,14 @@ export function createPlay(core: Core, o: PlayOptions): Play {
     watchOff();
     watchOff = scope.timeout(() => {
       if (modal || document.hidden || destroyed) return armWatchdog();
-      if (!(flow.frame.phase === 'ready' && flow.frame.striker === 0)) {
-        rescue();
-        sync();
-      }
+      if (rescue()) sync();
       armWatchdog();
     }, WATCHDOG_MS);
   }
-  function rescue(): void {
-    rescues++;
-    flow.skip();
+  function rescue(): boolean {
+    const moved = flow.skip();
+    if (moved) rescues++;
+    return moved;
   }
 
   /** one object for every frame: nothing is allocated while drawing */

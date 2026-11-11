@@ -13,12 +13,12 @@ export type Zone = (typeof ZONES)[number];
 
 /** Where the keeper's hands end up for each zone (metres on the goal plane). */
 export const ZONE_CENTER: Readonly<Record<Zone, { x: number; y: number }>> = {
-  ul: { x: -2.2, y: 1.8 },
+  ul: { x: -2.45, y: 1.8 },
   u: { x: 0, y: 1.85 },
-  ur: { x: 2.2, y: 1.8 },
-  dl: { x: -2.2, y: 0.55 },
+  ur: { x: 2.45, y: 1.8 },
+  dl: { x: -2.45, y: 0.55 },
   d: { x: 0, y: 0.55 },
-  dr: { x: 2.2, y: 0.55 },
+  dr: { x: 2.45, y: 0.55 },
 };
 
 /** Seconds a dive takes to reach its zone. */

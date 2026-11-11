@@ -174,13 +174,6 @@ export const dust = () =>
     `<g fill="#D49A66" stroke="#8C5230" stroke-width="2"><circle cx="20" cy="30" r="14"/><circle cx="40" cy="22" r="18"/><circle cx="60" cy="30" r="13"/><circle cx="32" cy="36" r="11"/><circle cx="50" cy="36" r="11"/></g>`,
     ' width="80" height="48"',
   );
-export const floodGlow = () =>
-  svg(
-    '0 0 256 256',
-    `<defs><radialGradient id="fg"><stop offset="0" stop-color="${PLANTAIN}" stop-opacity=".8"/><stop offset=".45" stop-color="${GOLD}" stop-opacity=".25"/><stop offset="1" stop-color="${GOLD}" stop-opacity="0"/></radialGradient></defs><circle cx="128" cy="128" r="128" fill="url(#fg)"/>`,
-    ' width="256" height="256"',
-  );
-
 /** Cheering crowd strip (tileable 360 x 96): silhouettes with raised arms, drawn over the stands on a goal. */
 export const crowdCheer = () => {
   const r = rng(77);

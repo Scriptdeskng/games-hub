@@ -96,8 +96,11 @@ export interface Flow {
   shoot(input: ShotInput): boolean;
   /** the human's dive (when the human is the keeper, from the whistle until a quarter second after the strike) */
   dive(zone: Zone): boolean;
-  /** watchdog: move the match on by force, whatever phase it is stuck in */
-  skip(): void;
+  /**
+   * watchdog: move the match on by force, whatever phase it is stuck in. Returns false when it did nothing: it never
+   * decides for a human (a human who is to shoot, or a human keeper who may still dive).
+   */
+  skip(): boolean;
   state(): Shootout;
   practice(): PracticeStats;
   /** the human may act now */
@@ -329,13 +332,14 @@ export function createFlow(o: FlowOptions): Flow {
       plan === null &&
       (frame.phase === 'runup' || (frame.phase === 'flight' && frame.t <= T.window)),
     skip() {
-      // the watchdog: never leave a CPU or animation phase hanging
-      if (frame.phase === 'ready' && frame.striker === 0) return;
-      if (frame.phase === 'done' && doneSent) return;
+      // the watchdog never resolves a human's own kick or dive by timeout
+      if (f.canShoot() || f.canDive()) return false;
+      if (frame.phase === 'done' && doneSent) return false;
       advancePhase();
-      if (frame.phase === 'runup') advancePhase();
-      if (frame.phase === 'flight') advancePhase();
+      if (frame.phase === 'runup' && !f.canDive()) advancePhase();
+      if (frame.phase === 'flight' && !f.canDive()) advancePhase();
       poseNow();
+      return true;
     },
     state: () => st,
     practice: () => ({ ...stats }),

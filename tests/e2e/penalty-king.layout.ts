@@ -134,7 +134,11 @@ export function layoutTests(): void {
         expect(overlap(board, bar)).toBe(false);
         expect(overlap(bar, dive)).toBe(false);
         expect(overlap(board, dive)).toBe(false);
-        expect(dive.r - dive.l).toBeGreaterThanOrEqual(300 > vp.width ? vp.width * 0.8 : 300);
+        // a low landscape screen uses a 270 px grid (cells 90 x 45, still 44 px or more) to clear the striker
+        const lowLandscape = vp.width > vp.height && vp.height <= 520;
+        expect(dive.r - dive.l).toBeGreaterThanOrEqual(
+          lowLandscape ? 270 : 300 > vp.width ? vp.width * 0.8 : 300,
+        );
         // the page does not scroll while playing
         expect(
           await page.evaluate(

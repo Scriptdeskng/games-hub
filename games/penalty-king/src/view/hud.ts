@@ -8,7 +8,7 @@ import { teamById, type TeamId } from '../rules/teams';
 
 export type BannerKind = 'goal' | 'saved' | 'miss' | 'post' | 'sudden' | 'round';
 export type PhaseChip = 'aim' | 'power' | 'curve' | 'go';
-export type FxKind = 'ribbons' | 'save' | 'post' | 'net' | 'dust' | 'glow';
+export type FxKind = 'ribbons' | 'save' | 'post' | 'net' | 'dust';
 
 const SLOT_WORD: Record<Slot, string> = {
   goal: 'kick.goal',

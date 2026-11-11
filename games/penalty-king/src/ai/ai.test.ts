@@ -19,6 +19,10 @@ import {
   simulate,
   simulateShootout,
   strikerGoalRate,
+  PLACEMENTS,
+  placementWinRate,
+  reactKeeper,
+  type Controller,
   zonePrior,
   zoneWeights,
   aiRng,
@@ -199,7 +203,7 @@ describe('CPU striker', () => {
       }
       return out;
     };
-    expect(count('easy').corner ?? 0).toBe(0);
+    expect((count('easy').corner ?? 0) / 1200).toBeLessThan(0.15);
     expect(count('hard').corner).toBeGreaterThan(600);
     expect(aimPoint('easy', 'ur').x).toBeLessThan(aimPoint('hard', 'ur').x);
   });
@@ -321,6 +325,54 @@ describe('simulations: difficulty measurably raises the challenge (1000 seeded g
       expect(Math.abs(s.taken[0] - s.taken[1])).toBeLessThanOrEqual(1);
     }
   });
+
+  it('every AI decision (keeper dive, striker aim) is finite and inside the legal input ranges, over 300 seeded matches', () => {
+    let kicks = 0;
+    const spy = (c: Controller): Controller => ({
+      shoot(st, k) {
+        const i = c.shoot(st, k);
+        kicks++;
+        for (const v of Object.values(i)) expect(Number.isFinite(v)).toBe(true);
+        expect(Math.abs(i.aimX)).toBeLessThanOrEqual(6);
+        expect(i.aimY).toBeGreaterThanOrEqual(-1);
+        expect(i.aimY).toBeLessThanOrEqual(4);
+        expect(i.power).toBeGreaterThanOrEqual(0);
+        expect(i.power).toBeLessThanOrEqual(1);
+        expect(Math.abs(i.curve)).toBeLessThanOrEqual(1);
+        return i;
+      },
+      keep(st, shot, k) {
+        const p = c.keep(st, shot, k);
+        expect(p.zone === null || ZONES.includes(p.zone)).toBe(true);
+        expect(Number.isFinite(p.startT)).toBe(true);
+        expect(p.startT).toBeGreaterThanOrEqual(-1);
+        expect(p.startT).toBeLessThanOrEqual(1);
+        return p;
+      },
+    });
+    for (let i = 1; i <= 300; i++) {
+      const d = DIFFICULTIES[i % 3]!;
+      const s = simulate(i, [spy(botController(createBot(), i)), spy(cpuController(d, 1))]);
+      expect(s.status).toBe('over');
+    }
+    expect(kicks).toBeGreaterThan(2000);
+  });
+
+  it('no single repeated placement beats Hard: the best of eight placements wins at most 22% fresh and 25% after 300 matches of learning', () => {
+    const keeper = reactKeeper(0.25); // a quick human keeper, so the CPU striker is not a free win
+    const rates = DIFFICULTIES.map((d) => ({
+      d,
+      fresh: Math.max(...PLACEMENTS.map((p) => placementWinRate(d, p.input, 1000, 0, keeper))),
+      learned: Math.max(...PLACEMENTS.map((p) => placementWinRate(d, p.input, 1000, 300, keeper))),
+    }));
+    const [easy, medium, hard] = rates as [(typeof rates)[0], (typeof rates)[0], (typeof rates)[0]];
+    expect(hard.fresh).toBeLessThanOrEqual(0.22);
+    expect(hard.learned).toBeLessThanOrEqual(0.25);
+    expect(hard.learned).toBeLessThanOrEqual(hard.fresh + 0.02); // repetition is punished through the habit
+    expect(hard.fresh).toBeGreaterThan(0.05); // still beatable
+    expect(easy.fresh).toBeGreaterThanOrEqual(medium.fresh);
+    expect(medium.fresh).toBeGreaterThan(hard.fresh);
+  }, 120_000);
 
   it('a human with a habit gets read: the same bot is saved more once the keeper has its history', () => {
     const habit = { ...NONE, ul: 11, ur: 11, dl: 5, dr: 5, u: 1, d: 1 };

@@ -55,6 +55,8 @@ export const V_MIN = 0.3;
 export const V_MAX = 3.2;
 /** speed is measured over the last part of the swipe, so the flick at the end counts */
 export const SPEED_WINDOW_MS = 120;
+/** the shortest time a flick is measured over: two samples a frame apart cannot read as an instant, full-power kick */
+export const MIN_DT_MS = 16;
 export const CURVE_DEAD = 0.04;
 export const CURVE_FULL = 0.2;
 
@@ -76,7 +78,7 @@ export function flickSpeed(t: SwipeTrack): number {
   while (i > 0 && t.ts[last]! - t.ts[i - 1]! <= SPEED_WINDOW_MS) i--;
   let d = 0;
   for (let k = i; k < last; k++) d += Math.hypot(t.xs[k + 1]! - t.xs[k]!, t.ys[k + 1]! - t.ys[k]!);
-  const dt = Math.max(8, t.ts[last]! - t.ts[i]!);
+  const dt = Math.max(MIN_DT_MS, t.ts[last]! - t.ts[i]!);
   return d / dt;
 }
 
@@ -105,6 +107,11 @@ export function analyseSwipe(t: SwipeTrack, f: AimFrame): SwipeResult {
   const neutral: ShotInput = { aimX: 0, aimY: 1, power: 0.5, curve: 0 };
   if (t.n < 2) return { verdict: 'empty', input: neutral, length: 0 };
   const last = t.n - 1;
+  // a sample that is not a number, or a swipe whose samples share one time stamp, is not a real gesture
+  for (let i = 0; i <= last; i++)
+    if (!Number.isFinite(t.xs[i]!) || !Number.isFinite(t.ys[i]!) || !Number.isFinite(t.ts[i]!))
+      return { verdict: 'empty', input: neutral, length: 0 };
+  if (!(t.ts[last]! > t.ts[0]!)) return { verdict: 'empty', input: neutral, length: 0 };
   const dx = t.xs[last]! - t.xs[0]!;
   const dy = t.ys[last]! - t.ys[0]!;
   const length = Math.hypot(dx, dy);

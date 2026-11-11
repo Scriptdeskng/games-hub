@@ -5,7 +5,7 @@
 import { mkdirSync, writeFileSync, copyFileSync, existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { TEAMS, KEEPER, KEEPER_SKINS, svg, inner, kitIcon, f1 } from './penalty-king-common.mjs';
+import { TEAMS, KEEPER, KEEPER_SKINS, svg, inner, f1 } from './penalty-king-common.mjs';
 import { figure, sheet } from './penalty-king-figures.mjs';
 import { KEEPER_POSES, KEEPER_ORDER, STRIKER_POSES, STRIKER_ORDER } from './penalty-king-poses.mjs';
 import { scene, GEO } from './penalty-king-scenes.mjs';
@@ -130,7 +130,6 @@ export const build = () => {
         hair: t.hair,
       }),
     );
-    w(`teams/kit-${t.id}.svg`, kitIcon(t, t.id[0]));
   }
   for (const id of CREST_IDS) w(`teams/crest-${id}.svg`, crest(id));
   for (const [k, fn] of Object.entries(HUD)) w(`hud/${k}.svg`, fn());
@@ -143,7 +142,6 @@ export const build = () => {
   w('fx/save-ring.svg', PR.saveRing());
   w('fx/post-clang.svg', PR.postClang());
   w('fx/dust.svg', PR.dust());
-  w('fx/floodlight-glow.svg', PR.floodGlow());
   w('icon/menu-mark.svg', menuMark());
   for (const [id, fn] of Object.entries(AVATARS)) w(`avatars/${id}.svg`, fn());
   w('thumb/thumb-512x512.svg', thumb(512, 512));

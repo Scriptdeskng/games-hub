@@ -231,32 +231,56 @@ describe('whole matches', () => {
 });
 
 describe('watchdog skip', () => {
-  it('moves a CPU or animation phase on by force, never a human wait, and never past the end', () => {
+  it('moves a CPU or animation phase on by force, but never decides for a human: not a shot, not a dive', () => {
     const { flow, events } = mk({ first: 1 });
     expect(flow.frame.phase).toBe('intro');
-    flow.skip();
+    expect(flow.skip()).toBe(true);
     expect(flow.frame.phase).toBe('ready'); // intro -> ready
-    flow.skip();
-    expect(flow.frame.phase).toBe('result'); // the CPU kicks, the run-up and the flight are skipped, the kick is scored
-    expect(flow.state().kicks).toHaveLength(1);
-    flow.skip();
-    expect(flow.frame.phase).toBe('ready');
+    expect(flow.skip()).toBe(true); // the CPU takes its kick and starts its run-up
+    expect(flow.frame.phase).toBe('runup');
+    expect(flow.canDive()).toBe(true);
+    // the human keeper may still dive: the watchdog waits for him, however often it fires
+    for (let i = 0; i < 5; i++) expect(flow.skip()).toBe(false);
+    expect(flow.frame.phase).toBe('runup');
+    expect(flow.state().kicks).toHaveLength(0);
+    expect(flow.dive('dl')).toBe(true);
+    expect(flow.skip()).toBe(true);
+    expect(flow.frame.phase).toBe('result');
+    expect(flow.state().kicks[0]!.dive).toBe('dl'); // his dive, not a timeout's
+    expect(flow.skip()).toBe(true);
     expect(flow.frame.striker).toBe(0);
-    flow.skip(); // a human who is thinking is not forced to shoot
     expect(flow.frame.phase).toBe('ready');
+    expect(flow.skip()).toBe(false); // a human who is thinking is not forced to shoot
     expect(events.filter((e) => e.type === 'over')).toHaveLength(0);
   });
 
-  it('skipping alone finishes a whole match when the human never acts (a kick each time they are up is not forced: use shoot)', () => {
+  it('a human keeper whose dive window has closed no longer blocks the watchdog (he did not dive: that is his choice)', () => {
+    const { flow } = mk({ first: 1, instantCpu: true });
+    run(flow, T.intro + 0.05);
+    until(flow, () => flow.frame.phase === 'flight');
+    run(flow, T.window + 0.05);
+    expect(flow.canDive()).toBe(false);
+    expect(flow.skip()).toBe(true);
+    expect(flow.frame.phase).toBe('result');
+    expect(flow.state().kicks[0]!.dive).toBeNull();
+  });
+
+  it('skipping with the human acting finishes a whole match without ever choosing for him', () => {
     const { flow, events } = mk({ first: 0, seed: 12 });
     let guard = 0;
-    while (!events.some((e) => e.type === 'over') && guard++ < 400) {
+    while (!events.some((e) => e.type === 'over') && guard++ < 600) {
       if (flow.canShoot()) flow.shoot(SHOT);
+      else if (flow.canDive()) flow.dive('u');
       flow.skip();
     }
     expect(events.filter((e) => e.type === 'over')).toHaveLength(1);
-    flow.skip();
-    flow.skip();
+    expect(
+      flow
+        .state()
+        .kicks.filter((k) => k.side === 1)
+        .every((k) => k.dive === 'u'),
+    ).toBe(true);
+    expect(flow.skip()).toBe(false);
     expect(events.filter((e) => e.type === 'over')).toHaveLength(1);
   });
 
