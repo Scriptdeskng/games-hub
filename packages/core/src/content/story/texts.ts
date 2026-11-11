@@ -7,7 +7,7 @@ function* loc(at: string, t: LocalizedText | undefined): Generator<TextRef> {
     if (typeof v === 'string') yield { at: `${at}.${k}`, text: v };
 }
 
-/** Every player-visible string of a campaign bundle (not `source`/`reviewedBy`, which are metadata). */
+/** Every player-visible string of a campaign bundle (not the `source`/`reviewedBy` metadata on each item). */
 export function* collectTexts(b: CampaignBundle): Generator<TextRef> {
   for (const c of b.chapters) {
     yield* loc(`${c.id}.title`, c.title);
@@ -27,6 +27,8 @@ export function* collectTexts(b: CampaignBundle): Generator<TextRef> {
     for (const [i, s] of p.sources.entries()) {
       const at = `${p.id}.sources[${i}]`;
       yield { at: `${at}.title`, text: s.title };
+      yield { at: `${at}.author`, text: s.author };
+      yield { at: `${at}.citation`, text: s.citation };
       yield* loc(`${at}.why`, s.why);
       if (s.quote) yield { at: `${at}.quote`, text: s.quote };
     }

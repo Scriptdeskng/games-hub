@@ -24,7 +24,8 @@ export const chapterOne = (): ChapterManifest => ({
   ],
   environment: 'oke-imesi-town',
   hero: 'bisi',
-  companions: ['akin'],
+  // Akin is introduced in Chapter 3 (SCRIPT.md), so Chapter 1 has no companion.
+  companions: [],
   cast: ['iya-morenike'],
   objectives: [
     {
@@ -103,10 +104,11 @@ export const kirijiOneBundle = (): CampaignBundle => ({
             },
             {
               id: 'k1-t-3',
-              speaker: 'akin',
+              speaker: 'bisi',
               text: { en: 'Ẹ jẹ́ ká lọ!', pcm: 'Oya, make we go!' },
               langs: ['yo'],
               native_review: true,
+              pcm_review: true,
             },
           ],
         },

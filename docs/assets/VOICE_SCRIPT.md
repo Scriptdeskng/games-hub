@@ -172,7 +172,7 @@ Files in `games/akoni-dike/assets/packs/shared-kiriji/audio/voice/vo-ak-<id>.mp3
 | `ak-akin-heard` | Akin | They will hear us! | Dem go hear us! `_review` | n/a | proud | after the crack |
 | `ak-akin-see` | Akin | I see him! | I don see am! `_review` | n/a | quick | target marked |
 | `ak-drummer` | drummer | Listen! | n/a | `Ẹ gbọ́!` (yo, proposed) `_review` | short call | before the rally |
-| `ak-bisi-steady` | Bisi | Steady. | Steady. | n/a | low, calm | Hunter's Eye |
+| `ak-bisi-steady` | Bisi | Steady. | Steady. `_review` | n/a | low, calm | Hunter's Eye |
 | `ak-bisi-up` | Bisi | I'm still standing. | I still dey stand. `_review` | n/a | grit | recovery |
 | `ak-rival-hold` | rival captain | Hold your ground! | n/a | `Ẹ dúró ṣinṣin!` (yo, proposed) `_review` | disciplined, respectful | rival group |
 | `ak-rival-yield` | rival | Enough. I yield. | Enough. I don yield. `_review` | `Ó tó.` (yo, proposed) `_review` | dignified | disarmed rival |
@@ -190,4 +190,4 @@ Files in `games/akoni-dike/assets/packs/shared-kiriji/audio/voice/vo-ak-<id>.mp3
 | `ek-con-search` | constable | Search the barns! | n/a | n/a | procedural | search |
 | `ek-con-here` | constable | Over here! | n/a | n/a | alert | spotted |
 | `ek-con-back` | Captain Harrow | Column, withdraw. | n/a | n/a | composed | Ekumeku 5 finale |
-Shared lines also used: `oya`, `e-ku-ise`, `o-di-mma`, `no-wahala`, `no-shaking`.
+Shared lines also used: `oya`, `e-ku-ise`, `o-di-mma`, `no-wahala`, `no-shaking`. The shared celebratory lines `madalla` (Hausa) and `koyo` (Edo) are **not** used in this game (brief part 5 section 6). Every Pidgin line above is `_review`, including those that read the same as the English.

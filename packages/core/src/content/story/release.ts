@@ -19,6 +19,8 @@ export interface ReleaseReport {
   unreviewed: ReviewItem[];
   /** Dialogue lines still flagged `native_review: true` (reported, not blocking). */
   nativePending: number;
+  /** Dialogue lines still flagged `pcm_review: true` (reported, not blocking). */
+  pcmPending: number;
   /** Glossary terms with `diacriticChecked: false` (reported, not blocking). */
   diacriticsPending: number;
 }
@@ -69,6 +71,9 @@ export function releaseReport(b: CampaignBundle): ReleaseReport {
     nativePending: b.dialogue
       .flatMap((d) => d.scenes.flatMap((s) => s.lines))
       .filter((l) => l.native_review === true).length,
+    pcmPending: b.dialogue
+      .flatMap((d) => d.scenes.flatMap((s) => s.lines))
+      .filter((l) => l.pcm_review === true).length,
     diacriticsPending: b.glossary.flatMap((g) => g.terms).filter((t) => !t.diacriticChecked).length,
   };
 }
@@ -80,7 +85,7 @@ export function describeRelease(
 ): { ok: boolean; lines: string[] } {
   const lines = [
     `content: ${r.total} learning item(s), ${r.unreviewed.length} with reviewed:false`,
-    `content: ${r.nativePending} dialogue line(s) awaiting native review, ${r.diacriticsPending} glossary term(s) with diacriticChecked:false (reported only)`,
+    `content: ${r.nativePending} dialogue line(s) awaiting native review, ${r.pcmPending} awaiting Pidgin review, ${r.diacriticsPending} glossary term(s) with diacriticChecked:false (reported only)`,
   ];
   if (!release) {
     lines.push(

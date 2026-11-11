@@ -27,6 +27,22 @@ export const LIMITS = {
   explanation: 200,
 } as const;
 
+/**
+ * Length in Unicode code points. JSON Schema (2020-12) `maxLength` counts code points, not UTF-16
+ * units, so the TypeScript validators count the same way (an astral character counts as 1).
+ */
+export const cpLen = (s: string): number => [...s].length;
+
+/**
+ * A `reviewedBy` that names a role still to do the review, not a person. With `reviewed: true` it
+ * is rejected. The JSON Schemas carry the same words (case-expanded, see `placeholderPattern`).
+ */
+export const PLACEHOLDER_WORDS: readonly string[] = ['todo', 'tbd', 'pending', 'n/a', 'none'];
+export const PLACEHOLDER_RE = /^\s*(?:todo|tbd|pending|n\/a|none)\b/i;
+/** The same rule as a case-expanded ECMA-262 pattern for the JSON Schemas (no inline flags there). */
+export const placeholderPattern = (): string =>
+  `^\\s*(?:${PLACEHOLDER_WORDS.map((w) => [...w].map((c) => (/[a-z]/.test(c) ? `[${c}${c.toUpperCase()}]` : c)).join('')).join('|')})\\b`;
+
 export const isObj = (v: unknown): v is Obj =>
   typeof v === 'object' && v !== null && !Array.isArray(v);
 export const isStr = (v: unknown): v is string => typeof v === 'string' && v.trim().length > 0;
@@ -60,7 +76,7 @@ export const checkFlag = (v: unknown, at: string, s: Sink): void => {
 };
 export const checkStr = (v: unknown, at: string, s: Sink, max?: number): void => {
   if (!isStr(v)) s.add(at, 'must be a non-empty string');
-  else if (max !== undefined && v.length > max) s.add(at, `is over ${max} characters`);
+  else if (max !== undefined && cpLen(v) > max) s.add(at, `is over ${max} characters`);
 };
 export const checkEnum = (v: unknown, at: string, s: Sink, values: readonly string[]): void => {
   if (typeof v !== 'string' || !values.includes(v))
@@ -93,8 +109,11 @@ export function checkReviewable(o: Obj, at: string, s: Sink): void {
   checkStr(o.source, p('source'), s);
   checkStr(o.reviewedBy, p('reviewedBy'), s);
   if (typeof o.reviewed !== 'boolean') s.add(p('reviewed'), 'must be a boolean');
-  else if (o.reviewed && typeof o.reviewedBy === 'string' && /^\s*todo\b/i.test(o.reviewedBy)) {
-    s.add(p('reviewedBy'), 'reviewed is true but reviewedBy is still a TODO placeholder');
+  else if (o.reviewed && typeof o.reviewedBy === 'string' && PLACEHOLDER_RE.test(o.reviewedBy)) {
+    s.add(
+      p('reviewedBy'),
+      'reviewed is true but reviewedBy is still a placeholder (TODO, TBD, pending, n/a, none)',
+    );
   }
 }
 

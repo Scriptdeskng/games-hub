@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://naija-games/schemas/chapter-manifest.schema.json",
   "title": "ChapterManifest",
+  "$comment": "Rules JSON Schema cannot express are TypeScript-only and the TypeScript validator in packages/core/src/content/story is authoritative for them: uniqueness of ids inside an array of objects, option strings distinct ignoring case, and cross-field comparisons (a date range ending before it starts, a chapter depending on itself). scripts/content-schemas.test.ts keeps the two in agreement for everything else. Lengths are Unicode code points in both (2020-12 maxLength counts code points). A non-empty string must contain a non-whitespace character. reviewed:true requires a reviewedBy that does not start with TODO, TBD, pending, n/a or none. Also TS-only: the chapter id prefix ch00 or an early Legend needs featureFlag moremiPrologue, and chapter ids are unique across files (campaign checks in xref.ts).",
   "type": "object",
   "required": [
     "version",
@@ -221,11 +222,13 @@
     },
     "source": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "\\S"
     },
     "reviewedBy": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": "\\S"
     },
     "reviewed": {
       "type": "boolean"
@@ -266,6 +269,26 @@
           ]
         }
       }
+    },
+    {
+      "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+      "if": {
+        "properties": {
+          "reviewed": {
+            "const": true
+          }
+        },
+        "required": ["reviewed"]
+      },
+      "then": {
+        "properties": {
+          "reviewedBy": {
+            "not": {
+              "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {
@@ -277,27 +300,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         }
       }
     },
@@ -309,27 +337,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 120
+          "maxLength": 120,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 120
+          "maxLength": 120,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 120
+          "maxLength": 120,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 120
+          "maxLength": 120,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 120
+          "maxLength": 120,
+          "pattern": "\\S"
         }
       }
     },
@@ -341,27 +374,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         }
       }
     },
@@ -385,7 +423,18 @@
           "minimum": 1,
           "maximum": 31
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "a day needs a month",
+          "if": {
+            "required": ["day"]
+          },
+          "then": {
+            "required": ["month"]
+          }
+        }
+      ]
     },
     "dateRange": {
       "type": "object",
@@ -404,7 +453,8 @@
         "sourcesDisagree": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         }
       }
     }

@@ -146,6 +146,7 @@ No samples of existing songs, no artist sound-alikes, and no uncleared beats.
 | Penalty King | dusty community pitch to stadium, invented team crests | crowd cheer, whistle, talking-drum build-up | football chant drums | Chidi |
 | Danfo Dash | Lagos traffic, Third Mainland-style bridge, BRT lanes | danfo horn, conductor call, generator hum | Afrobeats | Efe as driver, passengers |
 | Mama Put Match | food tiles drawn appetisingly, with Balogun, Wuse, Kurmi and Ogbete districts | udu drops, agogo combos, talking-drum cascades | Afrobeats / highlife | Mama Nkechi as guide |
+| Akọni & Dike | a JSS museum-trip frame around two period worlds: Kiriji (adire indigo, laterite, dry-season gold, Ekiti hills) and Ekumeku (forest green, uli ochre, night blue, Anioma compounds); aso-oke and akwete trims | Kiriji set: talking-drum parry and rally, agogo; Ekumeku set: ogene signals, udu, ekwe (no shared cues across campaigns; the Company bugle is a documented story-sound exception) | Kiriji: slow highlife and jùjú/dùndún war drums; Ekumeku: akwatankwa bamboo and ogene, low udu | Bisi, Akin, Iya Morenike, Nkem, Ada, Okeke, Ogbuefi Nwaka, guides Mr Adewale and Mrs Okonkwo; Pidgin banter, Yoruba and Igbo words `_review` |
 
 ## 8. Cultural review (a human task at each phase exit)
 A Nigerian reviewer (ideally from more than one region) checks each game for authenticity,

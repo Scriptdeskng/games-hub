@@ -3,8 +3,6 @@ export { LIMITS } from './check';
 export {
   validateChapter,
   validateFeatureConfig,
-  isFeatureOn,
-  chapterEnabled,
   PACK_MAX_KB,
   PACK_ID_RE,
   HERO_MOMENTS,

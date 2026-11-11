@@ -2,7 +2,10 @@
 
 Status: A0 design for owner review. Nothing here is gameplay code. What A0 actually built (content
 schemas and validators, release gate, size rules) is marked **[built]**. Everything else is a
-proposal for A1 and is marked **[A1]**. Binding specs: `SCRIPT.md`, `LEARNING.md`, `ASSET_BIBLE.md`,
+proposal for A1 and is marked **[A1]**.
+
+Split to stay under 400 lines: `PACKS.md` holds sections 3 to 6 and `QUIZ.md` section 7 (numbers unchanged).
+Binding specs: `SCRIPT.md`, `LEARNING.md`, `ASSET_BIBLE.md`,
 `CLAUDE.md`, `docs/IMPLEMENTATION_PLAN.md` ("Priority override", "Phase A", the four added DoD items).
 
 ## 1. Decisions that need the owner's call
@@ -18,7 +21,9 @@ proposal for A1 and is marked **[A1]**. Binding specs: `SCRIPT.md`, `LEARNING.md
 | D7 | Shared art/audio | Anything used by 2+ chapters (hero sprites, UI frames, common SFX, shared enemy sets) lives in the initial download, never in a pack. Packs never import from other packs | keeps packs independently cacheable and evictable |
 | D8 | Difficulty names | Story = easy, Warrior = medium, Legend = hard, mapped onto core `ai-kit` profiles | one vocabulary for sim tests and the DoD "difficulty must raise the challenge" rule |
 | D9 | Simulation rate | 60 Hz fixed step by default; allow 30 Hz sim with interpolated render on devices that miss 50 fps (auto-detected by `perf`) | protects the 50 fps DoD on 2 GB phones |
-| D10 | Build tooling | The `content:*` scripts bundle the TypeScript gate in memory with `esbuild` (already installed as a Vite dependency, no new package) | avoids a second copy of the validators in `.mjs` |
+| D10 | Build tooling | The `content:*` scripts bundle the TypeScript gate in memory with `esbuild`, now a declared devDependency (it was only a transitive Vite dependency; same version 0.28.2, no new package installed, lockfile +1 line) | avoids a second copy of the validators in `.mjs` |
+| D11 | `content:release-check` with no `content/` folder | It PASSES with the message "games/akoni-dike/content not found, nothing to check" (exit 0), in release mode too | A0 ships no content, and `npm run check` must stay green. Risk: a mistyped path or a deleted folder passes a release check silently. Mitigation **[A1]**: once `packs.json` declares a pack, or the registry entry becomes `deploy:true`, a missing `content/` must FAIL (a 2-line change in `scripts/content-gate.ts`, with a test). Owner may prefer to make it fail from day one |
+| D12 | Size model for shared and audio assets | **Open, owner decides** (`PACKS.md` section 3.1): options A, B, C | the asset brief and D7 disagree; the A1 slice is not affected, A2 asset production is |
 
 ## 2. Content layer **[built]**
 
@@ -36,7 +41,7 @@ games/akoni-dike/
     guardrails.json               optional override merged over the built-in guardrail defaults
 ```
 
-`content/` does not exist yet, so `npm run content:check` prints "nothing to check" and passes.
+`content/` does not exist yet, so `npm run content:check` and `content:release-check` print "nothing to check" and pass (decision D11).
 The fixtures (Kiriji 1 skeleton, `packages/core/src/content/story/fixtures.ts`) are used by tests only.
 
 ### 2.2 Documents and schemas
@@ -44,24 +49,37 @@ The fixtures (Kiriji 1 skeleton, `packages/core/src/content/story/fixtures.ts`) 
 | Schema file (`packages/core/content/schemas/`) | TypeScript validator (`@naija/core/content`) | Holds |
 |---|---|---|
 | `chapter-manifest.schema.json` | `validateChapter` | id, campaign (`kiriji` `ekumeku` `moremi-prologue`), order, title, tag, goals (1-4), environment, hero, companions, cast, battle objectives, hero-moment type, `dates` (+ optional `sourcesDisagree`), dependencies, `delivery` (`initial` or `pack`), `pack` + `packBudgetKb` (1-1024), `featureFlag`, content id lists, source/reviewedBy/reviewed |
-| `dialogue-pack.schema.json` | `validateDialoguePack` | scenes (tag) -> lines: speaker, text (`en` required, `pcm` etc.), `langs`, `glossary` ids, `native_review`, `fictional`, tag |
+| `dialogue-pack.schema.json` | `validateDialoguePack` | scenes (tag) -> lines: speaker, text (`en` required, `pcm` etc.), `langs`, `glossary` ids, `native_review` (required when the text or `langs` has yo, ig or ha), `pcm_review` (required when the text or `langs` has Pidgin), `fictional`, tag |
 | `learning-pack.schema.json` | `validateLearningPack` | `facts` (<= 140 chars per language, trigger, `sourceRef`), `sources` (author, when, why, citation, quote, codex shelf+slot), `twoSides` (2-3 sides), `pins` (timeline/map, date range, place 0..1), `checks` (knowledge-check items) |
 | `glossary-pack.schema.json` | `validateGlossaryPack` | term, language, definition, `diacriticChecked` |
 | (TypeScript only) | `validateFeatureConfig`, `validateGuardrailOverride` | `features.json`, `guardrails.json` |
 
 - **Learning items** (facts, sources, twoSides, pins, checks, glossary terms, and the chapter manifest) ALL
-  carry `source`, `reviewedBy`, `reviewed`. `reviewed:true` with a `TODO` reviewer is rejected.
+  carry `source`, `reviewedBy`, `reviewed`. `reviewed:true` with a placeholder reviewer is rejected: a
+  `reviewedBy` that starts with `TODO`, `TBD`, `pending`, `n/a` or `none` (whole word, any case). The same rule
+  is in the TypeScript validators and, case-expanded, in the JSON Schemas (`placeholderPattern()` generates the
+  schema text and a test checks the files contain it).
 - **Knowledge checks** are a structural superset of the existing `QuizQuestion` (4 distinct options, `answer`
   0-3, `source`, `reviewed`, `category`, `difficulty`) plus `explanation` (<= 200 chars, shown after a wrong
   answer, never blocking) and `reviewedBy`. The future `@naija/core/quiz` runs them without conversion.
 - **Unknown fields are errors** (a typo like `sourceRf` cannot silently drop a field).
-- **Agreement test:** `scripts/content-schemas.test.ts` runs the JSON Schemas (through a small checker,
-  `scripts/json-schema-lite.ts`) and the TS validators over about 65 mutations of the fixture and requires the same
-  verdict. Same pattern as `pack-check.test.ts`.
-- **Run-time use:** the pack loader (section 5) imports only the four `validate*` functions: measured at
-  about +2.6 KB gzip over the quiz baseline (3.9 KB vs 1.2 KB, esbuild minified). The linter, guardrails and
-  release code are not imported at run time and tree-shake out (`import *` of the whole barrel is 11 KB, so
-  games must import named functions).
+- **Schema versus TypeScript:** the schemas express everything JSON Schema can: required fields, lengths,
+  enums, ids, `reviewed:true` needs a real reviewer, a date `day` needs a `month`, `native_review` for yo/ig/ha
+  text, `pcm_review` for Pidgin text, non-blank strings. Rules JSON Schema cannot express are **TypeScript-only**
+  and the TypeScript validator is authoritative: ids unique inside an array of objects, check options distinct
+  ignoring case and spaces, a date range ending before it starts, a chapter depending on itself. Each schema
+  states this in its `$comment` header. Lengths are Unicode code points in both (2020-12 `maxLength` counts code
+  points; TypeScript uses `cpLen`).
+- **Agreement test:** `scripts/content-schemas.test.ts` runs the JSON Schemas (through a small 2020-12 subset
+  checker, `scripts/json-schema-lite.ts`, which counts code points and does not trim) and the TS validators over
+  157 mutations of the fixture. Each mutation is `reject` (both must reject), `accept` (both must accept) or
+  `ts-only` (TypeScript must reject; the schema cannot). Any divergence on a mutation not marked `ts-only`
+  fails the test. Same pattern as `pack-check.test.ts`.
+- **Run-time use:** the pack loader (section 5, `PACKS.md`) imports only the four `validate*` functions.
+  Measured with esbuild minified and gzipped: the story validators are 3.9 KB, `validateQuizPack` alone 0.85 KB,
+  so the real delta over the quiz baseline is about 3.1 KB (an earlier figure of 2.6 KB used a 1.2 KB quiz
+  baseline; QA measured 0.85 KB). The linter, guardrails and release code are not imported at run time and tree-shake out
+  (`import *` of the whole barrel is 11 KB, so games must import named functions).
 
 ### 2.3 Campaign checks (`lintBundle`, `content:check`)
 
@@ -70,31 +88,44 @@ Errors fail the check, warnings are advice (rule ids in `story/xref.ts`).
   `xref/chapter-item` (packs point at real chapters, one dialogue and one learning pack per chapter, every id a
   chapter lists exists); `xref/glossary`; `xref/speaker` (hero, companions, `cast`, `narrator`, `guide` only);
   `cameo/fictional` (real-person speaker without `fictional: true`); `xref/fact-source` (bad `sourceRef`);
-  `xref/order`, `xref/pack-id`; `xref/dependency`, `xref/dependency-cycle`; `xref/feature-flag` (Moremi chapters
-  must set `featureFlag: "moremiPrologue"`, any flag must be declared in `features.json`); `xref/packs-json`.
+  `xref/order`, `xref/pack-id`; `xref/dependency`, `xref/dependency-cycle`; `xref/feature-flag` (a Moremi
+  chapter must set `featureFlag: "moremiPrologue"`: campaign `moremi-prologue`, a chapter id or pack `ch00*`, or a
+  `Legend` chapter dated before 1200, whatever its `campaign` says; any flag must be declared in
+  `features.json`); `xref/packs-json`; `text/not-nfc` (every player-visible string must be NFC);
+  chapter ids are unique across the whole bundle (`xref/duplicate-id`).
 - **Warnings:** `xref/orphan-item`, `glossary/untagged`, fact without `sourceRef`, `chapter/checks|facts|sources`
-  (target 3 checks, 2-3 facts, 1 source), `diacritics/no-marks` and `diacritics/not-nfc` (flag-only; Yoruba/Igbo
-  term with no tone marks or underdots, or text not NFC; `diacriticChecked:true` silences the first).
+  (target 3 checks, 2-3 facts, 1 source), `diacritics/no-marks` (flag-only; a Yoruba/Igbo
+  term with no tone marks or underdots; `diacriticChecked:true` silences it).
 
 ### 2.4 Guardrail linter (configurable, flag-only except the clearest violations)
 
-Scans every player-visible string in every language. Defaults live in
+Scans every player-visible string in every language, including source `author` and `citation`. Defaults live in
 `packages/core/src/content/story/guardrails.ts`; `games/akoni-dike/content/guardrails.json` is MERGED over
-them: same `id` replaces a rule, a new `id` adds one, `severity: "off"` disables, `ethnicGroups` and
-`realPeople` are unioned, `allow: [{rule, at, reason}]` silences one rule at one location prefix (a reason is
-mandatory, so exceptions are reviewable in the diff). Patterns are case-insensitive regex; `{ETHNIC}` expands
-to `ethnicGroups`.
+them: same `id` replaces a rule (with a mandatory `reason`), a new `id` adds one, `severity: "off"` disables
+(with a reason), `ethnicGroups` and `realPeople` are unioned, `allow: [{rule, at, reason}]` silences one rule
+at one location (a reason is mandatory, so exceptions are reviewable in the diff; `at` matches on a segment
+boundary, so `kiriji-1` does not silence `kiriji-10`). **The eight SCRIPT guardrail rules cannot be weakened by
+the project file**: `blood`, `skull`, `beheading`, `gore`, `tribe-of`, `colonial-ethnic-label`,
+`yoruba-igbo-enemies`, `ugbo-villain` may not be switched off, downgraded or have their patterns replaced
+(validation rejects it and `mergeGuardrails` ignores it); use a new rule id or an `allow` entry with a reason.
+Patterns are case-insensitive regex; `{ETHNIC}` expands to `ethnicGroups` (now also Ijesa, Ekiti, Anioma, Ugbo,
+Ilaje, Ebira).
 
-- **Errors:** `blood`, `skull`, `beheading`, `gore`, `tribe-of`, `colonial-ethnic-label` (an ethnic name beside
-  soldier/constable/troops/police/force in either order, e.g. "Hausa soldiers"), `yoruba-igbo-enemies` (incl.
-  "Igbo raiders"), `ugbo-villain`.
-- **Warnings:** `villain-city`, `tribe-word`, `violence-words` (kill, murder, execute, torture, massacre),
+- **Errors:** `blood`, `skull`, `beheading`, `gore`, `tribe-of`; `colonial-ethnic-label` (an ethnic name beside
+  a force that is colonial by name, constable/constabulary/police/askari/riflemen/mercenary, in either order,
+  or beside soldiers/troops/forces in the same clause as Company, colonial, Crown, Royal Niger, constabulary or
+  police: "Hausa constables", "The Company sent Hausa soldiers"); `yoruba-igbo-enemies` ("Igbo raiders",
+  "Yoruba enemies", "The Yoruba were our enemies"; a clause with a negation such as never, not or no is not
+  flagged, so the required sentence "The raffia raiders of the forest are never called Igbo." passes);
+  `ugbo-villain`.
+- **Warnings:** `ethnic-army-label` (an ethnic name beside soldiers/troops/forces with no colonial word: usually
+  an indigenous army such as "Yoruba troops of Oyo", a human reviews it), `villain-city`, `tribe-word`, `violence-words` (kill, murder, execute, torture, massacre),
   `trophy` (incl. head-taking), `enslavement`, `sacred-imagery` (shrine, sacrifice, masquerade, nsibidi, mbari,
-  ofo, war charm), `people-in-flames`, `anachronism` (corrugated, searchlight, railway).
+  ofo, war charm), `people-in-flames` (also "burns his cloak", "burned the raider chief": the firebrand duel is an open owner question, question 3), `anachronism` (corrugated, searchlight, railway).
 
 Limits: a regex linter cannot judge context. "Latoosa died in camp in 1885" trips `violence-words` only if
 the word "killed" appears; deliberate codex sentences (slave-raiding, head-taking, the Ekumeku outcome) use
-`allow` with a reason. It does not replace the cultural review.
+`allow` with a reason. Negation is handled per clause, not by meaning. It does not replace the cultural review.
 
 ### 2.5 Dev/preview builds vs release builds
 
@@ -108,191 +139,11 @@ the word "killed" appears; deliberate codex sentences (slave-raiding, head-takin
 
 The existing quiz-pack check (`packs:check`, `packs:release-check`) is untouched.
 
-## 3. Size rules **[built]**
+## 3 to 7. Size rules, packs, hub, quiz extraction
 
-`scripts/size-lib.mjs` (pure, unit-tested) is used by `scripts/size-budget.mjs`. Limits live in code, not in the
-manifest, so editing `packs.json` can never relax a budget.
-
-| Case | Result |
-|---|---|
-| Any game except `akoni-dike` | total gzip <= 3 MB (1.5 MB warning), core <= 60 KB. A `packs/` folder is ordinary files and counts fully. A `packs.json` in another game FAILS the build |
-| `akoni-dike`, initial = every file outside a declared pack | initial <= 3 MB |
-| `akoni-dike`, each declared pack (`packs/chNN/**`) | <= 1 MB, or lower via `budgetKb` (1-1024; can only lower) |
-| `akoni-dike`, files in `packs/` not declared in the manifest | count as INITIAL |
-| Declared pack with no files | FAIL (the loader would 404) |
-| `packs.json` missing | warning; everything counts as initial (3 MB, no allowance) |
-| `packs.json` malformed (bad id/dir, `budgetKb` > 1024, duplicate id, unknown field) | FAIL with the message |
-| Core chunks (`core-*.js/css`) | <= 60 KB for every game, `akoni-dike` included |
-
-Manifest: `games/akoni-dike/packs.json` = `{ "version": 1, "packs": [{ "id": "ch02", "dir": "packs/ch02", "budgetKb": 900 }] }`;
-`dir` must be exactly `packs/<id>`. Currently `packs: []`. **Note:** gzip does not shrink `.webp`/`.ogg`, so the
-1 MB pack budget is effectively 1 MB of raw media + JSON. See risk R3.
-
-## 4. Build pipeline for packs **[A1]** (design notes are also in `vite-naija-plugin.ts` and `ship-check.ts`)
-
-1. A pack build step in `closeBundle` assembles per chapter: the three content documents (chapter, dialogue,
-   learning, plus the glossary terms it uses) into one `pack.<hash>.json`, art (`.webp`), audio (`.ogg`),
-   into `dist/akoni-dike/packs/chNN/` with `<name>.<sha256-8>.<ext>` names.
-2. `pack.<hash>.json` = `{ version, engine: {min,max}, chapter, files: [{path, bytes, sha256}], content }`.
-3. The catalogue `{ chNN: { url: "./packs/chNN/pack.<hash>.json", bytes, sha256 } }` is emitted as a generated
-   module (decision D2), so the built JS names each pack by a literal relative path.
-4. The SW precache list excludes `packs/**` and the SW version hash ignores pack bytes (otherwise install
-   would download every chapter, and any pack edit would re-download the game).
-5. Build failures: empty declared pack, undeclared file in `packs/`, manifest listing a missing file, hash
-   mismatch, over-budget pack (shared `evaluateGame`), release mode with `reviewed:false`.
-6. `ship-check` gets a sibling `checkPacks` with the same two-way rule: a file in `packs/chNN/` must be listed
-   by its pack manifest, and every listed file must exist with the recorded size and hash.
-
-## 5. `@naija/core/packs`: on-demand chapter packs **[A1]**
-
-Builds on `loadPack` (`packages/core/src/content/loader.ts`: never throws, typed `PackLoadResult`, 6 s timeout,
-`cache: 'no-cache'`). `loadPack` stays as is for quiz/word packs; `packs` adds a layer above it.
-
-### 5.1 API sketch
-
-```ts
-interface PackCatalogue { [id: string]: { url: string; bytes: number; sha256: string; version: number } }
-interface PackManager {
-  state(id): PackState                                // 'absent'|'queued'|'downloading'|'verifying'|'ready'|'failed'
-  ensure(id, opts?: { onProgress(p: { loaded: number; total: number }): void; signal?: AbortSignal }): Promise<PackResult<T>>
-  has(id): Promise<boolean>                           // cached and verified, works offline
-  remove(id): Promise<void>
-  usage(): Promise<{ bytes: number; ids: string[] }>
-  subscribe(fn): () => void
-}
-createPackManager({ catalogue, validate, cacheName, fetchImpl?, caches?, maxCached? })
-```
-
-### 5.2 Fetch rules (security and cost)
-
-- URLs come ONLY from the embedded catalogue and must match `^\./packs/ch\d{2}/[\w.-]+$`. No string building from
-  user input, no query string, so a `?token=` can never reach a pack request or a cache key (CLAUDE.md: no MSISDN/token in URLs).
-- `Content-Length` (or catalogue `bytes`) feeds the progress bar. The body is read with `response.body.getReader()`
-  so progress is real; if streaming is unavailable, progress is 0 then 100 %.
-- Integrity: SHA-256 of the whole file via `crypto.subtle.digest`, compared to the catalogue before anything is
-  stored or parsed. Mismatch = `integrity` error, bytes discarded. (`fetch({integrity})` is not used: browsers
-  buffer the body before exposing it, which would kill the progress bar.) Where `crypto.subtle` is missing
-  (insecure context, only local dev) the check is skipped with a dev-only warning.
-- Then `JSON.parse` + the schema validator (`validateChapter` etc.), exactly like `loadPack`, with the same
-  `network|timeout|http|parse|invalid` reasons plus `integrity`, `quota`, `cancelled`, `version`.
-- Binary files listed in `pack.json` (art, audio) are fetched the same way, in parallel (max 3 in flight) and
-  counted in the same progress bar.
-- **Retry/timeout:** per-file timeout 15 s (a 1 MB pack on slow 3G is about 25 s total, so the timeout is per stall,
-  not per pack), 3 attempts with 1 s / 3 s back-off, resumable at file level (verified files are kept). `loadPack`
-  gets one backward-compatible option `cache?: RequestCache` so immutable hashed files can use the HTTP cache
-  instead of `no-cache`.
-- **Friendly error state:** every failure maps to a Pidgin/English message and two buttons, "Try again" and
-  "Play a downloaded chapter". It never blocks the app, never shows a stack or a status code.
-
-### 5.3 Where packs are stored: Cache API (D3) vs the existing service worker
-
-Today `sw-template.js` is version-keyed: install precaches the whole build into `naija-<slug>-<hash>` and
-activate DELETES every older `naija-<slug>-*` cache. Packs in that cache would be wiped on every game update, and
-a re-download of up to 6 MB on a metered line is unacceptable. So:
-
-- Packs go to their own cache, **`naija-packs-akoni-dike-v1`**, whose name does NOT start with `naija-akoni-dike-`
-  (the SW's delete prefix; also `hub-lib` forbids slug-prefix collisions). The cache is bumped to `-v2` only
-  when the pack format changes.
-- The **page** writes and reads it through `window.caches` (the page already has the bytes and the hash check
-  result; the SW does not have to run for a download to work). The SW only adds a read rule so offline replay
-  works for sub-resources inside the game (art/audio referenced by URL):
-  `if (pathname matches /\/packs\/ch\d{2}\//) -> caches.match(key, {ignoreSearch:true}) in the packs cache,
-  fall back to network, never write`. Hashed names mean a hit is always correct: no revalidation needed.
-- Existing rule `\/assets\/packs\/[^/]+\.json$` (network-first quiz/word packs) does not match `/packs/chNN/`
-  and is unchanged.
-- No SW support (private mode, some in-app browsers): packs still download and run for the session through the
-  page cache API; with no `caches` at all they are held in memory for the session only (offline replay is lost,
-  the game still works online).
-- `navigator.storage.persist()` is requested after the first successful pack download (best effort), so the
-  browser is less likely to evict chapters.
-
-### 5.4 Immutable hashed names vs short revalidation
-
-`index.html` and `sw.js` stay fixed-name `max-age=0, must-revalidate`; `chunks/*` stay hashed and immutable;
-`packs/chNN/*` are `name.<sha256-8>.ext` with `public, max-age=31536000, immutable`.
-
-The embedded catalogue means no revalidated file is needed. If D2 flips to the remote index, it lists
-`{chNN: {url, sha256, bytes, engine}}` and the loader ignores entries whose `engine` range does not include the
-running engine (shows "Update the game to play this chapter").
-
-### 5.5 Eviction and "Download chapter" UX
-
-- Budget: keep at most `maxCached` (default 6) packs. Eviction is by least recent `lastPlayedAt` (stored in
-  `core.storage`, key `packs:meta`, never a token/MSISDN), never the chapter being played, never initial files.
-  On `QuotaExceededError` the manager evicts the least recently played pack and retries once, then reports
-  `quota` with "Free some space" copy.
-- Old versions: when the catalogue hash for `chNN` changes, the previous files of that chapter are deleted after
-  the new pack verifies.
-
-Chapter-card states: `absent` online ("Download 0.9 MB"), `absent` offline (greyed, "Needs internet"),
-`downloading` (progress bar, "Cancel": AbortController, verified files kept), `verifying`, `ready` ("Downloaded",
-Play, "Remove" in settings), `failed` (friendly message, "Try again", play another chapter), `update` ("Updated
-chapter", the old copy stays playable until the new one verifies).
-
-Rules: starting a chapter auto-downloads the NEXT chapter in the background only on Wi-Fi where the Network
-Information API says so and never when `saveData` is on (otherwise manual). Classroom mode adds "Download all
-chapters" with a total size and a warning, for school Wi-Fi.
-
-### 5.6 Offline replay of cached chapters (DoD)
-
-`has(id)` answers from the cache without network. The chapter list shows "Downloaded" chapters playable
-offline and everything else disabled. Playwright test: download ch02, set the context offline, reload, play ch02,
-assert zero failed requests to `/packs/` and zero console errors; ch03 shows "Needs internet".
-
-### 5.7 Reuse by Danfo Dash and Mama Put Match
-
-`packs` is content-agnostic (catalogue + validator + cache name), so a later game could call
-`createPackManager({ catalogue, validate: validateLevelPack, cacheName: 'naija-packs-danfo-dash-v1' })`. Danfo Dash
-and Mama Put Match should normally fit the 3 MB and not need packs. The size exception stays per game and explicit
-(`PACK_GAMES` in `size-lib.mjs`): another game gets it only by an owner-approved edit.
-
-## 6. Hub, `_headers` and Netlify/Vercel **[A1 proposal]**
-
-The hub (`scripts/build-hub.mjs`, `hub/games.json`) lists only `deploy:true` games; `akoni-dike` is deliberately
-NOT in `games/registry.json` yet. Before it can be deployed:
-
-1. `hub-lib.mjs` hard-codes `GAME_LIMIT = 3 MB` per game folder: use `evaluateGame` from `size-lib.mjs` (D6).
-2. `renderHeaders`: add ONE disjoint rule `/<slug>/packs/*` -> `Cache-Control: public, max-age=31536000, immutable`
-   (hosts merge overlapping rules). `index.html` and `sw.js` stay `max-age=0`. The existing
-   `/<slug>/assets/packs/*` revalidate rule is a different folder. Mirror it in `vercel.json` (`/:slug/packs/(.*)`).
-3. `CATEGORIES` (`board cards quiz words`) has no story/action value: add `story` and `hub.cat.story` (en, pcm).
-4. `scanOutput` bans `.md` and `docs` in the output: teacher guides must be hosted separately or added deliberately.
-5. DigitalOcean Spaces ignores `_headers`: the future `scripts/deploy.mjs` must upload `packs/**` with the
-   immutable `Cache-Control` and HTML/`sw.js` with `max-age=0`. No deploy without owner approval (unchanged).
-6. CSP (`connect-src 'self'`) already allows same-origin pack fetches. The hub test should also assert that
-   `naija-packs-akoni-dike-v1` collides with no game cache prefix.
-
-## 7. `@naija/core/quiz` extraction **[A1]** (from `games/sabi-quiz/src/rules`)
-
-Sources read: `config.ts`, `scoring.ts`, `poll.ts`, `engine.ts` (340 lines), `daily.ts`, `progress.ts`.
-
-| Moves to `@naija/core/quiz` (generic, pure) | Stays in Sabi Quiz |
-|---|---|
-| `multiplierFor`, `speedBonus`, a `ScoringModel` interface (`classicPoints` becomes the default model) | `PROFILES`, `CATEGORIES`, `DUEL_*`, `PASS_MARK`, `stars`, `won` |
-| `toPercents`, `padiPoll` (crowd lifeline) | duel mode, `CpuSeat`, `answerCpu`, `duelOutcome`, `duelPoints` |
-| a generic round machine from `engine.ts`: `createQuiz`, `tick`, `answer`, `next`, `canUse`, `useFifty`, `useSkip`, `usePadi`, `accuracy`, state + history | daily record/streak (`daily.ts`), `progress.ts` (stats keys are game-specific) |
-| already in core: `pickQuestions`, `shuffleOptions`, `dailySeed`, `QuizQuestion` | all views, personas, i18n |
-
-```ts
-createQuiz<Q extends QuizQuestion>({ questions: Q[], spares?: Q[], seed: number,
-  timer?: { limitMs: number },            // optional: Akọni checks have none
-  lifelines?: LifelineId[],               // optional: Akọni uses none
-  scoring?: ScoringModel,                 // optional: Akọni awards honours, not points
-  onWrong?: 'reveal' | 'reveal-explanation' }): QuizState<Q>
-```
-
-State stays JSON-serialisable with the rng in state, as in Sabi. Akọni's knowledge check = `createQuiz` with 3
-items, no timer, no lifelines, `reveal-explanation`, and `never blocks`: the engine has no "fail" state; the
-caller decides honours from `correct`. `KnowledgeCheckItem` already extends `QuizQuestion`.
-
-**Sabi migration without regressions (deferred to after the vertical slice, as its own PR):**
-1. Copy `engine.test.ts`, `scoring.test.ts`, `poll.test.ts` (about 800 lines) into `packages/core/src/quiz` first; the
-   new module must pass them unchanged with Sabi's config injected.
-2. Make `sabi-quiz/src/rules/engine.ts` a thin wrapper over `createQuiz` that adds duel and daily. Public
-   exports (`createRound`, `answer`, ...) keep their signatures so `app.ts` and views do not change.
-3. Gates: all existing Sabi unit tests green with zero edits, seeded replay equality (same seed => same
-   question ids and scores as the pre-migration build, recorded as a golden file), Sabi e2e green, Sabi size
-   delta <= +1 KB, core delta counted against the 60 KB budget.
+Moved to keep each file under 400 lines, numbers unchanged. `PACKS.md`: 3 size rules **[built]** and 3.1 the
+pack-id options for the owner (D12), 4 pack build, 5 `@naija/core/packs`, 6 hub and headers. `QUIZ.md`: 7 the
+`@naija/core/quiz` extraction.
 
 ## 8. `@naija/core/loop` extensions **[A1]**
 
@@ -311,17 +162,25 @@ Hit-stop (a few frozen frames on impact) is an engine concern (a `freezeSteps` c
 ## 9. Action engine module map **[A1]**
 
 Rules are pure and live in `src/rules/` (this is the folder the 90 % coverage gate checks); no DOM, no timers,
-no `Math.random`, state serialisable. `src/ai/` decides, `src/view/` draws. Each file < 400 lines.
+no `Math.random`, state serialisable. `src/ai/` decides, `src/view/` draws. Each file < 400 lines. `step.ts` is
+only the ordered phase calls, so each concern is tested alone; the determinism golden test covers the sequence.
 
 ```
 games/akoni-dike/src/
-  rules/  state, step (one fixed step: input, orders, intents, movement, combat, morale, objectives),
-          movement (accel, dodge i-frames, knockback, tile collision), spatial (uniform-grid hash: radius and cone queries),
-          combat (strike chains, hit boxes, block/parry window + counter, stagger, hit-stop, flash + knockback, NEVER blood),
-          weapons (data tables), morale (group bar; break -> flee/kneel/drop weapon), objectives (escort, defend, hold N of M,
-          relay, protect, survive, choice; lowered-weapon attack fails), squad (orders ring, companion abilities),
-          stealth (sight cones, hearing, alert states, hiding, vanish, double ambush damage), skills, difficulty,
-          dialogue (scene runner state), learning (triggers, source unlocks, check via core/quiz, honours), progress
+  rules/  state.ts      serialisable game state and constructors
+          step.ts       ONLY sequences the phases below in a fixed order, one call per fixed step; no game logic
+          phases (each its own file, pure `(state, dt) -> state`, <= ~300 lines):
+            input         raw input -> player intents (move, strike, dodge, block, order)
+            orders        squad orders ring, companion commands
+            intents       AI brain output -> per-entity intents
+            movement      accel, dodge i-frames, knockback, tile collision
+            combat        strike chains, hit boxes, block/parry window + counter, stagger, hit-stop, flash + knockback, NEVER blood
+            morale        group bar; break -> flee/kneel/drop weapon
+            objectives    escort, defend, hold N of M, relay, protect, survive, choice; lowered-weapon attack fails
+            stealth       sight cones, hearing, alert states, hiding, vanish, double ambush damage
+          support (called by phases, not phases themselves): spatial (uniform-grid hash: radius and cone queries),
+            weapons (data tables), squad (companion abilities), skills, difficulty
+          story: dialogue (scene runner state), learning (triggers, source unlocks, check via core/quiz, honours), progress
     setpieces/  brawl, duel (phased, disarm finish), aim, chase, rhythm, escape
   ai/     brains (spearman, archer/musketeer, captain, constable pairs, rival boss), squadai, pathing (grid A*, flow field), bot (autoplay)
   view/   renderer (interpolated), atlas, pool, hud (DOM overlay), cutscene, codex, timeline, map, learning-ui
@@ -354,8 +213,15 @@ with nearby entities, not with the map.
 ## 11. Performance plan (mid-range Android, 60 fps target, 50 fps floor)
 
 - Fixed step (60 Hz, 30 Hz fallback D9), render with interpolation; `maxSteps` cap already in `loop`.
-- One atlas per chapter (WebP, <= 1024x1024 so it fits a low-end GPU), sprite sheets, no per-frame allocations in
-  the step: struct-of-arrays entity state, reused vectors, `pool.ts` for particles/text/projectiles.
+- **Atlases follow the asset brief** (`docs/assets/akoni-dike-brief/04-assets-and-atlas.md` sections 3.4 and 4):
+  shared SVG sprite sheets with a twin `*.json` frame map (`name, x, y, w, h, ax, ay, ms`), fetched when a pack
+  starts and rasterised ONCE into an `OffscreenCanvas` (or `createImageBitmap`) at `min(devicePixelRatio, 2)`,
+  cached per sheet, never rasterised per frame. Pre-baked WebP only if rasterising takes more than 600 ms per
+  campaign on a throttled low-end device; that is decided after the A1 slice (brief open question 6), and
+  the A1.1 spike must measure it. Decoded atlas memory <= 24 MB; the previous chapter's tiles, props and fx
+  are unloaded when a pack starts, `shared-<campaign>` stays resident. Hit flash draws into a pooled scratch
+  canvas with `source-atop` (no `ctx.filter`); rival accents tint a white `*-accent.svg` mask once. No
+  per-frame allocations in the step: struct-of-arrays entity state, reused vectors, `pool.ts` for particles/text/projectiles (cap 48 live fx).
 - Spatial hash for collisions, targeting and sight; at most N=24 active AI per frame, farther ones tick at 1/4 rate.
 - Canvas 2D: static tile layer pre-rendered to an offscreen canvas and scrolled; one draw per sprite; no
   shadows/filters; integer-aligned blits; DPR capped at 2.
@@ -367,11 +233,11 @@ with nearby entities, not with the map.
 
 In: hub (Oke-Imesi, talk + one artefact that unlocks the source card), museum frame scene with Mr Adewale,
 escort-6-villagers fight (guards pushed back, not defeated), the street-brawl hero moment (strike, dodge, parry,
-counter), companion Akin with follow/hold, morale and the captain archetype, Story difficulty plus Warrior/Legend
+counter), morale and the captain archetype (no companion: Akin joins in Chapter 3 per SCRIPT, see question 19), Story difficulty plus Warrior/Legend
 parameters, 2-3 did-you-know cards, one source card in the codex, 3-item knowledge check with explanations,
 glossary taps, results and honours, save through the portal bridge, en + pcm, accessibility basics, content
 through the A0 pipeline with `reviewed:false` items (dev/preview build only).
-Out (later phases): stealth, aiming, chase and rhythm set pieces, the squad ring beyond follow/hold, timeline and
+Out (later phases): stealth, aiming, chase and rhythm set pieces, the squad ring and companions (Akin, A1.9 moves to A2), timeline and
 map screens, skill tree depth, classroom mode, all other chapters, music (placeholder loop), voice barks.
 Chapter 1 is `delivery: "initial"`, so the slice also proves the 3 MB initial budget. A throw-away second chapter
 pack (any tiny `ch02`) proves download, verify, cache and offline replay before real chapters exist.
@@ -381,7 +247,9 @@ pack (any tiny `ch02`) proves download, verify, cache and offline replay before 
 - **i18n:** `src/i18n/en.json` and `pcm.json` for UI from day one (core `t('key')`, `_review` flags, `npm run i18n:check`).
   Story text lives in content JSON with `text.en` required and `text.pcm` from day one; `yo`/`ig` arrive for the
   glossary and barks with `native_review:true` until a native speaker clears them. A line mixing languages lists
-  them in `langs`; a missing `native_review` on a yo/ig/ha line is a validation error. Diacritics are checked
+  them in `langs`, but the text keys are the truth: a line with yo/ig/ha text without `native_review`, or with
+  Pidgin text without `pcm_review`, is a validation error even if `langs` says `["en"]`. Pidgin lines the writer
+  is unsure of carry `pcm_review: true` (reported by the release report, not blocking). Diacritics are checked
   (NFC, marks present) but only a native speaker can approve them. Strings never go in code.
 - **Accessibility:** reading-level target JSS (short lines, <= 220 chars); text size setting; high-contrast
   toggle; reduced motion (no screen shake, no hit-stop flash); one-handed mode and auto-block on Story (from
@@ -391,16 +259,16 @@ pack (any tiny `ch02`) proves download, verify, cache and offline replay before 
   overlay; captions for barks.
 - **Feature flags** (`games/akoni-dike/features.json`, validated, default off for the unfinished):
   `moremiPrologue: false`. A chapter ships only if it has no `featureFlag` or the flag is on
-  (`chapterEnabled`). The build omits flagged-off chapters and their packs from `packs.json`, so a flag-off prologue
+  (a `chapterEnabled(chapter, features)` helper is added WITH the A1 build step that uses it; A0 removed the unused one). The build omits flagged-off chapters and their packs from `packs.json`, so a flag-off prologue
   costs zero bytes.
 
 ## 14. Risks
 
 | # | Risk | Mitigation |
 |---|---|---|
-| R1 | Schedule: the A1 slice is far bigger than "weeks 2-5" (section 15 sums to about 11 weeks for one developer) | cut list in section 15; owner decides whether to extend A1 or trim the slice |
-| R2 | Core budget 60 KB: `loop`, `quiz`, `packs` add to the shared `core` chunk of every game | named imports only (measured: validators +2.6 KB); measure core after each module; `packs` and `quiz` must tree-shake out of games that do not import them |
-| R3 | 1 MB pack: art (<= 300 KB), music loop (<= 300 KB), SFX, barks, tiles and JSON are already compressed; gzip will not help | per-chapter art/audio budget table in the asset brief; shared assets in the initial download (D7); audio at 64 kbps mono; atlases quantised |
+| R1 | Schedule: the A1 slice is far bigger than "weeks 2-5" (section 15: minimum viable A1 is about 47 working days, about 10 weeks, not 4) | section 15 options; owner decides whether to extend Phase A, cut the campaign scope or add a second stream |
+| R2 | Core budget 60 KB: `loop`, `quiz`, `packs` add to the shared `core` chunk of every game | named imports only (measured: validators +3.1 KB gzip); measure core after each module; `packs` and `quiz` must tree-shake out of games that do not import them |
+| R3 | 1 MB pack: art (<= 300 KB), music loop (<= 300 KB), SFX, barks, tiles and JSON are already compressed; gzip will not help | per-chapter art/audio budget table in the asset brief; shared assets per D7 or the `PACKS.md` 3.1 option the owner picks; audio at 64 kbps mono; atlases quantised |
 | R4 | Historical accuracy and cultural sensitivity (Ugbo/Moremi, Ekumeku outcome, living heritage bodies) | historian sign-off is a release gate (`reviewed`); no invented facts; every unknown is `TODO historian` + `reviewed:false` |
 | R5 | Mid-range phones: canvas action game at 50 fps | section 11 plus a spike in A1.1 on a throttled profile before the engine grows |
 | R6 | Offline and storage quotas in in-app browsers / Android WebView | Cache API with graceful degradation, eviction, persist request, a visible "Downloaded" state |
@@ -413,11 +281,11 @@ pack (any tiny `ch02`) proves download, verify, cache and offline replay before 
 
 | # | Task | Days | Gate |
 |---|---|---|---|
-| A1.0 | Owner review of A0 (this doc, schemas, size rules) and answers to the questions below | 2 (owner) | owner approves D1-D10 |
-| A1.1 | Perf spike: canvas scene with 24 sprites, spatial hash, atlas, fixed step on a 4x throttled profile | 2 | >= 55 fps; decides D9 |
+| A1.0 | Owner review of A0 (this doc, schemas, size rules) and answers to the questions below | 2 (owner) | owner approves D1-D12 |
+| A1.1 | Perf spike: canvas scene with 24 sprites, spatial hash, SVG atlas rasterised at load, fixed step on a 4x throttled profile | 2 | >= 55 fps; decides D9 and the SVG-or-WebP question |
 | A1.2 | `core/loop` extensions (timeScale, simTime, setStep, onResume) + tests | 1 | existing loop and Penalty King tests unchanged |
 | A1.3 | `core/quiz` (new module, copy of Sabi tests passing) | 3 | tests green; core size delta reported |
-| A1.4 | `core/packs`: manager, integrity, retry, cache, eviction, state machine + tests | 5 | >= 90 % coverage; fault-injection tests (offline, 404, corrupt hash, quota) |
+| A1.4 | `core/packs`: manager, integrity, retry, cache, eviction, state machine + tests | 5 | >= 90 % coverage; fault-injection tests (offline, 404, corrupt hash, quota, no `crypto.subtle`) |
 | A1.5 | Build: pack step in plugin, catalogue module, SW exclusion + packs cache read rule, `checkPacks`, `loadPack` cache option | 4 | build tests; size script on a real throw-away pack |
 | A1.6 | Engine core: state, step, movement, spatial, collision | 4 | unit + determinism golden |
 | A1.7 | Combat, weapons, hit reactions, parry/counter | 4 | table tests, flame/blood-free asserts |
@@ -429,16 +297,66 @@ pack (any tiny `ch02`) proves download, verify, cache and offline replay before 
 | A1.13 | Kiriji 1 content (TODO historian, `reviewed:false`), en + pcm strings, assets from the brief | 3 | content gate, i18n check |
 | A1.14 | Autoplay bot, `__naijaTest`, Playwright chapter + offline + pack-download specs | 4 | e2e green, zero console errors |
 | A1.15 | Perf and soak pass, QA round fixes | 4 | DoD items for the slice |
-| | **Total** | **56 (about 11 weeks)** minus parallel asset work | |
+| | **Total** | **56 (11.2 weeks at 5 days)**, of which 2 are the owner's review: 54 developer days | |
 
-Cut list if the window must stay at 4 weeks (about 20 days): defer A1.9, the codex screen, glossary taps beyond one
-term, Warrior/Legend tuning, and the packs download UI polish; keep A1.1-A1.8, A1.10, A1.12 (check + DYK only), A1.14.
+### 15.1 Honest minimum viable A1 (cut list recomputed)
 
-Stop for human review at the end of A1 (plan rule). QA agent report: `docs/qa/akoni-dike-A1-report.md`.
+The earlier cut list ("about 20 days") was wrong. Its keep-list (A1.1 to A1.8, A1.10, A1.12 check and
+did-you-know only, A1.14) is 28 + 5 + 4 = **37 days, or 41 with A1.12**, and it still omits the Chapter 1
+content (A1.13), dialogue and the perf and QA pass. The minimum that meets the A1 exit (Chapter 1 playable,
+learning layer, 50 fps, e2e green):
+
+| Task | Days kept | Moves to A2 |
+|---|---|---|
+| A1.1 to A1.8 (spike, loop, quiz, packs, build, engine, combat, morale and difficulty) | 28 | 0 (difficulty sims are a DoD item, so A1.8 keeps its 5 days) |
+| A1.10 renderer, atlas, pools, HUD | 5 | 0 |
+| A1.11 dialogue box and one glossary tap only | 2 | 2 (hub scene, cutscene panels) |
+| A1.12 did-you-know, one source card, 3-item check, honours; no codex screen | 3 | 1 (codex) |
+| A1.13 Kiriji 1 content, en + pcm, assets | 3 | 0 |
+| A1.14 bot, `__naijaTest`, chapter, offline and pack-download specs | 4 | 0 |
+| A1.15 one QA round and the perf pass; the 10-minute soak waits | 2 | 2 (soak, second QA round) |
+| A1.9 Akin and squad follow/hold (Akin is Chapter 3, question 19) | 0 | 2 |
+| **Total** | **47 days** (about 9.5 weeks) plus the owner's 2 days of review | **7 days** |
+
+So the minimum viable A1 is about **47 developer days, 49 with the owner's review: roughly 10 weeks, against
+the 4 weeks (weeks 2 to 5) in `docs/IMPLEMENTATION_PLAN.md`**. The 7 days moved out land in A2.
+
+### 15.2 Revised Phase A total (estimate)
+
+The plan's A2 (weeks 5 to 10, 5 weeks) and A3 (weeks 10 to 16, 6 weeks) are the owner's figures and are not
+re-estimated here. Taking them as given: A0 1 + A1 10 + A2 (5 + 1.4 for the moved days) 6.4 + A3 6 = about
+**23 to 24 weeks, against 14 to 16**.
+
+| Option | Phase A total | What it costs |
+|---|---|---|
+| 1. Accept the real number, keep the scope | about 23-24 weeks | one more owner review slot; every chapter and both campaigns ship |
+| 2. Hold about 16 weeks by cutting scope: ship Kiriji only (A0, A1, A2) and make Ekumeku a second release | Kiriji about 17-18 weeks, Ekumeku about 6 more | half the catalogue at the first release; `core/packs`, quiz and engine are paid once, so the Ekumeku release is cheaper than A3 as planned |
+| 3. Keep the scope, add a second stream after A1.5: stream 1 engine and combat (A1.6 to A1.8, 14 days), stream 2 renderer, hub, learning UI and content (A1.10 to A1.13, about 13 days) against an agreed state contract, then merge for A1.14 and A1.15 | about 20 weeks (A1 about 7 weeks on the critical path of about 34 days) | needs a second developer or a second agent run in parallel; merge risk on the `rules` state shape, so the state types are frozen first |
+
+Recommendation: option 3 if a second stream is available, otherwise option 1; option 2 if the date cannot move.
+
+Stop for human review at the end of A1 (plan rule); QA report: `docs/qa/akoni-dike-A1-report.md`.
 
 ## 16. Questions and contradictions for the project owner
 
-Contradictions and gaps found in the specs and the existing code:
+Contradictions and gaps found in the specs and the existing code. The asset-designer keeps a second list in
+`docs/assets/akoni-dike-brief/07-human-assets-and-open-questions.md` section 4 (its item 24 points here). The
+two lists overlap; **answer each topic once**, using this map (this list is the canonical one):
+
+| Topic | This list | Brief 07 section 4 |
+|---|---|---|
+| Chapter count | 1 | 2 |
+| Moremi prologue kept, and where it sits | 2, 8 | 1 |
+| Firebrand duel / fire on people | 3 | 4 |
+| Cameos (Phillips, Latoosa) | 4 | 16 |
+| Etymology of "Kiriji" | 7 | 23 |
+| Initial 3 MB, pack budget reading, shared and audio packs, music size | 9, 20 | 5, 7 |
+| SVG at runtime or pre-baked WebP | 21 | 6 |
+| Masquerade, shrine, sacrifice severity; raffia cape | 17 | 3 |
+| Reviewers and heritage-body sign-off; teacher guides | 16, 18 | 10, 20 |
+| Akin's first appearance | 19 | 12 |
+
+Contradictions and gaps:
 
 1. **Chapter count:** GAMES.md says "a prologue and 6 chapters... 14 chapters". With `moremiPrologue` OFF Kiriji has
    6, so 13 ship. Is the target 13 or 14?
@@ -465,3 +383,17 @@ Contradictions and gaps found in the specs and the existing code:
     only the boolean and rejects a `TODO` reviewer on a reviewed item.
 17. **Severity:** should `masquerade`, `shrine`, `sacrifice` become errors rather than warnings?
 18. **Teacher PDFs and the class quiz:** ship inside the game (counts toward size) or host separately?
+19. **Akin's first chapter:** SCRIPT introduces Akin in Chapter 3 (brief 07 item 12 agrees: his sheet is in
+    `shared-kiriji`). The earlier slice plan had him in Chapter 1. A0 now keeps him OUT of the Chapter 1 slice
+    (A1.9 moves to A2). Does he join earlier? If so SCRIPT must say so first.
+20. **Shared and audio asset packs (D12, `PACKS.md` section 3.1):** options A, B, C. Recommendation B. Also: do the
+    1 MB chapter pack and the 3 MB initial download count audio and JSON (brief item 5)? One audio format
+    (`.ogg`), or also `.mp3` for old WebViews (doubles music bytes)?
+21. **SVG sheets at runtime or pre-baked WebP:** the brief rasterises SVG at load and switches to WebP only if
+    that takes more than 600 ms per campaign on a low-end phone. A1.1 measures it on a real Tecno, Infinix or
+    Itel device. Can the owner provide one?
+22. **Early Legend chapters:** the Moremi rule treats a `Legend` chapter dated before 1200 as the prologue even
+    if its campaign says `kiriji` (the validator's minimum year is 1000, so "before 1000" cannot fire).
+    Confirm 1200 or give the historian's date.
+23. **Pidgin review flag:** `pcm_review` is now required on every dialogue line that has Pidgin text. Who is the
+    Pidgin reviewer, and should unresolved Pidgin lines block a release (D5)?

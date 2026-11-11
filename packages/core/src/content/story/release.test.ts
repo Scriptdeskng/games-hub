@@ -49,10 +49,12 @@ describe('release report', () => {
     const r = releaseReport(kirijiOneBundle());
     expect(r.unreviewed).toHaveLength(r.total);
     expect(r.nativePending).toBe(1);
+    expect(r.pcmPending).toBe(1);
     expect(r.diacriticsPending).toBe(2);
     const d = describeRelease(r, false);
     expect(d.ok).toBe(true);
     expect(d.lines.join('\n')).toContain('dev/preview');
+    expect(d.lines.join('\n')).toContain('1 awaiting Pidgin review');
   });
   it('a release build FAILS while one item is unreviewed and lists it', () => {
     const b = kirijiOneBundle();

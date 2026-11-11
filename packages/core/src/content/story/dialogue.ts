@@ -24,7 +24,17 @@ function checkLine(l: unknown, at: string, s: Sink): void {
   if (!isObj(l)) return void s.add(at, 'must be an object');
   checkKeys(
     l,
-    ['id', 'speaker', 'text', 'langs', 'glossary', 'native_review', 'fictional', 'tag'],
+    [
+      'id',
+      'speaker',
+      'text',
+      'langs',
+      'glossary',
+      'native_review',
+      'pcm_review',
+      'fictional',
+      'tag',
+    ],
     at,
     s,
   );
@@ -32,15 +42,21 @@ function checkLine(l: unknown, at: string, s: Sink): void {
   checkId(l.speaker, `${at}.speaker`, s);
   checkLocalized(l.text, `${at}.text`, s, LIMITS.line);
   const langs = l.langs;
+  const listed = Array.isArray(langs) ? langs : [];
   if (!Array.isArray(langs) || langs.length === 0 || !langs.every(isPackLang)) {
     s.add(`${at}.langs`, 'must list the languages in the line, e.g. ["en"]');
-  } else if (langs.some((x) => NATIVE_LANGS.includes(x as string))) {
-    if (typeof l.native_review !== 'boolean') {
-      s.add(
-        `${at}.native_review`,
-        'is required (true or false) when the line has yo, ig or ha text',
-      );
-    }
+  }
+  // The text keys are the truth: a line with yo/ig/ha text is native_review-checked even when
+  // `langs` says ["en"], and a line with Pidgin needs a pcm_review flag.
+  const present = new Set<unknown>([...listed, ...(isObj(l.text) ? Object.keys(l.text) : [])]);
+  if (NATIVE_LANGS.some((x) => present.has(x)) && typeof l.native_review !== 'boolean') {
+    s.add(`${at}.native_review`, 'is required (true or false) when the line has yo, ig or ha text');
+  }
+  if (present.has('pcm') && typeof l.pcm_review !== 'boolean') {
+    s.add(`${at}.pcm_review`, 'is required (true or false) when the line has Pidgin (pcm) text');
+  }
+  if (l.pcm_review !== undefined && typeof l.pcm_review !== 'boolean') {
+    s.add(`${at}.pcm_review`, 'must be a boolean');
   }
   if (l.native_review !== undefined && typeof l.native_review !== 'boolean') {
     s.add(`${at}.native_review`, 'must be a boolean');

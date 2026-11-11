@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://naija-games/schemas/glossary-pack.schema.json",
   "title": "GlossaryPack",
+  "$comment": "Rules JSON Schema cannot express are TypeScript-only and the TypeScript validator in packages/core/src/content/story is authoritative for them: uniqueness of ids inside an array of objects, option strings distinct ignoring case, and cross-field comparisons (a date range ending before it starts, a chapter depending on itself). scripts/content-schemas.test.ts keeps the two in agreement for everything else. Lengths are Unicode code points in both (2020-12 maxLength counts code points). A non-empty string must contain a non-whitespace character. reviewed:true requires a reviewedBy that does not start with TODO, TBD, pending, n/a or none. Also TS-only: term ids unique inside the pack.",
   "type": "object",
   "required": ["version", "kind", "id", "campaign", "terms"],
   "additionalProperties": false,
@@ -45,7 +46,8 @@
           "term": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 60
+            "maxLength": 60,
+            "pattern": "\\S"
           },
           "language": {
             "enum": ["en", "pcm", "yo", "ig", "ha"]
@@ -58,16 +60,40 @@
           },
           "source": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "\\S"
           },
           "reviewedBy": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "\\S"
           },
           "reviewed": {
             "type": "boolean"
           }
-        }
+        },
+        "allOf": [
+          {
+            "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+            "if": {
+              "properties": {
+                "reviewed": {
+                  "const": true
+                }
+              },
+              "required": ["reviewed"]
+            },
+            "then": {
+              "properties": {
+                "reviewedBy": {
+                  "not": {
+                    "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                  }
+                }
+              }
+            }
+          }
+        ]
       },
       "minItems": 1
     }
@@ -81,27 +107,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 160
+          "maxLength": 160,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 160
+          "maxLength": 160,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 160
+          "maxLength": 160,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 160
+          "maxLength": 160,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 160
+          "maxLength": 160,
+          "pattern": "\\S"
         }
       }
     }

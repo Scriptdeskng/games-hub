@@ -32,7 +32,7 @@ import {
 } from '../packages/core/src/content';
 import type { ValidationResult } from '../packages/core/src/content/types';
 
-export const CONTENT_SLUG = 'akoni-dike';
+const CONTENT_SLUG = 'akoni-dike';
 const DEFAULT_FEATURES: FeatureConfig = { version: 1, features: { moremiPrologue: false } };
 
 const KINDS = [

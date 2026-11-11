@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://naija-games/schemas/learning-pack.schema.json",
   "title": "LearningPack",
+  "$comment": "Rules JSON Schema cannot express are TypeScript-only and the TypeScript validator in packages/core/src/content/story is authoritative for them: uniqueness of ids inside an array of objects, option strings distinct ignoring case, and cross-field comparisons (a date range ending before it starts, a chapter depending on itself). scripts/content-schemas.test.ts keeps the two in agreement for everything else. Lengths are Unicode code points in both (2020-12 maxLength counts code points). A non-empty string must contain a non-whitespace character. reviewed:true requires a reviewedBy that does not start with TODO, TBD, pending, n/a or none. Also TS-only: ids unique inside each array, date range end before start, check options distinct ignoring case.",
   "type": "object",
   "required": [
     "version",
@@ -77,27 +78,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         }
       }
     },
@@ -109,27 +115,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         }
       }
     },
@@ -141,27 +152,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 220
+          "maxLength": 220,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 220
+          "maxLength": 220,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 220
+          "maxLength": 220,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 220
+          "maxLength": 220,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 220
+          "maxLength": 220,
+          "pattern": "\\S"
         }
       }
     },
@@ -173,27 +189,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 80
+          "maxLength": 80,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 80
+          "maxLength": 80,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 80
+          "maxLength": 80,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 80
+          "maxLength": 80,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 80
+          "maxLength": 80,
+          "pattern": "\\S"
         }
       }
     },
@@ -205,27 +226,32 @@
         "en": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "pcm": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "yo": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "ig": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         },
         "ha": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 60
+          "maxLength": 60,
+          "pattern": "\\S"
         }
       }
     },
@@ -246,7 +272,8 @@
         "sourcesDisagree": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         }
       }
     },
@@ -270,7 +297,18 @@
           "minimum": 1,
           "maximum": 31
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "a day needs a month",
+          "if": {
+            "required": ["day"]
+          },
+          "then": {
+            "required": ["month"]
+          }
+        }
+      ]
     },
     "fact": {
       "type": "object",
@@ -297,16 +335,40 @@
         },
         "source": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewedBy": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewed": {
           "type": "boolean"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+          "if": {
+            "properties": {
+              "reviewed": {
+                "const": true
+              }
+            },
+            "required": ["reviewed"]
+          },
+          "then": {
+            "properties": {
+              "reviewedBy": {
+                "not": {
+                  "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "source": {
       "type": "object",
@@ -332,17 +394,20 @@
         "title": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 100
+          "maxLength": 100,
+          "pattern": "\\S"
         },
         "author": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 100
+          "maxLength": 100,
+          "pattern": "\\S"
         },
         "when": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 40
+          "maxLength": 40,
+          "pattern": "\\S"
         },
         "why": {
           "$ref": "#/$defs/loc200"
@@ -350,12 +415,14 @@
         "citation": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 300
+          "maxLength": 300,
+          "pattern": "\\S"
         },
         "quote": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 240
+          "maxLength": 240,
+          "pattern": "\\S"
         },
         "codex": {
           "type": "object",
@@ -377,16 +444,40 @@
         },
         "source": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewedBy": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewed": {
           "type": "boolean"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+          "if": {
+            "properties": {
+              "reviewed": {
+                "const": true
+              }
+            },
+            "required": ["reviewed"]
+          },
+          "then": {
+            "properties": {
+              "reviewedBy": {
+                "not": {
+                  "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "twoSides": {
       "type": "object",
@@ -405,11 +496,13 @@
         },
         "source": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewedBy": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewed": {
           "type": "boolean"
@@ -428,7 +521,8 @@
               "label": {
                 "type": "string",
                 "minLength": 1,
-                "maxLength": 60
+                "maxLength": 60,
+                "pattern": "\\S"
               },
               "account": {
                 "$ref": "#/$defs/loc220"
@@ -441,7 +535,29 @@
           "minItems": 2,
           "maxItems": 3
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+          "if": {
+            "properties": {
+              "reviewed": {
+                "const": true
+              }
+            },
+            "required": ["reviewed"]
+          },
+          "then": {
+            "properties": {
+              "reviewedBy": {
+                "not": {
+                  "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "pin": {
       "type": "object",
@@ -466,11 +582,13 @@
         },
         "source": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewedBy": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewed": {
           "type": "boolean"
@@ -483,7 +601,8 @@
             "name": {
               "type": "string",
               "minLength": 1,
-              "maxLength": 60
+              "maxLength": 60,
+              "pattern": "\\S"
             },
             "x": {
               "type": "number",
@@ -511,6 +630,26 @@
           "then": {
             "required": ["place"]
           }
+        },
+        {
+          "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+          "if": {
+            "properties": {
+              "reviewed": {
+                "const": true
+              }
+            },
+            "required": ["reviewed"]
+          },
+          "then": {
+            "properties": {
+              "reviewedBy": {
+                "not": {
+                  "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                }
+              }
+            }
+          }
         }
       ]
     },
@@ -536,7 +675,8 @@
         },
         "category": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "difficulty": {
           "enum": ["easy", "medium", "hard"]
@@ -544,14 +684,16 @@
         "q": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 140
+          "maxLength": 140,
+          "pattern": "\\S"
         },
         "options": {
           "type": "array",
           "items": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 48
+            "maxLength": 48,
+            "pattern": "\\S"
           },
           "minItems": 4,
           "maxItems": 4,
@@ -565,27 +707,53 @@
         "explanation": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 200
+          "maxLength": 200,
+          "pattern": "\\S"
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "\\S"
           }
         },
         "source": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewedBy": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "pattern": "\\S"
         },
         "reviewed": {
           "type": "boolean"
         }
-      }
+      },
+      "allOf": [
+        {
+          "$comment": "reviewed:true needs a real reviewer, not a placeholder",
+          "if": {
+            "properties": {
+              "reviewed": {
+                "const": true
+              }
+            },
+            "required": ["reviewed"]
+          },
+          "then": {
+            "properties": {
+              "reviewedBy": {
+                "not": {
+                  "pattern": "^\\s*(?:[tT][oO][dD][oO]|[tT][bB][dD]|[pP][eE][nN][dD][iI][nN][gG]|[nN]/[aA]|[nN][oO][nN][eE])\\b"
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

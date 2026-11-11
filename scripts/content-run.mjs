@@ -1,6 +1,6 @@
 // Shared runner for content-check.mjs / content-release-check.mjs. The gate is TypeScript (it reuses
-// the validators in packages/core), so it is bundled in memory with esbuild (already installed as
-// a dependency of Vite) and imported. No file is written.
+// the validators in packages/core), so it is bundled in memory with esbuild (a declared devDependency,
+// also used by Vite) and imported. No file is written.
 import path from 'node:path';
 import { build } from 'esbuild';
 import { ROOT } from './lib.mjs';

@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { validateChapter, validateFeatureConfig, chapterEnabled, isFeatureOn } from './chapter';
+import { validateChapter, validateFeatureConfig } from './chapter';
 import { validateDialoguePack } from './dialogue';
 import { validateGlossaryPack } from './glossary';
 import { validateLearningPack } from './learning';
 import { featuresFixture, kirijiOneBundle } from './fixtures';
 
-type Mut = (x: Record<string, any>) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+/**
+ * A fixture document being mutated by a test. It is deliberately untyped: the tests break the
+ * documents on purpose (delete a field, put a string where an array belongs), which no static
+ * type for a valid document allows. Nothing else in the repo uses this alias.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- intentionally untyped fixture mutation
+type Doc = Record<string, any>;
+type Mut = (x: Doc) => void;
 const errs = (r: { ok: boolean; errors?: string[] }): string => (r.errors ?? []).join('|');
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x)) as T;
 
@@ -72,7 +79,7 @@ describe('validateChapter', () => {
       ['source', (d) => (d.source = ''), 'source'],
       ['reviewedBy', (d) => delete d.reviewedBy, 'reviewedBy'],
       ['reviewed', (d) => (d.reviewed = 'no'), 'reviewed'],
-      ['reviewed with TODO', (d) => (d.reviewed = true), 'TODO placeholder'],
+      ['reviewed with TODO', (d) => (d.reviewed = true), 'placeholder'],
     ]);
   });
   it('requires pack id and budget (1..1024 KB) for a pack chapter', () => {
@@ -134,14 +141,14 @@ describe('validateLearningPack', () => {
     const each = ['facts', 'sources', 'twoSides', 'pins', 'checks'] as const;
     for (const k of each) {
       for (const field of ['source', 'reviewedBy', 'reviewed']) {
-        const d = clone(base) as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const d = clone(base) as Doc;
         delete d[k][0][field];
         expect(errs(validateLearningPack(d)), `${k}.${field}`).toContain(`${k}[0].${field}`);
       }
       const d2 = clone(base) as unknown as Record<string, unknown>;
       d2[k] = 'x';
       expect(errs(validateLearningPack(d2))).toContain(k);
-      const d3 = clone(base) as Record<string, any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+      const d3 = clone(base) as Doc;
       d3[k] = [d3[k][0], d3[k][0]];
       expect(errs(validateLearningPack(d3))).toContain('duplicated');
       d3[k] = [1];
@@ -203,20 +210,74 @@ describe('validateGlossaryPack', () => {
   });
 });
 
+describe('reviewer placeholders, code-point lengths and review flags', () => {
+  const chapter = kirijiOneBundle().chapters[0]!;
+  it.each([
+    'TODO historian',
+    'todo',
+    'TBD',
+    'tbd later',
+    'Pending',
+    'n/a',
+    'N/A',
+    'None',
+    '  none',
+  ])('reviewed:true is rejected for the placeholder reviewer "%s"', (who) => {
+    const d = clone(chapter) as Doc;
+    Object.assign(d, { reviewed: true, reviewedBy: who });
+    expect(errs(validateChapter(d))).toContain('placeholder');
+  });
+  it.each(['Todorov Adeyemi', 'Nonesuch Press', 'Dr Pendlebury', 'Prof. A. Okafor'])(
+    'reviewed:true is accepted for the real reviewer "%s"',
+    (who) => {
+      const d = clone(chapter) as Doc;
+      Object.assign(d, { reviewed: true, reviewedBy: who });
+      expect(validateChapter(d).ok).toBe(true);
+    },
+  );
+  it('an unreviewed item may keep a placeholder', () => {
+    const d = clone(chapter) as Doc;
+    Object.assign(d, { reviewed: false, reviewedBy: 'TBD' });
+    expect(validateChapter(d).ok).toBe(true);
+  });
+  it('counts length in code points like a 2020-12 validator (emoji are one character)', () => {
+    const ok = clone(chapter) as Doc;
+    ok.title = { en: '😀'.repeat(60) };
+    expect(validateChapter(ok).ok).toBe(true);
+    const long = clone(chapter) as Doc;
+    long.title = { en: '😀'.repeat(61) };
+    expect(errs(validateChapter(long))).toContain('over 60');
+  });
+  it('derives languages from the text keys: yo/ig/ha text needs native_review even if langs says en', () => {
+    const base = kirijiOneBundle().dialogue[0]!;
+    for (const lang of ['yo', 'ig', 'ha']) {
+      const d = clone(base) as Doc;
+      d.scenes[0].lines[0].text[lang] = 'x';
+      expect(errs(validateDialoguePack(d)), lang).toContain('native_review');
+      d.scenes[0].lines[0].native_review = true;
+      expect(validateDialoguePack(d).ok, lang).toBe(true);
+    }
+  });
+  it('a Pidgin line needs pcm_review, from its text or from langs', () => {
+    const base = kirijiOneBundle().dialogue[0]!;
+    const d = clone(base) as Doc;
+    delete d.scenes[1].lines[2].pcm_review;
+    expect(errs(validateDialoguePack(d))).toContain('pcm_review');
+    const e = clone(base) as Doc;
+    e.scenes[0].lines[0].langs = ['en', 'pcm'];
+    expect(errs(validateDialoguePack(e))).toContain('pcm_review');
+    e.scenes[0].lines[0].pcm_review = false;
+    expect(validateDialoguePack(e).ok).toBe(true);
+    e.scenes[0].lines[0].pcm_review = 'x';
+    expect(errs(validateDialoguePack(e))).toContain('must be a boolean');
+  });
+});
+
 describe('feature flags', () => {
-  it('ships the Moremi prologue OFF by default and treats unknown flags as off', () => {
+  it('ships the Moremi prologue OFF by default', () => {
     const f = featuresFixture();
     expect(validateFeatureConfig(f).ok).toBe(true);
-    expect(isFeatureOn(f, 'moremiPrologue')).toBe(false);
-    expect(isFeatureOn(f, 'nope')).toBe(false);
-    expect(chapterEnabled({ featureFlag: 'moremiPrologue' }, f)).toBe(false);
-    expect(chapterEnabled({}, f)).toBe(true);
-    expect(
-      chapterEnabled(
-        { featureFlag: 'moremiPrologue' },
-        { version: 1, features: { moremiPrologue: true } },
-      ),
-    ).toBe(true);
+    expect(f.features.moremiPrologue).toBe(false);
   });
   it('rejects malformed config', () => {
     expect(validateFeatureConfig(1).ok).toBe(false);

@@ -3,7 +3,7 @@
  * chapter wiring, feature flags, glossary use, diacritics and the guardrail text lint.
  * Pure: give it parsed, individually valid documents; get back findings (errors fail the check).
  */
-import { checkDiacritics, foldDiacritics } from './diacritics';
+import { checkDiacritics, foldDiacritics, isNfc } from './diacritics';
 import { DEFAULT_GUARDRAILS, lintTexts, type GuardrailConfig } from './guardrails';
 import { collectTexts } from './texts';
 import type {
@@ -18,13 +18,23 @@ import type {
 export interface LintOptions {
   features?: FeatureConfig;
   guardrails?: GuardrailConfig;
-  /** Folded glossary terms that legitimately carry no diacritics. */
-  diacriticAllow?: ReadonlySet<string>;
 }
 
 type Add = (severity: Severity, rule: string, at: string, message: string) => void;
 const SPEAKERS = ['narrator', 'guide'];
 export const MOREMI_PROLOGUE_FLAG = 'moremiPrologue';
+/** A Legend chapter dated before this year is the Moremi era (c. 12th century), whatever its campaign says. */
+const MOREMI_ERA_BEFORE = 1200;
+
+/** Does this chapter look like the Moremi prologue, whatever `campaign` says? */
+export function looksLikeMoremi(c: ChapterManifest): boolean {
+  return (
+    c.campaign === 'moremi-prologue' ||
+    c.id.startsWith('ch00') ||
+    c.pack === 'ch00' ||
+    (c.tag === 'Legend' && c.dates.start.year < MOREMI_ERA_BEFORE)
+  );
+}
 
 function checkDuplicateIds(b: CampaignBundle, add: Add): void {
   interface Entry {
@@ -80,6 +90,17 @@ function hasCycle(c: ChapterManifest, byId: Map<string, ChapterManifest>): boole
 
 function checkChapters(b: CampaignBundle, add: Add, features?: FeatureConfig): void {
   const byId = new Map(b.chapters.map((c) => [c.id, c]));
+  const seenIds = new Set<string>();
+  for (const c of b.chapters) {
+    if (seenIds.has(c.id))
+      add(
+        'error',
+        'xref/duplicate-id',
+        c.id,
+        `chapter id "${c.id}" is used by more than one chapter`,
+      );
+    seenIds.add(c.id);
+  }
   const orders = new Map<string, string>();
   const packs = new Map<string, string>();
   for (const c of b.chapters) {
@@ -99,12 +120,12 @@ function checkChapters(b: CampaignBundle, add: Add, features?: FeatureConfig): v
         add('error', 'xref/dependency', c.id, `"${d}" is in another campaign`);
     }
     if (hasCycle(c, byId)) add('error', 'xref/dependency-cycle', c.id, 'dependencies form a cycle');
-    if (c.campaign === 'moremi-prologue' && c.featureFlag !== MOREMI_PROLOGUE_FLAG) {
+    if (looksLikeMoremi(c) && c.featureFlag !== MOREMI_PROLOGUE_FLAG) {
       add(
         'error',
         'xref/feature-flag',
         c.id,
-        `the Moremi prologue must set featureFlag "${MOREMI_PROLOGUE_FLAG}"`,
+        `the Moremi prologue (campaign moremi-prologue, id ch00*, or an early Legend) must set featureFlag "${MOREMI_PROLOGUE_FLAG}"`,
       );
     }
     if (c.featureFlag && features && !(c.featureFlag in features.features)) {
@@ -269,15 +290,23 @@ function checkFacts(b: CampaignBundle, add: Add): void {
   }
 }
 
-function checkGlossary(b: CampaignBundle, add: Add, allow?: ReadonlySet<string>): void {
+function checkGlossary(b: CampaignBundle, add: Add): void {
   for (const g of b.glossary) {
     for (const t of g.terms) {
-      const issues = checkDiacritics(t.term, t.language, { allow });
+      const issues = checkDiacritics(t.term, t.language);
       for (const i of issues) {
-        if (i.code === 'no-marks' && t.diacriticChecked) continue;
+        // not-nfc is an error for every string (checkNfc), so it is not repeated here.
+        if (i.code === 'not-nfc' || t.diacriticChecked) continue;
         add('warning', `diacritics/${i.code}`, `${g.id}.${t.id}`, `"${t.term}" ${i.message}`);
       }
     }
+  }
+}
+
+/** Every player-visible string must be NFC, or the same word compares and renders two ways. */
+function checkNfc(b: CampaignBundle, add: Add): void {
+  for (const { at, text } of collectTexts(b)) {
+    if (!isNfc(text)) add('error', 'text/not-nfc', at, 'is not Unicode NFC normalised');
   }
 }
 
@@ -291,7 +320,8 @@ export function lintBundle(b: CampaignBundle, o: LintOptions = {}): Finding[] {
   checkChapterItems(b, add);
   checkDialogue(b, add, new Set(cfg.realPeople));
   checkFacts(b, add);
-  checkGlossary(b, add, o.diacriticAllow);
+  checkGlossary(b, add);
+  checkNfc(b, add);
   out.push(...lintTexts(collectTexts(b), cfg));
   return out;
 }

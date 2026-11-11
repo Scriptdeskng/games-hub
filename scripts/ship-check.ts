@@ -19,7 +19,7 @@
  * listed by that pack's `pack.<hash>.json`, and every listed file must exist with the recorded size
  * and sha-256. A pack file is "referenced" by its manifest, not by the code, and the manifest by a
  * literal path in the generated catalogue, which keeps the dead-weight guarantee without `dynamic`
- * globs. See docs/games/akoni-dike/ARCHITECTURE.md.
+ * globs. See docs/games/akoni-dike/PACKS.md.
  */
 export interface ShipConfig {
   include: string[];

@@ -7,8 +7,8 @@ Source of truth: `CULTURAL_GUIDE.md` section 4.
 ## Rules for every track
 - **Original compositions** (commissioned, work-for-hire or fully licensed for web-game embedding). No samples of existing songs, no artist sound-alikes, no uncleared beats or loops, no AI-generated music of unknown licence. Licence, composer and date go into the game's `CREDITS.md`.
 - **Instruments are Nigerian-flavoured and live-played or convincingly sampled with a clear licence**: guitar, bass, congas, shekere, agogo, talking drum, udu, calabash, goje, kakaki-style brass, ekwe/woodblock, hand claps, light keys. No generic stock "game" synth music and no pan-African cliché (no djembe-and-chant "savanna" bed, no kora).
-- **Loop**: 30 to 60 s, seamless (end rings out into bar 1, rendered with a 1-bar tail then crossfaded), tempo constant, no key change. Deliver stems-free stereo mix.
-- **Size**: each file <= 300 KB as `.ogg` (Vorbis q3 to q4, about 96 to 112 kbps) **and** `.mp3` (96 kbps, joint stereo). One game loads at most 2 music files at a time.
+- **Loop**: seamless (end rings out into bar 1, rendered with a 1-bar tail then crossfaded), tempo constant, no key change. Deliver stems-free stereo mix. **Maximum length is set by the size cap:** length (s) <= 300 KB x 8 / bitrate (kbps), so **about 25 s at 96 kbps, about 38 s at 64 kbps**, about 53 s at 45 kbps. The 30 to 60 s range this brief used before cannot meet 300 KB at 96 kbps (360 to 720 KB); the 45 s and 60 s slots below are **flagged for a decision** (shorten to <= 38 s at 64 kbps, or encode at about 53 kbps for 45 s and about 40 kbps for 60 s, or raise the cap).
+- **Size**: each file <= 300 KB. **Ship one format per loop**: `.ogg` (Vorbis, about 64 to 96 kbps) preferred; `.mp3` (joint stereo) only if a real-device test shows a WebView that cannot decode `.ogg`, and then it replaces rather than adds to the `.ogg`. The budget counts the shipped format; shipping both would double the music bytes. One game loads at most 2 music files at a time.
 - **Level**: -16 LUFS integrated, true peak -1 dBTP. Leave room in 1 to 4 kHz for SFX (talking drum and agogo SFX live there): keep lead lines soft, no sustained harsh highs.
 - **Mood**: light, warm, never aggressive. Family-friendly lyrics: **instrumental only** (no vocals, no lyrics) unless a licensed vocal is approved by the human.
 - Menu loops are calmer (lower density) than play loops. Play loops must not tire the listener after 10 minutes: sparse enough, no ear-worm hook repeated every bar.
@@ -40,6 +40,8 @@ Source of truth: `CULTURAL_GUIDE.md` section 4.
 | `ng-sting-win` | Win sting | Highlife + talking-drum fill | 2.5 to 3 s, not a loop | Pairs with the SFX win fanfare; do not duplicate its melody |
 | `ng-sting-lose` | Gentle "try again" sting | Highlife, soft | 2 s, not a loop | Warm and encouraging, never mocking |
 
+**Length versus size flag:** every slot of 45 s or 60 s above (and the Snakes & Ladders, Naija Ludo and Draughts Naija slots below) needs the decision in the Loop rule: at 64 kbps they exceed 300 KB (45 s is about 360 KB, 60 s about 480 KB).
+
 Per-game "menu + play" pairs (CULTURAL_GUIDE section 4) will be listed in each game's brief, reusing these slots until bespoke loops are commissioned.
 
 ## Wiring (for the developer)
@@ -64,3 +66,14 @@ Per-game "menu + play" pairs (CULTURAL_GUIDE section 4) will be listed in each g
 |---|---|---|---|---|
 | `draughts-menu-hausa` | Menu loop | Hausa-inspired, unhurried | 45 s loop | 96 BPM; calabash percussion in a rolling 12/8 feel, goje-style bowed-lute melody on D F G A, soft hand-drum bass; no kakaki or ceremonial fanfare |
 | `draughts-play-hausa` | Play loop | Hausa-inspired thinking bed | 60 s loop | 104 BPM; thinner, sparse low-level goje; leave 800 Hz to 2.5 kHz clear on the cue beats (ekwe move, agogo capture); never tiring over 20 minutes. Fallback: `ng-play-hausa`. Full spec in `draughts-naija-brief.md` section 7 |
+
+## Game-specific slots: Akọni & Dike
+| File (silent placeholder in `games/akoni-dike/assets/packs/audio-<campaign>/`) | Slot | Style | Length | Notes |
+|---|---|---|---|---|
+| `akd-k-camp`, `akd-k-war`, `akd-k-peace` | Kiriji menu and hub, fights, ch06 finale | slow highlife; jùjú and dùndún war drums; spare highlife | 8, 16 and 8 bars, 84, 116 and 72 BPM (about 23, 33 and 27 s) | <= 64 kbps, <= 265 KB each; no ear-worm; never celebratory of violence |
+| `akd-e-museum`, `akd-e-stealth`, `akd-e-action`, `akd-e-memory` | Ekumeku menu and hub, stealth, ambush and chase, ch16 epilogue | akwatankwa bamboo and ogene; low udu; polyrhythm; calm | 24, 27, 27 and 32 s (80, 72, 108 and 60 BPM) | <= 64 kbps; the composer and a native musician confirm the instrument term `[AB]` |
+| `akd-p-flute` (flagged) | Moremi prologue, default off | one flute over soft drums | about 30 s (64 BPM, 8 bars) | only if the prologue ships |
+| stingers `akd-k-sting-*`, `akd-e-sting-*` | win, lose, hero | drum phrases | 3 s, 3 s, 5 s | lose is gentle, never mocking |
+
+All akoni-dike loops are 24 to 33 s at <= 64 kbps, one format per loop, so each stays <= 300 KB; the full brief is `akoni-dike-brief/05-audio-music-voice.md` section 4.
+

@@ -28,9 +28,11 @@ export function validateSchema(schema: Schema, value: unknown, root: Schema = sc
       }
     }
     if (typeof v === 'string') {
-      if (typeof sc.minLength === 'number' && v.trim().length < sc.minLength)
-        out.push(`${at}: empty`);
-      if (typeof sc.maxLength === 'number' && v.length > sc.maxLength) out.push(`${at}: too long`);
+      // Like a real 2020-12 validator: length is in code points and whitespace counts (a schema that
+      // wants "not blank" says so with a pattern).
+      const len = [...v].length;
+      if (typeof sc.minLength === 'number' && len < sc.minLength) out.push(`${at}: empty`);
+      if (typeof sc.maxLength === 'number' && len > sc.maxLength) out.push(`${at}: too long`);
       if (typeof sc.pattern === 'string' && !new RegExp(sc.pattern, 'u').test(v))
         out.push(`${at}: pattern`);
     }

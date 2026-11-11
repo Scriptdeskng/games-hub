@@ -50,7 +50,7 @@ function assertNoDeadAssets(outDir: string, ship: ShipConfig): void {
 
 /*
  * DESIGN NOTES (not implemented, Phase A1): per-chapter packs for `akoni-dike`.
- * Full design: docs/games/akoni-dike/ARCHITECTURE.md, sections "Pack build" and "Service worker".
+ * Full design: docs/games/akoni-dike/PACKS.md, sections 4 (pack build) and 5.3 (service worker).
  *
  * 1. Declaration: games/akoni-dike/packs.json (read by scripts/size-lib.mjs, the same file the size
  *    budget uses). Folder convention `packs/chNN/` at the game root, NOT under `assets/`, so the

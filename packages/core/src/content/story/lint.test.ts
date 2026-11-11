@@ -5,11 +5,12 @@ import {
   DEFAULT_GUARDRAILS,
   lintTexts,
   mergeGuardrails,
+  PROTECTED_RULES,
   validateGuardrailOverride,
 } from './guardrails';
 import { collectTexts } from './texts';
 import { errorsOf, formatFinding, lintBundle } from './xref';
-import type { CampaignBundle } from './types';
+import type { CampaignBundle, ChapterManifest } from './types';
 
 const rules = (b: CampaignBundle, o = {}): string[] => lintBundle(b, o).map((f) => f.rule);
 const lint = (text: string): string[] =>
@@ -46,10 +47,19 @@ describe('guardrail linter', () => {
     ['beheading', 'He was beheaded.'],
     ['gore', 'Too much gore here.'],
     ['tribe-of', 'the tribe of the hills'],
-    ['colonial-ethnic-label', 'Hausa soldiers marched in.'],
+    ['colonial-ethnic-label', 'Hausa constables marched in.'],
     ['colonial-ethnic-label', 'the constabulary from the Yoruba country'],
-    ['colonial-ethnic-label', 'soldiers of the Igbo'],
-    ['colonial-ethnic-label', 'Fulani-speaking troops'],
+    ['colonial-ethnic-label', 'The Company sent Hausa soldiers.'],
+    ['colonial-ethnic-label', 'Company officers and soldiers of the Igbo arrived.'],
+    ['colonial-ethnic-label', 'The Crown paid Fulani-speaking troops.'],
+    ['colonial-ethnic-label', 'Ijesa soldiers served the colonial government.'],
+    ['colonial-ethnic-label', 'Ekiti constables walked the road.'],
+    ['colonial-ethnic-label', 'The Company posted Anioma police at the ford.'],
+    ['colonial-ethnic-label', 'Royal Niger Company Ebira forces came upriver.'],
+    ['colonial-ethnic-label', 'The Ugbo constabulary waited.'],
+    ['colonial-ethnic-label', 'Ilaje askaris took the landing.'],
+    ['yoruba-igbo-enemies', 'The Yoruba were our enemies.'],
+    ['yoruba-igbo-enemies', 'Igbo and Yoruba are enemies, said the trader.'],
     ['yoruba-igbo-enemies', 'The Igbo raiders attacked Ife.'],
     ['yoruba-igbo-enemies', 'Yoruba enemies at the gate'],
     ['ugbo-villain', 'The Ugbo were the villains of the tale.'],
@@ -64,11 +74,58 @@ describe('guardrail linter', () => {
     ['trophy', 'He kept a trophy.'],
     ['enslavement', 'slave raiding'],
     ['sacred-imagery', 'near the shrine'],
+    ['ethnic-army-label', 'Hausa soldiers marched in.'],
+    ['ethnic-army-label', 'soldiers of the Igbo'],
+    ['ethnic-army-label', 'Fulani-speaking troops'],
+    ['ethnic-army-label', 'Hausa forces attacked the village.'],
+    ['ethnic-army-label', 'Ijesa soldiers held the pass.'],
+    ['ethnic-army-label', 'Yoruba soldiers held the hill path while the villagers escaped.'],
     ['people-in-flames', 'the flames reached the villagers'],
+    ['people-in-flames', 'The firebrand burns his cloak until he flees.'],
+    ['people-in-flames', 'The firebrand burned the raider chief.'],
     ['anachronism', 'a corrugated roof'],
   ])('is a WARNING: %s in "%s"', (rule, text) => {
     const f = lintTexts([{ at: 'x', text }]);
     expect(f.find((x) => x.rule === `guardrail/${rule}`)?.severity).toBe('warning');
+  });
+  it.each([
+    'The Yoruba soldiers of Ibadan marched on Ikirun.',
+    'Yoruba soldiers held the hill path while the villagers escaped.',
+    'The Igbo soldiers of Onitsha fought at the ford.',
+    'Yoruba troops of Oyo fought the Ibadan army.',
+    'The raffia raiders of the forest are never called Igbo.',
+    'Company raiders burned no Igbo towns in this telling.',
+    'The Yoruba were never our enemies.',
+    'Igbo and Yoruba were not enemies, they were neighbours.',
+    'A bloodline of drummers; a skulking guard; a bloodless day.',
+    'Ekumeku survived, and the codex states the real outcome: a British victory.',
+    'The Ekitiparapo and the Ekiti Parapo hold the ridge.',
+  ])('regression: compliant text is never an ERROR: %s', (text) => {
+    expect(lintTexts([{ at: 'x', text }]).filter((f) => f.severity === 'error')).toEqual([]);
+  });
+  it('the required Moremi sentence passes with no finding at all', () => {
+    expect(lint('The raffia raiders of the forest are never called Igbo.')).toEqual([]);
+  });
+  it('negation reaches only its own clause: a true violation after a negation is still caught', () => {
+    expect(lint('Raiders are never called Igbo. The Igbo raiders attacked Ife.')).toContain(
+      'yoruba-igbo-enemies',
+    );
+    expect(lint('Company raiders burned the Igbo towns.')).toContain('yoruba-igbo-enemies');
+  });
+  it('an allow entry matches on a segment boundary', () => {
+    const cfg = mergeGuardrails(DEFAULT_GUARDRAILS, {
+      allow: [{ rule: 'enslavement', at: 'kiriji-1', reason: 'codex' }],
+    });
+    const f = lintTexts(
+      [
+        { at: 'kiriji-1.facts[0]', text: 'slave raiding' },
+        { at: 'kiriji-1', text: 'slave raiding' },
+        { at: 'kiriji-10.facts[0]', text: 'slave raiding' },
+        { at: 'kiriji-1x', text: 'slave raiding' },
+      ],
+      cfg,
+    );
+    expect(f.map((x) => x.at)).toEqual(['kiriji-10.facts[0]', 'kiriji-1x']);
   });
   it('passes clean text, honours word boundaries and ignores the colonial rule for places', () => {
     expect(lint('The Company and its constabulary arrive. Ibadan soldiers march.')).toEqual([]);
@@ -82,8 +139,20 @@ describe('guardrail linter', () => {
   it('merges a project override: replace, add, disable, union, allow-list', () => {
     const cfg = mergeGuardrails(DEFAULT_GUARDRAILS, {
       rules: [
-        { id: 'blood', severity: 'warning', patterns: ['\\bblood\\b'], message: 'm' },
-        { id: 'skull', severity: 'off', patterns: ['x'], message: 'm' },
+        {
+          id: 'trophy',
+          severity: 'error',
+          patterns: ['\\btrophy\\b'],
+          message: 'm',
+          reason: 'stricter here',
+        },
+        {
+          id: 'villain-city',
+          severity: 'off',
+          patterns: ['x'],
+          message: 'm',
+          reason: 'not used',
+        },
         { id: 'custom', severity: 'error', patterns: ['\\bbanned\\b'], message: 'custom' },
       ],
       ethnicGroups: ['Gwari'],
@@ -94,18 +163,53 @@ describe('guardrail linter', () => {
     expect(cfg.realPeople).toContain('someone');
     const f = lintTexts(
       [
-        { at: 'x', text: 'blood skull banned slaves Gwari soldiers' },
+        { at: 'x', text: 'trophy cruel Ibadan banned slaves Company Gwari soldiers' },
         { at: 'y', text: 'slaves' },
       ],
       cfg,
     );
     const by = Object.fromEntries(f.map((x) => [`${x.at}:${x.rule}`, x.severity]));
-    expect(by['x:guardrail/blood']).toBe('warning');
-    expect(by['x:guardrail/skull']).toBeUndefined();
+    expect(by['x:guardrail/trophy']).toBe('error');
+    expect(by['x:guardrail/villain-city']).toBeUndefined();
     expect(by['x:guardrail/custom']).toBe('error');
     expect(by['x:guardrail/enslavement']).toBeUndefined();
     expect(by['y:guardrail/enslavement']).toBe('warning');
     expect(by['x:guardrail/colonial-ethnic-label']).toBe('error');
+  });
+  it('the eight SCRIPT guardrail rules cannot be switched off, downgraded or re-patterned', () => {
+    expect(PROTECTED_RULES).toHaveLength(8);
+    const base = DEFAULT_GUARDRAILS.rules.filter((r) => PROTECTED_RULES.includes(r.id));
+    expect(base.map((r) => r.severity)).toEqual(Array(8).fill('error'));
+    for (const r of base) {
+      const bad = (over: object): string => {
+        const v = validateGuardrailOverride({
+          version: 1,
+          rules: [{ ...r, reason: 'x', ...over }],
+        });
+        return v.ok ? '' : v.errors.join('|');
+      };
+      expect(bad({}), r.id).toBe('');
+      expect(bad({ severity: 'off' }), r.id).toContain('severity must stay');
+      expect(bad({ severity: 'warning' }), r.id).toContain('severity must stay');
+      expect(bad({ patterns: ['zzz'] }), r.id).toContain('patterns cannot be replaced');
+      // even if a caller skips validation, merge keeps the built-in rule
+      const merged = mergeGuardrails(DEFAULT_GUARDRAILS, {
+        rules: [{ ...r, severity: 'off', patterns: ['zzz'] }],
+      });
+      expect(merged.rules.find((x) => x.id === r.id)).toEqual(r);
+    }
+  });
+  it('overriding any built-in rule needs a reason; a new rule id does not', () => {
+    const rule = { severity: 'warning', patterns: ['x'], message: 'm' };
+    const bad = (id: string, extra: object = {}): string => {
+      const v = validateGuardrailOverride({ version: 1, rules: [{ id, ...rule, ...extra }] });
+      return v.ok ? '' : v.errors.join('|');
+    };
+    expect(bad('trophy')).toContain('needs a reason');
+    expect(bad('trophy', { reason: '  ' })).toContain('needs a reason');
+    expect(bad('trophy', { reason: 'codex sentence' })).toBe('');
+    expect(bad('my-own-rule')).toBe('');
+    expect(bad('my-own-rule', { reason: 3 })).toContain('needs id');
   });
   it('merging with no override returns the defaults', () => {
     expect(mergeGuardrails(DEFAULT_GUARDRAILS).rules).toHaveLength(DEFAULT_GUARDRAILS.rules.length);
@@ -159,10 +263,11 @@ describe('lintBundle (cross-references and wiring)', () => {
     const lines = b.dialogue[0]!.scenes[1]!.lines;
     lines[1]!.glossary = ['nope'];
     lines[0]!.speaker = 'stranger';
-    lines[2]!.speaker = 'akin';
+    lines[2]!.speaker = 'akin'; // not in Chapter 1 (introduced in Chapter 3)
     expect(rules(b).filter((r) => r.startsWith('xref/'))).toEqual([
       'xref/speaker',
       'xref/glossary',
+      'xref/speaker',
     ]);
     const c = kirijiOneBundle();
     c.chapters[0]!.cast!.push('ogedengbe');
@@ -268,9 +373,70 @@ describe('lintBundle (cross-references and wiring)', () => {
       errorsOf(lintBundle(b, { features: { version: 1, features: {} } })).map((x) => x.rule),
     ).toEqual(['xref/feature-flag']);
   });
+  it('rejects a chapter id used twice, even across campaigns', () => {
+    const b = kirijiOneBundle();
+    const other = structuredClone(b.chapters[0]!);
+    other.campaign = 'ekumeku';
+    other.order = 9;
+    b.chapters.push(other);
+    const f = errorsOf(lintBundle(b)).filter((x) => x.rule === 'xref/duplicate-id');
+    expect(f.some((x) => x.message.includes('more than one chapter'))).toBe(true);
+  });
+  it('requires featureFlag moremiPrologue for ch00 ids, ch00 packs and early Legend chapters', () => {
+    const make = (patch: (c: ChapterManifest) => void): ChapterManifest => {
+      const c = structuredClone(kirijiOneBundle().chapters[0]!);
+      c.id = 'moremi-x';
+      c.order = 0;
+      c.content = { scenes: [], facts: [], sources: [], twoSides: [], pins: [], checks: [] };
+      patch(c);
+      return c;
+    };
+    const flagged = (c: ChapterManifest): boolean => {
+      const b = kirijiOneBundle();
+      b.chapters.push(c);
+      return errorsOf(lintBundle(b, { features: featuresFixture() })).some(
+        (x) => x.rule === 'xref/feature-flag' && x.at === c.id,
+      );
+    };
+    expect(flagged(make((c) => (c.id = 'ch00-moremi')))).toBe(true);
+    expect(
+      flagged(make((c) => Object.assign(c, { delivery: 'pack', pack: 'ch00', packBudgetKb: 9 }))),
+    ).toBe(true);
+    expect(
+      flagged(make((c) => Object.assign(c, { tag: 'Legend', dates: { start: { year: 1100 } } }))),
+    ).toBe(true);
+    // a Legend chapter in the Kiriji era, or an ordinary History chapter, is not the prologue
+    expect(
+      flagged(make((c) => Object.assign(c, { tag: 'Legend', dates: { start: { year: 1877 } } }))),
+    ).toBe(false);
+    expect(
+      flagged(make((c) => Object.assign(c, { tag: 'History', dates: { start: { year: 1100 } } }))),
+    ).toBe(false);
+    const ok = make((c) => Object.assign(c, { id: 'ch00-moremi', featureFlag: 'moremiPrologue' }));
+    expect(flagged(ok)).toBe(false);
+  });
+  it('NFC-checks every player-visible string and tells which one', () => {
+    const b = kirijiOneBundle();
+    b.dialogue[0]!.scenes[1]!.lines[2]!.text.en = 'ọ'.normalize('NFD') + 'ba';
+    b.learning[0]!.facts[0]!.text.pcm = 'e' + '\u0301';
+    const f = errorsOf(lintBundle(b)).filter((x) => x.rule === 'text/not-nfc');
+    expect(f.map((x) => x.at)).toEqual([
+      'kiriji-1-dialogue.scenes[1].lines[2].en',
+      'kiriji-1-learning.facts[0].pcm',
+    ]);
+    expect(rules(kirijiOneBundle())).not.toContain('text/not-nfc');
+  });
+  it('lints source author and citation too, not only the title', () => {
+    const b = kirijiOneBundle();
+    b.learning[0]!.sources[0]!.citation = 'Hausa constables, 1886';
+    b.learning[0]!.sources[0]!.author = 'The Company, Ijesa police';
+    const at = errorsOf(lintBundle(b)).map((x) => x.at);
+    expect(at).toContain('kiriji-1-learning.sources[0].citation');
+    expect(at).toContain('kiriji-1-learning.sources[0].author');
+  });
   it('flags guardrail violations anywhere in the bundle with their location', () => {
     const b = kirijiOneBundle();
-    b.learning[0]!.facts[0]!.text.en = 'Hausa soldiers took the town.';
+    b.learning[0]!.facts[0]!.text.en = 'Hausa constables took the town.';
     const f = errorsOf(lintBundle(b));
     expect(f).toHaveLength(1);
     expect(f[0]!.at).toContain('kiriji-1-learning.facts[0]');

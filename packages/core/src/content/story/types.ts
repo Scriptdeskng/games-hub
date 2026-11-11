@@ -111,8 +111,10 @@ export interface DialogueLine {
   langs: PackLang[];
   /** Glossary term ids used in the line (tappable). */
   glossary?: string[];
-  /** Awaiting a native speaker. Required (true or false) when `langs` has yo, ig or ha. */
+  /** Awaiting a native speaker. Required (true or false) when the text has yo, ig or ha. */
   native_review?: boolean;
+  /** Pidgin line awaiting a Nigerian Pidgin reviewer. Required (true or false) when the text has pcm. */
+  pcm_review?: boolean;
   /** Required `true` when the speaker is a real person: the words are invented. */
   fictional?: boolean;
   tag?: ContentTag;
@@ -210,7 +212,7 @@ export interface GlossaryPack {
 
 export type StoryDoc = ChapterManifest | DialoguePack | LearningPack | GlossaryPack;
 
-/** Games ask `isFeatureOn(features, 'moremiPrologue')`; unknown flags are off. */
+/** `features.json`. Unknown flags are off (the build step added in A1 reads this). */
 export interface FeatureConfig {
   version: 1;
   features: Record<string, boolean>;

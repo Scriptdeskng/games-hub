@@ -2,7 +2,7 @@
  * Guardrail linter: scans every player-visible string of a campaign for words and phrases that
  * break the SCRIPT.md cultural guardrails or the telco content rules.
  *
- * Configuration (documented in docs/games/akoni-dike/ARCHITECTURE.md, section "Content tooling"):
+ * Configuration (documented in docs/games/akoni-dike/ARCHITECTURE.md, section 2.4):
  *  - `DEFAULT_GUARDRAILS` below is the baseline. A project file
  *    `games/akoni-dike/content/guardrails.json` is MERGED over it with `mergeGuardrails`:
  *    a rule with the same `id` replaces the default, a new `id` is added, `severity: "off"`
@@ -10,8 +10,12 @@
  *  - Patterns are regular-expression sources, matched case-insensitively with the `u` flag.
  *    `{ETHNIC}` expands to an alternation of `ethnicGroups`.
  *  - `severity: "error"` fails `content:check`; `"warning"` is printed only.
- *  - `allow` silences one rule at one location prefix, with a mandatory reason, for a deliberate
- *    exception (e.g. a codex sentence that must say "slave raiding").
+ *  - `allow` silences one rule at one location prefix (matched on a segment boundary, so `kiriji-1`
+ *    does not silence `kiriji-10`), with a mandatory reason, for a deliberate exception (e.g. a codex
+ *    sentence that must say "slave raiding").
+ *  - The eight SCRIPT guardrail rules (`PROTECTED_RULES`) cannot be turned off, downgraded or have
+ *    their patterns replaced by a project file; the override is rejected. Any other override of a
+ *    built-in rule must carry a `reason`.
  */
 import type { ValidationResult } from '../types';
 import type { Finding } from './types';
@@ -23,6 +27,8 @@ export interface GuardrailRule {
   severity: RuleSeverity;
   patterns: string[];
   message: string;
+  /** Why this project changes a built-in rule. Required when `id` is a built-in rule id. */
+  reason?: string;
 }
 export interface GuardrailAllow {
   rule: string;
@@ -44,8 +50,36 @@ export interface TextRef {
   text: string;
 }
 
-const COLONIAL =
-  'soldiers?|troops?|constables?|constabulary|policemen|police|riflemen|sepoys?|askaris?|mercenar\\w+|force';
+/** Armed forces that are colonial by their very name (the Company's constabulary, police, askaris). */
+const COLONIAL_FORCE =
+  'constables?|constabulary|policemen|police|riflemen|sepoys?|askaris?|mercenar\\w+';
+/** Forces an indigenous army can also be called: an ethnic label on these is an error only beside a colonial word. */
+const ANY_FORCE = 'soldiers?|troops?|forces?';
+/** Words that put a clause in the colonial setting. */
+const COLONIAL_CONTEXT =
+  'company|constables?|constabulary|colonial\\w*|royal\\s+niger|crown|police|policemen|protectorate';
+/** A clause: no sentence or clause-ending punctuation inside. */
+const CL = '[^.;:!?]';
+/** Negation words: a clause containing one is not asserting the thing. */
+const NEG = "never|not|no|nor|neither|without|\\w+n['’]t";
+/** Up to `n` characters of one clause that contain no negation word. */
+const gap = (n: number): string => `(?:(?!\\b(?:${NEG})\\b)${CL}){0,${n}}`;
+/** One word that is not a negation word. */
+const WORD = `(?!(?:${NEG})\\b)\\w+`;
+/** Not preceded, in the same clause, by a negation word. */
+const NOT_NEGATED = `(?<!\\b(?:${NEG})\\b[^.;:!?,]*)`;
+
+/** The eight SCRIPT guardrail rules. A project `guardrails.json` may not weaken them. */
+export const PROTECTED_RULES: readonly string[] = [
+  'blood',
+  'skull',
+  'beheading',
+  'gore',
+  'tribe-of',
+  'colonial-ethnic-label',
+  'yoruba-igbo-enemies',
+  'ugbo-villain',
+];
 
 export const DEFAULT_GUARDRAILS: GuardrailConfig = {
   version: 1,
@@ -67,6 +101,12 @@ export const DEFAULT_GUARDRAILS: GuardrailConfig = {
     'igala',
     'idoma',
     'ibibio',
+    'ijesa',
+    'ekiti',
+    'anioma',
+    'ugbo',
+    'ilaje',
+    'ebira',
   ],
   realPeople: [
     'ogedengbe',
@@ -108,19 +148,35 @@ export const DEFAULT_GUARDRAILS: GuardrailConfig = {
       id: 'colonial-ethnic-label',
       severity: 'error',
       patterns: [
-        `\\b(?:{ETHNIC})[- ](?:speaking\\s+)?(?:${COLONIAL})\\b`,
-        `\\b(?:${COLONIAL})\\s+(?:of|from)\\s+(?:the\\s+)?(?:{ETHNIC})\\b`,
+        // constables, police, askaris... are colonial by name: an ethnic label is always wrong
+        `\\b(?:{ETHNIC})[- ](?:speaking\\s+)?(?:${COLONIAL_FORCE})\\b`,
+        `\\b(?:${COLONIAL_FORCE})\\s+(?:of|from)\\s+(?:the\\s+)?(?:{ETHNIC})\\b`,
+        // soldiers, troops, forces: an error only in the same clause as a colonial word
+        `\\b(?:${COLONIAL_CONTEXT})\\b${CL}{0,80}\\b(?:{ETHNIC})[- ](?:speaking\\s+)?(?:${ANY_FORCE})\\b`,
+        `\\b(?:{ETHNIC})[- ](?:speaking\\s+)?(?:${ANY_FORCE})\\b${CL}{0,80}\\b(?:${COLONIAL_CONTEXT})\\b`,
+        `\\b(?:${COLONIAL_CONTEXT})\\b${CL}{0,80}\\b(?:${ANY_FORCE})\\s+(?:of|from)\\s+(?:the\\s+)?(?:{ETHNIC})\\b`,
       ],
       message:
         'colonial forces are "the Company" and its constabulary, never labelled by ethnicity',
     },
     {
+      id: 'ethnic-army-label',
+      severity: 'warning',
+      patterns: [
+        `\\b(?:{ETHNIC})[- ](?:speaking\\s+)?(?:${ANY_FORCE})\\b`,
+        `\\b(?:${ANY_FORCE})\\s+(?:of|from)\\s+(?:the\\s+)?(?:{ETHNIC})\\b`,
+      ],
+      message:
+        "an ethnic name beside soldiers/troops/forces: fine for an indigenous army, an error if it means the Company's men (colonial forces are never labelled by ethnicity)",
+    },
+    {
       id: 'yoruba-igbo-enemies',
       severity: 'error',
       patterns: [
-        '\\b(?:yoruba|igbo|ibo)\\s+(?:enem(?:y|ies)|villains?|invaders?|raiders?)\\b',
-        '\\braiders?\\b[^.]{0,40}\\b(?:igbo|ibo)\\b',
-        '\\b(?:igbo|ibo)\\b[^.]{0,40}\\braiders?\\b',
+        `${NOT_NEGATED}\\b(?:yoruba|igbo|ibo)\\s+(?:enem(?:y|ies)|villains?|invaders?|raiders?)\\b`,
+        `${NOT_NEGATED}\\braiders?\\b${gap(40)}\\b(?:igbo|ibo)\\b`,
+        `${NOT_NEGATED}\\b(?:igbo|ibo)\\b${gap(40)}\\braiders?\\b`,
+        `${NOT_NEGATED}\\b(?:yoruba|igbo|ibo)\\b(?:\\s+${WORD}){0,3}?\\s+(?:were|was|are|is|as|be)\\s+(?:${WORD}\\s+){0,2}(?:enem(?:y|ies)|villains?)\\b`,
       ],
       message: 'Yoruba and Igbo are never enemies; the Moremi raiders are never called Igbo',
     },
@@ -178,7 +234,7 @@ export const DEFAULT_GUARDRAILS: GuardrailConfig = {
       id: 'people-in-flames',
       severity: 'warning',
       patterns: [
-        '\\b(?:flames?|burn(?:ed|t|ing)?)\\b[^.]{0,30}\\b(?:people|villagers|children|child|man|woman|him|her|them)\\b',
+        '\\b(?:flames?|burn(?:s|ed|t|ing)?)\\b[^.]{0,30}\\b(?:people|villagers|children|child|man|woman|him|her|them|his|their|chief|raiders?|captain|guards?|soldiers?|rivals?|elder)\\b',
       ],
       message: 'smoke only: no flames on people',
     },
@@ -193,6 +249,7 @@ export const DEFAULT_GUARDRAILS: GuardrailConfig = {
 
 const ruleOk = (r: unknown): r is GuardrailRule =>
   isObj(r) &&
+  (r.reason === undefined || typeof r.reason === 'string') &&
   isStr(r.id) &&
   ['error', 'warning', 'off'].includes(r.severity as string) &&
   Array.isArray(r.patterns) &&
@@ -211,9 +268,21 @@ export function validateGuardrailOverride(
     else {
       data.rules.forEach((r, i) => {
         if (!ruleOk(r)) return void s.add(`rules[${i}]`, 'needs id, severity, patterns[], message');
+        const builtIn = DEFAULT_GUARDRAILS.rules.find((d) => d.id === r.id);
+        if (builtIn && !isStr(r.reason))
+          s.add(`rules[${i}]`, `overriding built-in rule "${r.id}" needs a reason`);
+        if (PROTECTED_RULES.includes(r.id)) {
+          if (r.severity !== 'error')
+            s.add(`rules[${i}]`, `"${r.id}" is a SCRIPT guardrail: severity must stay "error"`);
+          if (JSON.stringify(r.patterns) !== JSON.stringify(builtIn?.patterns))
+            s.add(
+              `rules[${i}]`,
+              `"${r.id}" is a SCRIPT guardrail: its patterns cannot be replaced (add a new rule id, or an allow entry with a reason)`,
+            );
+        }
         for (const p of r.patterns) {
           try {
-            new RegExp(p.replace('{ETHNIC}', 'x'), 'iu');
+            new RegExp(p.split('{ETHNIC}').join('x'), 'iu');
           } catch {
             s.add(`rules[${i}]`, `pattern does not compile: ${p}`);
           }
@@ -245,7 +314,8 @@ export function mergeGuardrails(
   over: Partial<GuardrailConfig> = {},
 ): GuardrailConfig {
   const rules = new Map(base.rules.map((r) => [r.id, r]));
-  for (const r of over.rules ?? []) rules.set(r.id, r);
+  // Defence in depth: validateGuardrailOverride rejects this, and merge refuses it too.
+  for (const r of over.rules ?? []) if (!PROTECTED_RULES.includes(r.id)) rules.set(r.id, r);
   const union = (a: string[], b: string[] = []): string[] => [
     ...new Set([...a, ...b.map((x) => x.toLowerCase())]),
   ];
@@ -257,6 +327,10 @@ export function mergeGuardrails(
     realPeople: union(base.realPeople, over.realPeople),
   };
 }
+
+/** `at` is the allowed location or lies under it: `kiriji-1` allows `kiriji-1.facts[0]`, not `kiriji-10`. */
+const atMatches = (at: string, prefix: string): boolean =>
+  at === prefix || (at.startsWith(prefix) && /[.[]/.test(at.charAt(prefix.length)));
 
 const escapeRe = (s: string): string => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
@@ -276,7 +350,7 @@ export function lintTexts(
   for (const { at, text } of texts) {
     const t = text.normalize('NFC');
     for (const { r, res } of compiled) {
-      if (cfg.allow.some((a) => a.rule === r.id && at.startsWith(a.at))) continue;
+      if (cfg.allow.some((a) => a.rule === r.id && atMatches(at, a.at))) continue;
       for (const re of res) {
         re.lastIndex = 0;
         const m = re.exec(t);

@@ -410,7 +410,7 @@ Story characters for the history action-adventure `akoni-dike`. They are **not C
 **Fictional.** Honourable, capable, **never a cartoon**; the rival is brave and the real antagonist is overreach and endless war. The name needs a collision check `[H-27]`. **Voice:** M, 30s to 40s, Yoruba speaker; measured and respectful. **Animation cue:** a deliberate bow.
 | # | en | pcm | flags |
 |---|---|---|---|
-| 1 | Well struck. | Well struck. | |
+| 1 | Well struck. | Well struck. | `_review: true` |
 | 2 | I have met brave people on both sides of this war. | I don meet brave people for both sides of this war. | `_review: true` |
 | 3 | Rest your arm, Bisi. We both need it. | Rest your arm, Bisi. Both of us need am. | `_review: true` |
 
@@ -435,7 +435,7 @@ Story characters for the history action-adventure `akoni-dike`. They are **not C
 | # | en | pcm | flags |
 |---|---|---|---|
 | 1 | My ogene talks more than the soldiers. | My ogene dey talk pass the soldiers. | `_review: true` |
-| 2 | Wait for the third bell. | Wait for the third bell. | |
+| 2 | Wait for the third bell. | Wait for the third bell. | `_review: true` |
 | 3 | If I miss a beat, blame the wind. | If I miss beat, blame the wind. | `_review: true` |
 
 ### Ogbuefi Nwaka (`nwaka`)
@@ -468,7 +468,7 @@ Modern museum guides who open each chapter with "Let me tell you what happened h
 | # | en | pcm | flags |
 |---|---|---|---|
 | 1 | Torches up. | Torch up. | `_review: true` |
-| 2 | Stay together. | Stay together. | |
+| 2 | Stay together. | Stay together. | `_review: true` |
 
 ### Historical cameos (Story and History tags; no banter)
 Drawn with dignity from descriptions, not traced, heritage-body check required before release (HUMAN_ASSETS row 75). **Their lines in the game are fictional and labelled so.** Only the lines in `SCRIPT.md` are used.
@@ -476,6 +476,6 @@ Drawn with dignity from descriptions, not traced, heritage-body check required b
 |---|---|---|
 | Ogedengbe | commander-in-chief of the Ekitiparapo; 3 scenes | "You know the hills. Then the hills are yours." |
 | Fabunmi | the Ekiti prince who steps aside for Ogedengbe | "A crown is lighter than a broken people. Lead them." |
-| Latoosa | named in a ch05 codex card (Aare; died in camp in 1885 per SCRIPT); on-screen use pending (open question 16) | none |
+| Latoosa | named in a ch05 codex card (Aare; died in camp in 1885 per SCRIPT); on-screen use pending (open question 16); **a portrait is made only if he gets an on-screen role**, otherwise a text-only codex card | none |
 | Samuel Johnson | the peacemaker in Kiriji 6 | "There are more of you in graves than in these camps. Let the living go home." |
 | Charles Phillips | named with Johnson in the 1886 treaty lesson | none |

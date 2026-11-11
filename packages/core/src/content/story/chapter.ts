@@ -151,13 +151,3 @@ export function validateFeatureConfig(data: unknown): ValidationResult<FeatureCo
     ? { ok: false, errors: s.errors }
     : { ok: true, value: data as unknown as FeatureConfig };
 }
-
-/** Unknown flags are OFF. */
-export const isFeatureOn = (cfg: FeatureConfig, flag: string): boolean =>
-  cfg.features[flag] === true;
-
-/** A chapter ships when it has no flag, or its flag is on. */
-export const chapterEnabled = (
-  c: Pick<ChapterManifest, 'featureFlag'>,
-  cfg: FeatureConfig,
-): boolean => c.featureFlag === undefined || isFeatureOn(cfg, c.featureFlag);
