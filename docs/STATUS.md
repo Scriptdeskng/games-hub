@@ -10,7 +10,7 @@
 | sabi-quiz | 2 | PASS (QA round 3; all gates green; release blocked until fact-check) | game 25.7 KB / 3 MB | fact-check of 300 questions (all reviewed:false, 58 tagged `uncertain`); pcm `_review` lines (62); Yoruba/Igbo/Hausa words; host (Etim) vs guide (Aisha); Daily device-local rule; core pcm labels 'Easy Easy'/'Hard Well Well' |
 | sabi-words | 2 | QA round 1 FAIL, fixes in progress (round 2 pending) | game 116 KB / 3 MB | pcm `_review` lines (all Pidgin); Yoruba/Igbo/Hausa/Edo diacritics on 25 display forms (tagged `uncertain`); AKATA and OYINBO blocklist decision; DASH and FLEX hints; coin economy values; reviewed:false words (release gated by `packs:release-check`); real-device test of 12x12 tiles; placeholder music, voice and art |
 | draughts-naija | 2 | PASS (QA round 2; minors N1-N9 open) | game 110 KB / 3 MB | rule variants (8x8 flying kings, majority, draws, colour); all 97 pcm `_review` lines; roster vs guide (Doosuur Tiv, Falmata Kanuri, Damola Yoruba); Tiv shawl review; real-device 10x10 tap test and Hard think time; CPU stall (M1) unconfirmed, watchdog added |
-| penalty-king | 2 | not started | | |
+| penalty-king | 2 | PASS (QA round 3; minors QA-R3-01..09 open) | game 157 KB / 3 MB | team-name live check vs NPFL/NNL/NWFL + trademark (blocking); Chidi not used (guide); rivals Ozavize/Ndako/Hamman native review; 118 pcm `_review`; balance: alternating two placements beats Hard ~43%; registry deploy:false + hub entry/category; music/voice/hero art placeholders; real-device test |
 | danfo-dash | 3 | not started | | |
 | mama-put-match | 3 | not started | | |
 
